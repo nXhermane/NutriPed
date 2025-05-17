@@ -1,1 +1,1 @@
-export * from "./InitPediatricSoftware";
+export * from "./PediatricSoftwareDataManager";

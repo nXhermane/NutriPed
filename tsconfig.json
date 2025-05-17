@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*"],
+      // "@/*": ["./*"],
       "@shared": ["./core/shared"],
       "@core/*": ["./core/*"],
       "tailwind.config": ["./tailwind.config.js"]

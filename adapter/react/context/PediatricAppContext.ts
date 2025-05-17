@@ -1,5 +1,10 @@
 import { createContext } from "react";
-import { PatientContext, DiagnosticContext, MedicalRecordContext, NutritionCareContext, UnitContext } from "../../web";
+import { DiagnosticContext } from "../../diagnostics";
+import { MedicalRecordContext } from "../../medical_record";
+import { NutritionCareContext } from "../../nutrition_care";
+import { PatientContext } from "../../patient";
+import { UnitContext } from "../../units";
+
 
 export interface PediatricAppContextType {
    // Services from Patient BC

@@ -1,7 +1,13 @@
+import { IEventBus } from "domain-eventrix";
 import React, { ReactNode } from "react";
-import { PediatricAppContext, PediatricAppContextType } from "./PediatricAppContext";
-import { IEventBus } from "@shared";
-import { IndexedDBConnection, DiagnosticContext, MedicalRecordContext, NutritionCareContext, PatientContext, UnitContext } from "../../web";
+import { DiagnosticContext } from "../../diagnostics";
+import { MedicalRecordContext } from "../../medical_record";
+import { NutritionCareContext } from "../../nutrition_care";
+import { PatientContext } from "../../patient";
+import { IndexedDBConnection } from "../../shared";
+import { UnitContext } from "../../units";
+import { PediatricAppContextType, PediatricAppContext } from "./PediatricAppContext";
+
 
 interface PediatricAppProviderProps {
    children: ReactNode;
