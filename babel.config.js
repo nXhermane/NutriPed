@@ -8,15 +8,19 @@ module.exports = function (api) {
     ],
 
     plugins: [
-      ['@babel/plugin-proposal-decorators', { legacy: true }],
-      ['@babel/plugin-proposal-class-properties', { loose: true }]
-      , ["module-resolver", {
-        root: ["./"],
+      ["@babel/plugin-proposal-decorators", { legacy: true }],
+      ["@babel/plugin-proposal-class-properties", { loose: true }],
+      [
+        "module-resolver",
+        {
+          root: ["./"],
 
-        alias: {
-          "@": "./",
-          "tailwind.config": "./tailwind.config.js"
-        }
-      }]]
+          alias: {
+            "@": "./",
+            "tailwind.config": "./tailwind.config.js",
+          },
+        },
+      ],
+    ],
   };
 };
