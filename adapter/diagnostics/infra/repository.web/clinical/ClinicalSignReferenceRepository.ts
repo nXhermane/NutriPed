@@ -1,11 +1,11 @@
 import { ClinicalSignReference, ClinicalSignReferenceRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { ClinicalSignReferencePersistenceDto } from "../../dtos";
 
 
 export class ClinicalSignReferenceRepositoryWebImpl
-   extends EntityBaseRepository<ClinicalSignReference, ClinicalSignReferencePersistenceDto>
+   extends EntityBaseRepositoryWeb<ClinicalSignReference, ClinicalSignReferencePersistenceDto>
    implements ClinicalSignReferenceRepository
 {
    protected storeName = "clinical_sign_references";

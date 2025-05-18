@@ -1,11 +1,11 @@
 import { UnitType } from "@core/constants";
 import { Unit, UnitRepository } from "@core/units";
 import { SystemCode, AggregateID, AggregateRoot } from "@shared";
-import { EntityBaseRepository } from "../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../shared";
 import { UnitPersistenceDto } from "../dtos";
 
 
-export class UnitRepositoryWebImpl extends EntityBaseRepository<Unit, UnitPersistenceDto> implements UnitRepository {
+export class UnitRepositoryWebImpl extends EntityBaseRepositoryWeb<Unit, UnitPersistenceDto> implements UnitRepository {
    protected storeName = "units";
 
    async getByCode(code: SystemCode): Promise<Unit> {

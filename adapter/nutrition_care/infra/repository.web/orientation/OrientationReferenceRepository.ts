@@ -1,10 +1,10 @@
 import { OrientationReference, OrientationReferenceRepository } from "@core/nutrition_care";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { OrientationReferencePersistenceDto } from "../../dtos";
 
 export class OrientationReferenceRepositoryWebImpl 
-    extends EntityBaseRepository<OrientationReference, OrientationReferencePersistenceDto> 
+    extends EntityBaseRepositoryWeb<OrientationReference, OrientationReferencePersistenceDto> 
     implements OrientationReferenceRepository {
     
     protected storeName = "orientation_refs";

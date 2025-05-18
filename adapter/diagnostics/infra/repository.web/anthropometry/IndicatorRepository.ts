@@ -1,12 +1,12 @@
 import { Indicator, IndicatorRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { IndicatorPersistenceDto } from "../../dtos";
 
 
 
 export class IndicatorRepositoryWebImpl 
-    extends EntityBaseRepository<Indicator, IndicatorPersistenceDto> 
+    extends EntityBaseRepositoryWeb<Indicator, IndicatorPersistenceDto> 
     implements IndicatorRepository {
     
     protected storeName = "indicators";

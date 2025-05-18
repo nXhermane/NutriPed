@@ -1,10 +1,10 @@
 import { Patient, PatientRepository } from "@core/patient";
 import { AggregateID, AggregateRoot } from "@shared";
-import { EntityBaseRepository } from "../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../shared";
 import { PatientPersistenceDto } from "../dtos";
 
 
-export class PatientRepositoryWebImpl extends EntityBaseRepository<Patient, PatientPersistenceDto> implements PatientRepository {
+export class PatientRepositoryWebImpl extends EntityBaseRepositoryWeb<Patient, PatientPersistenceDto> implements PatientRepository {
    protected storeName = "patients";
 
 

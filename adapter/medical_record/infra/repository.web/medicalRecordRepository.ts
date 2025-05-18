@@ -1,10 +1,10 @@
 import { MedicalRecord, MedicalRecordRepository } from "@core/medical_record";
 import { AggregateID, AggregateRoot } from "@shared";
-import { EntityBaseRepository } from "../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../shared";
 import { MedicalRecordPersistenceDto } from "../dtos";
 
 
-export class MedicalRecordRepositoryWebImpl extends EntityBaseRepository<MedicalRecord, MedicalRecordPersistenceDto> implements MedicalRecordRepository {
+export class MedicalRecordRepositoryWebImpl extends EntityBaseRepositoryWeb<MedicalRecord, MedicalRecordPersistenceDto> implements MedicalRecordRepository {
    protected storeName = "medical_records";
 
    async getByPatientIdOrID(patientIdOrId: AggregateID): Promise<MedicalRecord> {

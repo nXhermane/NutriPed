@@ -1,11 +1,11 @@
 import { GrowthReferenceTable, GrowthReferenceTableRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { GrowthReferenceTablePersistenceDto } from "../../dtos";
 
 
 export class GrowthReferenceTableRepositoryWebImpl 
-    extends EntityBaseRepository<GrowthReferenceTable, GrowthReferenceTablePersistenceDto> 
+    extends EntityBaseRepositoryWeb<GrowthReferenceTable, GrowthReferenceTablePersistenceDto> 
     implements GrowthReferenceTableRepository {
     
     protected storeName = "growth_reference_tables";

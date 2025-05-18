@@ -1,11 +1,11 @@
 import { BiochemicalReference, BiochemicalReferenceRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { BiochemicalReferencePersistenceDto } from "../../dtos";
 
 
 export class BiochemicalReferenceRepositoryWebImpl
-   extends EntityBaseRepository<BiochemicalReference, BiochemicalReferencePersistenceDto>
+   extends EntityBaseRepositoryWeb<BiochemicalReference, BiochemicalReferencePersistenceDto>
    implements BiochemicalReferenceRepository
 {
    protected storeName = "biochemical_references";

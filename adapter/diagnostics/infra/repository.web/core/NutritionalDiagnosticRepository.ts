@@ -1,11 +1,11 @@
 import { NutritionalDiagnostic, NutritionalDiagnosticRepository } from "@core/diagnostics";
 import { AggregateID, AggregateRoot } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { NutritionalDiagnosticPersistenceDto } from "../../dtos";
 
 
 export class NutritionalDiagnosticRepositoryWebImpl
-   extends EntityBaseRepository<NutritionalDiagnostic, NutritionalDiagnosticPersistenceDto>
+   extends EntityBaseRepositoryWeb<NutritionalDiagnostic, NutritionalDiagnosticPersistenceDto>
    implements NutritionalDiagnosticRepository
 {
    protected storeName = "nutritional_diagnostics";

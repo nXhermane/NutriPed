@@ -1,12 +1,12 @@
 import { Complication, ComplicationRepository } from "@core/nutrition_care";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { ComplicationPersistenceDto } from "../../dtos";
 
 
 
 export class ComplicationRepositoryWebImpl 
-    extends EntityBaseRepository<Complication, ComplicationPersistenceDto> 
+    extends EntityBaseRepositoryWeb<Complication, ComplicationPersistenceDto> 
     implements ComplicationRepository {
     
     protected storeName = "complications";

@@ -1,10 +1,10 @@
 import { PatientCareSession, PatientCareSessionRepository } from "@core/nutrition_care";
 import { AggregateID, AggregateRoot } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { PatientCareSessionPersistenceDto } from "../../dtos";
 
 export class PatientCareSessionRepositoryWebImpl 
-    extends EntityBaseRepository<PatientCareSession, PatientCareSessionPersistenceDto> 
+    extends EntityBaseRepositoryWeb<PatientCareSession, PatientCareSessionPersistenceDto> 
     implements PatientCareSessionRepository {
     
     protected storeName = "patient_care_sessions";

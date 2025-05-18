@@ -1,10 +1,10 @@
 import { AppetiteTestRef, AppetiteTestRefRepository } from "@core/nutrition_care";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { AppetiteTestReferencePersistenceDto } from "../../dtos";
 
 export class AppetiteTestRefRepositoryWebImpl 
-    extends EntityBaseRepository<AppetiteTestRef, AppetiteTestReferencePersistenceDto>
+    extends EntityBaseRepositoryWeb<AppetiteTestRef, AppetiteTestReferencePersistenceDto>
     implements AppetiteTestRefRepository {
     
     protected storeName = "appetite_test_refs";

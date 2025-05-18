@@ -1,7 +1,7 @@
 import { AggregateID, AggregateRoot, Entity, EntityPropsBaseType, InfrastructureMapper, IEventBus, Repository } from "@shared";
 import { IndexedDBConnection } from "./IndexedDBConnection";
 
-export abstract class EntityBaseRepository<DomainEntity extends Entity<EntityPropsBaseType>, PersistenceModel extends object>
+export abstract class EntityBaseRepositoryWeb<DomainEntity extends Entity<EntityPropsBaseType>, PersistenceModel extends object>
    implements Repository<DomainEntity>
 {
    protected abstract storeName: string;

@@ -1,11 +1,11 @@
 import { DiagnosticRule, DiagnosticRuleRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { DiagnosticRulePersistenceDto } from "../../dtos";
 
 
 export class DiagnosticRuleRepositoryWebImpl 
-    extends EntityBaseRepository<DiagnosticRule, DiagnosticRulePersistenceDto> 
+    extends EntityBaseRepositoryWeb<DiagnosticRule, DiagnosticRulePersistenceDto> 
     implements DiagnosticRuleRepository {
     
     protected storeName = "diagnostic_rules";

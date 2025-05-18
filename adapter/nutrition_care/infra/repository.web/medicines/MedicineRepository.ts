@@ -1,10 +1,10 @@
 import { Medicine, MedicineRepository } from "@core/nutrition_care";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { MedicinePersistenceDto } from "../../dtos";
 
 
-export class MedicineRepositoryWebImpl extends EntityBaseRepository<Medicine, MedicinePersistenceDto> implements MedicineRepository {
+export class MedicineRepositoryWebImpl extends EntityBaseRepositoryWeb<Medicine, MedicinePersistenceDto> implements MedicineRepository {
    protected storeName = "medicines";
 
    async getByCode(code: SystemCode): Promise<Medicine> {

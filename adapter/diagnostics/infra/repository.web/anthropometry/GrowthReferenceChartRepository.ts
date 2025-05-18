@@ -1,11 +1,11 @@
 import { GrowthReferenceChart, GrowthReferenceChartRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { GrowthReferenceChartPersistenceDto } from "../../dtos";
 
 
 export class GrowthReferenceChartRepositoryWebImpl 
-    extends EntityBaseRepository<GrowthReferenceChart, GrowthReferenceChartPersistenceDto> 
+    extends EntityBaseRepositoryWeb<GrowthReferenceChart, GrowthReferenceChartPersistenceDto> 
     implements GrowthReferenceChartRepository {
     
     protected storeName = "growth_reference_charts";

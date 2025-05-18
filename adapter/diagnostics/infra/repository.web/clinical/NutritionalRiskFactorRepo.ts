@@ -1,11 +1,11 @@
 import { NutritionalRiskFactor, NutritionalRiskFactorRepository } from "@core/diagnostics";
 import { InfrastructureMapper, SystemCode } from "@shared";
-import { EntityBaseRepository, IndexedDBConnection } from "../../../../shared";
+import { EntityBaseRepositoryWeb, IndexedDBConnection } from "../../../../shared";
 import { NutritionalRiskFactorPersistenceDto } from "../../dtos";
 
 
 export class NutritionalRiskFactorRepoWebImpl
-   extends EntityBaseRepository<NutritionalRiskFactor, NutritionalRiskFactorPersistenceDto>
+   extends EntityBaseRepositoryWeb<NutritionalRiskFactor, NutritionalRiskFactorPersistenceDto>
    implements NutritionalRiskFactorRepository
 {
    protected storeName: string = "nutritional_risk_factors";

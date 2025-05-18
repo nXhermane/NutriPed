@@ -1,10 +1,10 @@
 import { AnthropometricMeasure, AnthropometricMeasureRepository } from "@core/diagnostics";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { AnthropometricMeasurePersistenceDto } from "../../dtos";
 
 export class AnthropometricMeasureRepositoryWebImpl 
-    extends EntityBaseRepository<AnthropometricMeasure, AnthropometricMeasurePersistenceDto> 
+    extends EntityBaseRepositoryWeb<AnthropometricMeasure, AnthropometricMeasurePersistenceDto> 
     implements AnthropometricMeasureRepository {
     
     protected storeName = "anthropometric_measures";

@@ -1,11 +1,11 @@
 import { Milk, MilkRepository } from "@core/nutrition_care";
 import { SystemCode } from "@shared";
-import { EntityBaseRepository } from "../../../../shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { MilkPersistenceDto } from "../../dtos";
 
 
 export class MilkRepositoryWebImpl 
-    extends EntityBaseRepository<Milk, MilkPersistenceDto> 
+    extends EntityBaseRepositoryWeb<Milk, MilkPersistenceDto> 
     implements MilkRepository {
     
     protected storeName = "milks";
