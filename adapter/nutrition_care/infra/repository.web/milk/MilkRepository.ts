@@ -1,4 +1,4 @@
-import { Milk, MilkRepository } from "@core/nutrition_care";
+import { Milk, MilkRepository, MilkType } from "@core/nutrition_care";
 import { SystemCode } from "@shared";
 import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { MilkPersistenceDto } from "../../dtos";
@@ -10,29 +10,29 @@ export class MilkRepositoryWebImpl
     
     protected storeName = "milks";
 
-    async getByCode(code: SystemCode): Promise<Milk> {
+    async getByType(type: MilkType): Promise<Milk> {
         try {
             const store = await this.getObjectStore();
             return new Promise((resolve, reject) => {
-                const request = store.index("code").get(code.unpack());
+                const request = store.index("type").get(type)
 
                 request.onsuccess = (event) => {
                     const result = (event.target as IDBRequest).result;
                     if (!result) {
-                        reject(new Error(`Milk with code ${code.unpack()} not found`));
+                        reject(new Error(`Milk with type ${type} not found`));
                         return;
                     }
                     resolve(this.mapper.toDomain(result as MilkPersistenceDto));
                 };
 
                 request.onerror = (event) => {
-                    console.error("Error fetching milk by code:", event);
+                    console.error("Error fetching milk by type:", event);
                     reject(new Error("Failed to fetch milk"));
                 };
             });
         } catch (error) {
             console.error(error);
-            throw new Error(`Failed to get milk by code: ${error}`);
+            throw new Error(`Failed to get milk by type: ${error}`);
         }
     }
      async exist(code: SystemCode): Promise<boolean> {

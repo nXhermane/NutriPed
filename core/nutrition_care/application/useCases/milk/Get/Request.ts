@@ -1,6 +1,7 @@
-import { AggregateID } from "@shared"
+import { MilkType } from "./../../../../domain";
+import { AggregateID } from "@shared";
 
 export type GetMilkRequest = {
-    milkId?: AggregateID
-    milkCode?: string 
-}
+  milkId?: AggregateID;
+  milkType?: MilkType;
+};

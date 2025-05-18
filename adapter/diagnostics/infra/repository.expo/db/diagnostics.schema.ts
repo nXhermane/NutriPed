@@ -319,7 +319,7 @@ export const nutritional_diagnostics = sqliteTable("nutritional_diagnostics", {
   updatedAt: text("updated_at", { length: 50 }).notNull(),
   patientId: text("patient_id", { length: 50 }).notNull(),
   patientData: text("patient_data_id", { length: 50 }).notNull(),
-  results: text("nutritional_diagnostic_results_id", { length: 50 }).notNull(),
+  result: text("nutritional_diagnostic_results_id", { length: 50 }),
   date: text("nutritional_diagnostic_date", { length: 50 }).notNull(),
   notes: text("nutritional_diagnostic_notes", { mode: "json" })
     .$type<string[]>()

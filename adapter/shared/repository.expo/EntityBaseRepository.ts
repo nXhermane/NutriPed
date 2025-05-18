@@ -165,7 +165,7 @@ export abstract class  EntityBaseRepositoryExpo<
       .get();
     return !!entity;
   }
-  private async dispatchEventIfItAggregateRoot(entity: DomainEntity) {
+  protected async dispatchEventIfItAggregateRoot(entity: DomainEntity) {
     if (entity instanceof AggregateRoot && this.eventBus) {
       const domainEvents = entity.getDomainEvents();
       if (domainEvents.length === 0) return;

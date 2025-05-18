@@ -1,7 +1,7 @@
 import { Repository, SystemCode } from "@shared";
-import { Milk } from "../../../models";
+import { Milk, MilkType } from "../../../models";
 
 export interface MilkRepository extends Repository<Milk> {
-   getByCode(code: SystemCode): Promise<Milk>;
+   getByType(type: MilkType): Promise<Milk>;
    getAll(): Promise<Milk[]>;
 }

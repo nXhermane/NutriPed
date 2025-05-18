@@ -111,12 +111,13 @@ export const milks = sqliteTable("milks", {
   updatedAt: text("updated_at", { length: 50 }).notNull(),
   name: text("name", { length: 255 }).notNull(),
   type: text("type", { enum: ["f100", "f75", "f100_diluted"] }).notNull(),
+  doseFormula: text("dose_formula", { mode: "json" })
+    .$type<{ value: string; variables: string[] }>()
+    .notNull(),
   condition: text("condition", { mode: "json" })
     .$type<{ value: string; variables: string[] }>()
     .notNull(),
-  recommendedMilkPerDay: text("recommended_milk_per_day", {
-    enum: ["8", "5", "6"],
-  }).notNull(),
+  recommendedMilkPerDay: text("recommended_milk_per_day", {mode: 'json'}).$type<RecommendedMilkPerDay[]>().notNull(),
   recommendationPerRanges: text("recommendation_per_ranges", {
     mode: "json",
   })
@@ -212,7 +213,7 @@ export const patient_care_sessions = sqliteTable("patient_care_sessions", {
   startDate: text("start_date", { length: 50 }).notNull(),
   endDate: text("end_date", { length: 50 }),
   orientation: text("orientation", { mode: "json" })
-    .$type<{ name: string; code: string }[]>()
+    .$type<{ name: string; code: string }>()
     .notNull(),
   carePhases: text("care_phases", { mode: "json" })
     .$type<CarePhaseDto[]>()

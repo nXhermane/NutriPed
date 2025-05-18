@@ -23,7 +23,7 @@ export class ValidateMeasurementsUseCase implements UseCase<ValidateMeasurements
 
    async execute(request: ValidateMeasurementsRequest): Promise<ValidateMeasurementsResponse> {
       try {
-         const nutritionalDiagnostic = await this.nutritionalDiagnosticRepo.getByPatient(request.patientId);
+         const nutritionalDiagnostic = await this.nutritionalDiagnosticRepo.getByIdOrPatientId(request.patientId);
          const { id, gender, birthday, clinicalSigns } = nutritionalDiagnostic.getPatientData().getProps();
 
          const measuresResult = await this.buildMeasurements(request, clinicalSigns);

@@ -12,7 +12,7 @@ export class GenerateDiagnosticResultUseCase implements UseCase<GenerateDiagnost
    ) {}
    async execute(request: GenerateDiagnosticResultRequest): Promise<GenerateDiagnosticResultResponse> {
       try {
-         const nutritionalDiagnostic = await this.nutritionalDiagnosticRepo.getById(request.nutritionalDiagnosticId);
+         const nutritionalDiagnostic = await this.nutritionalDiagnosticRepo.getByIdOrPatientId(request.nutritionalDiagnosticId);
          const nutritionalAssessmentResult = await this.nutritionalAssessmentService.evaluateNutritionalStatus(
             nutritionalDiagnostic.getPatientData(),
          );
