@@ -7,21 +7,23 @@ import { PatientContext } from "../../patient";
 import { IndexedDBConnection } from "../../shared";
 import { UnitContext } from "../../units";
 import { PediatricAppContextType, PediatricAppContext } from "./PediatricAppContext";
+import { SQLiteDatabase } from "expo-sqlite";
 
 
 interface PediatricAppProviderProps {
    children: ReactNode;
-   dbConnection: IndexedDBConnection;
+   dbConnection: IndexedDBConnection | null
+   expo: SQLiteDatabase | null
    eventBus: IEventBus;
 }
 
-export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({ children, dbConnection, eventBus }) => {
+export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({ children, dbConnection, expo, eventBus }) => {
    // Initialize all bounded contexts
-   const diagnosticContext = DiagnosticContext.init(dbConnection, eventBus);
-   const medicalRecordContext = MedicalRecordContext.init(dbConnection, eventBus);
-   const nutritionCareContext = NutritionCareContext.init(dbConnection, eventBus);
-   const patientContext = PatientContext.init(dbConnection, eventBus);
-   const unitContext = UnitContext.init(dbConnection, eventBus);
+   const diagnosticContext = DiagnosticContext.init(dbConnection, expo, eventBus);
+   const medicalRecordContext = MedicalRecordContext.init(dbConnection, expo, eventBus);
+   const nutritionCareContext = NutritionCareContext.init(dbConnection, expo, eventBus);
+   const patientContext = PatientContext.init(dbConnection, expo, eventBus);
+   const unitContext = UnitContext.init(dbConnection, expo, eventBus);
 
    const value: PediatricAppContextType = {
       // Get services from Patient BC

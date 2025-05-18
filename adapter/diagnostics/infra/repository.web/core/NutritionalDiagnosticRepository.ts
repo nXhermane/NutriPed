@@ -10,7 +10,7 @@ export class NutritionalDiagnosticRepositoryWebImpl
 {
    protected storeName = "nutritional_diagnostics";
 
-   async getByPatient(patientId: AggregateID): Promise<NutritionalDiagnostic> {
+   async getByIdOrPatientId(patientId: AggregateID): Promise<NutritionalDiagnostic> {
       try {
          const store = await this.getObjectStore();
          return new Promise((resolve, reject) => {

@@ -1,5 +1,5 @@
 import { ApplicationMapper, GenerateUniqueId, IEventBus, InfrastructureMapper, UseCase } from "@shared";
-import { GenerateUUID, IndexedDBConnection } from "../common";
+
 import {
    AddDataToMedicalRecordRequest,
    AddDataToMedicalRecordResponse,
@@ -28,16 +28,18 @@ import {
    UpdateMedicalRecordResponse,
    UpdateMedicalRecordUseCase,
 } from "@core/medical_record";
-import { MedicalRecordPersistenceDto } from "./persistenceDto";
-import { MedicalRecordInfraMapper } from "./mappers";
-import { MedicalRecordRepositoryImpl } from "./repository.web";
+
 import { PatientACLImpl } from "@core/sharedAcl";
 import { PatientContext } from "../patient/context";
 import { DiagnosticContext } from "../diagnostics/context";
+import { MedicalRecordPersistenceDto, MedicalRecordInfraMapper, MedicalRecordRepositoryWebImpl, MedicalRecordRepositoryExpoImpl, medical_records } from "./infra";
+import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
+import { SQLiteDatabase } from "expo-sqlite";
 
 export class MedicalRecordContext {
    private static instance: MedicalRecordContext | null = null;
-   private readonly dbConnection: IndexedDBConnection;
+   private readonly dbConnection: IndexedDBConnection | null
+   private readonly expo: SQLiteDatabase | null
    private readonly idGenerator: GenerateUniqueId;
    private readonly eventBus: IEventBus;
    // Infra Mappers
@@ -63,17 +65,26 @@ export class MedicalRecordContext {
    private readonly afterPatientCreatedHandler: AfterPatientCreatedMedicalHandler;
    private readonly afterPatientDeletedHandler: AfterPatientDeletedMedicalRecordHandler;
 
-   private constructor(dbConnection: IndexedDBConnection, eventBus: IEventBus) {
+   private constructor(dbConnection: IndexedDBConnection | null, expo: SQLiteDatabase | null, eventBus: IEventBus) {
       // Infrastructure
+      if (isWebEnv() && dbConnection === null) {
+         throw new Error(`The web db connection must be provided when isWebEnv`);
+      }
+      if (!isWebEnv() && expo === null) {
+         throw new Error(
+            `The expo db connection must be provided when is not a web env.`
+         );
+      }
       this.dbConnection = dbConnection;
+      this.expo = expo
       this.eventBus = eventBus;
-      this.patientACL = new PatientACLImpl(PatientContext.init(dbConnection, this.eventBus).getService());
+      this.patientACL = new PatientACLImpl(PatientContext.init(dbConnection, expo, this.eventBus).getService());
       this.measurementACl = new MeasurementValidationACLImpl(
-         DiagnosticContext.init(dbConnection, this.eventBus).getValidatePatientMeasurementsService(),
+         DiagnosticContext.init(dbConnection, expo, this.eventBus).getValidatePatientMeasurementsService(),
       );
 
       this.infraMapper = new MedicalRecordInfraMapper();
-      this.repository = new MedicalRecordRepositoryImpl(this.dbConnection, this.infraMapper, this.eventBus);
+      this.repository = isWebEnv() ? new MedicalRecordRepositoryWebImpl(this.dbConnection as IndexedDBConnection, this.infraMapper, this.eventBus) : new MedicalRecordRepositoryExpoImpl(this.expo as SQLiteDatabase, this.infraMapper, medical_records)
       this.idGenerator = new GenerateUUID();
 
       // Application
@@ -96,9 +107,9 @@ export class MedicalRecordContext {
          updateUC: this.updateMedicalRecordUC,
       });
    }
-   static init(dbConnection: IndexedDBConnection, eventBus: IEventBus) {
+   static init(dbConnection: IndexedDBConnection | null, expo: SQLiteDatabase | null, eventBus: IEventBus) {
       if (!this.instance) {
-         this.instance = new MedicalRecordContext(dbConnection, eventBus);
+         this.instance = new MedicalRecordContext(dbConnection, expo, eventBus);
       }
       return this.instance as MedicalRecordContext;
    }

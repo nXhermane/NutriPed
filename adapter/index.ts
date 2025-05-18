@@ -4,7 +4,6 @@ export * from "./diagnostics";
 export * from "./medical_record";
 export * from "./nutrition_care";
 export * from "./patient";
-export * from "./react";
 export * from "./scripts";
 export * from "./shared";
 export * from "./units";

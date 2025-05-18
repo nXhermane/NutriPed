@@ -1,17 +1,19 @@
-import { PatientMapper, CreatePatientUseCase, GetPatientUseCase, UpdatePatientUseCase, DeletePatientUseCase, PatientService } from "@core/patient";
+import { PatientMapper, CreatePatientUseCase, GetPatientUseCase, UpdatePatientUseCase, DeletePatientUseCase, PatientService, PatientRepository } from "@core/patient";
 import { IEventBus } from "@shared";
-import { PatientInfraMapper, PatientRepositoryWebImpl } from "./infra";
-import { IndexedDBConnection, GenerateUUID } from "../shared";
+import { PatientInfraMapper, PatientRepositoryExpoImpl, PatientRepositoryWebImpl, patients } from "./infra";
+import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
+import { SQLiteDatabase } from "expo-sqlite";
 
 
 
 
 export class PatientContext {
    private static instance: PatientContext | null = null;
-   private readonly dbConnection: IndexedDBConnection;
+   private readonly dbConnection: IndexedDBConnection | null = null
+   private readonly expo: SQLiteDatabase | null = null
    private readonly eventBus: IEventBus;
    private readonly infraMapper: PatientInfraMapper;
-   private readonly repository: PatientRepositoryWebImpl;
+   private readonly repository: PatientRepository;
    private readonly applicationMapper: PatientMapper;
 
    // Use Cases
@@ -23,12 +25,23 @@ export class PatientContext {
    // Service
    private readonly patientService: PatientService;
 
-   private constructor(dbConnection: IndexedDBConnection, eventBus: IEventBus) {
+   private constructor(dbConnection: IndexedDBConnection | null, expo: SQLiteDatabase | null, eventBus: IEventBus) {
       // Infrastructure
+      if (isWebEnv() && dbConnection === null) {
+         throw new Error(`The web db connection must be provided when isWebEnv`);
+      }
+      if (!isWebEnv() && expo === null) {
+         throw new Error(
+            `The expo db connection must be provided when is not a web env.`
+         );
+      }
       this.dbConnection = dbConnection;
-      this.eventBus = eventBus;
+      this.expo = expo
+      this.eventBus = eventBus;dbConnection
       this.infraMapper = new PatientInfraMapper();
-      this.repository = new PatientRepositoryWebImpl(this.dbConnection, this.infraMapper, this.eventBus);
+      this.repository = isWebEnv() ? new PatientRepositoryWebImpl(this.dbConnection as IndexedDBConnection, this.infraMapper, this.eventBus) : new PatientRepositoryExpoImpl(
+         this.expo as SQLiteDatabase, this.infraMapper, patients
+      )
 
       // Application
       this.applicationMapper = new PatientMapper();
@@ -47,9 +60,13 @@ export class PatientContext {
          deleteUC: this.deleteUseCase,
       });
    }
-   static init(dbConnection: IndexedDBConnection, eventBus: IEventBus) {
+   static init(
+      dbConnection: IndexedDBConnection | null,
+      expo: SQLiteDatabase | null,
+      eventBus: IEventBus
+   ) {
       if (!PatientContext.instance) {
-         this.instance = new PatientContext(dbConnection, eventBus);
+         this.instance = new PatientContext(dbConnection, expo, eventBus);
       }
       return PatientContext.instance as PatientContext;
    }

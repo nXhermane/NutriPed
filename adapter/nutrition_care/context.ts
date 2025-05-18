@@ -132,7 +132,7 @@ import {
 
 import { PatientACLImpl } from "@core/sharedAcl";
 import { PatientContext } from "../patient/context";
-import { IndexedDBConnection, GenerateUUID } from "../shared";
+import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
 import {
   AppetiteTestReferencePersistenceDto,
   ComplicationPersistenceDto,
@@ -158,11 +158,29 @@ import {
   OrientationReferenceRepositoryWebImpl,
   PatientCareSessionRepositoryWebImpl,
   PatientCurrentStateRepositoryWebImpl,
+  AppetiteTestRefRepositoryExpoImpl,
+  appetite_test_references,
+  ComplicationRepositoryExpoImpl,
+  complications,
+  MedicineRepositoryExpoImpl,
+  medicines,
+  MilkRepositoryExpoImpl,
+  milks,
+  OrientationReferenceRepositoryExpoImpl,
+  orientation_references,
+  DailyCareJournalRepositoryExpoImpl,
+  daily_care_journals,
+  PatientCurrentStateRepositoryExpoImpl,
+  patient_current_states,
+  PatientCareSessionRepositoryExpoImpl,
+  patient_care_sessions,
 } from "./infra";
+import { SQLiteDatabase } from "expo-sqlite";
 
 export class NutritionCareContext {
   private static instance: NutritionCareContext | null = null;
-  private readonly dbConnection: IndexedDBConnection;
+  private readonly dbConnection: IndexedDBConnection | null
+  private readonly expo: SQLiteDatabase | null
   private readonly idGenerator: GenerateUniqueId;
   private readonly eventBus: IEventBus;
 
@@ -341,14 +359,27 @@ export class NutritionCareContext {
   // Subscribers
   private readonly afterPatientGlobalPerformedHandler: AfterPatientGlobalVariablePerformedEvent;
 
-  private constructor(dbConnection: IndexedDBConnection, eventBus: IEventBus) {
+  private constructor(
+    dbConnection: IndexedDBConnection | null,
+    expo: SQLiteDatabase | null,
+    eventBus: IEventBus
+  ) {
+    if (isWebEnv() && dbConnection === null) {
+      throw new Error(`The web db connection must be provided when isWebEnv`);
+    }
+    if (!isWebEnv() && expo === null) {
+      throw new Error(
+        `The expo db connection must be provided when is not a web env.`
+      );
+    }
     this.dbConnection = dbConnection;
+    this.expo = expo
     this.idGenerator = new GenerateUUID();
     this.eventBus = eventBus;
 
     // ACL
     this.patientAcl = new PatientACLImpl(
-      PatientContext.init(dbConnection, eventBus).getService()
+      PatientContext.init(dbConnection, expo, eventBus).getService()
     );
 
     // Infra Mappers
@@ -365,39 +396,45 @@ export class NutritionCareContext {
     );
 
     // Repositories
-    this.appetiteTestRefRepo = new AppetiteTestRefRepositoryWebImpl(
-      this.dbConnection,
+    this.appetiteTestRefRepo = isWebEnv() ? new AppetiteTestRefRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.appetiteTestRefInfraMapper
-    );
-    this.complicationRepo = new ComplicationRepositoryWebImpl(
-      this.dbConnection,
+    ) : new AppetiteTestRefRepositoryExpoImpl(this.expo as SQLiteDatabase, this.appetiteTestRefInfraMapper, appetite_test_references, this.eventBus)
+    this.complicationRepo = isWebEnv() ? new ComplicationRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.complicationInfraMapper
-    );
-    this.medicineRepo = new MedicineRepositoryWebImpl(
-      this.dbConnection,
+    ) : new ComplicationRepositoryExpoImpl(this.expo as SQLiteDatabase, this.complicationInfraMapper, complications, this.eventBus)
+    this.medicineRepo = isWebEnv() ? new MedicineRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.medicineInfraMapper
-    );
-    this.milkRepo = new MilkRepositoryWebImpl(
-      this.dbConnection,
+    ) : new MedicineRepositoryExpoImpl(this.expo as SQLiteDatabase, this.medicineInfraMapper, medicines, this.eventBus)
+    this.milkRepo = isWebEnv() ? new MilkRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.milkInfraMapper
-    );
-    this.orientationRepo = new OrientationReferenceRepositoryWebImpl(
-      this.dbConnection,
+    ) : new MilkRepositoryExpoImpl(this.expo as SQLiteDatabase, this.milkInfraMapper, milks, this.eventBus)
+    this.orientationRepo = isWebEnv() ? new OrientationReferenceRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.orientationRefInfraMapper
-    );
-    this.dailyCareJournalRepo = new DailyCareJournalRepositoryWebImpl(
-      this.dbConnection,
+    ) : new OrientationReferenceRepositoryExpoImpl(this.expo as SQLiteDatabase, this.orientationRefInfraMapper, orientation_references, this.eventBus)
+    this.dailyCareJournalRepo = isWebEnv() ? new DailyCareJournalRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.dailyCareJournalInfraMapper
-    );
-    this.patientCurrentStateRepo = new PatientCurrentStateRepositoryWebImpl(
-      this.dbConnection,
+    ) : new DailyCareJournalRepositoryExpoImpl(this.expo as SQLiteDatabase, this.dailyCareJournalInfraMapper, daily_care_journals, this.eventBus)
+    this.patientCurrentStateRepo = isWebEnv() ? new PatientCurrentStateRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.patientCurrentStateInfraMapper
-    );
-    this.patientCareSessionRepo = new PatientCareSessionRepositoryWebImpl(
-      this.dbConnection,
+    ) : new PatientCurrentStateRepositoryExpoImpl(this.expo as SQLiteDatabase, this.patientCurrentStateInfraMapper, patient_current_states, this.eventBus)
+    this.patientCareSessionRepo = isWebEnv() ? new PatientCareSessionRepositoryWebImpl(
+      this.dbConnection as IndexedDBConnection,
       this.patientCareSessionInfraMapper,
       this.eventBus
-    );
+    ) : new PatientCareSessionRepositoryExpoImpl(this.expo as SQLiteDatabase, this.patientCareSessionInfraMapper, patient_care_sessions, this.eventBus, {
+      currentStateRepo: this.patientCurrentStateRepo,
+      dailyJournalRepo: this.dailyCareJournalRepo
+    }, {
+      currentStateMapper: this.patientCurrentStateInfraMapper,
+      dailyJournalRepo: this.dailyCareJournalInfraMapper
+    })
 
     // Domain Services
     this.appetiteTestService = new AppetiteTestService(
@@ -559,9 +596,13 @@ export class NutritionCareContext {
     this.eventBus.subscribe(this.afterPatientGlobalPerformedHandler);
   }
 
-  static init(dbConnection: IndexedDBConnection, eventBus: IEventBus) {
+  static init(
+    dbConnection: IndexedDBConnection | null,
+    expo: SQLiteDatabase | null,
+    eventBus: IEventBus
+  ) {
     if (!NutritionCareContext.instance) {
-      this.instance = new NutritionCareContext(dbConnection, eventBus);
+      this.instance = new NutritionCareContext(dbConnection, expo, eventBus);
     }
     return this.instance as NutritionCareContext;
   }
