@@ -8,7 +8,7 @@ export interface PatientCareSessionPersistenceDto extends EntityPersistenceDto {
    patientId: string;
    startDate: string;
    endDate?: string;
-   orientation: OrientationResult;
+   orientation: {name: string , code: string };
    carePhases: CarePhaseDto[];
    currentState: PatientCurrentStatePersistenceDto;
    dailyJournals: DailyJournalPersistenceDto[];
