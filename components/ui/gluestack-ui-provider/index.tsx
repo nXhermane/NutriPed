@@ -15,7 +15,7 @@ export function GluestackUIProvider({
   children?: React.ReactNode;
   style?: ViewProps['style'];
 }) {
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme()
 
   useEffect(() => {
     setColorScheme(mode);

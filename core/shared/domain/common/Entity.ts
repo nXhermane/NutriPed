@@ -1,6 +1,6 @@
 import { EntityUniqueID } from "./EntityUniqueId";
 import { Guard } from "../../core";
-import { DomainDate } from "../shared";
+import { DomainDate } from "./../shared/valueObjects/Date";
 import { ValueType } from "../../utils/types";
 export type AggregateID = string | number;
 

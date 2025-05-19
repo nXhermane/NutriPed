@@ -1,61 +1,102 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React from "react";
+import "react-native-reanimated";
+import "react-native-get-random-values";
+import { Text } from "@/components/ui/text";
+import { View, ActivityIndicator } from "react-native";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/components/useColorScheme';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { useColorScheme } from "@/components/useColorScheme";
+import {
+  AppStateProvider,
+  DatabaseProvider,
+  InitializationProvider,
+  PediatricAppProvider,
+  useInitialization,
+} from "@context";
+import { EventProvider } from "domain-eventrix/react";
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <GluestackUIProvider mode="light"><RootLayoutNav /></GluestackUIProvider>;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <GluestackUIProvider mode="light"><ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        </Stack>
-      </ThemeProvider></GluestackUIProvider>
+    <GluestackUIProvider mode="dark">
+      <AppStateProvider>
+        <EventProvider>
+          <DatabaseProvider>
+            <PediatricAppProvider>
+              <InitializationProvider>
+                <Main />
+              </InitializationProvider>
+            </PediatricAppProvider>
+          </DatabaseProvider>
+        </EventProvider>
+      </AppStateProvider>
+    </GluestackUIProvider>
   );
 }
+
+function Main() {
+  const {
+    isInitialized,
+    isLoading,
+    progress,
+    currentStage,
+    statusMessage,
+    error,
+    initializeApp,
+  } = useInitialization();
+
+  React.useEffect(() => {
+    if (!isInitialized && !isLoading) {
+      initializeApp();
+    }
+  }, [isInitialized, isLoading]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+        <Text>{statusMessage || "Initialisation en cours..."}</Text>
+        <Text>{`Étape : ${currentStage}`}</Text>
+        <Text>{`Progression : ${progress.toFixed(0)}%`}</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={{ color: "red" }}>{error}</Text>
+        <Text
+          onPress={initializeApp}
+          style={{ textDecorationLine: "underline", marginTop: 10 }}
+        >
+          Réessayer
+        </Text>
+      </View>
+    );
+  }
+
+  if (!isInitialized) {
+    return (
+      <View style={styles.centered}>
+        <Text>L'application n'a pas pu être initialisée.</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.centered}>
+      <Text style={{ textAlign: "center" }}>
+        Bienvenue dans l'application !
+      </Text>
+    </View>
+  );
+}
+
+const styles = {
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  } as const,
+};

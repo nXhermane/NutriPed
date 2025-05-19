@@ -29,6 +29,7 @@ import { IAppetiteTestAppService, IComplicationAppService, IMedicineAppService, 
 import { IUnitService } from "@core/units";
 import { Message, Sex } from "@shared";
 import { PediatricSoftwareDataZipFileArch } from "../constants/PediatricSofWareDataZipFileArch";
+import { sleep } from "../shared";
 export interface InitializationProgress {
    stage: string;
    completed: number;
@@ -153,7 +154,7 @@ export class PediatricSoftwareDataManager {
          this.notifyProgress(stageName, this.currentStep, this.totalSteps, `Processing ${stageName}...`);
          await process();
          this.currentStep++;
-         setTimeout(()=>{},1000)
+         await sleep(1000)
          this.notifyProgress(stageName, this.currentStep, this.totalSteps, `${stageName} completed`);
       } catch (error) {
          this.notifyError(stageName, `Error processing ${stageName}: ${error}`);

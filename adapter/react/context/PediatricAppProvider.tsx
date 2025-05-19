@@ -1,4 +1,4 @@
-import { IEventBus } from "domain-eventrix";
+import { IEventBus } from "@shared";
 import React, { ReactNode } from "react";
 import { DiagnosticContext } from "../../diagnostics";
 import { MedicalRecordContext } from "../../medical_record";

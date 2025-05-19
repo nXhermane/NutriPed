@@ -1,6 +1,11 @@
-import { ArgumentInvalidException, EmptyStringError, Guard, handleError, Result, ValueObject } from "@shared";
-import { isValidExpression } from "smartcal";
-
+import { ValueObject } from "../../common";
+import { isValidCondition } from "./../../../utils";
+import {
+  ArgumentInvalidException,
+  EmptyStringError,
+  handleError,
+} from "./../../../exceptions";
+import { Guard, Result } from "./../../../core";
 export interface IFormula {
    value: string;
    variables: string[];
@@ -8,7 +13,7 @@ export interface IFormula {
 
 export class Formula extends ValueObject<IFormula> {
    protected validate(props: Readonly<IFormula>): void {
-      if (!isValidExpression(props.value)) {
+      if (!isValidCondition(props.value)) {
          throw new ArgumentInvalidException("The formula value is not valid. Please provide a valid formula.");
       }
       if (props.variables.some((variable) => Guard.isEmpty(variable).succeeded)) {
