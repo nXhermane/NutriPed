@@ -147,6 +147,11 @@ export abstract class Entity<EntityProps extends EntityPropsBaseType> {
    */
   public created(): void {}
   /**
+   * @method updated Called after when a Entity is updated
+   * @description In this method you are able to notify a system by domainEvent
+   */
+  public updated(): void {}
+  /**
    * @method delete Called Before paste entity to repo delete method
    */
   public delete(): void {

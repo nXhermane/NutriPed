@@ -9,8 +9,16 @@ import {
   InvalidArgumentFormatError,
 } from "./../../../exceptions";
 export class Time extends ValueObject<string> {
-  constructor(time: string) {
-    super({ _value: time });
+  constructor(time?: string) {
+    if (Guard.isEmpty(time).succeeded) {
+      // Pas de paramètre ou vide → heure actuelle format HH:mm
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      super({ _value: `${hh}:${mm}` });
+    } else {
+      super({ _value: time as string });
+    }
   }
 
   protected validate(props: { _value: string }): void {
@@ -82,7 +90,7 @@ export class Time extends ValueObject<string> {
     return `${hours}:${minutes}`;
   }
 
-  static create(props: string): Result<Time> {
+  static create(props?: string): Result<Time> {
     try {
       const time = new Time(props);
       return Result.ok<Time>(time);

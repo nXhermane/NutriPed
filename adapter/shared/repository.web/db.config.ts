@@ -3,7 +3,7 @@ export const DB_CONFIG = {
    version: 1,
    stores: {
       appetite_test_refs: { keyPath: "id", indexes: ["code"] },
-      complications: { keyPath: "id" , indexes: ["code"] },
+      complications: { keyPath: "id", indexes: ["code"] },
       medicines: { keyPath: "id", indexes: ["code"] },
       milks: { keyPath: "id", indexes: ["code"] },
       orientation_refs: { keyPath: "id", indexes: ["code"] },
@@ -22,6 +22,7 @@ export const DB_CONFIG = {
       medical_records: { keyPath: "id", indexes: ["patientId"] },
       patients: { keyPath: "id" },
       units: { keyPath: "id", indexes: ["code", "tyype"] },
+      reminders: { keyPath: "id" }
    },
 };
 

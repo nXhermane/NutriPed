@@ -1,0 +1,10 @@
+# Ignore artifacts:
+build
+coverage
+android
+ios
+drizzle 
+components
+
+# Ignore all HTML files:
+**/*.html
