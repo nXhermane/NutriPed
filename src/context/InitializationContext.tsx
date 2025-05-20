@@ -17,7 +17,7 @@ import {
   IZipProcessorObserver,
   allowedExtensions,
 } from "@services/ZipProcessor";
-import { CORE_CONFIG } from "../config/core";
+import { CORE_CONFIG } from "@config/core";
 
 const INIT_STATUS_KEY = "app_initialization_status";
 

@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import DataBaseEngine from "@services/ DatabaseEngine/engine";
+import DataBaseEngine from "@services/DatabaseEngine/engine";
 export interface DatabaseContextType {
   db: any | IndexedDBConnection | null;
   dbOpened: boolean;

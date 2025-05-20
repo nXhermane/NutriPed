@@ -5,17 +5,13 @@ import {
 } from "./IGoogleAuthService";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
-import { AUTH_CONFIG } from "@/src/config/auth";
+import { AUTH_CONFIG } from "./../../config/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { encryptData, decryptData } from "./utils";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const discovery = {
-  authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-  tokenEndpoint: "https://oauth2.googleapis.com/token",
-  revocationEndpoint: "https://oauth2.googleapis.com/revoke",
-};
+const discovery = AUTH_CONFIG.discovery
 
 const AUTH_KEY = AUTH_CONFIG.authDataStoreKey;
 const USER_KEY = AUTH_CONFIG.userDataStoreKey;

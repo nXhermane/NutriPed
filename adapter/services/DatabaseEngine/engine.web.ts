@@ -1,4 +1,4 @@
-import { DB_CONFIG, IndexedDBConnection, createStoreIndexes } from "@/adapter";
+import { DB_CONFIG, IndexedDBConnection, createStoreIndexes } from "../../shared";
 import { DatabaseEngine } from "./IDatabaseEngine";
 
 export default class WebDatabaseEngine implements DatabaseEngine {

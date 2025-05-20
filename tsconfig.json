@@ -3,15 +3,15 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-    "@/*": ["./*"],
+      "@/*": ["./*"],
       "@shared": ["./core/shared"],
       "@core/*": ["./core/*"],
       "@adapter": ["./adapter"],
       "@context": ["./src/context"],
       "@screen": ["./src/screens"],
       "@hooks": ["./src/hooks"],
-      "@services/*": ["./src/services/*"],
-      "@config/*":["./src/config/*"],
+      "@services/*": ["./adapter/services/*"],
+       "@config/*":["./adapter/config/*"],
       "tailwind.config": ["./tailwind.config.js"]
     }
   },

@@ -1,4 +1,4 @@
-import { AUTH_CONFIG } from "@/src/config/auth";
+import { AUTH_CONFIG } from "./../../config/auth";
 import {
   AuthData,
   GoogleUserInfo,

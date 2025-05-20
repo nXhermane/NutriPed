@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import GoogleAuthService from "../services/AuthService/GoogleAuthService";
+import GoogleAuthService from "@services/AuthService/GoogleAuthService";
 import {
   GoogleUserInfo,
   AuthData,
-} from "../services/AuthService/IGoogleAuthService";
+} from "@services/AuthService/IGoogleAuthService";
 
 type GoogleAuthContextType = {
   user: GoogleUserInfo | null;
