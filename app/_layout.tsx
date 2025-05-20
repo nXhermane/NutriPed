@@ -9,11 +9,14 @@ import { useColorScheme } from "@/components/useColorScheme";
 import {
   AppStateProvider,
   DatabaseProvider,
+  GoogleAuthProvider,
   InitializationProvider,
   PediatricAppProvider,
   useInitialization,
 } from "@context";
 import { EventProvider } from "domain-eventrix/react";
+import { Button, ButtonText } from "@/components/ui/button";
+import GoogleAuthService from "@services/AuthService/GoogleAuthService";
 
 export default function RootLayout() {
   return (
@@ -21,11 +24,13 @@ export default function RootLayout() {
       <AppStateProvider>
         <EventProvider>
           <DatabaseProvider>
-            <PediatricAppProvider>
-              <InitializationProvider>
-                <Main />
-              </InitializationProvider>
-            </PediatricAppProvider>
+            <GoogleAuthProvider>
+              <PediatricAppProvider>
+                <InitializationProvider>
+                  <Main />
+                </InitializationProvider>
+              </PediatricAppProvider>
+            </GoogleAuthProvider>
           </DatabaseProvider>
         </EventProvider>
       </AppStateProvider>
@@ -82,12 +87,73 @@ function Main() {
       </View>
     );
   }
+  const auth = new GoogleAuthService();
+  const handleLogin = async () => {
+    const success = await auth.login();
+    console.log(success);
+  };
 
   return (
     <View style={styles.centered}>
       <Text style={{ textAlign: "center" }}>
         Bienvenue dans l'application !
       </Text>
+      <Button
+        action={"primary"}
+        variant={"solid"}
+        size={"lg"}
+        isDisabled={false}
+        onPress={handleLogin}
+      >
+        <ButtonText>Login</ButtonText>
+      </Button>
+      <Button
+        action={"negative"}
+        variant={"solid"}
+        size={"lg"}
+        isDisabled={false}
+        onPress={async () => {
+          const logout = await auth.logout();
+          console.log(logout);
+        }}
+      >
+        <ButtonText>Logout</ButtonText>
+      </Button>
+      <Button
+        action={"secondary"}
+        variant={"solid"}
+        size={"lg"}
+        isDisabled={false}
+        onPress={async () => {
+          const user = await auth.getUserInfo();
+          console.log(user);
+        }}
+      >
+        <ButtonText>Get User</ButtonText>
+      </Button>
+      <Button
+        action={"secondary"}
+        variant={"outline"}
+        size={"lg"}
+        isDisabled={false}
+        onPress={async () => {
+          const token = await auth.getTokens();
+          console.log(token);
+        }}
+      >
+        <ButtonText>Get Tokens</ButtonText>
+      </Button>
+      <Button
+        action={"secondary"}
+        variant={"outline"}
+        size={"lg"}
+        isDisabled={false}
+        onPress={async () => {
+          await auth.revokeAccess();
+        }}
+      >
+        <ButtonText>Revoke access</ButtonText>
+      </Button>
     </View>
   );
 }

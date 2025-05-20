@@ -37,3 +37,4 @@ yarn-error.*
 *.tsbuildinfo
 #  yarn 
 yarn.lock 
+src/config/auth/config.ts 

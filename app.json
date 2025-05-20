@@ -35,19 +35,8 @@
       "expo-sqlite",
       "expo-font",
       "expo-background-task",
-      [
-        "expo-notifications",
-        {
-          "icon": "./local/assets/notification_icon.png",
-          "color": "#ffffff",
-          "defaultChannel": "default",
-          "sounds": [
-            "./local/assets/notification_sound.wav",
-            "./local/assets/notification_sound_other.wav"
-          ],
-          "enableBackgroundRemoteNotifications": false
-        }
-      ]
+      "@react-native-google-signin/google-signin",
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true
