@@ -14,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nxhermano.nutriped"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +33,8 @@
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      "expo-font"
+      "expo-font",
+      "expo-background-task"
     ],
     "experiments": {
       "typedRoutes": true

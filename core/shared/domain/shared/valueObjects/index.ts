@@ -11,3 +11,4 @@ export * from "./PhoneNumber";
 export * from "./Contact";
 export * from "./Formula";
 export * from "./Condition";
+export * from "./Time";
