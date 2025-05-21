@@ -1,1 +1,1 @@
-export * from "./ReminderDto"
+export * from "./ReminderDto";

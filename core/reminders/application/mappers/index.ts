@@ -1,1 +1,1 @@
-export * from "./ReminderMapper"
+export * from "./ReminderMapper";
