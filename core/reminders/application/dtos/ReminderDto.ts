@@ -1,13 +1,12 @@
 import { AggregateID, IDateTime } from "@shared";
-import { IReminderAction, ReminderRepeat } from "../../domain";
+import { IReminderAction, ReminderTriggerInputData, ReminderTriggerType } from "../../domain";
 
 export interface ReminderDto {
   id: AggregateID;
   title: string;
   message: string;
-  scheduledTime: IDateTime;
+  trigger: { type: ReminderTriggerType, data: ReminderTriggerInputData[keyof ReminderTriggerInputData] }
   isActive: boolean;
   actions: IReminderAction[];
-  repeat: ReminderRepeat;
   createdAt: IDateTime;
 }

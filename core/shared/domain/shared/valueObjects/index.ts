@@ -13,3 +13,4 @@ export * from "./Formula";
 export * from "./Condition";
 export * from "./Time";
 export * from "./DateTime";
+export * from "./Duration";

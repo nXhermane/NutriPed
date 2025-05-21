@@ -1,7 +1,7 @@
 import { DateTime, formatError, handleError, left, Result, right, UseCase } from "@shared";
 import { UpdateReminderRequest } from "./Request";
 import { UpdateReminderResponse } from "./Response";
-import { Reminder, ReminderAction, ReminderRepository } from "./../../../../domain";
+import { Reminder, ReminderAction, ReminderRepository, ReminderTrigger } from "./../../../../domain";
 
 export class UpdateReminderUseCase implements UseCase<UpdateReminderRequest, UpdateReminderResponse> {
     constructor(private readonly repo: ReminderRepository) { }
@@ -22,11 +22,10 @@ export class UpdateReminderUseCase implements UseCase<UpdateReminderRequest, Upd
         try {
             if (data.title) reminder.updateTitle(data.title)
             if (data.message) reminder.updateMessage(data.message)
-            if (data.repeat) reminder.updateRepeat(data.repeat)
-            if (data.scheduledTime) {
-                const newScheduledTimeRes = DateTime.create(data.scheduledTime)
-                if (newScheduledTimeRes.isFailure) return Result.fail(formatError(newScheduledTimeRes, UpdateReminderUseCase.name))
-                reminder.reschedule(newScheduledTimeRes.val)
+            if (data.trigger) {
+                const triggerResult = ReminderTrigger.create(data.trigger)
+                if(triggerResult.isFailure) return Result.fail(formatError(triggerResult, UpdateReminderUseCase.name))
+                reminder.updateTrigger(triggerResult.val)
             }
             if (data.isActive != undefined) {
                 if (data.isActive) reminder.activate()

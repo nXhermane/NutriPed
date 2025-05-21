@@ -1,5 +1,5 @@
 import { IReminderNotificationService, ReminderNotificationInput, ReminderUpdatedEvent, ReminderUpdatedEventData } from "@/core/reminders";
-import { bindEventHandler, DateTime, DomainEventMessage, EventHandler, EventHandlerExecutionFailed } from "@shared";
+import { bindEventHandler, DomainEventMessage, EventHandler, EventHandlerExecutionFailed } from "@shared";
 
 @DomainEventMessage("On Reminder Updated , Cancel the scheduled notification and make a reschedule.", true)
 export class OnReminderUpdatedScheduleNotificationHandler extends EventHandler<ReminderUpdatedEventData, ReminderUpdatedEvent> {
@@ -17,9 +17,8 @@ export class OnReminderUpdatedScheduleNotificationHandler extends EventHandler<R
                     reminderId: eventData.id,
                     title: eventData.title,
                     message: eventData.message,
-                    scheduledTime: new DateTime(eventData.scheduledTime).toDate(),
+                    trigger: eventData.trigger,
                     hasAction: eventData.actions.length != 0,
-                    repeat: eventData.repeat
                 }
                 await this.reminderNotificationService.scheduleNotification(input)
             }

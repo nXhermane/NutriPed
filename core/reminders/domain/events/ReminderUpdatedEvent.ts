@@ -4,18 +4,17 @@ import {
   DomainEventMessage,
   IDateTime,
 } from "@shared";
-import { ReminderRepeat, IReminderAction } from "../models";
+import { IReminderAction, SerializedReminderTrigger } from "../models";
 
 export interface ReminderUpdatedEventData {
   id: AggregateID;
   title: string;
   message: string;
-  scheduledTime: IDateTime;
+  trigger: SerializedReminderTrigger
   createdAt?: IDateTime;
-  repeat: ReminderRepeat;
   isActive: boolean;
   actions: IReminderAction[];
 }
 
 @DomainEventMessage("Reminder Updated Event", true)
-export class ReminderUpdatedEvent extends DomainEvent<ReminderUpdatedEventData> {}
+export class ReminderUpdatedEvent extends DomainEvent<ReminderUpdatedEventData> { }

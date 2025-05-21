@@ -1,22 +1,43 @@
-import { Reminder } from "@/core/reminders";
+import { Reminder, ReminderTriggerInputData, ReminderTriggerType } from "@/core/reminders";
 import { formatError, InfraMapToDomainError, InfrastructureMapper } from "@shared";
 import { ReminderPersistenceDto } from "../dtos";
 
 export class ReminderInfraMapper implements InfrastructureMapper<Reminder, ReminderPersistenceDto> {
     toPersistence(entity: Reminder): ReminderPersistenceDto {
+        const triggerProps = entity.getTrigger()
+        let triggerData: ReminderTriggerInputData[keyof ReminderTriggerInputData]
+        switch (triggerProps.type) {
+            case ReminderTriggerType.INTERVAL:
+                triggerData = {
+                    every: triggerProps.data.every.unpack()
+                };
+                break;
+            case ReminderTriggerType.DATE_TIME:
+                triggerData = {
+                    scheduled: triggerProps.data.scheduled.unpack(), // IDateTime
+                };
+                break;
+            case ReminderTriggerType.RECURRING:
+                triggerData = {
+                    frequency: triggerProps.data.frequency,
+                    time: triggerProps.data.time.time, // string "HH:mm"
+                    daysOfWeek: triggerProps.data.daysOfWeek,
+                };
+                break;
+            default:
+                throw new Error("Unsupported ReminderTrigger type in toDto()");
+        }
         return {
             id: entity.id as string,
             title: entity.getTitle(),
             message: entity.getMessage(),
-            scheduledTime: entity.getSheduledTime(),
-            reminderCreatedAt: entity.getCreatedAt(),
-            repeat: entity.getRepeat(),
+            trigger: { type: triggerProps.type, data: triggerData },
             isActive: entity.getIsActive(),
             actions: entity.getActions(),
+            reminderCreatedAt: entity.getCreatedAt(),
             createdAt: entity.createdAt,
-            updatedAt: entity.updatedAt,
-
-        }
+            updatedAt: entity.updatedAt
+        };
     }
 
     toDomain(record: ReminderPersistenceDto): Reminder {

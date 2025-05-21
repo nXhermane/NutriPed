@@ -1,15 +1,14 @@
-import { IReminderAction, ReminderRepeat } from "@/core/reminders"
+import { IReminderAction, ReminderTriggerInputData, ReminderTriggerType } from "@/core/reminders"
 import { IDateTime } from "@shared"
 
 export interface ReminderPersistenceDto {
     id: string
     title: string
     message: string
-    scheduledTime: IDateTime
+    trigger: { type: ReminderTriggerType, data: ReminderTriggerInputData[keyof ReminderTriggerInputData] }
     reminderCreatedAt: IDateTime
-    repeat: ReminderRepeat
     isActive: boolean
     actions: IReminderAction[]
-    createdAt: string 
-    updatedAt: string 
+    createdAt: string
+    updatedAt: string
 }

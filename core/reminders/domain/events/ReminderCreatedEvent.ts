@@ -1,13 +1,12 @@
 import { AggregateID, DomainEvent, DomainEventMessage, IDateTime } from "@shared";
-import { IReminderAction, ReminderRepeat } from "../models";
+import { IReminderAction, SerializedReminderTrigger } from "../models";
 
 export interface ReminderCreatedEventData {
   id: AggregateID;
   title: string;
   message: string;
-  scheduledTime: IDateTime;
+  trigger: SerializedReminderTrigger
   createdAt?: IDateTime;
-  repeat: ReminderRepeat;
   isActive: boolean;
   actions: IReminderAction[];
 }
