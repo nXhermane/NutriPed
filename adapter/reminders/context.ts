@@ -1,8 +1,10 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { GenerateUUID, IndexedDBConnection, isWebEnv } from "../shared";
 import { ApplicationMapper, GenerateUniqueId, IEventBus, InfrastructureMapper, UseCase } from "@shared";
-import { CreateReminderRequest, CreateReminderResponse, CreateReminderUseCase, DeleteReminderRequest, DeleteReminderResponse, DeleteReminderUseCase, GetReminderRequest, GetReminderResponse, GetReminderUseCase, IReminderAppService, Reminder, ReminderAppMapper, ReminderAppService, ReminderDto, ReminderRepository, UpdateReminderRequest, UpdateReminderResponse, UpdateReminderUseCase } from "@/core/reminders";
+import { CreateReminderRequest, CreateReminderResponse, CreateReminderUseCase, DeleteReminderRequest, DeleteReminderResponse, DeleteReminderUseCase, GetReminderRequest, GetReminderResponse, GetReminderUseCase, IReminderAppService, IReminderNotificationService, Reminder, ReminderAppMapper, ReminderAppService, ReminderDto, ReminderRepository, UpdateReminderRequest, UpdateReminderResponse, UpdateReminderUseCase } from "@/core/reminders";
 import { ReminderInfraMapper, ReminderPersistenceDto, ReminderRepositoryExpoImpl, ReminderRepositoryWebImpl, reminders } from "./infra";
+import { OnReminderCreatedScheduleNotificationHandler, OnReminderDeletedCanceledNotificationHandler, OnReminderUpdatedScheduleNotificationHandler } from "./subscribers";
+import ReminderNotificationService from "@services/Notification/Notification";
 
 export class ReminderContext {
     private static instance: ReminderContext | null = null
@@ -12,6 +14,7 @@ export class ReminderContext {
     private readonly idGenerator: GenerateUniqueId
     private readonly reminderInfraMapper: InfrastructureMapper<Reminder, ReminderPersistenceDto>
     private readonly reminderRepo: ReminderRepository
+    private readonly reminderNotificationService: IReminderNotificationService
     private readonly reminderAppMapper: ApplicationMapper<Reminder, ReminderDto>
 
 
@@ -21,6 +24,9 @@ export class ReminderContext {
     private readonly deleteReminderUC: UseCase<DeleteReminderRequest, DeleteReminderResponse>
 
     private readonly reminderAppService: IReminderAppService
+    private readonly onCreatedReminderNotifcationHandler: OnReminderCreatedScheduleNotificationHandler
+    private readonly onUpdatedReminderNotifcationHandler: OnReminderUpdatedScheduleNotificationHandler
+    private readonly onDeletdReminderNotifcationHandler: OnReminderDeletedCanceledNotificationHandler
 
 
     constructor(dbConnection: IndexedDBConnection | null, expo: SQLiteDatabase | null, eventBus: IEventBus) {
@@ -40,6 +46,7 @@ export class ReminderContext {
         this.idGenerator = new GenerateUUID()
         this.reminderInfraMapper = new ReminderInfraMapper()
         this.reminderRepo = isWebEnv() ? new ReminderRepositoryWebImpl(this.dbConnection as IndexedDBConnection, this.reminderInfraMapper) : new ReminderRepositoryExpoImpl(this.expo as SQLiteDatabase, this.reminderInfraMapper, reminders, this.eventBus)
+        this.reminderNotificationService = new ReminderNotificationService()
         this.reminderAppMapper = new ReminderAppMapper()
         this.createReminderUC = new CreateReminderUseCase(this.idGenerator, this.reminderRepo)
         this.getReminderUC = new GetReminderUseCase(this.reminderRepo, this.reminderAppMapper)
@@ -54,6 +61,14 @@ export class ReminderContext {
         })
 
 
+
+        // Subscribers 
+        this.onCreatedReminderNotifcationHandler = new OnReminderCreatedScheduleNotificationHandler(this.reminderNotificationService)
+        this.onUpdatedReminderNotifcationHandler = new OnReminderUpdatedScheduleNotificationHandler(this.reminderNotificationService)
+        this.onDeletdReminderNotifcationHandler = new OnReminderDeletedCanceledNotificationHandler(this.reminderNotificationService)
+        this.eventBus.subscribe(this.onCreatedReminderNotifcationHandler)
+        this.eventBus.subscribe(this.onUpdatedReminderNotifcationHandler)
+        this.eventBus.subscribe(this.onDeletdReminderNotifcationHandler)
     }
 
     static init(dbConnection: IndexedDBConnection | null, expo: SQLiteDatabase | null, eventBus: IEventBus) {

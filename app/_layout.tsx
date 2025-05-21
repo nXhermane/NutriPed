@@ -10,6 +10,7 @@ import {
   DatabaseProvider,
   GoogleAuthProvider,
   InitializationProvider,
+  NotificationProvider,
   PediatricAppProvider,
   useInitialization,
 } from "@context";
@@ -33,11 +34,14 @@ export default function RootLayout() {
         <EventProvider>
           <DatabaseProvider>
             <GoogleAuthProvider>
-              <PediatricAppProvider>
-                <InitializationProvider>
-                  <Main />
-                </InitializationProvider>
-              </PediatricAppProvider>
+              <NotificationProvider>
+                <PediatricAppProvider>
+                  <InitializationProvider>
+                    <Main />
+                  </InitializationProvider>
+                </PediatricAppProvider>
+              </NotificationProvider>
+
             </GoogleAuthProvider>
           </DatabaseProvider>
         </EventProvider>

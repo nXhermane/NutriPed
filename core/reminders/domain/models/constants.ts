@@ -7,4 +7,4 @@ export enum RECURRING_FREQUENCY {
   DAILY = 'daily',
   WEEKLY = 'weekly',
 }
-export type Weekday = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
+export enum Weekday { SUN, MON, TUE, WED, THU, FRI, SAT }
