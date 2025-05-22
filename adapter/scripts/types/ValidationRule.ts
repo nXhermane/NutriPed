@@ -1,5 +1,5 @@
 export interface ValidationRule {
-   condition: string;
-   rule: string;
-   variables: string[];
+  condition: string;
+  rule: string;
+  variables: string[];
 }

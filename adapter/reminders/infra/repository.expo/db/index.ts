@@ -1,1 +1,1 @@
-export * from "./reminders.schema"
+export * from "./reminders.schema";

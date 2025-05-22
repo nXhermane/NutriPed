@@ -1,3 +1,4 @@
 import { CreatePropsDto, GrowthReferenceChartDto } from "../../../../dtos";
 
-export type CreateGrowthReferenceChartRequest = CreatePropsDto<GrowthReferenceChartDto>;
+export type CreateGrowthReferenceChartRequest =
+  CreatePropsDto<GrowthReferenceChartDto>;

@@ -1,5 +1,8 @@
-import { GrowthIndicatorRange, StandardShape, ZScoreComputingStrategyType } from "@core/constants";
-
+import {
+  GrowthIndicatorRange,
+  StandardShape,
+  ZScoreComputingStrategyType,
+} from "@core/constants";
 
 export interface CreateIndicatorProps {
   code: string;
@@ -22,7 +25,6 @@ interface CreateIndicatorInterpreter {
   condition: ICondition;
 }
 
-
 export interface CreateAvailableTableProps {
   tableCode: string;
   condition: ICondition;
@@ -41,4 +43,3 @@ export interface IFormula {
   value: string;
   variables: string[];
 }
-

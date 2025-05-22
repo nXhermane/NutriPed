@@ -21,8 +21,8 @@ import { SQLiteDatabase } from "expo-sqlite";
 
 export class UnitContext {
   private static instance: UnitContext | null = null;
-  private readonly dbConnection: IndexedDBConnection | null 
-  private readonly expo: SQLiteDatabase | null 
+  private readonly dbConnection: IndexedDBConnection | null;
+  private readonly expo: SQLiteDatabase | null;
   private readonly eventBus: IEventBus;
   private readonly infraMapper: UnitInfraMapper;
   private readonly repository: UnitRepository;

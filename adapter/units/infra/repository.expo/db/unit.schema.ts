@@ -28,5 +28,4 @@ export const units = sqliteTable("units", {
       "PERCENTILE",
     ],
   }).notNull(),
-  
 });

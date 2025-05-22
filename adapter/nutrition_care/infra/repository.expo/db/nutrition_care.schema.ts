@@ -34,7 +34,7 @@ export const appetite_test_references = sqliteTable(
           weightRange: [number, number];
           sachetRange: [
             APPETITE_TEST_SACHET_FRACTION_PARTITION,
-            APPETITE_TEST_SACHET_FRACTION_PARTITION
+            APPETITE_TEST_SACHET_FRACTION_PARTITION,
           ];
           potRange: [number, number];
         }[]
@@ -117,7 +117,9 @@ export const milks = sqliteTable("milks", {
   condition: text("condition", { mode: "json" })
     .$type<{ value: string; variables: string[] }>()
     .notNull(),
-  recommendedMilkPerDay: text("recommended_milk_per_day", {mode: 'json'}).$type<RecommendedMilkPerDay[]>().notNull(),
+  recommendedMilkPerDay: text("recommended_milk_per_day", { mode: "json" })
+    .$type<RecommendedMilkPerDay[]>()
+    .notNull(),
   recommendationPerRanges: text("recommendation_per_ranges", {
     mode: "json",
   })

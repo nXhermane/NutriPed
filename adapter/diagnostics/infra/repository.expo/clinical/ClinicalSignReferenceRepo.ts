@@ -2,9 +2,7 @@ import {
   ClinicalSignReference,
   ClinicalSignReferenceRepository,
 } from "@core/diagnostics";
-import {
-  EntityBaseRepositoryExpoWithCodeColumn,
-} from "../../../../shared";
+import { EntityBaseRepositoryExpoWithCodeColumn } from "../../../../shared";
 import { ClinicalSignReferencePersistenceDto } from "../..";
 import { clinical_sign_references } from "../db";
 

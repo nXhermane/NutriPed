@@ -1,4 +1,4 @@
 export interface RecommendedTestDto {
-   testName: string;
-   reason: string;
+  testName: string;
+  reason: string;
 }

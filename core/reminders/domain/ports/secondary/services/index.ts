@@ -1,1 +1,1 @@
-export * from "./ReminderNotificationService"
+export * from "./ReminderNotificationService";

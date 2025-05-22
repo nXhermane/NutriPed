@@ -1,8 +1,5 @@
 import { ValueObject, ValueObjectProps } from "./../../common";
-import {
-  InvalidArgumentFormatError,
-  handleError,
-} from "./../../../exceptions";
+import { InvalidArgumentFormatError, handleError } from "./../../../exceptions";
 import { Result } from "./../../../core";
 export class Email extends ValueObject<string> {
   private static isValidEmailFormat(value: string): boolean {
@@ -23,7 +20,8 @@ export class Email extends ValueObject<string> {
       const email = new Email({ _value: value });
       return Result.ok<Email>(email);
     } catch (e: unknown) {
-    return handleError(e)  }
+      return handleError(e);
+    }
   }
 
   toString(): string {

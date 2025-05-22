@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "cc7c5fdf-52d6-4fbf-a6d8-4a89c69fc845",
+  "id": "c6418d57-ad8f-4707-b5bb-ab53a9654965",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "anthropometric_measures": {
@@ -1542,6 +1542,72 @@
         },
         "unit_type": {
           "name": "unit_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "reminders": {
+      "name": "reminders",
+      "columns": {
+        "reminder_id": {
+          "name": "reminder_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_title": {
+          "name": "reminder_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_message": {
+          "name": "reminder_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_trigger": {
+          "name": "reminder_trigger",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_created_at": {
+          "name": "reminder_created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_is_active": {
+          "name": "reminder_is_active",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_actions": {
+          "name": "reminder_actions",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reminder_updated_at": {
+          "name": "reminder_updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

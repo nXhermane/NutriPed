@@ -119,10 +119,10 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
           setStatusMessage(p.message);
           setProgress((p.completed / p.total) * 100);
           if (!initStages.includes(p.stage)) {
-            setInitStages((prev) => [...prev, p.stage]);
+            setInitStages(prev => [...prev, p.stage]);
           }
         },
-        onError: (e) => {
+        onError: e => {
           setError(`${e.stage}: ${e.error}`);
           setStatusMessage("Une erreur est survenue pendant l’initialisation");
         },

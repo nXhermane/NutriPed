@@ -2,7 +2,7 @@ import { AggregateID, DomainEvent, DomainEventMessage } from "@shared";
 
 export interface ReminderDeletedEventData {
   id: AggregateID;
-  isActive: boolean 
+  isActive: boolean;
 }
 
 @DomainEventMessage("Reminder Deleted Event.", true)

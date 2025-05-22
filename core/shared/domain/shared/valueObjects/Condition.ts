@@ -16,7 +16,7 @@ export class Condition extends ValueObject<ICondition> {
       throw new ArgumentInvalidException(
         "The  condition is invalid. Please provide an valid condition."
       );
-    if (props.variables.some((variable) => Guard.isEmpty(variable).succeeded))
+    if (props.variables.some(variable => Guard.isEmpty(variable).succeeded))
       throw new EmptyStringError("The condition variable can't be empty.");
   }
   static create(props: ICondition): Result<Condition> {

@@ -11,7 +11,7 @@ import { encryptData, decryptData } from "./utils";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const discovery = AUTH_CONFIG.discovery
+const discovery = AUTH_CONFIG.discovery;
 
 const AUTH_KEY = AUTH_CONFIG.authDataStoreKey;
 const USER_KEY = AUTH_CONFIG.userDataStoreKey;

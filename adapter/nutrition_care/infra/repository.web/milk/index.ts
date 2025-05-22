@@ -1,1 +1,1 @@
-export * from "./MilkRepository"
+export * from "./MilkRepository";

@@ -1,4 +1,4 @@
 export interface NutrientImpactDto {
-   nutrient: string;
-   effect: "deficiency" | "excess";
+  nutrient: string;
+  effect: "deficiency" | "excess";
 }

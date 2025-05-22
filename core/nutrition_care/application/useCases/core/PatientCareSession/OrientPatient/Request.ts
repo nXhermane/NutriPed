@@ -1,7 +1,5 @@
 import { AggregateID } from "@shared";
 
-
 export type OrientPatientRequest = {
-   patientIdOrPatientCareId: AggregateID;
-   
+  patientIdOrPatientCareId: AggregateID;
 };

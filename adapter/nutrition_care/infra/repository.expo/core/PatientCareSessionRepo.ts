@@ -70,7 +70,7 @@ export class PatientCareSessionRepositoryExpoImpl
     try {
       const persistenceType = this.mapper.toPersistence(entity);
       const exist = await this._exist(entity.id);
-      this.db.transaction(async (tx) => {
+      this.db.transaction(async tx => {
         if (!exist) {
           await tx
             .insert(this.table)
@@ -153,7 +153,7 @@ export class PatientCareSessionRepositoryExpoImpl
     return {
       ...persistenceType,
       currentDailyJournal: persistenceType.currentDailyJournal?.id,
-      dailyJournals: persistenceType.dailyJournals.map((entity) => ({
+      dailyJournals: persistenceType.dailyJournals.map(entity => ({
         id: entity.id,
         date: entity.date,
       })),
@@ -171,7 +171,7 @@ export class PatientCareSessionRepositoryExpoImpl
       record.currentState
     );
     const dailyJournals = await Promise.all(
-      record.dailyJournals.map((value) =>
+      record.dailyJournals.map(value =>
         this.repos.dailyJournalRepo.getById(value.id)
       )
     );

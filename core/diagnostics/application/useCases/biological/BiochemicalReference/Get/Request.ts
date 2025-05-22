@@ -1,6 +1,6 @@
 import { AggregateID } from "@shared";
 
 export type GetBiochemicalReferenceRequest = {
-   id?: AggregateID;
-   code?: string;
+  id?: AggregateID;
+  code?: string;
 };

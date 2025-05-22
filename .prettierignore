@@ -1,10 +1,16 @@
 # Ignore artifacts:
+node_modules/
+.expo/
 build
 coverage
-android
-ios
-drizzle 
-components
-
+android/
+ios/
+drizzle/
+components/
+*.lock
+*.log
+.git/
 # Ignore all HTML files:
 **/*.html
+
+

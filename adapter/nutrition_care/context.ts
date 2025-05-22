@@ -179,8 +179,8 @@ import { SQLiteDatabase } from "expo-sqlite";
 
 export class NutritionCareContext {
   private static instance: NutritionCareContext | null = null;
-  private readonly dbConnection: IndexedDBConnection | null
-  private readonly expo: SQLiteDatabase | null
+  private readonly dbConnection: IndexedDBConnection | null;
+  private readonly expo: SQLiteDatabase | null;
   private readonly idGenerator: GenerateUniqueId;
   private readonly eventBus: IEventBus;
 
@@ -373,7 +373,7 @@ export class NutritionCareContext {
       );
     }
     this.dbConnection = dbConnection;
-    this.expo = expo
+    this.expo = expo;
     this.idGenerator = new GenerateUUID();
     this.eventBus = eventBus;
 
@@ -396,45 +396,103 @@ export class NutritionCareContext {
     );
 
     // Repositories
-    this.appetiteTestRefRepo = isWebEnv() ? new AppetiteTestRefRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.appetiteTestRefInfraMapper
-    ) : new AppetiteTestRefRepositoryExpoImpl(this.expo as SQLiteDatabase, this.appetiteTestRefInfraMapper, appetite_test_references, this.eventBus)
-    this.complicationRepo = isWebEnv() ? new ComplicationRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.complicationInfraMapper
-    ) : new ComplicationRepositoryExpoImpl(this.expo as SQLiteDatabase, this.complicationInfraMapper, complications, this.eventBus)
-    this.medicineRepo = isWebEnv() ? new MedicineRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.medicineInfraMapper
-    ) : new MedicineRepositoryExpoImpl(this.expo as SQLiteDatabase, this.medicineInfraMapper, medicines, this.eventBus)
-    this.milkRepo = isWebEnv() ? new MilkRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.milkInfraMapper
-    ) : new MilkRepositoryExpoImpl(this.expo as SQLiteDatabase, this.milkInfraMapper, milks, this.eventBus)
-    this.orientationRepo = isWebEnv() ? new OrientationReferenceRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.orientationRefInfraMapper
-    ) : new OrientationReferenceRepositoryExpoImpl(this.expo as SQLiteDatabase, this.orientationRefInfraMapper, orientation_references, this.eventBus)
-    this.dailyCareJournalRepo = isWebEnv() ? new DailyCareJournalRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.dailyCareJournalInfraMapper
-    ) : new DailyCareJournalRepositoryExpoImpl(this.expo as SQLiteDatabase, this.dailyCareJournalInfraMapper, daily_care_journals, this.eventBus)
-    this.patientCurrentStateRepo = isWebEnv() ? new PatientCurrentStateRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.patientCurrentStateInfraMapper
-    ) : new PatientCurrentStateRepositoryExpoImpl(this.expo as SQLiteDatabase, this.patientCurrentStateInfraMapper, patient_current_states, this.eventBus)
-    this.patientCareSessionRepo = isWebEnv() ? new PatientCareSessionRepositoryWebImpl(
-      this.dbConnection as IndexedDBConnection,
-      this.patientCareSessionInfraMapper,
-      this.eventBus
-    ) : new PatientCareSessionRepositoryExpoImpl(this.expo as SQLiteDatabase, this.patientCareSessionInfraMapper, patient_care_sessions, this.eventBus, {
-      currentStateRepo: this.patientCurrentStateRepo,
-      dailyJournalRepo: this.dailyCareJournalRepo
-    }, {
-      currentStateMapper: this.patientCurrentStateInfraMapper,
-      dailyJournalRepo: this.dailyCareJournalInfraMapper
-    })
+    this.appetiteTestRefRepo = isWebEnv()
+      ? new AppetiteTestRefRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.appetiteTestRefInfraMapper
+        )
+      : new AppetiteTestRefRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.appetiteTestRefInfraMapper,
+          appetite_test_references,
+          this.eventBus
+        );
+    this.complicationRepo = isWebEnv()
+      ? new ComplicationRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.complicationInfraMapper
+        )
+      : new ComplicationRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.complicationInfraMapper,
+          complications,
+          this.eventBus
+        );
+    this.medicineRepo = isWebEnv()
+      ? new MedicineRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.medicineInfraMapper
+        )
+      : new MedicineRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.medicineInfraMapper,
+          medicines,
+          this.eventBus
+        );
+    this.milkRepo = isWebEnv()
+      ? new MilkRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.milkInfraMapper
+        )
+      : new MilkRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.milkInfraMapper,
+          milks,
+          this.eventBus
+        );
+    this.orientationRepo = isWebEnv()
+      ? new OrientationReferenceRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.orientationRefInfraMapper
+        )
+      : new OrientationReferenceRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.orientationRefInfraMapper,
+          orientation_references,
+          this.eventBus
+        );
+    this.dailyCareJournalRepo = isWebEnv()
+      ? new DailyCareJournalRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.dailyCareJournalInfraMapper
+        )
+      : new DailyCareJournalRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.dailyCareJournalInfraMapper,
+          daily_care_journals,
+          this.eventBus
+        );
+    this.patientCurrentStateRepo = isWebEnv()
+      ? new PatientCurrentStateRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.patientCurrentStateInfraMapper
+        )
+      : new PatientCurrentStateRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.patientCurrentStateInfraMapper,
+          patient_current_states,
+          this.eventBus
+        );
+    this.patientCareSessionRepo = isWebEnv()
+      ? new PatientCareSessionRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.patientCareSessionInfraMapper,
+          this.eventBus
+        )
+      : new PatientCareSessionRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.patientCareSessionInfraMapper,
+          patient_care_sessions,
+          this.eventBus,
+          {
+            currentStateRepo: this.patientCurrentStateRepo,
+            dailyJournalRepo: this.dailyCareJournalRepo,
+          },
+          {
+            currentStateMapper: this.patientCurrentStateInfraMapper,
+            dailyJournalRepo: this.dailyCareJournalInfraMapper,
+          }
+        );
 
     // Domain Services
     this.appetiteTestService = new AppetiteTestService(

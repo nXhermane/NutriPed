@@ -6,7 +6,12 @@
 
 import { Result } from "@shared";
 import { AnthropometricVariableObject } from "../../common";
-import { GrowthReferenceChart, GrowthReferenceTable, GrowthStandard, Indicator } from "../../models";
+import {
+  GrowthReferenceChart,
+  GrowthReferenceTable,
+  GrowthStandard,
+  Indicator,
+} from "../../models";
 
 /**
  * @interface IReferenceSelectionService
@@ -17,20 +22,28 @@ import { GrowthReferenceChart, GrowthReferenceTable, GrowthStandard, Indicator }
  * - Providing standardized chart selection logic
  */
 export interface IReferenceSelectionService {
-   /**
-    * Selects the appropriate growth reference chart for a given anthropometric measurement and indicator.
-    * @param {AnthropometricVariableObject} data - The anthropometric data to be evaluated
-    * @param {Indicator} indicator - The growth indicator to be used for chart selection
-    * @param {GrowthStandard} standard - The growth standard reference to be used
-    * @returns {Promise<Result<GrowthReferenceChart>>} A promise that resolves to a Result containing the selected growth reference chart
-    */
-   selectChartForIndicator(data: AnthropometricVariableObject, indicator: Indicator, standard: GrowthStandard): Promise<Result<GrowthReferenceChart>>;
-   /**
-    * Selects the appropriate growth reference table for a given anthropometric measurement and indicator.
-    * @param {AnthropometricVariableObject} data - The anthropometric data to be evaluated
-    * @param {Indicator} indicator - The growth indicator to be used for table selection
-    * @param {GrowthStandard} standard - The growth standard reference to be used
-    * @returns {Promise<Result<GrowthReferenceTable>>} A promise that resolves to a Result containing the selected growth reference table
-    */
-   selectTableForIndicator(data: AnthropometricVariableObject, indicator: Indicator, standard: GrowthStandard): Promise<Result<GrowthReferenceTable>>;
+  /**
+   * Selects the appropriate growth reference chart for a given anthropometric measurement and indicator.
+   * @param {AnthropometricVariableObject} data - The anthropometric data to be evaluated
+   * @param {Indicator} indicator - The growth indicator to be used for chart selection
+   * @param {GrowthStandard} standard - The growth standard reference to be used
+   * @returns {Promise<Result<GrowthReferenceChart>>} A promise that resolves to a Result containing the selected growth reference chart
+   */
+  selectChartForIndicator(
+    data: AnthropometricVariableObject,
+    indicator: Indicator,
+    standard: GrowthStandard
+  ): Promise<Result<GrowthReferenceChart>>;
+  /**
+   * Selects the appropriate growth reference table for a given anthropometric measurement and indicator.
+   * @param {AnthropometricVariableObject} data - The anthropometric data to be evaluated
+   * @param {Indicator} indicator - The growth indicator to be used for table selection
+   * @param {GrowthStandard} standard - The growth standard reference to be used
+   * @returns {Promise<Result<GrowthReferenceTable>>} A promise that resolves to a Result containing the selected growth reference table
+   */
+  selectTableForIndicator(
+    data: AnthropometricVariableObject,
+    indicator: Indicator,
+    standard: GrowthStandard
+  ): Promise<Result<GrowthReferenceTable>>;
 }

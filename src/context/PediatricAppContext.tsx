@@ -17,20 +17,17 @@ export const PediatricAppContext = createContext<IPediatricAppContext>({});
 
 export interface PediatricAppProviderType {
   children: ReactNode;
+  onLoading?: () => ReactNode;
 }
 
 export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
   children,
+  onLoading = () => null,
 }) => {
   const eventBus = useEventBus();
   const { db, dbOpened } = useDatabase();
 
-  if (!dbOpened)
-    return (
-      <View>
-        <Text>DataBase Not Opened</Text>
-      </View>
-    );
+  if (!dbOpened) return onLoading ? onLoading() : null;
 
   return (
     <PediatricAppContext.Provider value={{}}>

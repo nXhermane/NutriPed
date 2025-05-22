@@ -3,4 +3,10 @@ import { EntityBaseRepositoryExpoWithCodeColumn } from "../../../../shared";
 import { ComplicationPersistenceDto } from "../../dtos";
 import { complications } from "../db";
 
-export class ComplicationRepositoryExpoImpl extends EntityBaseRepositoryExpoWithCodeColumn<Complication,ComplicationPersistenceDto,typeof complications> implements ComplicationRepository {}
+export class ComplicationRepositoryExpoImpl
+  extends EntityBaseRepositoryExpoWithCodeColumn<
+    Complication,
+    ComplicationPersistenceDto,
+    typeof complications
+  >
+  implements ComplicationRepository {}

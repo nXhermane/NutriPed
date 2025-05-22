@@ -11,14 +11,19 @@ import {
   IDateTime,
   Result,
 } from "@shared";
-import { CreateReminderTriggerProps, IReminderAction, IReminderTriggerProps, ReminderAction, ReminderTrigger } from "../valueObject";
+import {
+  CreateReminderTriggerProps,
+  IReminderAction,
+  IReminderTriggerProps,
+  ReminderAction,
+  ReminderTrigger,
+} from "../valueObject";
 
 import {
   ReminderCreatedEvent,
   ReminderDeletedEvent,
   ReminderUpdatedEvent,
 } from "../../events";
-
 
 export interface IReminder extends EntityPropsBaseType {
   title: string;
@@ -45,7 +50,9 @@ export class Reminder extends AggregateRoot<IReminder> {
       throw new ArgumentNotProvidedException("Le titre ne peut pas être vide.");
     }
     if (Guard.isEmpty(this.props.message).succeeded) {
-      throw new ArgumentNotProvidedException("Le message ne peut pas être vide.");
+      throw new ArgumentNotProvidedException(
+        "Le message ne peut pas être vide."
+      );
     }
 
     this._isValid = true;
@@ -60,7 +67,7 @@ export class Reminder extends AggregateRoot<IReminder> {
   }
 
   public getActions(): IReminderAction[] {
-    return this.props.actions.map((action) => action.unpack());
+    return this.props.actions.map(action => action.unpack());
   }
 
   public getTitle(): string {
@@ -103,7 +110,7 @@ export class Reminder extends AggregateRoot<IReminder> {
   }
 
   public removeAction(action: ReminderAction): void {
-    this.props.actions = this.props.actions.filter((a) => a !== action);
+    this.props.actions = this.props.actions.filter(a => a !== action);
   }
 
   public changeActions(actions: ReminderAction[]): void {
@@ -124,7 +131,7 @@ export class Reminder extends AggregateRoot<IReminder> {
         : DateTime.fromDate(new Date());
 
       const triggerResult = ReminderTrigger.create(trigger);
-      const actionsResults = actions.map((a) => ReminderAction.create(a));
+      const actionsResults = actions.map(a => ReminderAction.create(a));
 
       const combinedResult = Result.combine([triggerResult, ...actionsResults]);
       if (combinedResult.isFailure) {
@@ -139,7 +146,7 @@ export class Reminder extends AggregateRoot<IReminder> {
           trigger: triggerResult.val,
           reminderCreatedAt: createdAtDate,
           isActive,
-          actions: actionsResults.map((r) => r.val),
+          actions: actionsResults.map(r => r.val),
         },
       });
 

@@ -1,6 +1,6 @@
 import { AggregateID } from "@shared";
 
 export type GetMedicineDosageRequest = {
-   medicineId: AggregateID;
-   patientWeightInKg: number;
+  medicineId: AggregateID;
+  patientWeightInKg: number;
 };

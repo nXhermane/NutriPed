@@ -67,7 +67,7 @@ export class NutritionalDiagnosticRepositoryExpoImpl
     try {
       const persistenceType = this.mapper.toPersistence(entity);
       const exist = await this._exist(entity.id);
-      this.db.transaction(async (tx) => {
+      this.db.transaction(async tx => {
         if (exist) {
           tx.insert(this.table).values({
             ...persistenceType,

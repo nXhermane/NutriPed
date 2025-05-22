@@ -11,7 +11,7 @@
       "@screen": ["./src/screens"],
       "@hooks": ["./src/hooks"],
       "@services/*": ["./adapter/services/*"],
-       "@config/*":["./adapter/config/*"],
+      "@config/*": ["./adapter/config/*"],
       "tailwind.config": ["./tailwind.config.js"]
     }
   },

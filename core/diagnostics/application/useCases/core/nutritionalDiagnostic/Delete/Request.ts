@@ -1,5 +1,5 @@
-import { AggregateID } from "@shared"
+import { AggregateID } from "@shared";
 
 export type DeleteNutritionalDiagnosticRequest = {
-    nutritionalDiagnosticId: AggregateID
-}
+  nutritionalDiagnosticId: AggregateID;
+};

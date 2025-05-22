@@ -1,7 +1,6 @@
 {
-    "cSpell.words": [
-        "eventrix",
-        "Gluestack",
-        "nchs"
-    ]
+  "cSpell.words": ["eventrix", "Gluestack", "nchs"],
+  "tailwindCSS.experimental.classRegex": [
+    ["tva\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
 }

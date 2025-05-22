@@ -1,7 +1,10 @@
 import { IZipProcessor } from "./IZipProcessor";
 import * as FileSystem from "expo-file-system";
 import { unzip } from "react-native-zip-archive";
-import { IZipProcessorObserver, ZipProgressEvent } from "./ZipProcessorObserver";
+import {
+  IZipProcessorObserver,
+  ZipProgressEvent,
+} from "./ZipProcessorObserver";
 
 class NativeZipProcessor implements IZipProcessor {
   constructor(
@@ -23,11 +26,19 @@ class NativeZipProcessor implements IZipProcessor {
       throw new Error("Téléchargement échoué");
     }
 
-    this.emit({ type: "download", message: "Téléchargement terminé", filePath: download.uri });
+    this.emit({
+      type: "download",
+      message: "Téléchargement terminé",
+      filePath: download.uri,
+    });
 
     this.emit({ type: "extract", message: "Début de l'extraction" });
     await unzip(zipPath, destPath);
-    this.emit({ type: "extract", message: "Extraction terminée", filePath: destPath });
+    this.emit({
+      type: "extract",
+      message: "Extraction terminée",
+      filePath: destPath,
+    });
 
     const map = new Map<string, string>();
     await this.readAll(destPath, map, destPath);
@@ -37,7 +48,11 @@ class NativeZipProcessor implements IZipProcessor {
     return map;
   }
 
-  private async readAll(current: string, map: Map<string, string>, root: string): Promise<void> {
+  private async readAll(
+    current: string,
+    map: Map<string, string>,
+    root: string
+  ): Promise<void> {
     const files = await FileSystem.readDirectoryAsync(current);
     for (const file of files) {
       const fullPath = `${current}${file}`;
@@ -48,14 +63,18 @@ class NativeZipProcessor implements IZipProcessor {
         const content = await FileSystem.readAsStringAsync(fullPath);
         const relativePath = fullPath.replace(root, "");
         map.set(relativePath, content);
-        this.emit({ type: "read", filePath: relativePath, message: `Lecture de ${relativePath}` });
+        this.emit({
+          type: "read",
+          filePath: relativePath,
+          message: `Lecture de ${relativePath}`,
+        });
       }
     }
   }
 
   private isAllowed(path: string): boolean {
     if (this.allowedExtensions.length === 0) return true;
-    return this.allowedExtensions.some((ext) => path.toLowerCase().endsWith(ext));
+    return this.allowedExtensions.some(ext => path.toLowerCase().endsWith(ext));
   }
 
   private emit(event: ZipProgressEvent) {

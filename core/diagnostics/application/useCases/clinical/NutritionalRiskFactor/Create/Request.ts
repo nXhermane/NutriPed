@@ -1,3 +1,4 @@
 import { CreatePropsDto, NutritionalRiskFactorDto } from "../../../../dtos";
 
-export type CreateNutritionalRiskFactorRequest = CreatePropsDto<NutritionalRiskFactorDto>;
+export type CreateNutritionalRiskFactorRequest =
+  CreatePropsDto<NutritionalRiskFactorDto>;

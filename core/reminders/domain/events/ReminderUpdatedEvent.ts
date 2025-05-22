@@ -10,11 +10,11 @@ export interface ReminderUpdatedEventData {
   id: AggregateID;
   title: string;
   message: string;
-  trigger: SerializedReminderTrigger
+  trigger: SerializedReminderTrigger;
   createdAt?: IDateTime;
   isActive: boolean;
   actions: IReminderAction[];
 }
 
 @DomainEventMessage("Reminder Updated Event", true)
-export class ReminderUpdatedEvent extends DomainEvent<ReminderUpdatedEventData> { }
+export class ReminderUpdatedEvent extends DomainEvent<ReminderUpdatedEventData> {}

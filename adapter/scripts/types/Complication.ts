@@ -1,5 +1,5 @@
 export interface ComplicationDto {
-   name: string;
-   code: string;
-   description: string;
+  name: string;
+  code: string;
+  description: string;
 }

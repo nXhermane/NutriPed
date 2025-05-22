@@ -1,4 +1,4 @@
 export interface GlobalDiagnosticDto {
-   code: string;
-   criteriaUsed: string[];
+  code: string;
+  criteriaUsed: string[];
 }

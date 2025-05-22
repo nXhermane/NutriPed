@@ -5,7 +5,9 @@ import { PediatricAppContext } from "./PediatricAppContext";
 export const usePediatricApp = () => {
   const context = useContext(PediatricAppContext);
   if (context === undefined) {
-    throw new Error('usePediatricApp must be used within an PediatricAppProvider');
+    throw new Error(
+      "usePediatricApp must be used within an PediatricAppProvider"
+    );
   }
   return context;
 };

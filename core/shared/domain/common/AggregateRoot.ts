@@ -2,7 +2,7 @@ import { Entity, AggregateID, EntityPropsBaseType } from "./Entity";
 import { DomainEvent } from "./../events";
 
 export abstract class AggregateRoot<
-  EntityProps extends EntityPropsBaseType
+  EntityProps extends EntityPropsBaseType,
 > extends Entity<EntityProps> {
   private _domainEvents: DomainEvent<object>[] = [];
   getID(): AggregateID {

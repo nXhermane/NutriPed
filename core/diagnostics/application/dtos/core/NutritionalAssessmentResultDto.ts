@@ -5,11 +5,11 @@ import { GlobalDiagnosticDto } from "./GlobalDiagnosticDto";
 import { ClinicalNutritionalAnalysisResultDto } from "../clinical";
 
 export interface NutritionalAssessmentResultDto {
-   id: AggregateID;
-   growthIndicatorValues: GrowthIndicatorValueDto[];
-   clinicalAnalysis: ClinicalNutritionalAnalysisResultDto[];
-   biologicalInterpretation: BiologicalAnalysisInterpretationDto[];
-   globalDiagnostics: GlobalDiagnosticDto[];
-   createdAt: string;
-   updatedAt: string;
+  id: AggregateID;
+  growthIndicatorValues: GrowthIndicatorValueDto[];
+  clinicalAnalysis: ClinicalNutritionalAnalysisResultDto[];
+  biologicalInterpretation: BiologicalAnalysisInterpretationDto[];
+  globalDiagnostics: GlobalDiagnosticDto[];
+  createdAt: string;
+  updatedAt: string;
 }

@@ -253,3 +253,14 @@ CREATE TABLE `units` (
 	`unit_base_unit` text(10) NOT NULL,
 	`unit_type` text NOT NULL
 );
+--> statement-breakpoint
+CREATE TABLE `reminders` (
+	`reminder_id` text PRIMARY KEY NOT NULL,
+	`reminder_title` text NOT NULL,
+	`reminder_message` text NOT NULL,
+	`reminder_trigger` text NOT NULL,
+	`reminder_created_at` text NOT NULL,
+	`reminder_is_active` text NOT NULL,
+	`reminder_actions` text NOT NULL,
+	`reminder_updated_at` text NOT NULL
+);

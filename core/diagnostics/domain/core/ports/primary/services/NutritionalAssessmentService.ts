@@ -1,8 +1,11 @@
 import { Result } from "@shared";
-import { PatientDiagnosticData, NutritionalAssessmentResult } from "../../../models";
+import {
+  PatientDiagnosticData,
+  NutritionalAssessmentResult,
+} from "../../../models";
 
 export interface INutritionalAssessmentService {
-    evaluateNutritionalStatus(
-        patientData: PatientDiagnosticData
-    ): Promise<Result<NutritionalAssessmentResult>>;
+  evaluateNutritionalStatus(
+    patientData: PatientDiagnosticData
+  ): Promise<Result<NutritionalAssessmentResult>>;
 }

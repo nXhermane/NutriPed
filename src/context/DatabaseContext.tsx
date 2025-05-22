@@ -26,9 +26,7 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({
   children,
 }) => {
   const [dbOpened, setDbOpened] = useState(false);
-  const [db, setDb] = useState<any | IndexedDBConnection | null>(
-    null
-  );
+  const [db, setDb] = useState<any | IndexedDBConnection | null>(null);
   const engine = new DataBaseEngine();
 
   useEffect(() => {

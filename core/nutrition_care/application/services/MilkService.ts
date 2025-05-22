@@ -7,7 +7,7 @@ import {
   GetMilkRequest,
   GetMilkResponse,
   SuggestMilkRequest,
-  SuggestMilkResponse
+  SuggestMilkResponse,
 } from "../useCases";
 import { MilkDto, MilkSuggestionResultDto } from "../dtos";
 
@@ -20,19 +20,25 @@ export interface MilkServiceUseCases {
 export class MilkAppService implements IMilkAppService {
   constructor(private readonly ucs: MilkServiceUseCases) {}
 
-  async create(req: CreateMilkRequest): Promise<AppServiceResponse<{ id: AggregateID }> | Message> {
+  async create(
+    req: CreateMilkRequest
+  ): Promise<AppServiceResponse<{ id: AggregateID }> | Message> {
     const res = await this.ucs.createUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async get(req: GetMilkRequest): Promise<AppServiceResponse<MilkDto[]> | Message> {
+  async get(
+    req: GetMilkRequest
+  ): Promise<AppServiceResponse<MilkDto[]> | Message> {
     const res = await this.ucs.getUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async suggestMilk(req: SuggestMilkRequest): Promise<AppServiceResponse<MilkSuggestionResultDto> | Message> {
+  async suggestMilk(
+    req: SuggestMilkRequest
+  ): Promise<AppServiceResponse<MilkSuggestionResultDto> | Message> {
     const res = await this.ucs.suggestMilkUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));

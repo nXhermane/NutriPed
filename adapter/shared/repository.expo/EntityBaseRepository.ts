@@ -27,10 +27,10 @@ export interface BaseTableFields {
   createdAt: SQLiteColumn;
   updatedAt: SQLiteColumn;
 }
-export abstract class  EntityBaseRepositoryExpo<
+export abstract class EntityBaseRepositoryExpo<
   DomainEntity extends Entity<EntityPropsBaseType>,
   PersistenceModel extends object,
-  TableSchema extends SQLiteTable & BaseTableFields
+  TableSchema extends SQLiteTable & BaseTableFields,
 > implements Repository<DomainEntity>
 {
   protected readonly db: ExpoSQLiteDatabase;
@@ -66,7 +66,7 @@ export abstract class  EntityBaseRepositoryExpo<
         const domainEvents = entity.getDomainEvents();
         if (domainEvents.length === 0) return;
         await Promise.all(
-          domainEvents.map((event) =>
+          domainEvents.map(event =>
             this.eventBus?.publishAndDispatchImmediate(event)
           )
         );
@@ -170,7 +170,7 @@ export abstract class  EntityBaseRepositoryExpo<
       const domainEvents = entity.getDomainEvents();
       if (domainEvents.length === 0) return;
       await Promise.all(
-        domainEvents.map((event) =>
+        domainEvents.map(event =>
           this.eventBus?.publishAndDispatchImmediate(event)
         )
       );

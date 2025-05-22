@@ -1,2 +1,2 @@
-export * from "./ReminderRepository"
-export * from "./db"
+export * from "./ReminderRepository";
+export * from "./db";

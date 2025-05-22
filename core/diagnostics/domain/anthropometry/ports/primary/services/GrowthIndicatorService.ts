@@ -6,7 +6,11 @@
 
 import { Result, SystemCode } from "@shared";
 import { AnthropometricVariableObject } from "../../../common";
-import { Indicator, AnthropometricMeasure, GrowthIndicatorValue } from "../../../models";
+import {
+  Indicator,
+  AnthropometricMeasure,
+  GrowthIndicatorValue,
+} from "../../../models";
 
 /**
  * @interface IGrowthIndicatorService
@@ -17,8 +21,17 @@ import { Indicator, AnthropometricMeasure, GrowthIndicatorValue } from "../../..
  * - Calculating individual and multiple indicators
  */
 export interface IGrowthIndicatorService {
-   identifyPossibleIndicator(data: AnthropometricVariableObject): Promise<Result<Indicator[]>>;
-   getRequireMeasureForIndicator(indicatorCode: SystemCode): Promise<Result<AnthropometricMeasure[]>>;
-   calculateIndicator(data: AnthropometricVariableObject, indicatorCode: SystemCode): Promise<Result<GrowthIndicatorValue>>;
-   calculateAllIndicators(data: AnthropometricVariableObject): Promise<Result<GrowthIndicatorValue[]>>;
+  identifyPossibleIndicator(
+    data: AnthropometricVariableObject
+  ): Promise<Result<Indicator[]>>;
+  getRequireMeasureForIndicator(
+    indicatorCode: SystemCode
+  ): Promise<Result<AnthropometricMeasure[]>>;
+  calculateIndicator(
+    data: AnthropometricVariableObject,
+    indicatorCode: SystemCode
+  ): Promise<Result<GrowthIndicatorValue>>;
+  calculateAllIndicators(
+    data: AnthropometricVariableObject
+  ): Promise<Result<GrowthIndicatorValue[]>>;
 }

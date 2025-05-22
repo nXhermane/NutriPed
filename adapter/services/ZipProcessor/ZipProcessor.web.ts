@@ -1,6 +1,9 @@
 import { IZipProcessor } from "./IZipProcessor";
 import JSZip from "jszip";
-import { IZipProcessorObserver, ZipProgressEvent } from "./ZipProcessorObserver";
+import {
+  IZipProcessorObserver,
+  ZipProgressEvent,
+} from "./ZipProcessorObserver";
 
 class WebZipProcessor implements IZipProcessor {
   constructor(
@@ -17,7 +20,10 @@ class WebZipProcessor implements IZipProcessor {
     const blob = await response.blob();
     const buffer = await blob.arrayBuffer();
 
-    this.emit({ type: "download", message: "Téléchargement terminé depuis le web" });
+    this.emit({
+      type: "download",
+      message: "Téléchargement terminé depuis le web",
+    });
 
     const zip = await JSZip.loadAsync(buffer);
     const result = new Map<string, string>();
@@ -38,7 +44,7 @@ class WebZipProcessor implements IZipProcessor {
         type: "read",
         filePath: path,
         message: `Lecture de ${path}`,
-        progress: count / fileEntries.length
+        progress: count / fileEntries.length,
       });
     }
 
@@ -49,7 +55,7 @@ class WebZipProcessor implements IZipProcessor {
 
   private isAllowed(path: string): boolean {
     if (this.allowedExtensions.length === 0) return true;
-    return this.allowedExtensions.some((ext) => path.toLowerCase().endsWith(ext));
+    return this.allowedExtensions.some(ext => path.toLowerCase().endsWith(ext));
   }
 
   private emit(event: ZipProgressEvent) {

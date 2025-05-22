@@ -40,7 +40,7 @@ export class Guard {
           message: `The array ${argumentName} is empty`,
         };
       }
-      if (value.every((item) => Guard.isEmpty(item).succeeded)) {
+      if (value.every(item => Guard.isEmpty(item).succeeded)) {
         return {
           succeeded: true,
           message: `One of the values of the table ${argumentName} is empty or undefined or null`,

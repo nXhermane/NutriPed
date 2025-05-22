@@ -8,7 +8,7 @@ import {
   GetOrientationRefResponse,
   OrientationResultDto,
   OrientRequest,
-  OrientResponse
+  OrientResponse,
 } from "../useCases";
 import { OrientationRefDto } from "../dtos";
 
@@ -21,19 +21,25 @@ export interface OrientationServiceUseCases {
 export class OrientationAppService implements IOrientationAppService {
   constructor(private readonly ucs: OrientationServiceUseCases) {}
 
-  async create(req: CreateOrientationRefRequest): Promise<AppServiceResponse<{ id: AggregateID }> | Message> {
+  async create(
+    req: CreateOrientationRefRequest
+  ): Promise<AppServiceResponse<{ id: AggregateID }> | Message> {
     const res = await this.ucs.createUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async get(req: GetOrientationRefRequest): Promise<AppServiceResponse<OrientationRefDto[]> | Message> {
+  async get(
+    req: GetOrientationRefRequest
+  ): Promise<AppServiceResponse<OrientationRefDto[]> | Message> {
     const res = await this.ucs.getUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async orient(req: OrientRequest): Promise<AppServiceResponse<OrientationResultDto> | Message> {
+  async orient(
+    req: OrientRequest
+  ): Promise<AppServiceResponse<OrientationResultDto> | Message> {
     const res = await this.ucs.orientUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));

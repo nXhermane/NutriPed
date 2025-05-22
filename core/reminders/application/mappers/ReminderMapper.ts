@@ -1,23 +1,27 @@
 import { ApplicationMapper, DateTime, IDateTime } from "@/core/shared";
-import { Reminder, ReminderTriggerInputData, ReminderTriggerType } from "../../domain";
+import {
+  Reminder,
+  ReminderTriggerInputData,
+  ReminderTriggerType,
+} from "../../domain";
 import { ReminderDto } from "../dtos";
 
 export class ReminderAppMapper
-  implements ApplicationMapper<Reminder, ReminderDto> {
+  implements ApplicationMapper<Reminder, ReminderDto>
+{
   toResponse(entity: Reminder): ReminderDto {
-    const triggerProps = entity.getTrigger()
-    let triggerData: ReminderTriggerInputData[keyof ReminderTriggerInputData]
+    const triggerProps = entity.getTrigger();
+    let triggerData: ReminderTriggerInputData[keyof ReminderTriggerInputData];
 
     switch (triggerProps.type) {
       case ReminderTriggerType.INTERVAL:
         triggerData = {
-          every: triggerProps.data.every.unpack()
+          every: triggerProps.data.every.unpack(),
         };
         break;
 
       case ReminderTriggerType.DATE_TIME:
         triggerData = {
-
           scheduled: triggerProps.data.scheduled.unpack(), // IDateTime
         };
         break;
@@ -41,7 +45,7 @@ export class ReminderAppMapper
       trigger: { type: triggerProps.type, data: triggerData },
       isActive: entity.getIsActive(),
       actions: entity.getActions(),
-      createdAt: entity.getCreatedAt()
+      createdAt: entity.getCreatedAt(),
     };
   }
 }

@@ -1,6 +1,5 @@
 import { ICondition } from "@shared";
 
-
 export interface OrientationRef {
   name: string;
   code: string;

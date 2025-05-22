@@ -1,11 +1,18 @@
 import { AggregateID, Result } from "@shared";
-import { AnthropometricData, BiologicalValue, ClinicalSignData } from "../../../models";
+import {
+  AnthropometricData,
+  BiologicalValue,
+  ClinicalSignData,
+} from "../../../models";
 
 export interface MeasurementData {
-   anthropometricData: AnthropometricData[];
-   clinicalData: ClinicalSignData[];
-   biologicalData: BiologicalValue[];
+  anthropometricData: AnthropometricData[];
+  clinicalData: ClinicalSignData[];
+  biologicalData: BiologicalValue[];
 }
 export interface MeasurementValidationACL {
-   validate(patientId: AggregateID, measurements: MeasurementData): Promise<Result<boolean>>;
+  validate(
+    patientId: AggregateID,
+    measurements: MeasurementData
+  ): Promise<Result<boolean>>;
 }

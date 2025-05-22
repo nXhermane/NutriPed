@@ -1,6 +1,6 @@
-import { AggregateID } from "@shared"
+import { AggregateID } from "@shared";
 
 export type GetGrowthReferenceTableRequest = {
-    id?: AggregateID
-    code?: string 
-}
+  id?: AggregateID;
+  code?: string;
+};

@@ -1,6 +1,5 @@
 import { ICondition } from "@shared";
 
-
 export enum MilkType {
   F100 = "f100",
   F75 = "f75",

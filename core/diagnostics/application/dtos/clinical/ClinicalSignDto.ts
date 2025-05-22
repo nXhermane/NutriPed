@@ -1,4 +1,4 @@
 export interface ClinicalSignDto<T> {
-   code: string;
-   data: T;
+  code: string;
+  data: T;
 }

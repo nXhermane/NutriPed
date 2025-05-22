@@ -3,5 +3,5 @@ export {
   APPETITE_TEST_CODES,
   APPETITE_TEST_PRODUCT_TYPE,
   APPETITE_TEST_SACHET_FRACTION_PARTITION,
-  ClinicalDataType
+  ClinicalDataType,
 } from "./../../../../constants";

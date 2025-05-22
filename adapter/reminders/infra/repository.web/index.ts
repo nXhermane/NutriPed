@@ -1,1 +1,1 @@
-export * from "./ReminderRepository"
+export * from "./ReminderRepository";

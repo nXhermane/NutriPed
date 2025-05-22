@@ -1,3 +1,3 @@
 import { CreateReminderProps } from "../../../../domain";
 
-export type CreateReminderRequest = CreateReminderProps
+export type CreateReminderRequest = CreateReminderProps;

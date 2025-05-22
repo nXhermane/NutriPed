@@ -45,7 +45,7 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
   const patientContext = PatientContext.init(dbConnection, expo, eventBus);
   const unitContext = UnitContext.init(dbConnection, expo, eventBus);
   const reminderContext = ReminderContext.init(dbConnection, expo, eventBus);
-  
+
   const value: PediatricAppContextType = {
     // Get services from Patient BC
     patientService: patientContext.getService(),

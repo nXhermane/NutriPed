@@ -44,20 +44,20 @@ const appReducer = (state: any, action: { type: any; payload: any }) => {
   }
 };
 
-// Context Type 
+// Context Type
 export interface AppStateContextType extends Record<string, any> {
   setError: (error: string) => void;
   clearError: () => void;
   setLoading: (isLoading: boolean) => void;
   resetState: () => void;
 }
-// Context 
+// Context
 
 export const AppStateContext = createContext<AppStateContextType>(
   {} as AppStateContextType
 );
 
-// Context Provider 
+// Context Provider
 export interface AppStateProviderProps {
   children: ReactNode;
 }

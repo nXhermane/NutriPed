@@ -1,8 +1,8 @@
 import { AggregateID, DomainEvent, DomainEventMessage } from "@shared";
 
 export interface UnitDeletedData {
-   id: AggregateID;
-   code: string;
+  id: AggregateID;
+  code: string;
 }
 
 @DomainEventMessage("Unit Deleted From System", true)

@@ -1,1 +1,1 @@
-export * from "./ComplicationRepository"
+export * from "./ComplicationRepository";

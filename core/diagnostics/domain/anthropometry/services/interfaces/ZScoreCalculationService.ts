@@ -6,7 +6,12 @@
 
 import { Result } from "@shared";
 import { AnthropometricVariableObject } from "../../common";
-import { GrowthReferenceChart, GrowthReferenceTable, GrowthStandard, Indicator } from "../../models";
+import {
+  GrowthReferenceChart,
+  GrowthReferenceTable,
+  GrowthStandard,
+  Indicator,
+} from "../../models";
 
 /**
  * @interface IZScoreCalculationService
@@ -17,18 +22,18 @@ import { GrowthReferenceChart, GrowthReferenceTable, GrowthStandard, Indicator }
  * - Supporting multiple growth standards (WHO, CDC, etc.)
  */
 export interface IZScoreCalculationService {
-   /**
-    * Calculates the z-score for a given anthropometric measurement using reference data.
-    * @param {AnthropometricVariableObject} data - The anthropometric measurements to evaluate
-    * @param {Indicator} indicator - The growth indicator being calculated
-    * @param {T} growthRef - The reference to use for calculations
-    * @param {GrowthStandard} standard - The growth standard being applied
-    * @returns {Promise<Result<number>>} The calculated z-score value
-    */
-   calculateZScore<T extends GrowthReferenceChart | GrowthReferenceTable>(
-      data: AnthropometricVariableObject,
-      indicator: Indicator,
-      growthRef: T,
-      standard: GrowthStandard,
-   ): Promise<Result<number>>;
+  /**
+   * Calculates the z-score for a given anthropometric measurement using reference data.
+   * @param {AnthropometricVariableObject} data - The anthropometric measurements to evaluate
+   * @param {Indicator} indicator - The growth indicator being calculated
+   * @param {T} growthRef - The reference to use for calculations
+   * @param {GrowthStandard} standard - The growth standard being applied
+   * @returns {Promise<Result<number>>} The calculated z-score value
+   */
+  calculateZScore<T extends GrowthReferenceChart | GrowthReferenceTable>(
+    data: AnthropometricVariableObject,
+    indicator: Indicator,
+    growthRef: T,
+    standard: GrowthStandard
+  ): Promise<Result<number>>;
 }

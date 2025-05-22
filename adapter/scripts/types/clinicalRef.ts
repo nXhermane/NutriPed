@@ -1,4 +1,3 @@
-
 import { ICondition } from "@shared";
 import { ClinicalSignData } from "./clinicalSignData";
 

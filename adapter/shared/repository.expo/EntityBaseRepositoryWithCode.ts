@@ -20,7 +20,7 @@ import {
 export abstract class EntityBaseRepositoryExpoWithCodeColumn<
   DomainEntity extends Entity<EntityPropsBaseType>,
   PersistenceModel extends object,
-  TableSchema extends SQLiteTable & BaseTableFields & { code: SQLiteColumn }
+  TableSchema extends SQLiteTable & BaseTableFields & { code: SQLiteColumn },
 > extends EntityBaseRepositoryExpo<
   DomainEntity,
   PersistenceModel,
@@ -62,7 +62,7 @@ export abstract class EntityBaseRepositoryExpoWithCodeColumn<
         .from(this.table)
         .all();
       return entityPersistenceTypes.map(
-        (code) => new SystemCode({ _value: code.code as string })
+        code => new SystemCode({ _value: code.code as string })
       );
     } catch (e: unknown) {
       throw new RepositoryException(

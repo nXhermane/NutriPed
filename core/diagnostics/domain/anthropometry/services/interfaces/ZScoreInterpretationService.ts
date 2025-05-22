@@ -17,12 +17,16 @@ import { Indicator, IndicatorInterpreter } from "../../models";
  * - Considering age and gender-specific thresholds
  */
 export interface IZScoreInterpretationService {
-   /**
-    * Determines the clinical interpretation of a calculated z-score.
-    * @param {AnthropometricVariableObject} data - The anthropometric context data
-    * @param {number} zScore - The calculated z-score value
-    * @param {Indicator} indicator - The indicator being interpreted
-    * @returns {Promise<Result<IndicatorInterpreter>>} The clinical interpretation of the z-score
-    */
-   findInterpretation(data: AnthropometricVariableObject, zScore: number, indicator: Indicator): Promise<Result<IndicatorInterpreter>>;
+  /**
+   * Determines the clinical interpretation of a calculated z-score.
+   * @param {AnthropometricVariableObject} data - The anthropometric context data
+   * @param {number} zScore - The calculated z-score value
+   * @param {Indicator} indicator - The indicator being interpreted
+   * @returns {Promise<Result<IndicatorInterpreter>>} The clinical interpretation of the z-score
+   */
+  findInterpretation(
+    data: AnthropometricVariableObject,
+    zScore: number,
+    indicator: Indicator
+  ): Promise<Result<IndicatorInterpreter>>;
 }

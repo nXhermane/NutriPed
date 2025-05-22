@@ -1,6 +1,6 @@
 import { ICondition } from "../../../domain";
 
 export interface AvailableTableDto {
-   tableCode: string;
-   condition: ICondition;
+  tableCode: string;
+  condition: ICondition;
 }

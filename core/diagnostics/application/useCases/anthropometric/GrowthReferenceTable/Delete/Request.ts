@@ -1,5 +1,5 @@
 import { AggregateID } from "@shared";
 
 export type DeleteGrowthReferenceTableRequest = {
-   id: AggregateID;
+  id: AggregateID;
 };

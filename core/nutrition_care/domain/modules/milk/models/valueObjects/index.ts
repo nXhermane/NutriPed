@@ -1,2 +1,2 @@
-export * from "./RecommendedMilkPerWeightRange"
-export * from "./MilkSuggestionResult"
+export * from "./RecommendedMilkPerWeightRange";
+export * from "./MilkSuggestionResult";
