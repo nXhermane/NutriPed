@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import GoogleAuthService from "@services/AuthService/GoogleAuthService";
 import {
   GoogleUserInfo,
@@ -11,6 +17,7 @@ type GoogleAuthContextType = {
   logout: () => Promise<void>;
   revokeAccess: () => Promise<void>;
   isAuthenticated: () => Promise<boolean>;
+  getUserInfo: () => Promise<GoogleUserInfo | null>;
   tokens: AuthData | null;
 };
 
@@ -56,7 +63,17 @@ export const GoogleAuthProvider: React.FC<GoogleAuthProviderProps> = ({
   const isAuthenticated = async (): Promise<boolean> => {
     return await authService.isAuthenticated();
   };
+  const getUserInfo = async (): Promise<GoogleUserInfo | null> => {
+    return await authService.getUserInfo();
+  };
 
+  useEffect(() => {
+    const init = async () => {
+      const user = await getUserInfo();
+      setUser(user);
+    };
+    init();
+  }, [authService]);
   return (
     <GoogleAuthContext.Provider
       value={{
@@ -66,6 +83,7 @@ export const GoogleAuthProvider: React.FC<GoogleAuthProviderProps> = ({
         logout,
         revokeAccess,
         isAuthenticated,
+        getUserInfo,
       }}
     >
       {children}

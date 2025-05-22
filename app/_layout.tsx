@@ -1,7 +1,6 @@
 import React from "react";
 import "react-native-reanimated";
 import "react-native-get-random-values";
-import { Text } from "@/components/ui/text";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import {
@@ -13,9 +12,12 @@ import {
   PediatricAppProvider,
 } from "@context";
 import { EventProvider } from "domain-eventrix/react";
-import { View } from "@/components/ui/view";
 import { useAppInitialization } from "@hooks";
 import { Box } from "@/components/ui/box";
+import {  Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { onLayoutRootView, appIsReady } = useAppInitialization();
@@ -47,9 +49,11 @@ export default function RootLayout() {
 
 function Route() {
   return (
-    <View>
-      <Text>Bienvenue dans Malnutrix</Text>
-    </View>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
   );
 }
 

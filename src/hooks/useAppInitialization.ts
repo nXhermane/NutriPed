@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 
-SplashScreen.preventAutoHideAsync();
 export const useAppInitialization = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);

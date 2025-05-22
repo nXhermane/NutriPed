@@ -86,7 +86,11 @@ class NativeGoogleAuthService implements IGoogleAuthService {
     return await GoogleSignin.getTokens();
   }
   async isAuthenticated(): Promise<boolean> {
-    return this.getUserInfo() != null;
+    try {
+      return this.getUserInfo() != null;
+    } catch (e: unknown) {
+      return false;
+    }
   }
   async revokeAccess(): Promise<void> {
     await GoogleSignin.revokeAccess();
