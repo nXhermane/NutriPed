@@ -14,8 +14,9 @@ import {
 import { EventProvider } from "domain-eventrix/react";
 import { useAppInitialization } from "@hooks";
 import { Box } from "@/components/ui/box";
-import {  Stack } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { Platform } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,8 +25,9 @@ export default function RootLayout() {
   if (!appIsReady) {
     return null;
   }
+  const gluestackMode = Platform.OS === 'web' ? "dark" : "system";
   return (
-    <GluestackUIProvider mode={"system"}>
+    <GluestackUIProvider mode={gluestackMode}>
       <Box style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <AppStateProvider>
           <EventProvider>

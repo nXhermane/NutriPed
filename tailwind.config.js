@@ -170,9 +170,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        heading: undefined,
-        body: undefined,
-        mono: undefined,
+        heading: "Poppins_600SemiBold",
+        body: "Poppins_400Regular",
+        mono: "Poppins_300Light",
+        light: 'Poppins_300Light',
+        light_italic: "Poppins_300Light_Italic",
         roboto: ["Roboto", "sans-serif"],
       },
       fontWeight: {
