@@ -24,7 +24,7 @@ const imageStyle = tva({
 
 const UIImage = createImage({ Root: RNImage });
 
-type ImageProps = VariantProps<typeof imageStyle> &
+export type ImageProps = VariantProps<typeof imageStyle> &
   React.ComponentProps<typeof UIImage>;
 const Image = React.forwardRef<
   React.ComponentRef<typeof UIImage>,

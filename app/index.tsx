@@ -8,15 +8,12 @@ import { useColorScheme } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { AppConstants } from "@/src/constants";
+import { AppLogo } from "@/components/custom";
 
 export default function Index() {
   const router = useRouter();
   const { user } = useGoogleAuth();
-  const colorScheme = useColorScheme();
-  const logoSource =
-    colorScheme == "dark"
-      ? require("./../assets/images/nutriped.dark.png")
-      : require("./../assets/images/nutriped.ligth.png");
+
   useEffect(() => {
     setTimeout(async () => {
       if (user) {
@@ -28,18 +25,16 @@ export default function Index() {
   }, [user]);
 
   return (
-    <Center className={"bg-white dark:bg-black"} style={{ flex: 1 }}>
-      <Image
-        source={logoSource}
-        alt={AppConstants.app_name + " Logo"}
-        className={"aspect-[320/320] h-60 w-auto"}
-        resizeMode={"contain"}
-      />
+    <Center className={"bg-background-primary"} style={{ flex: 1 }}>
+      <AppLogo className={"aspect-[320/320] h-60 w-auto"} />
       <VStack className={"absolute bottom-16 items-center gap-4"}>
-        <Heading size={"2xl"} className="font-heading">
+        <Heading size={"2xl"} className="font-heading color-typography-primary">
           {AppConstants.app_name}
         </Heading>
-        <Text size={"xs"} className={"font-light_italic"}>
+        <Text
+          size={"xs"}
+          className={"font-light_italic color-typography-primary_light"}
+        >
           {AppConstants.app_version}
         </Text>
       </VStack>

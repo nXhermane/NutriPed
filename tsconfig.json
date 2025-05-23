@@ -13,6 +13,7 @@
       "@constants": ["./src/constants"],
       "@services/*": ["./adapter/services/*"],
       "@config/*": ["./adapter/config/*"],
+      
 
       "tailwind.config": ["./tailwind.config.js"]
     }

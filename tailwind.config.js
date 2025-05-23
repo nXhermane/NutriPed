@@ -27,6 +27,8 @@ module.exports = {
           800: "rgb(var(--color-primary-800)/<alpha-value>)",
           900: "rgb(var(--color-primary-900)/<alpha-value>)",
           950: "rgb(var(--color-primary-950)/<alpha-value>)",
+          c: "rgb(var(--color-c-primary)/<alpha-value>)",
+          c_light: "rgb(var(--color-c-primary-light)/<alpha-value>)",
         },
         secondary: {
           0: "rgb(var(--color-secondary-0)/<alpha-value>)",
@@ -41,6 +43,7 @@ module.exports = {
           800: "rgb(var(--color-secondary-800)/<alpha-value>)",
           900: "rgb(var(--color-secondary-900)/<alpha-value>)",
           950: "rgb(var(--color-secondary-950)/<alpha-value>)",
+          c: "rgb(var(--color-c-secondary)/<alpha-value>)",
         },
         tertiary: {
           50: "rgb(var(--color-tertiary-50)/<alpha-value>)",
@@ -127,6 +130,8 @@ module.exports = {
           white: "#FFFFFF",
           gray: "#D4D4D4",
           black: "#181718",
+          primary: "rgb(var(--color-text-primary)/<alpha-value>)",
+          primary_light: "rgb(var(--color-text-primary-light)/<alpha-value>)",
         },
         outline: {
           0: "rgb(var(--color-outline-0)/<alpha-value>)",
@@ -162,6 +167,8 @@ module.exports = {
           info: "rgb(var(--color-background-info)/<alpha-value>)",
           light: "#FBFBFB",
           dark: "#181719",
+          primary: "rgb(var(--color-background-primary)/<alpha-value>)",
+          secondary: "rgb(var(--color-background-secondary)/<alpha-value>)",
         },
         indicator: {
           primary: "rgb(var(--color-indicator-primary)/<alpha-value>)",
@@ -173,7 +180,7 @@ module.exports = {
         heading: "Poppins_600SemiBold",
         body: "Poppins_400Regular",
         mono: "Poppins_300Light",
-        light: 'Poppins_300Light',
+        light: "Poppins_300Light",
         light_italic: "Poppins_300Light_Italic",
         roboto: ["Roboto", "sans-serif"],
       },
@@ -182,6 +189,7 @@ module.exports = {
       },
       fontSize: {
         "2xs": "10px",
+        "h1": "28px"
       },
       boxShadow: {
         "hard-1": "-2px 2px 8px 0px rgba(38, 38, 38, 0.20)",
