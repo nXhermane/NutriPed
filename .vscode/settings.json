@@ -1,6 +1,12 @@
 {
-  "cSpell.words": ["eventrix", "Gluestack", "nchs"],
+  "cSpell.words": ["eventrix", "Gluestack", "nativewind", "nchs"],
   "tailwindCSS.experimental.classRegex": [
     ["tva\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
-  ]
+  ],
+  "tailwind-class-sorter.classRegex": {
+    "rescript": [
+      "className\\w*?=\\w*(\"[\\s\\S]+?\")|className\\w*?=\\w*?\\{([\\s\\S]+?)\\}",
+      "\"(.+?)\""
+    ]
+  }
 }

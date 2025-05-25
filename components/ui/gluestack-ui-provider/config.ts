@@ -2,6 +2,15 @@
 import { vars } from 'nativewind';
 
 export const config = {
+  breakpoints: {
+      base: 0,
+      xs: 380,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      "2xl": 1536,
+    },
   light: vars({
     '--color-primary-0': '179 179 179',
     '--color-primary-50': '153 153 153',

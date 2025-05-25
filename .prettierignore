@@ -6,7 +6,7 @@ coverage
 android/
 ios/
 drizzle/
-components/
+components/ui
 *.lock
 *.log
 .git/

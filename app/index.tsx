@@ -26,14 +26,15 @@ export default function Index() {
 
   return (
     <Center className={"bg-background-primary"} style={{ flex: 1 }}>
-      <AppLogo className={"aspect-[320/320] h-60 w-auto"} />
-      <VStack className={"absolute bottom-16 items-center gap-4"}>
-        <Heading size={"2xl"} className="font-heading color-typography-primary">
+      <AppLogo className={"aspect-[320/320] h-60"} />
+      <VStack className={"absolute bottom-8 items-center gap-4"}>
+        <Heading className="font-heading text-h1 color-typography-primary">
           {AppConstants.app_name}
         </Heading>
         <Text
-          size={"xs"}
-          className={"font-light_italic color-typography-primary_light"}
+          className={
+            "font-light_italic text-subtitle3 color-typography-primary_light"
+          }
         >
           {AppConstants.app_version}
         </Text>

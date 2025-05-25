@@ -87,7 +87,7 @@ class NativeGoogleAuthService implements IGoogleAuthService {
   }
   async isAuthenticated(): Promise<boolean> {
     try {
-      return this.getUserInfo() != null;
+      return (await this.getUserInfo()) != null;
     } catch (e: unknown) {
       return false;
     }
