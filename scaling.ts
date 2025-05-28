@@ -122,7 +122,7 @@ const scalingPoints = {
   "--shadow-4xl": s(16, 1),
   "--shadow-5xl": s(20, 1.25),
   "--v-spacing-0": vs(0, 0),
-  "--v-spacing-1": ms(4, 0.25),
+  "--v-spacing-1": vs(4, 0.25),
   "--v-spacing-2": vs(8, 0.5),
   "--v-spacing-3": vs(12, 0.75),
   "--v-spacing-4": vs(16, 1),
@@ -131,13 +131,14 @@ const scalingPoints = {
   "--v-spacing-7": vs(28, 1.75),
   "--v-spacing-8": vs(32, 2),
   "--v-spacing-9": vs(36, 2.25),
+  "--v-spacing-10": vs(40, 2.5),
   "--v-spacing-11": vs(44, 2.75),
   "--v-spacing-12": vs(48, 3),
   "--v-spacing-14": vs(56, 3.5),
   "--v-spacing-16": vs(64, 4),
   "--v-spacing-20": vs(80, 5),
-  "--v-spacing-10": vs(40, 2.5),
   "--v-spacing-24": vs(96, 6),
+  "--v-spacing-22": vs(100,6.25),
   "--v-spacing-28": vs(112, 7),
   "--v-spacing-32": vs(128, 8),
   "--v-spacing-36": vs(144, 9),
@@ -151,6 +152,7 @@ const scalingPoints = {
   "--v-spacing-72": vs(288, 18),
   "--v-spacing-80": vs(320, 20),
   "--v-spacing-96": vs(384, 24),
+
 };
 
 export default scalingPoints;

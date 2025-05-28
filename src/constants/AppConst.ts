@@ -1,4 +1,4 @@
 export const AppConstants = {
-  app_name: "Malnutrix",
-  app_version: "Bêta",
+  app_name: "MalNutrix",
+  app_version: "Beta",
 };

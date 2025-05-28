@@ -9,6 +9,7 @@ import {
   InitializationProvider,
   NotificationProvider,
   PediatricAppProvider,
+  ToastProvider,
   UIProvider,
 } from "@context";
 import { EventProvider } from "domain-eventrix/react";
@@ -27,21 +28,23 @@ export default function RootLayout() {
   return (
     <UIProvider>
       <Box style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <AppStateProvider>
-          <EventProvider>
-            <DatabaseProvider>
-              <GoogleAuthProvider>
-                <NotificationProvider>
-                  <PediatricAppProvider>
-                    <InitializationProvider>
-                      <Route />
-                    </InitializationProvider>
-                  </PediatricAppProvider>
-                </NotificationProvider>
-              </GoogleAuthProvider>
-            </DatabaseProvider>
-          </EventProvider>
-        </AppStateProvider>
+        <ToastProvider>
+          <AppStateProvider>
+            <EventProvider>
+              <DatabaseProvider>
+                <GoogleAuthProvider>
+                  <NotificationProvider>
+                    <PediatricAppProvider>
+                      <InitializationProvider>
+                        <Route />
+                      </InitializationProvider>
+                    </PediatricAppProvider>
+                  </NotificationProvider>
+                </GoogleAuthProvider>
+              </DatabaseProvider>
+            </EventProvider>
+          </AppStateProvider>
+        </ToastProvider>
       </Box>
     </UIProvider>
   );

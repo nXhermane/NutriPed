@@ -1,6 +1,7 @@
 import React from "react";
-import { useColorScheme } from "@hooks";
 import { ImageProps, Image } from "../ui/image";
+import { useUI } from "@/src/context";
+
 
 export interface ModeImageProps extends Omit<ImageProps, "source"> {
   sourceDark: ImageProps["source"];
@@ -12,10 +13,10 @@ export const ModeImage: React.FC<ModeImageProps> = ({
   sourceLight,
   ...props
 }) => {
-  const colorScheme = useColorScheme();
+  const {colorMode} = useUI();
   return (
     <Image
-      source={colorScheme == "dark" ? sourceDark : sourceLight}
+      source={colorMode == "dark" ? sourceDark : sourceLight}
       {...props}
     />
   );

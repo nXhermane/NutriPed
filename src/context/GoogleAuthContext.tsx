@@ -10,6 +10,7 @@ import {
   GoogleUserInfo,
   AuthData,
 } from "@services/AuthService/IGoogleAuthService";
+import { useToast } from "./ToastContext";
 
 type GoogleAuthContextType = {
   user: GoogleUserInfo | null;
@@ -35,7 +36,7 @@ export const GoogleAuthProvider: React.FC<GoogleAuthProviderProps> = ({
 }) => {
   const [user, setUser] = useState<GoogleUserInfo | null>(null);
   const [tokens, setTokens] = useState<AuthData | null>(null);
-
+  const toast = useToast();
   const login = async (): Promise<boolean> => {
     const success = await authService.login();
     if (!success) return false;

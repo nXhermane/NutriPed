@@ -44,17 +44,15 @@ class NativeGoogleAuthService implements IGoogleAuthService {
             // Android only, play services not available or outdated
             break;
           default:
-            console.error(
+            throw new Error(
               `[${NativeGoogleAuthService.name}]: Error in native google sign in service related to google.,[Error]: ${error}`
             );
-            return false;
         }
         return false;
       } else {
-        console.error(
+        throw new Error(
           `[${NativeGoogleAuthService.name}]: Error in native google sign in service not related to google.,[Error]: ${error}`
         );
-        return false;
       }
     }
   }
@@ -73,7 +71,7 @@ class NativeGoogleAuthService implements IGoogleAuthService {
         given_name: user.givenName,
         name: user.name,
         picture: user.photo,
-        sub: user.id,
+        sub: user.id
       };
     } catch (e: unknown) {
       console.error(

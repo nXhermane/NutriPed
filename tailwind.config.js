@@ -59,6 +59,7 @@ module.exports = {
       "v-14": "var(--v-spacing-14)",
       "v-16": "var(--v-spacing-16)",
       "v-20": "var(--v-spacing-20)",
+      "v-22": "var(--v-spacing-22)",
       "v-24": "var(--v-spacing-24)",
       "v-28": "var(--v-spacing-28)",
       "v-32": "var(--v-spacing-32)",
@@ -73,6 +74,7 @@ module.exports = {
       "v-72": "var(--v-spacing-72)",
       "v-80": "var(--v-spacing-80)",
       "v-96": "var(--v-spacing-96)",
+
     },
     // borderWidth: {
     //   xs: "var(--border-width-xs)",

@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["eventrix", "Gluestack", "nativewind", "nchs"],
+  "cSpell.words": [
+    "eventrix",
+    "Gluestack",
+    "nativewind",
+    "nchs",
+    "Nutrix",
+    "Pressable"
+  ],
   "tailwindCSS.experimental.classRegex": [
     ["tva\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],

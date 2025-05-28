@@ -13,16 +13,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { VStack } from "@/components/ui/vstack";
 import Swiper from "react-native-web-swiper";
 import { Divider } from "@/components/ui/divider";
-import { useColorScheme, Image as RNImage, View } from "react-native";
-import { isMobile, rnS, rnVs, sPx, vsPx } from "@/scaling";
-import { colorScheme } from "react-native-css-interop";
+import { useColorScheme, Image as RNImage } from "react-native";
+import { isMobile, rnS, rnVs } from "@/scaling";
+import { Pressable } from "@/components/ui/pressable";
+import { Icon, InfoIcon } from "@/components/ui/icon";
 
 export default function Layout() {
-  const { user, login } = useGoogleAuth();
-  const [onLogin, setOnLogin] = useState<boolean>(false);
+  const { user } = useGoogleAuth();
   const router = useRouter();
   const swiperRef = useRef<Swiper>(null);
-  const colorScheme = useColorScheme();
   const [hideNextBtn, setHideNextBtn] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,13 +54,16 @@ export default function Layout() {
               dotProps: {
                 containerStyle: {},
               },
-              DotComponent: ({ isActive }) => {
+              DotComponent: ({ isActive, onPress }) => {
                 return (
-                  <Box
+                  <Pressable
+                    onPress={onPress}
                     {...{
-                      className: isActive ? "h-2 w-2 rounded-full bg-black dark:bg-white ": "h-2 w-2 rounded-full bg-slate-400"
+                      className: isActive
+                        ? "h-2 w-2 rounded-full bg-black dark:bg-white "
+                        : "h-2 w-2 rounded-full bg-slate-400",
                     }}
-                  ></Box>
+                  ></Pressable>
                 );
               },
               dotsWrapperStyle: {
@@ -94,9 +96,9 @@ export default function Layout() {
 const OnBoardingScreenHeader = () => {
   return (
     <Box className={`h-v-14 w-full`}>
-      <HStack className={"flex-1 items-center justify-start pt-v-4"}>
-        <AppLogo className={"w-14"} />
-        <Heading className={"mr-3 text-3xl color-typography-primary"}>
+      <HStack className={"flex-1 items-center justify-start pt-v-4 pl-4 gap-3"}>
+        <AppLogo className={"h-v-8 w-4"} />
+        <Heading className={"mr-3 text-2xl color-typography-primary"}>
           {AppConstants.app_name}
         </Heading>
       </HStack>
@@ -154,20 +156,27 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
 };
 
 const OnBoardingLoginScreen = () => {
-  const { user, login } = useGoogleAuth();
+  const { login } = useGoogleAuth();
   const [onLogin, setOnLogin] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const colorScheme = useColorScheme();
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setOnLogin(true);
-    const success = await login();
-    if (success) {
-      router.replace("./../home");
-    } else {
-      setOnLogin(false);
-      return;
-    }
+    setError(null);
+    login()
+      .then(success => {
+        if (success) {
+          router.replace("./../home");
+        }
+      })
+      .catch((e: Error) => {
+        setError(e.message);
+      })
+      .finally(() => {
+        setOnLogin(false);
+      });
   };
   return (
     <VStack className={"native:pt-v-12 items-center gap-v-3"}>
@@ -217,6 +226,18 @@ const OnBoardingLoginScreen = () => {
             Se Connecter avec Google
           </ButtonText>
         </Button>
+        {error && (
+          <Box className={"android:w-80 m-0 p-0 flex-row gap-3 items-center "}>
+            <Icon as={InfoIcon} className={"text-error-700"}  />
+            <Text
+              className={"text-2xs text-error-700 w-72"}
+              numberOfLines={2}
+            >
+              {error}
+            </Text>
+          </Box>
+        )}
+
         <VStack className={"w-full items-center gap-3"}>
           <Divider orientation={"horizontal"} className={"h-[1px] w-56"} />
           <Text className={"font-light text-xs text-typography-primary_light"}>

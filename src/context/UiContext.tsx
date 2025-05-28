@@ -11,8 +11,8 @@ import variables from "@/scaling";
 import { vars } from "nativewind";
 import { View } from "react-native";
 export interface UIContextType {
-  colorMode: "system" | "dark" | "light";
-  handleColorMode: (value?: "dark" | "light" | "system") => void;
+  colorMode: | "dark" | "light";
+  handleColorMode: (value?: "dark" | "light") => void;
 }
 
 export const UIContext = createContext<UIContextType>({} as UIContextType);
@@ -22,12 +22,12 @@ export interface UIContextProviderProps {
 }
 
 export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
-  const [colorMode, setColorMode] = useState<"dark" | "light" | "system">(
-    "system"
+  const [colorMode, setColorMode] = useState<"dark" | "light" >(
+    "dark"
   );
 
   const generatedVars = useMemo(() => vars(variables), [variables]);
-  const handleColorMode = (value?: "dark" | "system" | "light") => {
+  const handleColorMode = (value?: "dark"| "light") => {
     setColorMode(prev => {
       if (value) {
         return value;
