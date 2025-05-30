@@ -20,7 +20,7 @@ import { View } from "@/components/ui/view";
 export default function Layout() {
   const { user } = useGoogleAuth();
   useEffect(() => {
-   if (user == null) router.replace("./../");
+    if (user == null) router.replace("./../");
   }, [user]);
   return (
     <Tabs>

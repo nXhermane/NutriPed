@@ -96,7 +96,7 @@ export default function Layout() {
 const OnBoardingScreenHeader = () => {
   return (
     <Box className={`h-v-14 w-full`}>
-      <HStack className={"flex-1 items-center justify-start pt-v-4 pl-4 gap-3"}>
+      <HStack className={"flex-1 items-center justify-start gap-3 pl-4 pt-v-4"}>
         <AppLogo className={"h-v-8 w-4"} />
         <Heading className={"mr-3 text-2xl color-typography-primary"}>
           {AppConstants.app_name}
@@ -227,12 +227,9 @@ const OnBoardingLoginScreen = () => {
           </ButtonText>
         </Button>
         {error && (
-          <Box className={"android:w-80 m-0 p-0 flex-row gap-3 items-center "}>
-            <Icon as={InfoIcon} className={"text-error-700"}  />
-            <Text
-              className={"text-2xs text-error-700 w-72"}
-              numberOfLines={2}
-            >
+          <Box className={"android:w-80 m-0 flex-row items-center gap-3 p-0"}>
+            <Icon as={InfoIcon} className={"text-error-700"} />
+            <Text className={"w-72 text-2xs text-error-700"} numberOfLines={2}>
               {error}
             </Text>
           </Box>

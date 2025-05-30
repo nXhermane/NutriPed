@@ -17,6 +17,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@expo-google-fonts/poppins": "^0.3.1",
     "@expo/html-elements": "0.4.2",
     "@expo/vector-icons": "^14.1.0",
@@ -78,6 +79,7 @@
     "expo-web-browser": "~14.1.6",
     "jszip": "^3.10.1",
     "lucide-react-native": "^0.511.0",
+    "moti": "^0.30.0",
     "nativewind": "^4.1.23",
     "react": "19.0.0",
     "react-dom": "19.0.0",

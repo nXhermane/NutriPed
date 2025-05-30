@@ -40,7 +40,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
       duration: 30000,
       containerStyle: {
         width: "100%",
-        backgroundColor: 'yellow'
+        backgroundColor: "yellow",
       },
       render: ({ id }) => <SuccessToast id={id} />,
     });
@@ -69,11 +69,17 @@ export interface SuccessToastProps {
 export const SuccessToast: React.FC<SuccessToastProps> = ({ id }) => {
   const uniqueToastId = "toast-" + id;
   return (
-    <Box nativeID={id} style={{
+    <Box
+      nativeID={id}
+      style={{
         borderRadius: 20,
-        width: '100%',
-        backgroundColor: 'red'
-    }}className={"h-20 w-[375px] border rounded-3xl rounded-2xl bg-red-500 dark:bg-red-700"}>
+        width: "100%",
+        backgroundColor: "red",
+      }}
+      className={
+        "h-20 w-[375px] rounded-2xl rounded-3xl border bg-red-500 dark:bg-red-700"
+      }
+    >
       <HStack>
         <Icon as={CheckIcon} className={"text-success-400"} />
         <Text className={"text-red-700"}>Hello This my personal toast</Text>

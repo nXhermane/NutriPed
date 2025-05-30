@@ -18,4 +18,5 @@ function useWebColorScheme() {
   return theme;
 }
 
-export const useColorScheme =  Platform.OS === "web" ? useWebColorScheme : useColorSchemeRN;
+export const useColorScheme =
+  Platform.OS === "web" ? useWebColorScheme : useColorSchemeRN;

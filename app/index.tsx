@@ -15,9 +15,9 @@ export default function Index() {
   useEffect(() => {
     setTimeout(async () => {
       if (user) {
-      router.replace("./home");
+        router.replace("./home");
       } else {
-      router.replace("./onboarding");
+        router.replace("./onboarding");
       }
     }, 2000);
   }, [user]);

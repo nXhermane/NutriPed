@@ -12,14 +12,18 @@ export interface SessionHeaderProps {
 export const SessionHeader: React.FC<SessionHeaderProps> = ({
   actionName,
   title,
-  onActionPress = ()=> {},
+  onActionPress = () => {},
 }) => {
   return (
-    <HStack className={"justify-between items-center"}>
-      <Heading className={"text-xl text-typography-primary font-h2"}>{title}</Heading>
+    <HStack className={"items-center justify-between"}>
+      <Heading className={"font-h2 text-xl text-typography-primary"}>
+        {title}
+      </Heading>
       {actionName && (
         <Pressable onPress={onActionPress}>
-          <Text className={"text-sm font-light text-secondary-c"}>{actionName}</Text>
+          <Text className={"font-light text-sm text-secondary-c"}>
+            {actionName}
+          </Text>
         </Pressable>
       )}
     </HStack>

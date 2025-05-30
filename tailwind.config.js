@@ -29,6 +29,7 @@ module.exports = {
       14: "var(--spacing-14)",
       16: "var(--spacing-16)",
       20: "var(--spacing-20)",
+      22: "var(--spacing-22)",
       24: "var(--spacing-24)",
       28: "var(--spacing-28)",
       32: "var(--spacing-32)",
@@ -74,7 +75,6 @@ module.exports = {
       "v-72": "var(--v-spacing-72)",
       "v-80": "var(--v-spacing-80)",
       "v-96": "var(--v-spacing-96)",
-
     },
     // borderWidth: {
     //   xs: "var(--border-width-xs)",
@@ -300,7 +300,7 @@ module.exports = {
         h1: ["var(--fs-3xl)", { lineHeight: "var(--lh-3xl)" }],
         h2: ["var(--fs-2xl)", { lineHeight: "var(--lh-2xl)" }],
         h3: ["var(--fs-xl)", { lineHeight: "var(--lh-xl)" }],
-        h4:  ["var(--fs-base)", { lineHeight: "var(--lh-base)" }],
+        h4: ["var(--fs-base)", { lineHeight: "var(--lh-base)" }],
         subtitle0: ["var(--fs-lg)", { lineHeight: "var(--lh-lg)" }],
         subtitle1: ["var(--fs-base)", { lineHeight: "var(--lh-base)" }],
         subtitle2: ["var(--fs-sm)", { lineHeight: "var(--lh-sm)" }],

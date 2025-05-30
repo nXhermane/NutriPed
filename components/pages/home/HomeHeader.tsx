@@ -25,7 +25,7 @@ export function HomeHeader() {
     >
       <HStack className={"items-center gap-3 pl-4"}>
         <AppLogo className={"h-8 w-4"} />
-        <Text className={" font-h2 text-xl text-typography-primary"}>
+        <Text className={"font-h2 text-xl text-typography-primary"}>
           {AppConstants.app_name}
         </Text>
       </HStack>

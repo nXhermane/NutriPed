@@ -82,6 +82,7 @@ const scalingPoints = {
   "--spacing-16": s(64, 4),
   "--spacing-20": s(80, 5),
   "--spacing-24": s(96, 6),
+  "--spacing-22": s(100, 6.25),
   "--spacing-28": s(112, 7),
   "--spacing-32": s(128, 8),
   "--spacing-36": s(144, 9),
@@ -138,7 +139,7 @@ const scalingPoints = {
   "--v-spacing-16": vs(64, 4),
   "--v-spacing-20": vs(80, 5),
   "--v-spacing-24": vs(96, 6),
-  "--v-spacing-22": vs(100,6.25),
+  "--v-spacing-22": vs(100, 6.25),
   "--v-spacing-28": vs(112, 7),
   "--v-spacing-32": vs(128, 8),
   "--v-spacing-36": vs(144, 9),
@@ -152,7 +153,6 @@ const scalingPoints = {
   "--v-spacing-72": vs(288, 18),
   "--v-spacing-80": vs(320, 20),
   "--v-spacing-96": vs(384, 24),
-
 };
 
 export default scalingPoints;

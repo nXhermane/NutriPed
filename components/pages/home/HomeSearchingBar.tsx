@@ -2,13 +2,13 @@ import { Box } from "@/components/ui/box";
 import { Icon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Search } from "lucide-react-native";
-import React, {  } from "react";
+import React from "react";
 
 export function HomeSearchingBar() {
   return (
     <Box>
       <Input
-        className={`rounded-xl border-typography-primary_light/60 bg-background-secondary data-[focus=true]:border-primary-c`}
+        className={`rounded-xl border-typography-primary_light/60 border-[0.2px] bg-background-secondary data-[focus=true]:border-primary-c`}
       >
         <InputSlot className={"pl-3"}>
           <InputIcon

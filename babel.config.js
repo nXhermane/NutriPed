@@ -22,6 +22,8 @@ module.exports = function (api) {
         },
       ],
       ["inline-import", { extensions: [".sql"] }],
+      "@babel/proposal-export-namespace-from",
+      "react-native-reanimated/plugin",
     ],
   };
 };

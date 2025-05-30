@@ -24,7 +24,9 @@ const INIT_STATUS_KEY = "app_initialization_status";
 export interface InitializationContextType {
   isInitialized: boolean;
   isLoading: boolean;
+  phase: string | null;
   error: string | null;
+  state: "in_process" | "completed" | "error";
   progress: number; // 0 à 100
   currentStage: string;
   statusMessage: string;
@@ -50,12 +52,15 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [progress, setProgress] = useState<number>(0);
   const [currentStage, setCurrentStage] = useState<string>("");
   const [initStages, setInitStages] = useState<string[]>([]);
   const [statusMessage, setStatusMessage] = useState<string>("");
-
+  const [state, setState] = useState<"in_process" | "completed" | "error">(
+    "in_process"
+  );
+  const [currentPhase, setCurrentPhase] = useState<null | string>(null);
+  const [] = useState("");
   useEffect(() => {
     const checkStatus = async () => {
       try {
@@ -81,19 +86,24 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
     try {
       const observer: IZipProcessorObserver = {
         onProgress(event) {
+          setState("in_process");
           setCurrentStage(event.type);
           setStatusMessage(event.message as string);
           sleep(100);
           console.log(`[Zip:${event.type}] ${event.message}`);
           if (event.progress !== undefined) {
-            console.log(
-              `Progression ZIP: ${(event.progress * 100).toFixed(0)}%`
-            );
+            const zipProgress = Number((event.progress * 100).toFixed(0));
+            console.log(`Progression ZIP: ${zipProgress}%`);
             setProgress(event.progress * 100);
+            if (zipProgress === 100) {
+              setState("completed");
+            }
           }
         },
       };
+
       const processor = new ZipProcessor(allowedExtensions, observer);
+      setCurrentPhase("Phase de téléchargement");
       const zipFileData = await processor.load(CORE_CONFIG.pediatricDataZipUrl);
 
       const pediatricDataManager = new PediatricSoftwareDataManager({
@@ -115,27 +125,34 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
 
       pediatricDataManager.addObserver({
         onProgress: (p: InitializationProgress) => {
+          const initProgress = Number(
+            ((p.completed / p.total) * 100).toFixed(0)
+          );
           setCurrentStage(p.stage);
           setStatusMessage(p.message);
-          setProgress((p.completed / p.total) * 100);
+          setProgress(initProgress);
           if (!initStages.includes(p.stage)) {
             setInitStages(prev => [...prev, p.stage]);
           }
+          setState("in_process");
         },
         onError: e => {
           setError(`${e.stage}: ${e.error}`);
+          setState("error");
           setStatusMessage("Une erreur est survenue pendant l’initialisation");
         },
         onComplete: async () => {
           await AsyncStorage.setItem(INIT_STATUS_KEY, "completed");
           setIsInitialized(true);
+          setState("completed");
           setStatusMessage("Initialisation terminée avec succès !");
         },
       });
-      await pediatricDataManager.initialize(
-        pediatricDataManager.prepareData(zipFileData)
-      );
+      const preparedData = pediatricDataManager.prepareData(zipFileData);
+      setCurrentPhase("Phase de construction");
+      await pediatricDataManager.initialize(preparedData);
     } catch (err: unknown) {
+      setState("error");
       setError(`Erreur d'initialisation: ${(err as Error).message}`);
       setStatusMessage("Une erreur est survenue");
     } finally {
@@ -158,6 +175,8 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
         isInitialized,
         isLoading,
         error,
+        phase: currentPhase,
+        state,
         progress,
         currentStage,
         statusMessage,

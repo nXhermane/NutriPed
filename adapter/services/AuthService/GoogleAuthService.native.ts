@@ -71,7 +71,7 @@ class NativeGoogleAuthService implements IGoogleAuthService {
         given_name: user.givenName,
         name: user.name,
         picture: user.photo,
-        sub: user.id
+        sub: user.id,
       };
     } catch (e: unknown) {
       console.error(
