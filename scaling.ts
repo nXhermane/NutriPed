@@ -96,6 +96,7 @@ const scalingPoints = {
   "--spacing-72": s(288, 18),
   "--spacing-80": s(320, 20),
   "--spacing-96": s(384, 24),
+  
   "--border-radius-xs": s(4, 0.25),
   "--border-radius-sm": s(6, 0.375),
   "--border-radius-base": s(8, 0.5),

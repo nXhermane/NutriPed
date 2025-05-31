@@ -24,7 +24,7 @@ export default function Home() {
     }
   }, []);
   return (
-    <Box className={"h-v-20 flex-1 bg-background-primary"}>
+    <Box className={"flex-1 bg-background-primary"}>
       <HomeHeader />
       <ScrollView
         contentContainerClassName="px-4 gap-v-4 py-v-3"
@@ -33,7 +33,7 @@ export default function Home() {
         <GreetingSession />
         <HomeSearchingBar />
         <QuickAccessSession />
-        <LastPatientsSession />
+        <LastPatientsSession useMoked={true} />
         <NextReminderSession />
         <InitAppBottomSheet
           showInitializationSheet={showInitializationSheet}

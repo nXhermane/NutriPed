@@ -133,6 +133,7 @@ module.exports = {
           950: "rgb(var(--color-primary-950)/<alpha-value>)",
           c: "rgb(var(--color-c-primary)/<alpha-value>)",
           c_light: "rgb(var(--color-c-primary-light)/<alpha-value>)",
+          border: "rgb(var(--color-border-primary)/<alpha-value>)",
         },
         secondary: {
           0: "rgb(var(--color-secondary-0)/<alpha-value>)",
@@ -287,7 +288,7 @@ module.exports = {
         h1: "Poppins_700Bold",
         h2: "Poppins_600SemiBold",
         h3: "Poppins_600SemiBold",
-        h4: "Poppins_600SemiBold",
+        h4: "Poppins_500Medium",
         light: "Poppins_300Light",
         light_italic: "Poppins_300Light_Italic",
         roboto: ["Roboto", "sans-serif"],

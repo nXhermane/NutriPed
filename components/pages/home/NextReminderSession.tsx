@@ -20,9 +20,9 @@ export const NextReminderSession: React.FC<NextReminderSessionProps> = ({
 }) => {
   const nextReminder = useMoked
     ? {
-      dateAtString: "Today at 10:00 AM",
-      title: "Nutrition Follow-up : Lucas",
-    }
+        dateAtString: "Today at 10:00 AM",
+        title: "Nutrition Follow-up : Lucas",
+      }
     : null;
   return (
     <VStack>
@@ -35,7 +35,10 @@ export const NextReminderSession: React.FC<NextReminderSessionProps> = ({
       />
       <Box className={"gap-3 pt-4"}>
         {nextReminder === null ? (
-          <SessionEmpty message={"Aucun rappel à venir."} iconName={"BellOff"} />
+          <SessionEmpty
+            message={"Aucun rappel à venir."}
+            iconName={"BellOff"}
+          />
         ) : (
           <ReminderCard
             title={nextReminder?.title}

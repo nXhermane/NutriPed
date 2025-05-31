@@ -170,6 +170,7 @@ export const config = {
     '--color-c-secondary': '33, 150, 243',
     '--color-text-primary': '51, 51, 51',
     '--color-text-primary-light': '102, 102, 102',
+     '--color-border-primary': '0,0,0'
   }),
   dark: vars({
     '--color-primary-0': '166 166 166',
@@ -329,6 +330,7 @@ export const config = {
     '--color-c-primary-light': '76, 175, 80',
     '--color-c-secondary': '100, 181, 246',
     '--color-text-primary': '224, 224, 224',
-    '--color-text-primary-light': '176, 176, 176'
+    '--color-text-primary-light': '176, 176, 176',
+    '--color-border-primary': '255,255,255'
   }),
 };

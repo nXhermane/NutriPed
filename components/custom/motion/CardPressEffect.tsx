@@ -5,6 +5,7 @@ import React, { useState } from "react";
 export interface CardPressEffectProps extends IPressableProps {
   scaled?: boolean;
   translate?: "x" | "y";
+  
 }
 
 export const CardPressEffect: React.FC<CardPressEffectProps> = ({
@@ -27,7 +28,7 @@ export const CardPressEffect: React.FC<CardPressEffectProps> = ({
         ...(translate === "y" && { translateY: 0 }),
       }}
       animate={{
-        ...(scaled && { scale: pressed ? 1.1 : 1 }),
+        ...(scaled && { scale: pressed ? 1.02 : 1 }),
         ...(translate === "x" && { translateX: pressed ? 5 : 0 }),
         ...(translate === "y" && { translateY: pressed ? -4 : 0 }),
       }}

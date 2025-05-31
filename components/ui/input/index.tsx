@@ -101,7 +101,7 @@ const inputFieldStyle = tva({
   },
 });
 
-type IInputProps = React.ComponentProps<typeof UIInput> &
+export type IInputProps = React.ComponentProps<typeof UIInput> &
   VariantProps<typeof inputStyle> & { className?: string };
 const Input = React.forwardRef<React.ComponentRef<typeof UIInput>, IInputProps>(
   function Input(
@@ -185,7 +185,7 @@ const InputSlot = React.forwardRef<
   );
 });
 
-type IInputFieldProps = React.ComponentProps<typeof UIInput.Input> &
+export type IInputFieldProps = React.ComponentProps<typeof UIInput.Input> &
   VariantProps<typeof inputFieldStyle> & { className?: string };
 
 const InputField = React.forwardRef<
