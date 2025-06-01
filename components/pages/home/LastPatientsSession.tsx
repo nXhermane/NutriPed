@@ -5,8 +5,6 @@ import { SessionEmpty } from "./shared/SessionEmpty";
 import { PatientCard, PatientCardProps } from "../commun";
 import { MokedPatientList } from "@/data";
 
-
-
 export interface LastPatientSessionProps {
   useMoked?: boolean;
 }
@@ -18,8 +16,8 @@ export const LastPatientsSession: React.FC<LastPatientSessionProps> = ({
   );
 
   useEffect(() => {
-    if (useMoked) setPatientList(MokedPatientList.slice(0,3))
-  }, [useMoked])
+    if (useMoked) setPatientList(MokedPatientList.slice(0, 3));
+  }, [useMoked]);
   return (
     <VStack>
       <SessionHeader

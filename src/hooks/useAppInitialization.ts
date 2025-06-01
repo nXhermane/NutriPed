@@ -6,16 +6,13 @@ import {
   Poppins_200ExtraLight_Italic,
   Poppins_300Light,
   Poppins_500Medium,
-  
   Poppins_700Bold,
   Poppins_600SemiBold,
   Poppins_300Light_Italic,
-  useFonts
+  useFonts,
 } from "@expo-google-fonts/poppins";
 
-
 export const useAppInitialization = () => {
-
   const [isLoaded, error] = useFonts({
     Poppins_500Medium,
     Poppins_400Regular,
@@ -25,8 +22,7 @@ export const useAppInitialization = () => {
     Poppins_300Light_Italic,
     Poppins_700Bold,
     Poppins_600SemiBold,
-  })
-
+  });
 
   const onLayoutRootView = useCallback(async () => {
     if (isLoaded) {
@@ -37,6 +33,5 @@ export const useAppInitialization = () => {
   return {
     appIsReady: isLoaded,
     onLayoutRootView,
-
   };
 };

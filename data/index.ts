@@ -1,1 +1,1 @@
-export * from "./MokedPatientList"
+export * from "./MokedPatientList";

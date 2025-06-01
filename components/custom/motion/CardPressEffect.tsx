@@ -5,7 +5,6 @@ import React, { useState } from "react";
 export interface CardPressEffectProps extends IPressableProps {
   scaled?: boolean;
   translate?: "x" | "y";
-  
 }
 
 export const CardPressEffect: React.FC<CardPressEffectProps> = ({

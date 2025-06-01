@@ -3,7 +3,10 @@ import React, { ReactNode } from "react";
 export interface PageBodyProps extends IVStackProps {}
 export const PageBody: React.FC<PageBodyProps> = ({ children, ...props }) => {
   return (
-    <VStack className={"gap-v-4 px-4 py-v-3 overflow-visible w-full h-full"} {...props}>
+    <VStack
+      className={"h-full w-full gap-v-4 overflow-visible px-4 py-v-3"}
+      {...props}
+    >
       {children}
     </VStack>
   );

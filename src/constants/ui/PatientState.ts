@@ -1,5 +1,5 @@
 export enum PATIENT_STATE {
-    NORMAL = 'normal',
-    ATTENTION = 'attention',
-    NEW = 'new'
+  NORMAL = "normal",
+  ATTENTION = "attention",
+  NEW = "new",
 }

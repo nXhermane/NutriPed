@@ -1,1 +1,1 @@
-export * from "./human-date-formatter"
+export * from "./human-date-formatter";
