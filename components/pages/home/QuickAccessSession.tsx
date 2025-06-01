@@ -58,14 +58,14 @@ export const QuickToolCard: React.FC<QuickToolCardProps> = ({
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       className={
-        "elevation-sm h-v-22 w-22 items-center justify-center gap-1 rounded-xl bg-background-secondary"
+        "elevation-sm h-22 w-22 items-center justify-center gap-1 rounded-xl bg-background-secondary"
       }
     >
       <Center className={"h-9 w-9 rounded-full bg-primary-c_light"}>
         <Icon as={LucideIcon} className={"h-5 w-5 text-background-primary"} />
       </Center>
       <VStack className={"items-center"}>
-        <Text className={"font-h4 text-xs text-typography-primary"}>
+        <Text className={"font-body text-xs text-typography-primary"}>
           {name}
         </Text>
         <Text

@@ -6,9 +6,7 @@ import {
 } from "@/components/pages/patient";
 import { PageBody, TabHeader } from "@/components/pages/shared";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import { Plus } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Patients() {
   return (
@@ -20,12 +18,7 @@ export default function Patients() {
         <QuickFilterSession />
         <PatientListSession useMoked />
       </PageBody>
-      <Fab
-        placement="bottom right"
-        className="bg-primary-c"
-      >
-        <FabIcon as={Plus} className="text-typography-primary h-6 w-6" />
-      </Fab>
+    
     </Box>
   );
 }

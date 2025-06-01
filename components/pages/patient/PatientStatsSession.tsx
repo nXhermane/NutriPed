@@ -70,10 +70,10 @@ export interface PatientStatCardProps {
     desc: string
 }
 export const PatientStatCard: React.FC<PatientStatCardProps> = ({ value, desc }) => {
-    return <VStack className={"w-22 h-v-16 bg-background-secondary border-primary-border/10 border-[0.5px] rounded-md justify-center items-center"}>
-        <Heading className={"text-3xl text-primary-c font-h2 "}>
+    return <VStack className={"w-20 h-v-16 bg-background-secondary border-primary-border/10 border-[0.5px] rounded-md justify-center items-center"}>
+        <Heading className={"text-2xl text-primary-c font-h2 "}>
             {value}
         </Heading>
-        <Text className={"uppercase text-sm text-typography-primary_light font-light"}>{desc}</Text>
+        <Text className={"uppercase text-xs  text-typography-primary_light font-body"}>{desc}</Text>
     </VStack>;
 };

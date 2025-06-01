@@ -74,7 +74,7 @@ export const PatientCard: React.FC<PatientCardProps> = ({
                 </Center>
 
                 <VStack>
-                    <Text className={"font-h4 text-sm text-typography-primary"}>
+                    <Text className={"font-body text-base text-typography-primary"}>
                         {name}
                     </Text>
                     <Text className={"font-light text-2xs text-typography-primary_light"}>

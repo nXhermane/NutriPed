@@ -35,8 +35,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           />
         </InputSlot>
         <InputField
-          className={"text-base"}
-          placeholderClassName={"text-typography-primary_light/60 font-sm"}
+          className={"text-sm font-body text-typography-primary"}
+          placeholderClassName={"text-typography-primary_light/60 font-sm text-sm"}
           {...fieldProps}
         />
       </Input>

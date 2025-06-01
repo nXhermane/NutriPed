@@ -38,8 +38,8 @@ export const QuickFilterItem: React.FC<QuicFilterItemProps> = ({ value = false, 
         setState(_value)
         onChange && onChange(_value)
     }
-    return <Pressable className={`${state ? "bg-primary-c" : "bg-background-secondary"} py-v-1 px-3 border-primary-border/10 border-[0.5px] rounded-full`} onPress={handlePress}>
-        <Text className={`text-sm font-h4 ${state ? "text-background-primary" : "text-typography-primary"}`}>
+    return <Pressable className={`${state ? "bg-primary-c" : "bg-background-secondary"} py-v-1 px-4 border-primary-border/10 border-[0.5px] rounded-full`} onPress={handlePress}>
+        <Text className={`text-sm font-body ${false ? "text-background-primary" : "text-typography-primary"}`}>
             {title}
         </Text>
     </Pressable>

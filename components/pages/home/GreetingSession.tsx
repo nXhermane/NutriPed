@@ -17,7 +17,7 @@ export function GreetingSession() {
         {getGreetingWithName(user?.given_name!)}
       </Heading>
       <Text
-        className={"font-light text-subtitle1 text-typography-primary_light"}
+        className={"font-body text-base text-typography-primary_light"}
       >
         Diagnostic nutritionnel pédiatrique
       </Text>

@@ -37,7 +37,7 @@ export default function Layout() {
             <CustomTabButton name={"Rappels"} icon={"Bell"} />
           </TabTrigger>
           <TabTrigger name="Settings" href="/home/settings" asChild>
-            <CustomTabButton name={"Paramettres"} icon={"Settings2"} />
+            <CustomTabButton name={"Paramètres"} icon={"Settings2"} />
           </TabTrigger>
         </CustomTabList>
       </TabList>
