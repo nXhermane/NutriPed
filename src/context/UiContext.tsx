@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import variables from "@/scaling";
 import { vars } from "nativewind";
 import { View } from "react-native";
+
 export interface UIContextType {
   colorMode: "dark" | "light";
   handleColorMode: (value?: "dark" | "light") => void;

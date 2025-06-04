@@ -55,12 +55,12 @@ export const PatientCard: React.FC<PatientCardProps> = ({
     <CardPressEffect
       scaled={scaled}
       translate={translate ? "y" : undefined}
-      className=""
+      className="rounded-xl bg-background-secondary opacity-100"
       onPress={onPress}
       onLongPress={handleLongPress}
     >
       <HStack
-        className={`elevation-sm h-v-16 items-center gap-2 rounded-xl ${isSelected ? "border-[1px] border-primary-c bg-primary-c/10" : "bg-background-secondary"} px-2`}
+        className={`elevation-sm h-v-16 items-center gap-2 rounded-xl ${isSelected ? "border-[1px] border-primary-c bg-gray-100 dark:bg-primary-c/10" : "border-0 bg-background-secondary"} px-2`}
       >
         <Center>
           <Avatar className={`h-9 w-9 ${statusBackground}`}>

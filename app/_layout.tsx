@@ -17,7 +17,7 @@ import { useAppInitialization } from "@hooks";
 import { Box } from "@/components/ui/box";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-
+import { KeyboardProvider } from "react-native-keyboard-controller";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -26,27 +26,29 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <UIProvider>
-      <Box style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <ToastProvider>
-          <AppStateProvider>
-            <EventProvider>
-              <DatabaseProvider>
-                <GoogleAuthProvider>
-                  <NotificationProvider>
-                    <PediatricAppProvider>
-                      <InitializationProvider>
-                        <Route />
-                      </InitializationProvider>
-                    </PediatricAppProvider>
-                  </NotificationProvider>
-                </GoogleAuthProvider>
-              </DatabaseProvider>
-            </EventProvider>
-          </AppStateProvider>
-        </ToastProvider>
-      </Box>
-    </UIProvider>
+    <KeyboardProvider>
+      <UIProvider>
+        <Box style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <ToastProvider>
+            <AppStateProvider>
+              <EventProvider>
+                <DatabaseProvider>
+                  <GoogleAuthProvider>
+                    <NotificationProvider>
+                      <PediatricAppProvider>
+                        <InitializationProvider>
+                          <Route />
+                        </InitializationProvider>
+                      </PediatricAppProvider>
+                    </NotificationProvider>
+                  </GoogleAuthProvider>
+                </DatabaseProvider>
+              </EventProvider>
+            </AppStateProvider>
+          </ToastProvider>
+        </Box>
+      </UIProvider>
+    </KeyboardProvider>
   );
 }
 
