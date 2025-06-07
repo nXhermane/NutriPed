@@ -1,18 +1,10 @@
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
-import { Icon, CheckIcon } from "@/components/ui/icon";
-import { Text } from "@/components/ui/text";
-import {
-  Toast,
-  ToastDescription,
-  ToastTitle,
-  useToast as useGluestackToast,
-} from "@/components/ui/toast";
-import { VStack } from "@/components/ui/vstack";
+import { ErrorToast, SuccessToast } from "@/components/custom";
+import { useToast as useGluestackToast } from "@/components/ui/toast";
 import React, { createContext, ReactNode, useContext } from "react";
+import { Dimensions } from "react-native";
 
 export interface ToastContextType {
-  show: () => void;
+  show: (type: "Success" | "Error", title?: string, desc?: string) => void;
 }
 export const ToastContext = createContext<ToastContextType>(
   {} as ToastContextType
@@ -25,29 +17,41 @@ export interface ToastProviderProps {
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const toast = useGluestackToast();
   const [toastId, setToastId] = React.useState("0");
-  const handleToast = () => {
+  const handleToast = (
+    type: "Success" | "Error",
+    title?: string,
+    desc?: string
+  ) => {
     if (!toast.isActive(toastId)) {
-      showNewToast();
+      showNewToast(type);
     }
   };
 
-  const showNewToast = () => {
+  const showNewToast = (
+    type: "Success" | "Error",
+    title?: string,
+    desc?: string
+  ) => {};
+
+  const show = (type: "Success" | "Error", title?: string, desc?: string) => {
     const newId = Math.random().toString();
     setToastId(newId);
-    toast.show({
-      id: newId,
-      placement: "bottom",
-      duration: 30000,
-      containerStyle: {
-        width: "100%",
-        backgroundColor: "yellow",
-      },
-      render: ({ id }) => <SuccessToast id={id} />,
-    });
-  };
-
-  const show = () => {
-    handleToast();
+    if (!toast.isActive(toastId))
+      toast.show({
+        id: newId,
+        placement: "bottom",
+        duration: 5000,
+        containerStyle: {
+          width: Dimensions.get("screen").width,
+        },
+        render: ({ id }) => {
+          return type === "Success" ? (
+            <SuccessToast id={id} title={title} desc={desc} />
+          ) : (
+            <ErrorToast id={id} title={title} desc={desc} />
+          );
+        },
+      });
   };
 
   return (
@@ -62,28 +66,3 @@ export function useToast() {
   }
   return context;
 }
-
-export interface SuccessToastProps {
-  id: string;
-}
-export const SuccessToast: React.FC<SuccessToastProps> = ({ id }) => {
-  const uniqueToastId = "toast-" + id;
-  return (
-    <Box
-      nativeID={id}
-      style={{
-        borderRadius: 20,
-        width: "100%",
-        backgroundColor: "red",
-      }}
-      className={
-        "h-20 w-[375px] rounded-2xl rounded-3xl border bg-red-500 dark:bg-red-700"
-      }
-    >
-      <HStack>
-        <Icon as={CheckIcon} className={"text-success-400"} />
-        <Text className={"text-red-700"}>Hello This my personal toast</Text>
-      </HStack>
-    </Box>
-  );
-};

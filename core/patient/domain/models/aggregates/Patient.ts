@@ -48,7 +48,7 @@ export interface CreatePatientProps {
     tel: string;
   };
   address: IAddress;
-  registrationDate: string;
+  registrationDate?: string;
 }
 export class Patient extends AggregateRoot<IPatient> {
   getName(): string {

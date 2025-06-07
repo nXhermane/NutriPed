@@ -12,6 +12,7 @@ import {
   ToastProvider,
   UIProvider,
 } from "@context";
+
 import { EventProvider } from "domain-eventrix/react";
 import { useAppInitialization } from "@hooks";
 import { Box } from "@/components/ui/box";

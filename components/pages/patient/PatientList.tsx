@@ -26,7 +26,6 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
       );
     }
   }, [useMoked]);
-
   return (
     <Box className="h-full max-h-[65%]">
       <ScrollView

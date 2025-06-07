@@ -17,19 +17,19 @@ enum ACTION_TYPE {
 }
 type Action =
   | {
-      type: ACTION_TYPE.UPDATE_FIELD;
-      field: string;
-      value: any;
-    }
+    type: ACTION_TYPE.UPDATE_FIELD;
+    field: string;
+    value: any;
+  }
   | {
-      type: ACTION_TYPE.RESET;
-      payload: Record<string, { value: string; error?: string }>;
-    }
+    type: ACTION_TYPE.RESET;
+    payload: Record<string, { value: string; error?: string }>;
+  }
   | {
-      type: ACTION_TYPE.SET_ERROR;
-      field: string;
-      error?: string;
-    };
+    type: ACTION_TYPE.SET_ERROR;
+    field: string;
+    error?: string;
+  };
 const dynamicFromReducer = (
   state: Record<string, { value: any; error?: string }>,
   action: Action
@@ -66,21 +66,22 @@ type ExtractFieldNames<T extends FormSchema> =
 type BuildZodShape<Keys extends string> = {
   [K in Keys]: z.ZodTypeAny;
 };
-type SchemaConstraint<IFormSchema extends FormSchema> = ZodObject<
+export type SchemaConstraint<IFormSchema extends FormSchema> = ZodObject<
   BuildZodShape<ExtractFieldNames<IFormSchema>>
 >;
 export interface DynamicFormGeneratorProps<T extends FormSchema> {
   schema: T;
   zodSchema?: SchemaConstraint<T>;
 }
-export interface FormHandler<T> {
-  submit: () => Promise<T | null>;
+export interface FormHandler<T extends FormSchema> {
+  submit: () => Promise<z.infer<SchemaConstraint<T>> | null>;
+  reset: () => void
 }
 
 export const DynamicFormGenerator = forwardRef(
   <T extends FormSchema>(
     { schema, zodSchema }: DynamicFormGeneratorProps<T>,
-    ref: React.Ref<FormHandler<z.infer<SchemaConstraint<T>>>>
+    ref: React.Ref<FormHandler<T>>
   ) => {
     const [formState, dispatchFromState] = useReducer(
       dynamicFromReducer,
@@ -129,8 +130,10 @@ export const DynamicFormGenerator = forwardRef(
       }
       return formData;
     }, [formState, zodSchema]);
-
-    useImperativeHandle(ref, () => ({ submit }), [submit]);
+    const reset = () => {
+      dispatchFromState({ type: ACTION_TYPE.RESET, payload: {} })
+    }
+    useImperativeHandle(ref, () => ({ submit, reset }), [submit]);
 
     return (
       <VStack

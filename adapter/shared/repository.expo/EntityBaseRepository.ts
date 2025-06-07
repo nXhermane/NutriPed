@@ -52,6 +52,7 @@ export abstract class EntityBaseRepositoryExpo<
   ): Promise<void> {
     try {
       const persistenceType = this.mapper.toPersistence(entity);
+       console.log(persistenceType)
       const exist = await this._exist(entity.id);
       const queryRunner = trx || this.db;
       if (!exist) {
@@ -71,6 +72,7 @@ export abstract class EntityBaseRepositoryExpo<
           )
         );
       }
+     
     } catch (e: unknown) {
       if (e instanceof EventHandlerExecutionFailed) throw e;
       throw new RepositoryException(

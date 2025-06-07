@@ -4,6 +4,7 @@ import { SessionHeader } from "./shared/SessionHeader";
 import { SessionEmpty } from "./shared/SessionEmpty";
 import { PatientCard, PatientCardProps } from "../commun";
 import { MokedPatientList } from "@/data";
+import { useSelector } from "react-redux";
 
 export interface LastPatientSessionProps {
   useMoked?: boolean;
@@ -14,6 +15,12 @@ export const LastPatientsSession: React.FC<LastPatientSessionProps> = ({
   const [patientList, setPatientList] = useState<any[]>(
     useMoked ? MokedPatientList : []
   );
+  const patientInteractionList = useSelector(
+    (state: any) => state.reducer.interactions
+  );
+  useEffect(() => {
+    console.log(patientInteractionList);
+  }, [patientInteractionList]);
 
   useEffect(() => {
     if (useMoked) setPatientList(MokedPatientList.slice(0, 3));

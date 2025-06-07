@@ -1,4 +1,5 @@
 export * from "./AppLogo";
 export * from "./ModeImage";
-export * from "./ErrorAlert";
+export * from "./ErrorToast";
 export * from "./DynamicFormGenerator";
+export * from "./SuccessToast"
