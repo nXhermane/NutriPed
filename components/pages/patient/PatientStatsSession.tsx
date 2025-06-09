@@ -2,8 +2,11 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { PATIENT_STATE } from "@/src/constants/ui";
+import { Interaction } from "@/src/store";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
+import { useSelector } from "react-redux";
 export const PATIENT_MOKED_STATS = [
   {
     value: 24,
@@ -29,6 +32,10 @@ export interface PatientStatSessionProps {
 export const PatientStatSession: React.FC<PatientStatSessionProps> = ({
   useMoked = true,
 }) => {
+  const patientInteractionList: Interaction[] = useSelector(
+    (state: any) => state.patientInteractionReducer.interactions
+  );
+
   const [patientStats, setPatientStats] = useState<
     { value: number; tag: string }[]
   >([]);
@@ -56,6 +63,25 @@ export const PatientStatSession: React.FC<PatientStatSessionProps> = ({
       ]);
     }
   }, [useMoked]);
+  useEffect(() => {
+    const normalPatientLength = patientInteractionList.filter(
+      patient => patient.state === PATIENT_STATE.NORMAL
+    ).length;
+    const newPatientLenght = patientInteractionList.filter(
+      patient => patient.state === PATIENT_STATE.NEW
+    ).length;
+    const attentionPatientLenght = patientInteractionList.filter(
+      patient => patient.state === PATIENT_STATE.ATTENTION
+    ).length;
+    const allPatient =
+      normalPatientLength + newPatientLenght + attentionPatientLenght;
+    setPatientStats([
+      { value: allPatient, tag: "All" },
+      { value: newPatientLenght, tag: "New" },
+      { value: normalPatientLength, tag: "Normal" },
+      { value: attentionPatientLenght, tag: "Attention" },
+    ]);
+  }, [patientInteractionList]);
   return (
     <HStack className={"overflow-visible"}>
       <ScrollView

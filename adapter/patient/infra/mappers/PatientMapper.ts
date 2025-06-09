@@ -32,8 +32,8 @@ export class PatientInfraMapper
   }
   toDomain(record: PatientPersistenceDto): Patient {
     const fullnameRes = FullName.create(record.name);
-    const motherRes = FullName.create(record.parents.mother || "mother");
-    const fatherRes = FullName.create(record.parents.father || "father");
+    const motherRes = FullName.create(record?.parents?.mother || "mother");
+    const fatherRes = FullName.create(record?.parents?.father || "father");
     const contactRes = Contact.create({
       email: record.contact.email,
       phoneNumber: record.contact.tel,
@@ -68,8 +68,8 @@ export class PatientInfraMapper
         gender: genderRes.val,
         registrationDate: registrationDateRes.val,
         parents: {
-          father: record.parents.father ? fatherRes.val : undefined,
-          mother: record.parents.mother ? motherRes.val : undefined,
+          father: record.parents?.father ? fatherRes.val : undefined,
+          mother: record.parents?.mother ? motherRes.val : undefined,
         },
       },
     });

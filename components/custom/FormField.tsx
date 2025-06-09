@@ -15,7 +15,7 @@ import {
   ChevronDown,
   ChevronDownIcon,
   ChevronUp,
-  CircleIcon,
+  Circle,
   EyeIcon,
   EyeOff,
 } from "lucide-react-native";
@@ -173,7 +173,7 @@ export const FormField = <T,>({
                     } else if (field.mode != "countdown") {
                       handleChange(date.toISOString().split("T")[0] as T);
                     } else {
-                      console.log(date);
+                 
                     }
                   }
                   setVisible(false);
@@ -222,7 +222,7 @@ export const FormField = <T,>({
                   className={"h-4 w-4 border-typography-primary_light"}
                   grid-cols-2
                 >
-                  <RadioIcon as={CircleIcon} />
+                  <RadioIcon as={Circle} />
                 </RadioIndicator>
                 <RadioLabel
                   className={"font-body text-sm text-typography-primary_light"}

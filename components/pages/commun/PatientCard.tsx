@@ -8,17 +8,23 @@ import { Text } from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { PATIENT_STATE } from "@/src/constants/ui";
 import { HumanDateFormatter } from "@/utils";
+import { AggregateID } from "@/core/shared";
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 
-export interface PatientCardProps {
+export interface PatientCardInfo {
+  id?: AggregateID;
   name: string;
   createdAt: string;
   status: PATIENT_STATE;
   birthday: string;
   nextVisitDate?: string;
+}
+export interface PatientCardProps extends PatientCardInfo {
   onPress?: () => void;
   onChange?: (value: boolean) => void;
   selected?: boolean;
   enableSelection?: boolean;
+  enableQuickSelection?: boolean;
   scaled?: boolean;
   translate?: boolean;
 }
@@ -30,6 +36,7 @@ export const PatientCard: React.FC<PatientCardProps> = ({
   onChange = (value: boolean) => void 0,
   selected = false,
   enableSelection = false,
+  enableQuickSelection = false,
   birthday,
   nextVisitDate,
   scaled = true,
@@ -42,7 +49,7 @@ export const PatientCard: React.FC<PatientCardProps> = ({
       : status == PATIENT_STATE.ATTENTION
         ? "bg-warning-100"
         : "bg-success-100";
-  const handleLongPress = () => {
+  const handleSelection = () => {
     if (!enableSelection) return;
     const _value = !isSelected;
     setIsSelected(_value);
@@ -56,8 +63,11 @@ export const PatientCard: React.FC<PatientCardProps> = ({
       scaled={scaled}
       translate={translate ? "y" : undefined}
       className="rounded-xl bg-background-secondary opacity-100"
-      onPress={onPress}
-      onLongPress={handleLongPress}
+      onPress={() => {
+        if (enableQuickSelection) handleSelection();
+        else onPress && onPress();
+      }}
+      onLongPress={() => handleSelection()}
     >
       <HStack
         className={`elevation-sm h-v-16 items-center gap-2 rounded-xl ${isSelected ? "border-[1px] border-primary-c bg-gray-100 dark:bg-primary-c/10" : "border-0 bg-background-secondary"} px-2`}
@@ -97,5 +107,22 @@ export const PatientCard: React.FC<PatientCardProps> = ({
         </Center>
       </HStack>
     </CardPressEffect>
+  );
+};
+
+export const PatientCardSkeleton = () => {
+  return (
+    <HStack
+      className={"h-v-16 items-center gap-2 rounded-xl bg-background-100 px-2"}
+    >
+      <Skeleton variant={"circular"} className={"h-9 w-9"} />
+      <VStack className={"gap-2"}>
+        <SkeletonText _lines={1} className={"h-3 w-36"} />
+        <SkeletonText _lines={1} className={"h-2 w-44"} />
+      </VStack>
+      <Center className={"absolute right-2 gap-1"}>
+        <Skeleton variant={"rounded"} className={"h-v-4 w-14"} />
+      </Center>
+    </HStack>
   );
 };

@@ -1,8 +1,10 @@
 import { AggregateID } from "@/core/shared"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-type Interaction = {
+import { PATIENT_STATE } from "../constants/ui"
+export type Interaction = {
     patientId: AggregateID
-    date: string 
+    date: string
+    state: PATIENT_STATE
 }
 interface PatientInteractionsState {
     interactions: Interaction[]
@@ -17,9 +19,12 @@ export const patientInteractionsSlice = createSlice({
         recordInteraction(state, action: PayloadAction<Interaction>) {
             state.interactions = state.interactions.filter(p => p.patientId != action.payload.patientId)
             state.interactions.unshift(action.payload)
+        },
+        deleteInteraction(state, action: PayloadAction<AggregateID>) {
+            state.interactions = state.interactions.filter(p => p.patientId != action.payload)
         }
     }
 })
 
-export const {recordInteraction} = patientInteractionsSlice.actions
-export const reducer = patientInteractionsSlice.reducer
+export const { recordInteraction, deleteInteraction } = patientInteractionsSlice.actions
+export const patientInteractionReducer = patientInteractionsSlice.reducer

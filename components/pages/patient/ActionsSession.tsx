@@ -7,11 +7,12 @@ import { MotiView, TransitionConfig } from "moti";
 import React from "react";
 
 export interface ActionBtnSessionProps {
-  // actions: ActionBtnProps[]
+  actions?: ActionBtnProps[];
   isVisible?: boolean;
 }
 export const ActionBtnSession: React.FC<ActionBtnSessionProps> = ({
   isVisible = false,
+  actions = [],
 }) => {
   if (!isVisible) return null;
   return (
@@ -37,21 +38,9 @@ export const ActionBtnSession: React.FC<ActionBtnSessionProps> = ({
         "absolute bottom-0 h-v-20 w-full flex-row items-center justify-between px-8"
       }
     >
-      <ActionBtn
-        icon={"Share2"}
-        toolTip="Supprimer"
-        classNameColor={"bg-violet-500"}
-      />
-      <ActionBtn
-        icon={"ScanEye"}
-        toolTip="Supprimer"
-        classNameColor={"bg-blue-500"}
-      />
-      <ActionBtn
-        icon={"Trash2"}
-        toolTip="Supprimer"
-        classNameColor={"bg-red-500"}
-      />
+      {actions.map((action, index) => (
+        <ActionBtn key={index} {...action} />
+      ))}
     </MotiView>
   );
 };

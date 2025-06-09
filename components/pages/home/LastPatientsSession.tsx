@@ -2,9 +2,14 @@ import { VStack } from "@/components/ui/vstack";
 import React, { useEffect, useState } from "react";
 import { SessionHeader } from "./shared/SessionHeader";
 import { SessionEmpty } from "./shared/SessionEmpty";
-import { PatientCard, PatientCardProps } from "../commun";
+import { PatientCard, PatientCardInfo, PatientCardProps } from "../commun";
 import { MokedPatientList } from "@/data";
 import { useSelector } from "react-redux";
+import { usePediatricApp } from "@/adapter";
+import { Interaction } from "@/src/store";
+import { Message } from "@/core/shared";
+import { PATIENT_STATE } from "@/src/constants/ui";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface LastPatientSessionProps {
   useMoked?: boolean;
@@ -12,14 +17,43 @@ export interface LastPatientSessionProps {
 export const LastPatientsSession: React.FC<LastPatientSessionProps> = ({
   useMoked = false,
 }) => {
-  const [patientList, setPatientList] = useState<any[]>(
+  const { patientService } = usePediatricApp();
+  const [patientList, setPatientList] = useState<PatientCardInfo[]>(
     useMoked ? MokedPatientList : []
   );
-  const patientInteractionList = useSelector(
-    (state: any) => state.reducer.interactions
+  const patientInteractionList: Interaction[] = useSelector(
+    (state: any) => state.patientInteractionReducer.interactions
   );
   useEffect(() => {
-    console.log(patientInteractionList);
+    const getPatientList = async () => {
+      const patientLastInteractions = patientInteractionList
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 3);
+      const patients = await Promise.all(
+        patientLastInteractions.map(patient =>
+          patientService.get({ id: patient.patientId })
+        )
+      );
+      const lists: PatientCardInfo[] = [];
+      for (const patientRes of patients) {
+        if (!(patientRes instanceof Message)) {
+          const patientDto = patientRes.data[0];
+          lists.push({
+            birthday: patientDto.birthday,
+            name: patientDto.name,
+            createdAt: patientDto.registrationDate,
+            status:
+              patientLastInteractions.find(
+                interaction => interaction.patientId === patientDto.id
+              )?.state || PATIENT_STATE.NORMAL,
+            id: patientDto.id,
+          });
+        }
+      }
+      setPatientList(lists);
+    };
+   
+    getPatientList();
   }, [patientInteractionList]);
 
   useEffect(() => {

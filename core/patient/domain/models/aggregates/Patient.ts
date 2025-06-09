@@ -129,7 +129,6 @@ export class Patient extends AggregateRoot<IPatient> {
     this._isValid = true;
   }
   override created(): void {
-    console.log("Create");
     this.addDomainEvent(
       new PatientCreatedEvent({
         id: this.id,

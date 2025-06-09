@@ -14,6 +14,7 @@ import { DynamicFormGenerator, FormHandler } from "@/components/custom";
 import {
   AddPatientFormSchema,
   AddPatientFormZodSchema,
+  PATIENT_STATE,
 } from "@/src/constants/ui";
 import { usePediatricApp } from "@/adapter";
 import { Message } from "@/core/shared";
@@ -24,6 +25,7 @@ import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Check, X } from "lucide-react-native";
 import { useToast } from "@/src/context";
+import { recordUiState } from "@/src/store/uiState";
 
 export interface AddPatientBottomSheetProps {
   isOpen?: boolean;
@@ -34,19 +36,27 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
   onClose = () => void 0,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [isVisible,setIsVisisble] = useState<boolean>(false)
+  const [isVisible, setIsVisisble] = useState<boolean>(false);
   const { patientService } = usePediatricApp();
   const toast = useToast();
-
   const dynamicFormRef = useRef<FormHandler<typeof AddPatientFormSchema>>(null);
   const [onSubmit, setOnSubmit] = useState<boolean>(false);
   const [onError, setOnError] = useState<boolean>(false);
   const [onSuccess, setOnSuccess] = useState<boolean>(false);
+
+  const handleClose = () => {
+    dynamicFormRef.current?.reset();
+    setOnError(false);
+    setIsVisisble(false);
+    setOnSuccess(false);
+    setOnSubmit(false);
+    onClose();
+  };
   const handleSubmit = async () => {
     const formData = await dynamicFormRef.current?.submit();
-    
+
     if (formData) {
-      setOnSubmit(true)
+      setOnSubmit(true);
       const createPatientData = {
         name: formData.fullName,
         gender: formData.gender,
@@ -85,18 +95,20 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
           recordInteraction({
             patientId: result.data.id,
             date: new Date().toISOString(),
+            state: PATIENT_STATE.NEW,
           })
         );
-        setIsVisisble(false)
+        dispatch(recordUiState({ type: "PATIENT_ADDED" }));
+        handleClose();
       }
     } else {
       setOnSubmit(false);
     }
   };
 
-  useEffect( ()=> {
-    setIsVisisble(isOpen as boolean)
-  },[isOpen])
+  useEffect(() => {
+    setIsVisisble(isOpen as boolean);
+  }, [isOpen]);
   return (
     <Actionsheet isOpen={isVisible} onClose={onClose}>
       <ActionsheetBackdrop />
@@ -110,7 +122,7 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
               Nouveau Patient
             </Heading>
             <Button
-              className={`rounded-lg bg-primary-c_light px-4 py-[4px] ${onError ? "bg-red-500" : ""}`}
+              className={`h-v-6 rounded-lg bg-primary-c_light px-4 ${onError ? "bg-red-500" : ""}`}
               onPress={handleSubmit}
             >
               {onSubmit && <ButtonSpinner />}

@@ -1,15 +1,15 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from "redux-persist"
-
+import { persistReducer, persistStore } from "redux-persist"
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { reducer } from "./patientInteractions";
+import {patientInteractionReducer } from "./patientInteractions";
+import {uiReducer} from "./uiState"
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: 1
 }
 export const rootReducer = combineReducers({
- reducer
+ patientInteractionReducer,uiReducer
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
