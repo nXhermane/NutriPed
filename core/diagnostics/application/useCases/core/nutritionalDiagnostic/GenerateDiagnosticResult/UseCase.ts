@@ -31,6 +31,7 @@ export class GenerateDiagnosticResultUseCase
     request: GenerateDiagnosticResultRequest
   ): Promise<GenerateDiagnosticResultResponse> {
     try {
+    
       const nutritionalDiagnostic =
         await this.nutritionalDiagnosticRepo.getByIdOrPatientId(
           request.nutritionalDiagnosticId

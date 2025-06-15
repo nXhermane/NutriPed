@@ -18,11 +18,13 @@ import {
 } from "../ports";
 import {
   AnthropometricVariableObject,
+  AnthroSystemCodes,
   GrowthIndicatorValue,
   IAnthropometricVariableGeneratorService,
   IGrowthIndicatorService,
 } from "../../anthropometry";
 import {
+  CLINICAL_SIGNS,
   ClinicalNutritionalAnalysisResult,
   ClinicalVariableObject,
   IClinicalAnalysisService,
@@ -50,8 +52,7 @@ export type GlobalDiagnosticVariable = AnthropometricVariableObject &
  * clinical, and biological data to generate comprehensive nutritional diagnostics
  */
 export class NutritionalAssessmentService
-  implements INutritionalAssessmentService
-{
+  implements INutritionalAssessmentService {
   /**
    * Creates a new instance of NutritionalAssessmentService
    * @param anthropVariableGenerator Service for generating anthropometric variable
@@ -74,7 +75,7 @@ export class NutritionalAssessmentService
       CreateNutritionalAssessmentResultProps,
       NutritionalAssessmentResult
     >
-  ) {}
+  ) { }
 
   /**
    * Evaluates the nutritional status of a patient based on various health indicators
@@ -98,6 +99,7 @@ export class NutritionalAssessmentService
         return Result.fail(
           formatError(evaluationResult, NutritionalAssessmentService.name)
         );
+
       const globalDiagnostics = await this.globalEvaluation(
         patientData,
         anthropEvaluation.val,
@@ -155,9 +157,10 @@ export class NutritionalAssessmentService
             NutritionalAssessmentResult.name
           )
         );
-      return this.growthIndicatorService.calculateAllIndicators(
+      const computingIndicatorRes = await this.growthIndicatorService.calculateAllIndicators(
         anthropometricDataResult.val
       );
+      return computingIndicatorRes
     } catch (e: unknown) {
       return handleError(e);
     }
@@ -238,11 +241,7 @@ export class NutritionalAssessmentService
           `Detail: ${formatError(combinedResult, NutritionalAssessmentService.name)}`
         );
       }
-      const globalDiagnosticVariable = {
-        ...anthropometricVariableRes.val,
-        ...clinicalVariable.val,
-        ...biologicalVariable.val,
-      } as GlobalDiagnosticVariable;
+      const globalDiagnosticVariable = this.computeGlobalVariable(anthropometricVariableRes.val, clinicalVariable.val, biologicalVariable.val)
       const diagnosticRuleRes = await this.getAllDiagnosticRule();
       if (diagnosticRuleRes.isFailure)
         return handleDiagnosticCoreError(
@@ -330,8 +329,14 @@ export class NutritionalAssessmentService
       const validateDiagnostic = diagnosticRules.filter(diagnosticRule => {
         return diagnosticRule
           .getConditions()
-          .some(condition =>
-            this.evaluateCondition(condition.value, globalVariables)
+          .some(condition => {
+            const conditionEvalutationRes = Result.encapsulate(() => {
+              const res = this.evaluateCondition(condition.value, globalVariables)
+              return res
+            })
+            if (conditionEvalutationRes.isFailure) return false
+            return conditionEvalutationRes.val
+          }
           );
       });
       const globalDiagnostics = validateDiagnostic.map(rule =>
@@ -366,5 +371,20 @@ export class NutritionalAssessmentService
       globalVariables
     );
     return conditionEvaluationResult === ConditionResult.True;
+  }
+
+  private computeGlobalVariable(anthropometricVariableObject: AnthropometricVariableObject, clinicalVariable: ClinicalVariableObject, biologicalVariable: BiologicalVariableObject): GlobalDiagnosticVariable {
+    // Ici je dois faire une compromis pour la version beta 
+    // BETA: on doit prendre en charge l'élimination des indicateurs en cas d'œdeme 
+    const edemaIsPresent = clinicalVariable[CLINICAL_SIGNS.EDEMA] === ConditionResult.True
+    const weightBasedIndicator = [AnthroSystemCodes.WFH_UNISEX_NCHS, AnthroSystemCodes.WFLH_UNISEX, AnthroSystemCodes.BMI_FOR_AGE, AnthroSystemCodes.WFA, AnthroSystemCodes.WFLH]
+    if (edemaIsPresent) {
+      for (const indicatorCode of weightBasedIndicator) {
+        anthropometricVariableObject[indicatorCode] = undefined as any
+      }
+    }
+    return {
+      ...anthropometricVariableObject, ...clinicalVariable, ...biologicalVariable
+    } as GlobalDiagnosticVariable
   }
 }

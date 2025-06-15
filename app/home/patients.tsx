@@ -4,10 +4,9 @@ import {
   PatientStatSession,
   QuickFilterSession,
 } from "@/components/pages/patient";
-import { AddPatientBottomSheet } from "@/components/pages/patient/AddPatientBottomSheet";
 import { PageBody, TabHeader } from "@/components/pages/shared";
 import { Box } from "@/components/ui/box";
-import React, { useState } from "react";
+import React from "react";
 
 export default function Patients() {
   return (
@@ -17,7 +16,7 @@ export default function Patients() {
         <PatientSeachBar />
         <PatientStatSession />
         <QuickFilterSession />
-        <PatientListSession useMoked />
+        <PatientListSession  />
       </PageBody>
     </Box>
   );

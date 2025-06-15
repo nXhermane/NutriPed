@@ -2,14 +2,12 @@ import { ApplicationMapper } from "@shared";
 import {
   AnthropEntry,
   ClinicalSign,
-  EdemaData,
   PatientDiagnosticData,
 } from "../../domain";
 import { ClinicalSignDto, PatientDiagnosticDataDto } from "../dtos";
 
 export class PatientDiagnosticDataMapper
-  implements ApplicationMapper<PatientDiagnosticData, PatientDiagnosticDataDto>
-{
+  implements ApplicationMapper<PatientDiagnosticData, PatientDiagnosticDataDto> {
   toResponse(entity: PatientDiagnosticData): PatientDiagnosticDataDto {
     return {
       id: entity.id,
@@ -33,13 +31,10 @@ export class PatientDiagnosticDataMapper
           value: biologicalTestResult.unpack().value,
         })),
       clinicalData: {
-        edema: this.mapClinicalSign<EdemaData>(
-          entity.getClinicalSigns().unpack().edema
-        ),
-        otherSigns: entity
+        clinicalSigns: entity
           .getClinicalSigns()
           .unpack()
-          .otherSigns.map(this.mapClinicalSign),
+          .clinicalSigns.map(this.mapClinicalSign),
       },
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

@@ -53,7 +53,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     private growthReferenceSelectionService: IReferenceSelectionService,
     private zScoreService: IZScoreCalculationService,
     private interpretationService: IZScoreInterpretationService
-  ) {}
+  ) { }
 
   /**
    * @method identifyPossibleIndicator
@@ -71,35 +71,36 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     data: AnthropometricVariableObject
   ): Promise<Result<Indicator[]>> {
     try {
+
       const indicators = await this.indicatorRepo.getAll();
       const anthropDataMeasureCodes = Object.keys(data);
       const possibleIndicators: Indicator[] = [];
       for (const indicator of indicators) {
         const neededMeasureCodes = indicator.getMeasureCodes();
-        for (const neededMeasureCode of neededMeasureCodes) {
-          if (anthropDataMeasureCodes.includes(neededMeasureCode)) {
-            // anthropometric Data dispose des mesures necessaires pour utiliser cet Indicateur
-            // Verifions maintenant si le context est bon
-            const usageCondition = indicator.getUsageCondition();
-            const variableNames = usageCondition.variables;
-            if (
-              !variableNames.every(variableName =>
-                anthropDataMeasureCodes.includes(variableName)
-              )
-            ) {
-              return Result.fail(
-                "The context don't contain all needed variables"
-              );
-            }
-            const conditionResult =
-              evaluateCondition<AnthropometricVariableObject>(
-                usageCondition.value,
-                data
-              );
-            if (ConditionResult.True === conditionResult)
-              possibleIndicators.push(indicator);
-          }
+        const isPossible = neededMeasureCodes.every(code => anthropDataMeasureCodes.includes(code))
+        if (isPossible) {
+          const usageCondition = indicator.getUsageCondition();
+          const conditionResult =
+            evaluateCondition<AnthropometricVariableObject>(
+              usageCondition.value,
+              data
+            );
+          if (ConditionResult.True === conditionResult)
+            possibleIndicators.push(indicator);
         }
+        // anthropometric Data dispose des mesures necessaires pour utiliser cet Indicateur
+        // Verifions maintenant si le context est bon
+
+        // const variableNames = usageCondition.variables;
+        // if (
+        //   !variableNames.every(variableName =>
+        //     anthropDataMeasureCodes.includes(variableName)
+        //   )
+        // ) {
+        //   return Result.fail(
+        //     "The context don't contain all needed variables"
+        //   );
+        // }
       }
       return Result.ok(possibleIndicators);
     } catch (e: unknown) {
@@ -194,7 +195,11 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
           this._calculateIndicator(data, indicator, standard)
         )
       );
-      return Result.ok(growthIndicatorValueRes.map(res => res.val));
+      // FIXME: 
+      // BETA: Je dois faire des verife plustard. pour les growth inicator non calculer. 
+      const computedIndicators = growthIndicatorValueRes.filter(res => res.isSuccess)
+
+      return Result.ok(computedIndicators.map(res => res.val));
     } catch (e: unknown) {
       return handleError(e);
     }
@@ -226,15 +231,17 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const growthRef =
         indicator.getStandardShape() === StandardShape.CURVE
           ? await this.growthReferenceSelectionService.selectChartForIndicator(
-              data,
-              indicator,
-              standard
-            )
+            data,
+            indicator,
+            standard
+          )
           : await this.growthReferenceSelectionService.selectTableForIndicator(
-              data,
-              indicator,
-              standard
-            );
+            data,
+            indicator,
+            standard
+          );
+
+
       if (growthRef.isFailure)
         return Result.fail(formatError(growthRef, GrowthIndicatorService.name));
 
@@ -242,11 +249,12 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const zScoreResult = await this.zScoreService.calculateZScore<
         typeof growthRef.val
       >(data, indicator, growthRef.val, standard);
-      if (zScoreResult.isFailure)
+
+      if (zScoreResult.isFailure) {
         return Result.fail(
           formatError(zScoreResult, GrowthIndicatorService.name)
         );
-
+      }
       // 3. Find interpretation
       const interpretationResult =
         await this.interpretationService.findInterpretation(

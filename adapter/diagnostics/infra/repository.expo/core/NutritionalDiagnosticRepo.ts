@@ -48,8 +48,7 @@ export class NutritionalDiagnosticRepositoryExpoImpl
     NutritionalDiagnosticPersistenceDto,
     typeof nutritional_diagnostics
   >
-  implements NutritionalDiagnosticRepository
-{
+  implements NutritionalDiagnosticRepository {
   constructor(
     expo: SQLiteDatabase,
     mapper: InfrastructureMapper<
@@ -67,15 +66,15 @@ export class NutritionalDiagnosticRepositoryExpoImpl
     try {
       const persistenceType = this.mapper.toPersistence(entity);
       const exist = await this._exist(entity.id);
-      this.db.transaction(async tx => {
-        if (exist) {
-          tx.insert(this.table).values({
+      await this.db.transaction(async tx => {
+        if (!exist) {
+          await tx.insert(this.table).values({
             ...persistenceType,
             patientData: persistenceType.patientData.id,
             result: persistenceType.result?.id,
           });
         } else {
-          tx.update(this.table)
+          await tx.update(this.table)
             .set({
               ...persistenceType,
               patientData: persistenceType.patientData.id,

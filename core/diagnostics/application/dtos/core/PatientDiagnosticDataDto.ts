@@ -1,7 +1,6 @@
 import { AggregateID, Sex } from "@shared";
 import { AnthropometricDataDto } from "../anthropometric";
 import { ClinicalSignDto } from "../clinical";
-import { EdemaData } from "../../../domain";
 import { BiologicalTestResultDto } from "../biological";
 
 export interface PatientDiagnosticDataDto {
@@ -10,8 +9,7 @@ export interface PatientDiagnosticDataDto {
   birthday: string;
   anthropometricData: AnthropometricDataDto;
   clinicalData: {
-    edema: ClinicalSignDto<EdemaData>;
-    otherSigns: ClinicalSignDto<object>[];
+    clinicalSigns: ClinicalSignDto<object>[];
   };
   biologicalTestResults: BiologicalTestResultDto[];
   createdAt: string;

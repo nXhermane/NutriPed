@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c6418d57-ad8f-4707-b5bb-ab53a9654965",
+  "id": "49988538-7734-4df6-aa64-2360cbb11599",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "anthropometric_measures": {
@@ -673,6 +673,13 @@
         },
         "nutritional_risk_factor_associated_nutrients": {
           "name": "nutritional_risk_factor_associated_nutrients",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nutritional_risk_factor_modulating_condition": {
+          "name": "nutritional_risk_factor_modulating_condition",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1457,8 +1464,9 @@
           "name": "patient_parents",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'{}'"
         },
         "patient_contact": {
           "name": "patient_contact",

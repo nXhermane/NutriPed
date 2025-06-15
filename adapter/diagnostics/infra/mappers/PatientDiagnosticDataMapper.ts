@@ -8,15 +8,14 @@ import { PatientDiagnosticDataPersistenceDto } from "../dtos";
 
 export class PatientDiagnosticDataInfraMapper
   implements
-    InfrastructureMapper<
-      PatientDiagnosticData,
-      PatientDiagnosticDataPersistenceDto
-    >
-{
+  InfrastructureMapper<
+    PatientDiagnosticData,
+    PatientDiagnosticDataPersistenceDto
+  > {
   toPersistence(
     entity: PatientDiagnosticData
   ): PatientDiagnosticDataPersistenceDto {
-    const { edema, otherSigns } = entity.getClinicalSigns().unpack();
+    const { clinicalSigns } = entity.getClinicalSigns().unpack();
     return {
       id: entity.id as string,
       sex: entity.sex,
@@ -40,11 +39,7 @@ export class PatientDiagnosticDataInfraMapper
           };
         }),
       clinicalSigns: {
-        edema: {
-          code: edema.unpack().code.unpack(),
-          data: edema.unpack().data,
-        },
-        otherSigns: otherSigns.map(clinicalData => ({
+        clinicalSigns: clinicalSigns.map(clinicalData => ({
           code: clinicalData.unpack().code.unpack(),
           data: clinicalData.unpack().data,
         })),

@@ -5,7 +5,6 @@ import {
   GrowthStandard,
   StandardShape,
 } from "@core/constants";
-import { EdemaData } from "@core/diagnostics";
 import { Sex } from "@shared";
 import {
   integer,
@@ -204,6 +203,7 @@ export const nutritional_risk_factors = sqliteTable(
     })
       .$type<{ nutrient: string; effect: "deficiency" | "excess" }[]>()
       .notNull(),
+    modulatingCondition: text("nutritional_risk_factor_modulating_condition", { mode: 'json' }).$type<{ value: string, variables: string[] }>().notNull(),
     recommendedTests: text("nutritional_risk_factor_recommended_tests", {
       mode: "json",
     })
@@ -299,9 +299,7 @@ export const patient_diagnostic_data = sqliteTable("patient_diagnostic_data", {
   })
     .$type<
       {
-        edema: { code: string; data: EdemaData };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        otherSigns: { code: string; data: Record<string, any> }[];
+        clinicalSigns: { code: string; data: Record<string, any> }[];
       }[]
     >()
     .notNull(),

@@ -50,7 +50,7 @@ export class BiochemicalReference extends Entity<IBiochemicalReference> {
     return this.props.name;
   }
   getCode(): string {
-    return this.props.unit.unpack();
+    return this.props.code.unpack();
   }
   getRanges(): IBiochemicalRange[] {
     return this.props.ranges.map(range => range.unpack());

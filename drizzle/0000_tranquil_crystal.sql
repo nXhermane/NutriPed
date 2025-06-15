@@ -109,6 +109,7 @@ CREATE TABLE `nutritional_risk_factors` (
 	`updated_at` text(50) NOT NULL,
 	`nutritional_risk_factor_clinical_sign_code` text(10) NOT NULL,
 	`nutritional_risk_factor_associated_nutrients` text NOT NULL,
+	`nutritional_risk_factor_modulating_condition` text NOT NULL,
 	`nutritional_risk_factor_recommended_tests` text NOT NULL
 );
 --> statement-breakpoint
@@ -237,7 +238,7 @@ CREATE TABLE `patients` (
 	`patient_name` text(200) NOT NULL,
 	`patient_sex` text NOT NULL,
 	`patient_birthday` text(50) NOT NULL,
-	`patient_parents` text NOT NULL,
+	`patient_parents` text DEFAULT '{}',
 	`patient_contact` text NOT NULL,
 	`patient_address` text NOT NULL,
 	`patient_registration_date` text(50) NOT NULL

@@ -27,6 +27,7 @@ export class TableBasedStrategy extends AbstractZScoreComputingStrategy {
     if (!tableRow) return NaN;
     if (!tableRow.isUnisex && tableRow.sex != data.sex) return NaN;
     // FIXME: Verifier plustard si cela donne vraiment la bonne valeur
+    console.log("Table basesd value", columnValue,rowValue)
     if (columnValue < tableRow.severeNeg)
       return -3; // Si c'est c'est inférieur a severeNeg nous allons le mettre a -3
     else if (columnValue < tableRow.moderateNeg) return -2;

@@ -21,6 +21,7 @@ import {
 } from "lucide-react-native";
 import { Input, InputField, InputIcon, InputSlot } from "../ui/input";
 import { Textarea, TextareaInput } from "../ui/textarea";
+import { Text } from "../ui/text";
 import {
   Select,
   SelectBackdrop,
@@ -50,6 +51,7 @@ import {
 } from "../ui/checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useUI } from "@/src/context";
+import { HStack } from "../ui/hstack";
 type CommonFieldProps = {
   label: string;
   name: string;
@@ -88,12 +90,22 @@ type DateField = CommonFieldProps & {
   maxDate?: Date;
   minDate?: Date;
 };
+type QuantityField = CommonFieldProps & {
+  type: "quantity";
+  placeholder?: string;
+  maxValue?: number;
+  minValue?: number;
+  unitOptions: { unit: string; label: string; convertionFactor: number }[];
+  defaultUnit: { unit: string; label: string; convertionFactor: number };
+  default: { unit: string; value: number };
+};
 export type IField =
   | TextField
   | SelectField
   | RadioField
   | CheckBoxField
-  | DateField;
+  | DateField
+  | QuantityField;
 export interface FormFieldProps<T> {
   field: IField;
   value?: T;
@@ -109,14 +121,66 @@ export const FormField = <T,>({
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const { colorMode } = useUI();
   const [visible, setVisible] = useState<boolean>(false);
-  const handleChange = (value: T) => {
-    onChange &&
-      onChange(
-        field.name,
-        field.type === "number" ? (Number(value) as T) : value
-      );
-  };
   const [dateValue, setDateValue] = useState<Date>(new Date());
+  const [currentQuantityUnit, setCurrentQuantityUnit] = useState<{
+    unit: string;
+    label: string;
+    convertionFactor: number;
+  }>({} as any);
+  const [currentQuantityValue, setCurrentQuantityValue] = useState<number>(0);
+
+  const handleChange = (_value: T) => {
+    if (onChange) {
+      if (field.type === "number") {
+        onChange(field.name, Number(_value) as T);
+      } else {
+        onChange(field.name, _value);
+      }
+    }
+  };
+  const handleQuantityChangeHandle = (
+    _value: number,
+    prevUnit: string,
+    nextUnit: string
+  ) => {
+    if (field.type == "quantity") {
+      if (prevUnit != nextUnit) {
+        const availableUnits = field.unitOptions;
+        const nextUnitInfo = availableUnits.find(val => val.unit === nextUnit);
+        const prevUnitInfo = availableUnits.find(val => val.unit === prevUnit);
+        if (prevUnitInfo && nextUnitInfo) {
+          const baseValue = _value * prevUnitInfo.convertionFactor;
+          const nextValue = baseValue / nextUnitInfo.convertionFactor;
+          setCurrentQuantityUnit(nextUnitInfo);
+          setCurrentQuantityValue(nextValue);
+        }
+      }
+      if (currentQuantityValue != _value) {
+        const baseValue = currentQuantityUnit.convertionFactor * _value;
+        const defaultUnitValue = baseValue / field.defaultUnit.convertionFactor;
+        const minValue = field?.minValue || 0;
+        const maxValue = field?.maxValue || Infinity;
+        const matchedValue =
+          defaultUnitValue <= minValue
+            ? minValue
+            : defaultUnitValue >= maxValue
+              ? maxValue
+              : defaultUnitValue;
+        const currentUnitValue =
+          ((isNaN(matchedValue) ? minValue : matchedValue) *
+            field.defaultUnit.convertionFactor) /
+          currentQuantityUnit.convertionFactor;
+        setCurrentQuantityValue(currentUnitValue);
+        onChange &&
+          onChange(field.name, {
+            code: field.name,
+            value: defaultUnitValue,
+            unit: field.defaultUnit.unit,
+          } as T);
+      }
+    }
+  };
+
   useEffect(() => {
     if (field.type === "date") {
       if (field.mode === "date") {
@@ -133,8 +197,96 @@ export const FormField = <T,>({
       }
     }
   }, [value, field.default]);
+
+  if (field.type === "quantity")
+    useEffect(() => {
+      setCurrentQuantityUnit(field.defaultUnit);
+    }, [field?.defaultUnit]);
+
   const renderForm = () => {
     switch (field.type) {
+      case "quantity": {
+        return (
+          <React.Fragment>
+            <Input className="h-v-10 rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c">
+              <InputField
+                type={"text"}
+                placeholderClassName={
+                  "text-base font-body text-typography-primary_light"
+                }
+                placeholder={field.placeholder}
+                keyboardType={"numeric"}
+                onChangeText={num =>
+                  handleQuantityChangeHandle(
+                    Number(num),
+                    currentQuantityUnit.unit,
+                    currentQuantityUnit.unit
+                  )
+                }
+                value={String(currentQuantityValue)}
+              />
+              <InputSlot
+                onPress={() => setVisible(true)}
+                className={"h-[100%] w-20"}
+              >
+                <Select
+                  selectedValue={
+                    (currentQuantityUnit?.unit as string) || field.default.unit
+                  }
+                  onValueChange={unit =>
+                    handleQuantityChangeHandle(
+                      currentQuantityValue,
+                      currentQuantityUnit.unit,
+                      unit
+                    )
+                  }
+                  onClose={() => setVisible(false)}
+                  className={
+                    "h-[100%] w-[100%] border-[1px] border-primary-border/5"
+                  }
+                >
+                  <SelectTrigger className={"h-[100%] w-[100%] border-0"}>
+                    <HStack
+                      className={
+                        "h-[100%] w-[100%] items-center justify-end gap-1 pr-2"
+                      }
+                    >
+                      <Text className={"font-light text-sm"}>
+                        {currentQuantityUnit?.label}
+                      </Text>
+                      <InputIcon
+                        as={visible ? ChevronUp : ChevronDown}
+                        className={"h-4 w-4 text-typography-primary_light"}
+                      />
+                    </HStack>
+                  </SelectTrigger>
+                  <SelectPortal>
+                    <SelectBackdrop />
+                    <SelectContent
+                      className={"max-h-[85vh] bg-background-secondary"}
+                    >
+                      <SelectDragIndicatorWrapper>
+                        <SelectDragIndicator
+                          className={"h-v-1 w-5 rounded-sm border-0"}
+                        />
+                      </SelectDragIndicatorWrapper>
+                      <SelectScrollView>
+                        {field.unitOptions.map((item, index) => (
+                          <SelectItem
+                            key={index}
+                            label={item.label}
+                            value={item.unit}
+                          />
+                        ))}
+                      </SelectScrollView>
+                    </SelectContent>
+                  </SelectPortal>
+                </Select>
+              </InputSlot>
+            </Input>
+          </React.Fragment>
+        );
+      }
       case "date": {
         return (
           <React.Fragment>
@@ -173,7 +325,6 @@ export const FormField = <T,>({
                     } else if (field.mode != "countdown") {
                       handleChange(date.toISOString().split("T")[0] as T);
                     } else {
-                 
                     }
                   }
                   setVisible(false);

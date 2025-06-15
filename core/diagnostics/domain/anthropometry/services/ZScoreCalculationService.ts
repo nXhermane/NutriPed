@@ -37,23 +37,19 @@ export class ZScoreCalculationService implements IZScoreCalculationService {
           `Indicator: ${indicator.getCode()} , Standard: ${standard}`
         );
       }
-
       const axeX = evaluateFormula(indicator.getAxeX().value, data) as number;
       const axeY = evaluateFormula(indicator.getAxeY().value, data) as number;
-
       const zscore = strategy.computeZScore<T>({
         measurements: { x: axeX, y: axeY },
         growthReference: growthRef,
         sex: data.sex as Sex,
       });
-
       if (isNaN(zscore)) {
         return handleGrowthIndicatorError(
           GROWTH_INDICATOR_ERRORS.CALCULATION.INVALID_RESULT.path,
           `ZScore : ${zscore}, Indicator: ${indicator.getCode()}, GrowthRef: ${growthRef.getCode()}, Standard: ${standard}`
         );
       }
-
       return Result.ok(zscore);
     } catch (e: unknown) {
       return handleError(e);

@@ -22,6 +22,7 @@ import { recordUiState } from "@/src/store/uiState";
 import { DeletePatientBottomSheet } from "./DeletePatientBottomSheet";
 import { Spinner } from "@/components/ui/spinner";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
+import { router } from "expo-router";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
@@ -131,6 +132,13 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
                     selectedPatient => selectedPatient.id != item.id
                   );
                 });
+              }}
+              onPress={() => {
+                item.id &&
+                  router.push({
+                    pathname: "/screens/patient_detail/[id]",
+                    params: { id: item.id as string },
+                  });
               }}
             />
           ))

@@ -2,7 +2,7 @@ import { IAnthroComputingHelper } from "./interfaces/AnthroComputingHelper";
 
 export class AnthroComputingHelper implements IAnthroComputingHelper {
   computeZScore(y: number, L: number, M: number, S: number): number {
-    return (Math.pow(y / M, L) - 1) / (M * S);
+    return (Math.pow(y / M, L) - 1) / (S * L); // CHANGE : j'ai fixer ceci lors du debogage du beta sinon c'etait M * S changer en S * L 
   }
   computeZScoreAdjusted(y: number, L: number, M: number, S: number): number {
     const zScore = this.computeZScore(y, L, M, S);

@@ -68,9 +68,10 @@ export class NutritionalDiagnostic extends AggregateRoot<INutritionalDiagnostic>
     this.init();
   }
   saveDiagnostic(patientDiagnosticResult: NutritionalAssessmentResult): void {
-    if (this.props.atInit) {
+    // BETA: J'ai desativé pour des raisons de debugage
+    // if (this.props.atInit) {
       this.props.result = patientDiagnosticResult;
-    }
+    // }
     this.props.atInit = false;
   }
   correctDiagnostic(diagnosticModification: DiagnosticModification) {

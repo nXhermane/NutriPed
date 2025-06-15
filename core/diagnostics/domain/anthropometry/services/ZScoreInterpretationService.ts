@@ -5,7 +5,7 @@ import {
   Result,
 } from "@shared";
 import { AnthropometricVariableObject } from "../common";
-import { Indicator, IndicatorInterpreter, ZScoreVarName } from "../models";
+import { AnthroSystemCodes, Indicator, IndicatorInterpreter, ZScoreVarName } from "../models";
 import { IZScoreInterpretationService } from "./interfaces/ZScoreInterpretationService";
 import { GROWTH_INDICATOR_ERRORS, handleGrowthIndicatorError } from "../errors";
 
@@ -20,6 +20,9 @@ export class ZScoreInterpretationService
   ): Promise<Result<IndicatorInterpreter>> {
     try {
       const interpretations = indicator.getProps().interpretations;
+      if(indicator.getCode() === AnthroSystemCodes.WFLH_UNISEX) {
+        console.log("Interpretaion ", interpretations,zScore)
+      }
       const interpretation = interpretations.find(interp => {
         const { condition } = interp.unpack();
         const conditionEvaluationContext = data;
