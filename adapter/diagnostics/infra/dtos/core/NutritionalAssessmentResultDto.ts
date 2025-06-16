@@ -17,6 +17,7 @@ export interface NutritionalAssessmentResultPersistenceDto
     valueRange: `${GrowthIndicatorRange}`;
     interpretation: string;
     value: number;
+    isValid: boolean;
   }[];
   clinicalAnalysis: {
     clinicalSign: string;

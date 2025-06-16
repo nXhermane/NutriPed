@@ -61,6 +61,7 @@ export class NutritionalAssessmentResultInfraMapper
             unit,
             value,
             valueRange,
+            isValid,
           } = indicator.unpack();
           return {
             code: code.unpack(),
@@ -70,6 +71,7 @@ export class NutritionalAssessmentResultInfraMapper
             unit: unit.unpack(),
             value,
             valueRange,
+            isValid,
           };
         }),
       createdAt: entity.createdAt,

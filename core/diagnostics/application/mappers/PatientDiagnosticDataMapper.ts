@@ -7,7 +7,8 @@ import {
 import { ClinicalSignDto, PatientDiagnosticDataDto } from "../dtos";
 
 export class PatientDiagnosticDataMapper
-  implements ApplicationMapper<PatientDiagnosticData, PatientDiagnosticDataDto> {
+  implements ApplicationMapper<PatientDiagnosticData, PatientDiagnosticDataDto>
+{
   toResponse(entity: PatientDiagnosticData): PatientDiagnosticDataDto {
     return {
       id: entity.id,
@@ -16,7 +17,7 @@ export class PatientDiagnosticDataMapper
       anthropometricData: {
         data: entity
           .getAnthropometricData()
-          .unpack()
+          .unpack().entry
           .map((val: AnthropEntry) => ({
             code: val.code.unpack(),
             unit: val.unit.unpack(),

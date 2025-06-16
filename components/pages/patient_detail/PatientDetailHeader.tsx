@@ -53,7 +53,7 @@ export const PatientDetailHeader: React.FC<PatientDetailHeaderProps> = ({
   }, [patientId]);
   if (patientInfo === null) return null;
   return (
-    <VStack className={"p-safe pb-4 bg-background-secondary h-v-52"}>
+    <VStack className={"p-safe h-v-52 bg-background-secondary pb-4"}>
       <HStack className={"px-2 py-4"}>
         <Pressable onPress={() => router.back()}>
           <Icon

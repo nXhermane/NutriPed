@@ -20,6 +20,10 @@ import {
   NutritionalTreatmentAction,
 } from "../valueObjects";
 import { PatientCareSessionCreatedEvent } from "../../events";
+import {
+  ORIENTATION_REF_CODES,
+  TREATMENT_HISTORY_VARIABLES_CODES,
+} from "@/core/constants";
 export enum PatientCareSessionStatus {
   NOT_READY = "not_ready",
   IN_PROGRESS = "in_progress",
@@ -75,8 +79,9 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
       );
     }
 
-    if (!this.haveCurrentDailyJournal())
+    if (!this.haveCurrentDailyJournal()) {
       this.props.currentDailyJournal = dailyJournal;
+    }
   }
   addMonitoringValueToJournal(monitoringEntry: MonitoringEntry) {
     this.checkIfDailyJournalIsAdded();
@@ -130,6 +135,12 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
   }
 
   changeOrientationResult(orientationResult: OrientationResult) {
+    // BETA:
+    this.props.currentState.addOtherData(
+      TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT,
+      this.props.orientation.code.unpack() as any
+    );
+    // CHANGE: I
     this.props.orientation = orientationResult;
   }
   changeStatus(status: PatientCareSessionStatus) {

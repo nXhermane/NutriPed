@@ -48,7 +48,8 @@ export class NutritionalDiagnosticRepositoryExpoImpl
     NutritionalDiagnosticPersistenceDto,
     typeof nutritional_diagnostics
   >
-  implements NutritionalDiagnosticRepository {
+  implements NutritionalDiagnosticRepository
+{
   constructor(
     expo: SQLiteDatabase,
     mapper: InfrastructureMapper<
@@ -74,7 +75,8 @@ export class NutritionalDiagnosticRepositoryExpoImpl
             result: persistenceType.result?.id,
           });
         } else {
-          await tx.update(this.table)
+          await tx
+            .update(this.table)
             .set({
               ...persistenceType,
               patientData: persistenceType.patientData.id,

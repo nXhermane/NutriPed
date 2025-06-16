@@ -12,4 +12,5 @@ export interface GrowthIndicatorValueDto {
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;
+  isValid: boolean;
 }

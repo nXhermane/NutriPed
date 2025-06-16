@@ -21,6 +21,7 @@ export interface IGrowthIndicatorValue {
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;
+  isValid: boolean;
 }
 export type CreateGrowthIndicatorValueProps = {
   code: string;
@@ -30,6 +31,7 @@ export type CreateGrowthIndicatorValueProps = {
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;
+  isValid: boolean;
 };
 export class GrowthIndicatorValue extends ValueObject<IGrowthIndicatorValue> {
   protected validate(props: Readonly<IGrowthIndicatorValue>): void {
@@ -39,6 +41,7 @@ export class GrowthIndicatorValue extends ValueObject<IGrowthIndicatorValue> {
       );
     }
   }
+
   static create(
     createProps: CreateGrowthIndicatorValueProps
   ): Result<GrowthIndicatorValue> {
@@ -55,6 +58,7 @@ export class GrowthIndicatorValue extends ValueObject<IGrowthIndicatorValue> {
         valueRange: createProps.valueRange,
         value: createProps.value,
         interpretation: createProps.interpretation,
+        isValid: createProps.isValid,
       });
       return Result.ok(growthIndicatorValue);
     } catch (e: unknown) {

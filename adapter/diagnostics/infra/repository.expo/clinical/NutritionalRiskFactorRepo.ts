@@ -17,16 +17,17 @@ export class NutritionalRiskFactorRepositoryExpoImpl
     NutritionalRiskFactorPersistenceDto,
     typeof nutritional_risk_factors
   >
-  implements NutritionalRiskFactorRepository {
+  implements NutritionalRiskFactorRepository
+{
   async getByClinicalRefCode(
     code: SystemCode
   ): Promise<NutritionalRiskFactor[]> {
     try {
-      const entityPersistenceTypes = await this.db
+      const entityPersistenceTypes = (await this.db
         .select()
         .from(this.table)
         .where(eq(this.table.clinicalSignCode, code.unpack()))
-        .all() as NutritionalRiskFactorPersistenceDto[];
+        .all()) as NutritionalRiskFactorPersistenceDto[];
       return entityPersistenceTypes.map(entity => this.mapper.toDomain(entity));
     } catch (e: unknown) {
       throw new RepositoryException(

@@ -56,6 +56,7 @@ export class AfterPatientCareSessionCreatedHandler extends EventHandler<
     } else {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = (result.value as any).err;
+      console.error(AfterPatientCareSessionCreatedHandler.name, error);
       throw new EventHandlerExecutionFailed(
         formatError(error, AfterPatientCareSessionCreatedHandler.name)
       );

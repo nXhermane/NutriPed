@@ -1,2 +1,2 @@
-export * from "./patientInteractions"
-export * from "./store"
+export * from "./patientInteractions";
+export * from "./store";

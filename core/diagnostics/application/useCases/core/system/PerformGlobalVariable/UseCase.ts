@@ -103,7 +103,7 @@ export class PerformPatientGlobalVariableUseCase
   }
 
   private async _retrieveDiagnostic(patientId: AggregateID) {
-    return await this.diagnosticRepo.getByPatient(patientId);
+    return await this.diagnosticRepo.getByIdOrPatientId(patientId);
   }
 
   private async _ensureDiagnosticResult(

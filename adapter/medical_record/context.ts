@@ -136,7 +136,8 @@ export class MedicalRecordContext {
       : new MedicalRecordRepositoryExpoImpl(
           this.expo as SQLiteDatabase,
           this.infraMapper,
-          medical_records
+          medical_records,
+          this.eventBus
         );
     this.idGenerator = new GenerateUUID();
 

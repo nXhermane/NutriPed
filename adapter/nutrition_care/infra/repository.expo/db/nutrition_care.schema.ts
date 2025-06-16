@@ -2,6 +2,7 @@ import {
   APPETITE_TEST_PRODUCT_TYPE,
   APPETITE_TEST_SACHET_FRACTION_PARTITION,
   ConditionResult,
+  TREATMENT_HISTORY_VARIABLES_CODES,
 } from "@core/constants";
 import {
   Amount,
@@ -203,6 +204,15 @@ export const patient_current_states = sqliteTable("patient_current_states", {
       [key: string]: ValueTypeDto<
         (typeof ConditionResult)[keyof typeof ConditionResult]
       >;
+    }>()
+    .notNull(),
+  otherData: text("other_data", { mode: "json" })
+    .$type<{
+      [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
+        | "ORIENTATION_HOME"
+        | "ORIENTATION_CRENAM"
+        | "ORIENTATION_CNT"
+        | "ORIENTATION_CNA";
     }>()
     .notNull(),
 });

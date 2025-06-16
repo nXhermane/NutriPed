@@ -66,7 +66,8 @@ export class UnitContext {
       : new UnitRepositoryExpoImpl(
           this.expo as SQLiteDatabase,
           this.infraMapper,
-          units
+          units,
+          this.eventBus
         );
 
     // Application

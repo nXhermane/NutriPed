@@ -53,7 +53,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     private growthReferenceSelectionService: IReferenceSelectionService,
     private zScoreService: IZScoreCalculationService,
     private interpretationService: IZScoreInterpretationService
-  ) { }
+  ) {}
 
   /**
    * @method identifyPossibleIndicator
@@ -71,13 +71,14 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     data: AnthropometricVariableObject
   ): Promise<Result<Indicator[]>> {
     try {
-
       const indicators = await this.indicatorRepo.getAll();
       const anthropDataMeasureCodes = Object.keys(data);
       const possibleIndicators: Indicator[] = [];
       for (const indicator of indicators) {
         const neededMeasureCodes = indicator.getMeasureCodes();
-        const isPossible = neededMeasureCodes.every(code => anthropDataMeasureCodes.includes(code))
+        const isPossible = neededMeasureCodes.every(code =>
+          anthropDataMeasureCodes.includes(code)
+        );
         if (isPossible) {
           const usageCondition = indicator.getUsageCondition();
           const conditionResult =
@@ -195,9 +196,11 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
           this._calculateIndicator(data, indicator, standard)
         )
       );
-      // FIXME: 
-      // BETA: Je dois faire des verife plustard. pour les growth inicator non calculer. 
-      const computedIndicators = growthIndicatorValueRes.filter(res => res.isSuccess)
+      // FIXME:
+      // BETA: Je dois faire des verife plustard. pour les growth inicator non calculer.
+      const computedIndicators = growthIndicatorValueRes.filter(
+        res => res.isSuccess
+      );
 
       return Result.ok(computedIndicators.map(res => res.val));
     } catch (e: unknown) {
@@ -231,16 +234,15 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const growthRef =
         indicator.getStandardShape() === StandardShape.CURVE
           ? await this.growthReferenceSelectionService.selectChartForIndicator(
-            data,
-            indicator,
-            standard
-          )
+              data,
+              indicator,
+              standard
+            )
           : await this.growthReferenceSelectionService.selectTableForIndicator(
-            data,
-            indicator,
-            standard
-          );
-
+              data,
+              indicator,
+              standard
+            );
 
       if (growthRef.isFailure)
         return Result.fail(formatError(growthRef, GrowthIndicatorService.name));
@@ -271,10 +273,11 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
         code: indicator.getCode(),
         unit: "zscore",
         growthStandard: standard,
-        referenceSource: StandardShape.CURVE,
+        referenceSource: indicator.getStandardShape(),
         value: zScoreResult.val,
         interpretation: interpretationResult.val.unpack().code.unpack(),
         valueRange: interpretationResult.val.unpack().range,
+        isValid: true,
       };
       return GrowthIndicatorValue.create(growthIndicatorValueProps);
     } catch (e: unknown) {

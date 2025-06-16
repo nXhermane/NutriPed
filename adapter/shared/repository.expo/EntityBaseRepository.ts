@@ -71,8 +71,8 @@ export abstract class EntityBaseRepositoryExpo<
           )
         );
       }
-     
     } catch (e: unknown) {
+      console.error(e);
       if (e instanceof EventHandlerExecutionFailed) throw e;
       throw new RepositoryException(
         `[${entity.constructor.name}]: Repository saving internal Error`,

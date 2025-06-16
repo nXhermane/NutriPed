@@ -16,7 +16,7 @@ export default function Patients() {
         <PatientSeachBar />
         <PatientStatSession />
         <QuickFilterSession />
-        <PatientListSession  />
+        <PatientListSession />
       </PageBody>
     </Box>
   );

@@ -84,7 +84,7 @@ export default function Layout() {
         </Box>
       </Center>
       <OnBoardingScreenFooter
-        onNextBtnPress={swiperRef.current?.goToNext}
+        onNextBtnPress={() => swiperRef.current?.goToNext()}
         onSkipBtnPress={() => swiperRef.current?.goTo(3)}
         hideNextBtn={hideNextBtn}
         hideSkipBtn={hideNextBtn}

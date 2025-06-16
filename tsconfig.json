@@ -22,6 +22,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts"
-, "app/screens/patient_detail"  ]
+    "nativewind-env.d.ts",
+    "app/screens/patient_detail"
+  ]
 }

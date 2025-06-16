@@ -52,7 +52,7 @@ export const LastPatientsSession: React.FC<LastPatientSessionProps> = ({
       }
       setPatientList(lists);
     };
-   
+
     getPatientList();
   }, [patientInteractionList]);
 

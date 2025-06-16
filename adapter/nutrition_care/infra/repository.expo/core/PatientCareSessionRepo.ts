@@ -70,7 +70,7 @@ export class PatientCareSessionRepositoryExpoImpl
     try {
       const persistenceType = this.mapper.toPersistence(entity);
       const exist = await this._exist(entity.id);
-      this.db.transaction(async tx => {
+      await this.db.transaction(async tx => {
         if (!exist) {
           await tx
             .insert(this.table)
@@ -88,11 +88,12 @@ export class PatientCareSessionRepositoryExpoImpl
             ...(entity.getCurrentJournal()
               ? [entity.getCurrentJournal() as DailyCareJournal]
               : []),
-          ].map(this.repos.dailyJournalRepo.save)
+          ].map(dailyJournal => this.repos.dailyJournalRepo.save(dailyJournal))
         );
         await this.dispatchEventIfItAggregateRoot(entity);
       });
     } catch (e: unknown) {
+      console.error(e);
       if (e instanceof EventHandlerExecutionFailed) throw e;
       throw new RepositoryException(
         `[${entity.constructor.name}]: Repository saving internal Error`,
@@ -133,6 +134,7 @@ export class PatientCareSessionRepositoryExpoImpl
           currentState: string;
         }
       );
+
       return this.mapper.toDomain(entityPersistenceType);
     } catch (e: unknown) {
       if (
@@ -176,13 +178,13 @@ export class PatientCareSessionRepositoryExpoImpl
       )
     );
     const currentDailyJournal = record.currentDailyJournal
-      ? await this.repos.dailyJournalRepo.getById(record.currentDailyJournal.id)
+      ? await this.repos.dailyJournalRepo.getById(record.currentDailyJournal)
       : undefined;
     return {
       ...record,
       currentState: this.mappers.currentStateMapper.toPersistence(currentState),
-      dailyJournals: dailyJournals.map(
-        this.mappers.dailyJournalRepo.toPersistence
+      dailyJournals: dailyJournals.map(dailyJournal =>
+        this.mappers.dailyJournalRepo.toPersistence(dailyJournal)
       ),
       currentDailyJournal: currentDailyJournal
         ? this.mappers.dailyJournalRepo.toPersistence(

@@ -42,7 +42,6 @@ export class AddDataToMedicalRecordUseCase
 
       const validationRes = await this.validateMeasurement(medicalRecord);
       if (validationRes.isFailure) return left(validationRes);
-
       await this.repo.save(medicalRecord);
       return right(Result.ok(void 0));
     } catch (e: unknown) {

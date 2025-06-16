@@ -264,10 +264,11 @@ export class PediatricSoftwareDataManager {
                 (item): TableDataDto => ({
                   isUnisex: item.isUnisex,
                   median: item.median ?? 0,
+                  normalNeg: item.normalNeg ?? 0,
+                  outComeTargetValueNeg: item.hightSeverNeg ?? 0,
                   moderateNeg: item.moderateNeg ?? 0,
-                  moderatePos: item.moderatePos ?? 0,
                   severeNeg: item.severeNeg ?? 0,
-                  severePos: item.severePos ?? 0,
+                  hightSeverNeg: item.hightSeverNeg ?? 0,
                   sex: (item.sex ?? Sex.OTHER) as Sex,
                   value: item.value,
                 })

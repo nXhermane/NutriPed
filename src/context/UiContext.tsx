@@ -38,7 +38,7 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
     <React.Fragment>
       <StatusBar
         style="auto"
-       // backgroundColor={`${colorMode == "light" ? "#F6F6F6" : "#272625"}`}
+        // backgroundColor={`${colorMode == "light" ? "#F6F6F6" : "#272625"}`}
       />
       <UIContext.Provider
         value={{

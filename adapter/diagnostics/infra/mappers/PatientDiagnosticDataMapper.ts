@@ -8,10 +8,11 @@ import { PatientDiagnosticDataPersistenceDto } from "../dtos";
 
 export class PatientDiagnosticDataInfraMapper
   implements
-  InfrastructureMapper<
-    PatientDiagnosticData,
-    PatientDiagnosticDataPersistenceDto
-  > {
+    InfrastructureMapper<
+      PatientDiagnosticData,
+      PatientDiagnosticDataPersistenceDto
+    >
+{
   toPersistence(
     entity: PatientDiagnosticData
   ): PatientDiagnosticDataPersistenceDto {
@@ -22,7 +23,7 @@ export class PatientDiagnosticDataInfraMapper
       birthday: entity.getBirthDay().unpack(),
       anthropMeasures: entity
         .getAnthropometricData()
-        .unpack()
+        .unpack().entry
         .map(anthroEntry => ({
           code: anthroEntry.code.unpack(),
           unit: anthroEntry.unit.unpack(),

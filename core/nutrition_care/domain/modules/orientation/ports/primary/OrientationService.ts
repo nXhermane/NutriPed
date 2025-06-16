@@ -3,6 +3,8 @@ import {
   CLINICAL_SIGNS,
   AnthroSystemCodes,
   COMPLICATION_CODES,
+  TREATMENT_HISTORY_VARIABLES_CODES,
+  ORIENTATION_REF_CODES,
 } from "../../../../../../constants";
 import {
   APPETITE_TEST_CODES,
@@ -20,6 +22,11 @@ export interface OrientationContext {
   [AnthroSystemCodes.AGE_IN_MONTH]: number;
   [AnthroSystemCodes.WEIGHT]: number;
   [AnthroSystemCodes.WFA]: number;
+  [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
+    | "ORIENTATION_HOME"
+    | "ORIENTATION_CRENAM"
+    | "ORIENTATION_CNT"
+    | "ORIENTATION_CNA";
 }
 
 export interface OrientationResult {

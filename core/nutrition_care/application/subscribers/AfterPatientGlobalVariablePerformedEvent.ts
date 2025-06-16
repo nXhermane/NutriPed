@@ -7,7 +7,13 @@ import {
   PatientGlobalVariablePerformedEventData,
   PatientGlobalVariablesPerformedEvent,
 } from "../../../diagnostics/application/events";
-import { ConditionResult, DomainDate, UseCase } from "@shared";
+import {
+  ConditionResult,
+  DomainDate,
+  EventHandlerExecutionFailed,
+  formatError,
+  UseCase,
+} from "@shared";
 import {
   AddDataToPatientCareSessionRequest,
   AddDataToPatientCareSessionResponse,
@@ -21,7 +27,7 @@ import {
   MonitoredValueSource,
   MonitoringEntryType,
 } from "../../domain";
-
+//BETA:
 @DomainEventMessage(
   "After patient global variable performed event: update patient care session with new variables",
   true
@@ -63,9 +69,25 @@ export class AfterPatientGlobalVariablePerformedEvent extends EventHandler<
 
     const addResponse = await this.addDataUseCase.execute(addRequest);
     if (addResponse.isRight()) {
-      await this.makeReadyUseCase.execute({
+      const result = await this.makeReadyUseCase.execute({
         patientIdOrPatientCareId: patientId,
       });
+      if (result.isRight()) {
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const error = (addResponse.value as any).err;
+        console.error(AfterPatientGlobalVariablePerformedEvent.name, error);
+        throw new EventHandlerExecutionFailed(
+          formatError(error, AfterPatientGlobalVariablePerformedEvent.name)
+        );
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const error = (addResponse.value as any).err;
+      console.error(AfterPatientGlobalVariablePerformedEvent.name, error);
+      throw new EventHandlerExecutionFailed(
+        formatError(error, AfterPatientGlobalVariablePerformedEvent.name)
+      );
     }
   }
 
@@ -82,6 +104,10 @@ export class AfterPatientGlobalVariablePerformedEvent extends EventHandler<
   private generateMonitoringValues(
     variables: PatientGlobalVariablePerformedEventData["variables"]
   ): CreateMonitoringEntry[] {
+    console.log(
+      "This is called on ",
+      AfterPatientGlobalVariablePerformedEvent.name
+    );
     const date: string = new DomainDate().unpack(); // Assumes unpack() returns a string representation of the date.
     const defaultUnit = "kg"; // FIXME: adjust unit mapping as needed.
 

@@ -11,18 +11,26 @@ import {
 } from "../../../../../domain";
 import {
   AnthroSystemCodes,
+  AnthroSystemDefaultValue,
   CLINICAL_SIGNS,
   COMPLICATION_CODES,
+  TREATMENT_HISTORY_VARIABLES_CODES,
 } from "../../../../../../constants";
-
+type PreviousTreatment =
+  | "ORIENTATION_HOME"
+  | "ORIENTATION_CRENAM"
+  | "ORIENTATION_CNT"
+  | "ORIENTATION_CNA";
+type PatientOrientationContext = {
+  [x: string]: number | APPETITE_TEST_RESULT_CODES | PreviousTreatment;
+};
 export class OrientPatientUseCase
-  implements UseCase<OrientPatientRequest, OrientPatientResponse>
-{
+  implements UseCase<OrientPatientRequest, OrientPatientResponse> {
   constructor(
     private readonly orientUseCase: UseCase<OrientRequest, OrientResponse>,
     private readonly dailyJournalGenerator: IPatientDailyJournalGenerator,
     private readonly repo: PatientCareSessionRepository
-  ) {}
+  ) { }
   async execute(request: OrientPatientRequest): Promise<OrientPatientResponse> {
     try {
       const patientCareSession = await this.repo.getByIdOrPatientId(
@@ -43,7 +51,6 @@ export class OrientPatientUseCase
       const patientContext =
         this.getPatientCurrentVariables(patientCareSession);
       const orientRequest = this.generateOrientRequest(patientContext);
-
       const orientPatientRes = await this.orientPatient(orientRequest);
       if (orientPatientRes.isFailure) return left(orientPatientRes);
 
@@ -61,21 +68,22 @@ export class OrientPatientUseCase
     }
   }
 
-  private getPatientCurrentVariables(patientCareSession: PatientCareSession): {
-    [x: string]: number | APPETITE_TEST_RESULT_CODES;
-  } {
+  private getPatientCurrentVariables(
+    patientCareSession: PatientCareSession
+  ): PatientOrientationContext {
     const patientCurrentState = patientCareSession.getCurrentState();
     const allPatientVariables = {
       ...patientCurrentState.getAnthroVariables(),
       ...patientCurrentState.getClinicalVariables(),
       ...patientCurrentState.getAppetiteTestVariables(),
       ...patientCurrentState.getComplicationVariables(),
+      ...patientCurrentState.getOtherData(),
     };
     return allPatientVariables;
   }
-  private generateOrientRequest(patientContext: {
-    [x: string]: number | APPETITE_TEST_RESULT_CODES;
-  }): OrientRequest {
+  private generateOrientRequest(
+    patientContext: PatientOrientationContext
+  ): OrientRequest {
     return {
       [AnthroSystemCodes.AGE_IN_MONTH]: patientContext[
         AnthroSystemCodes.AGE_IN_MONTH
@@ -83,9 +91,9 @@ export class OrientPatientUseCase
       [AnthroSystemCodes.WEIGHT]: patientContext[
         AnthroSystemCodes.WEIGHT
       ] as number,
-      [AnthroSystemCodes.MUAC]: patientContext[
+      [AnthroSystemCodes.MUAC]: (patientContext[
         AnthroSystemCodes.MUAC
-      ] as number,
+      ] as number) || AnthroSystemDefaultValue[AnthroSystemCodes.MUAC],
       [AnthroSystemCodes.WFA]: patientContext[AnthroSystemCodes.WFA] as number,
       [AnthroSystemCodes.WFH_UNISEX_NCHS]: patientContext[
         AnthroSystemCodes.WFH_UNISEX_NCHS
@@ -100,6 +108,9 @@ export class OrientPatientUseCase
       [COMPLICATION_CODES.COMPLICATIONS_NUMBER]: patientContext[
         COMPLICATION_CODES.COMPLICATIONS_NUMBER
       ] as number,
+      [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]: patientContext[
+        TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT
+      ] as PreviousTreatment,
     };
   }
 

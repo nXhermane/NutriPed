@@ -27,14 +27,30 @@ export class TableBasedStrategy extends AbstractZScoreComputingStrategy {
     if (!tableRow) return NaN;
     if (!tableRow.isUnisex && tableRow.sex != data.sex) return NaN;
     // FIXME: Verifier plustard si cela donne vraiment la bonne valeur
-    console.log("Table basesd value", columnValue,rowValue)
-    if (columnValue < tableRow.severeNeg)
+    if (columnValue <= tableRow.hightSeverNeg) return -4;
+    if (
+      columnValue > tableRow.hightSeverNeg &&
+      columnValue <= tableRow.severeNeg
+    )
       return -3; // Si c'est c'est inférieur a severeNeg nous allons le mettre a -3
-    else if (columnValue < tableRow.moderateNeg) return -2;
-    else if (columnValue < tableRow.median) return 0;
-    else if (columnValue > tableRow.severePos) return 3;
-    else if (columnValue > tableRow.moderatePos) return 2;
-    else if (columnValue > tableRow.median) return 0;
+    else if (
+      columnValue > tableRow.severeNeg &&
+      columnValue <= tableRow.moderateNeg
+    )
+      return -2;
+    else if (
+      columnValue > tableRow.moderateNeg &&
+      columnValue <= tableRow.outComeTargetValueNeg
+    )
+      return -1.5;
+    else if (
+      columnValue > tableRow.outComeTargetValueNeg &&
+      columnValue <= tableRow.normalNeg
+    )
+      return -1;
+    else if (columnValue > tableRow.normalNeg && columnValue <= tableRow.median)
+      return 0;
+    else if (columnValue > tableRow.median) return 1;
     else return NaN;
   }
   private findTableDataCorrespondingToRowValue(

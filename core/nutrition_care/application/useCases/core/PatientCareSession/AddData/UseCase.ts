@@ -35,7 +35,6 @@ export class AddDataToPatientCareSessionUseCase
       const patientCareSession = await this.repo.getByIdOrPatientId(
         request.patientOrPatientCareId
       );
-
       const result =
         this.dailyGenerator.createDailyJournalIfNeeded(patientCareSession);
       if (result.isFailure) return left(result);
@@ -69,11 +68,12 @@ export class AddDataToPatientCareSessionUseCase
       );
       if (clinicalEventsRes.isFailure)
         return clinicalEventsRes as unknown as Result<void>;
-
-      monitoringValuesRes.val.map(
-        patientCareSession.addMonitoringValueToJournal
+      monitoringValuesRes.val.map(monitoringEntry =>
+        patientCareSession.addMonitoringValueToJournal(monitoringEntry)
       );
-      clinicalEventsRes.val.map(patientCareSession.addClinicalEventToJournal);
+      clinicalEventsRes.val.map(clinicalEvent =>
+        patientCareSession.addClinicalEventToJournal(clinicalEvent)
+      );
 
       return Result.ok();
     } catch (e: unknown) {

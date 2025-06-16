@@ -71,13 +71,8 @@ export class ValidateMeasurementsUseCase
       anthropometricMeasures: request.anthropometricData.data,
     });
 
-    const clinicalEdema = clinicalSigns.unpack().edema.unpack();
     const clinicalData = ClinicalData.create({
-      edema: {
-        code: clinicalEdema.code.unpack(),
-        data: clinicalEdema.data,
-      },
-      otherSigns: request.clinicalData,
+      clinicalSigns: request.clinicalData,
     });
 
     const biologicalData = request.biologicalTestResults.map(

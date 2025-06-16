@@ -1,5 +1,5 @@
-import {  SuccessToast } from "@/components/custom/SuccessToast";
-import {ErrorToast} from "@/components/custom/ErrorToast"
+import { SuccessToast } from "@/components/custom/SuccessToast";
+import { ErrorToast } from "@/components/custom/ErrorToast";
 import { useToast as useGluestackToast } from "@/components/ui/toast";
 import React, { createContext, ReactNode, useContext } from "react";
 import { Dimensions } from "react-native";

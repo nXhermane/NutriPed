@@ -53,6 +53,7 @@ export class NutritionalAssessmentResultMapper
       unit,
       value,
       valueRange,
+      isValid,
     } = growthIndicatorValue.unpack();
     return {
       code: code.unpack(),
@@ -62,6 +63,7 @@ export class NutritionalAssessmentResultMapper
       unit: unit.unpack(),
       value,
       valueRange,
+      isValid,
     };
   }
   private mapClinicalAnalysisResult(

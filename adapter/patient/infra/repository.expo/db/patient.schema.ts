@@ -10,7 +10,8 @@ export const patients = sqliteTable("patients", {
     .$type<{
       mother?: string;
       father?: string;
-    }>().default({}),
+    }>()
+    .default({}),
   contact: text("patient_contact", { mode: "json" })
     .$type<{
       email: string;

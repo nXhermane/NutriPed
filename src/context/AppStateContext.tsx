@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useReducer,
 } from "react";
-import { Provider as ReduxProvider } from "react-redux"
+import { Provider as ReduxProvider } from "react-redux";
 import { PERSISTOR, STORE } from "../store";
 import { PersistGate } from "redux-persist/integration/react";
 const APP_STATE_KEY = "app_state";
@@ -129,9 +129,8 @@ export const AppStateProvider: React.FC<AppStateProviderProps> = ({
     >
       <ReduxProvider store={STORE}>
         <PersistGate loading={null} persistor={PERSISTOR}>
-    {children}
+          {children}
         </PersistGate>
-    
       </ReduxProvider>
     </AppStateContext.Provider>
   );

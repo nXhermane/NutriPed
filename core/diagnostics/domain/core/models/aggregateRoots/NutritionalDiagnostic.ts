@@ -51,12 +51,14 @@ export class NutritionalDiagnostic extends AggregateRoot<INutritionalDiagnostic>
   changeAnthropometricData(anthropData: AnthropometricData) {
     this.props.patientData.changeAnthropometricData(anthropData);
     this.validate();
-    this.init();
+    // BETA:
+    // this.init();
   }
   changeClinicalData(clinicalData: ClinicalData) {
     this.props.patientData.changeClinicalSigns(clinicalData);
     this.validate();
-    this.init();
+    // BETA: j'ai desactiver ceci d'abord
+    // this.init();
   }
   changeBiologicalTestResult(
     biologicalAnalysisResults: BiologicalTestResult[]
@@ -65,12 +67,13 @@ export class NutritionalDiagnostic extends AggregateRoot<INutritionalDiagnostic>
       ...biologicalAnalysisResults
     );
     this.validate();
-    this.init();
+    // BETA:
+    // this.init();
   }
   saveDiagnostic(patientDiagnosticResult: NutritionalAssessmentResult): void {
     // BETA: J'ai desativé pour des raisons de debugage
     // if (this.props.atInit) {
-      this.props.result = patientDiagnosticResult;
+    this.props.result = patientDiagnosticResult;
     // }
     this.props.atInit = false;
   }

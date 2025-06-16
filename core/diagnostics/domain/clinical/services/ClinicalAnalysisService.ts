@@ -37,7 +37,7 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository,
     private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository
-  ) { }
+  ) {}
   async analyze(
     data: ClinicalData,
     context: EvaluationContext
@@ -55,7 +55,6 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
         presentSigns,
         context
       );
-   
 
       if (analysisResults.length === 0) {
         return handleClinicalError(
@@ -73,10 +72,10 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
     }
   }
   private extractClinicalSigns(data: ClinicalData): ClinicalSign<any>[] {
-    return data.unpack().clinicalSigns
+    return data.unpack().clinicalSigns;
   }
-  // TODO: OPTIMISER 
-  // FIXME: Je crois que nous ne gerons pas encore la possibilite ou le data n'est pas un require 
+  // TODO: OPTIMISER
+  // FIXME: Je crois que nous ne gerons pas encore la possibilite ou le data n'est pas un require
   private async identifyPresentSigns(
     data: ClinicalData,
     context: EvaluationContext
@@ -91,8 +90,10 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
         .getClinicalSignData()
         .map(signData => signData.code.unpack());
       if (
-        !clinicalSignRefNeedDataCode.every(
-          clinicalRefNeededCode => Object.keys(clinicalSignAssociatedData).includes(clinicalRefNeededCode)
+        !clinicalSignRefNeedDataCode.every(clinicalRefNeededCode =>
+          Object.keys(clinicalSignAssociatedData).includes(
+            clinicalRefNeededCode
+          )
         )
       ) {
         throw new ArgumentInvalidException(
@@ -130,7 +131,7 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
     presentSigns: ClinicalSign<any>[],
     context: EvaluationContext
   ): Promise<ClinicalNutritionalAnalysisResult[]> {
-    const clinicalSignAnalyseResult: ClinicalNutritionalAnalysisResult[] = []; 
+    const clinicalSignAnalyseResult: ClinicalNutritionalAnalysisResult[] = [];
     for (const presentClinicalSign of presentSigns) {
       const nutritionalRiskFactors =
         await this.nutritionalRiskFactorRepo.getByClinicalRefCode(

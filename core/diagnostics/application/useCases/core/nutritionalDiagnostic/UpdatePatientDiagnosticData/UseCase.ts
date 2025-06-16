@@ -44,8 +44,8 @@ export class UpdatePatientDiagnosticDataUseCase
   ): Promise<UpdatePatientDiagnosticDataResponse> {
     try {
       const nutritionalDiagnostic =
-        await this.nutritionalDiagnosticRepo.getById(
-          request.nutritionalDiagnosticId
+        await this.nutritionalDiagnosticRepo.getByIdOrPatientId(
+          request.patientOrNutritionalDiagnosticId
         );
       const updatedRes = this.updatePatientDiagnosticData(
         nutritionalDiagnostic,
@@ -110,7 +110,7 @@ export class UpdatePatientDiagnosticDataUseCase
     existing: AnthropometricData,
     newData: { data: { code: string; value: number; unit: string }[] }
   ): Result<AnthropometricData> {
-    const existingMeasures = existing.unpack().map(measure => ({
+    const existingMeasures = existing.unpack().entry.map(measure => ({
       code: measure.code.unpack(),
       value: measure.value,
       unit: measure.unit.unpack(),
@@ -150,14 +150,11 @@ export class UpdatePatientDiagnosticDataUseCase
     newData: CreateClinicalData
   ): Result<ClinicalData> {
     const existingData = existing.unpack();
-    const existingOtherSigns = existingData.otherSigns;
-
-    // Gérer l'edema séparément car c'est obligatoire
-    const edema = newData.edema;
+    const existingOtherSigns = existingData.clinicalSigns;
 
     // Fusionner les autres signes cliniques
     const mergedOtherSigns = [...existingOtherSigns];
-    for (const sign of newData.otherSigns) {
+    for (const sign of newData.clinicalSigns) {
       const existingIndex = mergedOtherSigns.findIndex(
         s => s.unpack().code.unpack() === sign.code
       );
@@ -182,8 +179,7 @@ export class UpdatePatientDiagnosticDataUseCase
     }
 
     return ClinicalData.create({
-      edema,
-      otherSigns: mergedOtherSigns.map(s => ({
+      clinicalSigns: mergedOtherSigns.map(s => ({
         code: s.unpack().code.unpack(),
         data: s.unpack().data,
       })),

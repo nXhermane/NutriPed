@@ -73,6 +73,7 @@ export class PatientCurrentStateInfraMapper
           },
         ])
       ),
+      otherData: entity.getOtherData(),
     };
   }
   toDomain(record: PatientCurrentStatePersistenceDto): PatientCurrentState {
@@ -136,6 +137,7 @@ export class PatientCurrentStateInfraMapper
         biologicalData: biologicalData as never,
         clinicalSignData: clinicalSignData as never,
         complicationData,
+        otherData: record.otherData,
       },
     });
     return patientCurrentState;

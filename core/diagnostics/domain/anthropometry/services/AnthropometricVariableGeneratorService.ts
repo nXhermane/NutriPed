@@ -56,7 +56,7 @@ export class AnthropometricVariableGeneratorService
         [AnthroSystemCodes.SEX]: context.sex,
         [AnthroSystemCodes.AGE_IN_MONTH]: context.age_in_month,
       };
-      for (const anthroMeasure of anthropData) {
+      for (const anthroMeasure of anthropData.entry) {
         const measureCode = anthroMeasure.code.unpack();
         if (
           Object.values(AnthroSystemCodes).includes(

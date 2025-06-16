@@ -9,10 +9,11 @@ export interface GrowthReferenceTablePersistenceDto
   standard: `${GrowthStandard}`;
   data: {
     value: number;
-    severePos: number;
-    moderatePos: number;
     median: number;
+    normalNeg: number;
     moderateNeg: number;
+    hightSeverNeg: number;
+    outComeTargetValueNeg: number;
     severeNeg: number;
     isUnisex: boolean;
     sex: `${Sex}`;

@@ -11,26 +11,17 @@
  * - otherSigns: Additional clinical observations
  */
 
-import {
-  formatError,
-  handleError,
-  Result,
-  ValueObject,
-} from "@shared";
+import { formatError, handleError, Result, ValueObject } from "@shared";
 import { ClinicalSign } from "./ClinicalSign";
 
 export interface IClinicalData {
-
   clinicalSigns: ClinicalSign<object>[];
 }
 export interface CreateClinicalData {
-
   clinicalSigns: { code: string; data: object }[];
 }
 export class ClinicalData extends ValueObject<IClinicalData> {
-  protected validate(props: Readonly<IClinicalData>): void {
-
-  }
+  protected validate(props: Readonly<IClinicalData>): void {}
   static create(props: CreateClinicalData): Result<ClinicalData> {
     try {
       const clinicalSignRes = props.clinicalSigns.map(sign =>
@@ -41,7 +32,7 @@ export class ClinicalData extends ValueObject<IClinicalData> {
         return Result.fail(formatError(combinedRes, ClinicalData.name));
       return Result.ok(
         new ClinicalData({
-          clinicalSigns: clinicalSignRes.map(res => res.val)
+          clinicalSigns: clinicalSignRes.map(res => res.val),
         })
       );
     } catch (e: unknown) {

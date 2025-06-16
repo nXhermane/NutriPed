@@ -1,2 +1,2 @@
-export * from './PatientDetailHeader'
-export * from "./DiagnosticDataForm"
+export * from "./PatientDetailHeader";
+export * from "./DiagnosticDataForm";

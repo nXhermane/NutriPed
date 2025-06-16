@@ -37,7 +37,7 @@ export class LenheiBasedStrategy extends AbstractZScoreComputingStrategy {
     // Filtrage pour ne prendre en charge que des valeurs valides
     const weight = y < MIN_WEIGHT || y > MAX_WEIGHT ? NaN : y;
     const lenhei = x < MIN_LENHEI || x > MAX_LENHEI ? NaN : x;
-     
+
     // Interpolation des tailles
     const lowLenhei = Math.trunc(lenhei * 10) / 10;
     const uppLenhei = Math.trunc(lenhei * 10 + 1) / 10;

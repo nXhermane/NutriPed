@@ -85,7 +85,7 @@ export const DeletePatientBottomSheet: React.FC<
         <ActionsheetDragIndicatorWrapper>
           <ActionsheetDragIndicator className={"h-v-1 w-5 rounded-sm"} />
         </ActionsheetDragIndicatorWrapper>
-        <VStack className={"gap-4 px-4 pt-v-4 pb-0 max-h-[60vh]"}>
+        <VStack className={"max-h-[60vh] gap-4 px-4 pb-0 pt-v-4"}>
           <VStack className={"gap-2"}>
             <HStack className={"gap-3"}>
               <Icon as={AlertTriangle} className={"h-7 w-7 text-warning-500"} />
@@ -115,7 +115,10 @@ export const DeletePatientBottomSheet: React.FC<
               patients selectionnés seront définitivement supprimées.
             </Text>
           </VStack>
-          <ScrollView className={" h-fit"} contentContainerClassName={"gap-2 max-h-v-52"}>
+          <ScrollView
+            className={"h-fit"}
+            contentContainerClassName={"gap-2 max-h-v-52"}
+          >
             {deletedPatients.map((patient, index) => (
               <CardPressEffect
                 key={index}
@@ -143,7 +146,6 @@ export const DeletePatientBottomSheet: React.FC<
           <HStack className={"justify-between"}>
             <Button
               className={"w-[40%] rounded-xl bg-green-500"}
-              
               onPress={handleOnClose}
             >
               <ButtonText className={"font-h4 text-sm text-typography-900"}>

@@ -96,6 +96,7 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
             patientId: result.data.id,
             date: new Date().toISOString(),
             state: PATIENT_STATE.NEW,
+            isFirstVisitToPatientDetail: true 
           })
         );
         dispatch(recordUiState({ type: "PATIENT_ADDED" }));

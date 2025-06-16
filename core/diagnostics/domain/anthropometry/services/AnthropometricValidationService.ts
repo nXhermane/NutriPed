@@ -30,7 +30,7 @@ export class AnthropometricValidationService
   ): Promise<Result<ValidateResult>> {
     try {
       const anthropometricEntries = data.unpack();
-      for (const anthropEntry of anthropometricEntries) {
+      for (const anthropEntry of anthropometricEntries.entry) {
         const anthropMeasure = await this.anthropMeasureRepo.getByCode(
           anthropEntry.code
         );

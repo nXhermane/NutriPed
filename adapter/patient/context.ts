@@ -63,7 +63,8 @@ export class PatientContext {
       : new PatientRepositoryExpoImpl(
           this.expo as SQLiteDatabase,
           this.infraMapper,
-          patients
+          patients,
+          this.eventBus
         );
 
     // Application

@@ -4,6 +4,7 @@ import {
   CLINICAL_SIGNS,
   BIOCHEMICAL_REF_CODES,
   COMPLICATION_CODES,
+  TREATMENT_HISTORY_VARIABLES_CODES,
 } from "../../../../../constants";
 import {
   APPETITE_TEST_CODES,
@@ -43,6 +44,13 @@ export interface IPatientCurrentState extends EntityPropsBaseType {
     string,
     ValueType<(typeof ConditionResult)[keyof typeof ConditionResult]>
   >;
+  otherData: {
+    [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
+      | "ORIENTATION_HOME"
+      | "ORIENTATION_CRENAM"
+      | "ORIENTATION_CNT"
+      | "ORIENTATION_CNA";
+  };
 }
 
 export interface CreateCurrentStateProps {
@@ -65,6 +73,13 @@ export interface CreateCurrentStateProps {
     string,
     (typeof ConditionResult)[keyof typeof ConditionResult]
   >;
+  otherData: {
+    [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
+      | "ORIENTATION_HOME"
+      | "ORIENTATION_CRENAM"
+      | "ORIENTATION_CNT"
+      | "ORIENTATION_CNA";
+  };
 }
 
 export class PatientCurrentState extends Entity<IPatientCurrentState> {
@@ -99,6 +114,12 @@ export class PatientCurrentState extends Entity<IPatientCurrentState> {
   }
   addComplication(code: string, value: number, date: DomainDate) {
     this.props.complicationData[code] = { code, value, date };
+  }
+  addOtherData<k extends keyof IPatientCurrentState["otherData"]>(
+    key: k,
+    value: IPatientCurrentState["otherData"][k]
+  ) {
+    this.props.otherData[key] = value;
   }
 
   getAnthroVariables(): Record<string, number> {
@@ -151,6 +172,9 @@ export class PatientCurrentState extends Entity<IPatientCurrentState> {
         0
       ),
     };
+  }
+  getOtherData(): IPatientCurrentState["otherData"] {
+    return this.props.otherData;
   }
   public validate(): void {
     this._isValid = false;
@@ -231,6 +255,7 @@ export class PatientCurrentState extends Entity<IPatientCurrentState> {
             >,
             appetiteTestResult: appetiteTestData,
             complicationData: complicationData,
+            otherData: createProps.otherData,
           },
         })
       );

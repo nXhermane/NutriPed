@@ -270,7 +270,12 @@ import { PatientACLImpl, UnitACLImpl } from "@core/sharedAcl";
 import { UnitContext } from "../units/context";
 
 import { PatientContext } from "../patient/context";
-import { AfterPatientCareSessionCreatedHandler } from "@core/diagnostics/application/subscribers";
+import {
+  AfterAnthropometricDataAddedDiagnosticHandler,
+  AfterBiologicalValueAddedDiagnosticHandler,
+  AfterClinicalSignDataAddedDiagnosticHandler,
+  AfterPatientCareSessionCreatedHandler,
+} from "@core/diagnostics/application/subscribers";
 import { GenerateUUID, IndexedDBConnection, isWebEnv } from "../shared";
 import { SQLiteDatabase } from "expo-sqlite";
 import {
@@ -601,6 +606,9 @@ export class DiagnosticContext {
   >;
   // Subscribers
   private readonly afterPatientCareSessionCreated: AfterPatientCareSessionCreatedHandler;
+  private readonly afterAnthropometricDataAdded: AfterAnthropometricDataAddedDiagnosticHandler;
+  private readonly afterClinicalSignAdded: AfterClinicalSignDataAddedDiagnosticHandler;
+  private readonly afterBiologicalValueAdded: AfterBiologicalValueAddedDiagnosticHandler;
   // Application Services
   private readonly anthroMeasureAppService: IAnthropometricMeasureService;
   private readonly indicatorAppService: IIndicatorService;
@@ -1066,7 +1074,23 @@ export class DiagnosticContext {
         this.performGlobalVariableUC,
         this.eventBus
       );
+    this.afterAnthropometricDataAdded =
+      new AfterAnthropometricDataAddedDiagnosticHandler(
+        this.updatePatientDiagnosticDataUC
+      );
+    this.afterClinicalSignAdded =
+      new AfterClinicalSignDataAddedDiagnosticHandler(
+        this.updatePatientDiagnosticDataUC
+      );
+    this.afterBiologicalValueAdded =
+      new AfterBiologicalValueAddedDiagnosticHandler(
+        this.updatePatientDiagnosticDataUC
+      );
+
     this.eventBus.subscribe(this.afterPatientCareSessionCreated);
+    this.eventBus.subscribe(this.afterAnthropometricDataAdded);
+    this.eventBus.subscribe(this.afterBiologicalValueAdded);
+    this.eventBus.subscribe(this.afterClinicalSignAdded);
     // Application Services
     this.anthroMeasureAppService = new AnthropometricMeasureService({
       createUC: this.createMeasureUC,
@@ -1189,6 +1213,9 @@ export class DiagnosticContext {
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {
     this.eventBus.unsubscribe(this.afterPatientCareSessionCreated);
+    this.eventBus.unsubscribe(this.afterAnthropometricDataAdded);
+    this.eventBus.unsubscribe(this.afterClinicalSignAdded);
+    this.eventBus.unsubscribe(this.afterBiologicalValueAdded);
     DiagnosticContext.instance = null;
   }
 }

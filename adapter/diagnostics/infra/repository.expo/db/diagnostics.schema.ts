@@ -6,16 +6,8 @@ import {
   StandardShape,
 } from "@core/constants";
 import { Sex } from "@shared";
-import {
-  integer,
-  sqliteTable,
-  SQLiteUpdateBase,
-  text,
-} from "drizzle-orm/sqlite-core";
-import {
-  NutritionalAssessmentResultPersistenceDto,
-  PatientDiagnosticDataPersistenceDto,
-} from "../../dtos";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { NutritionalAssessmentResultPersistenceDto } from "../../dtos";
 
 export const anthropometric_measures = sqliteTable("anthropometric_measures", {
   id: text("anthropometric_measure_id").primaryKey(),
@@ -68,10 +60,11 @@ export const growth_reference_tables = sqliteTable("growth_reference_tables", {
     .$type<
       {
         value: number;
-        severePos: number;
-        moderatePos: number;
         median: number;
+        normalNeg: number;
         moderateNeg: number;
+        hightSeverNeg: number;
+        outComeTargetValueNeg: number;
         severeNeg: number;
         isUnisex: boolean;
         sex: `${Sex}`;
@@ -203,7 +196,11 @@ export const nutritional_risk_factors = sqliteTable(
     })
       .$type<{ nutrient: string; effect: "deficiency" | "excess" }[]>()
       .notNull(),
-    modulatingCondition: text("nutritional_risk_factor_modulating_condition", { mode: 'json' }).$type<{ value: string, variables: string[] }>().notNull(),
+    modulatingCondition: text("nutritional_risk_factor_modulating_condition", {
+      mode: "json",
+    })
+      .$type<{ value: string; variables: string[] }>()
+      .notNull(),
     recommendedTests: text("nutritional_risk_factor_recommended_tests", {
       mode: "json",
     })
@@ -248,6 +245,7 @@ export const nutritional_assessment_results = sqliteTable(
           valueRange: `${GrowthIndicatorRange}`;
           interpretation: string;
           value: number;
+          isValid: boolean;
         }[]
       >()
       .notNull(),

@@ -41,7 +41,11 @@ export class GetNutritionalDiagnosticUseCase
         nutritionalDiagnostics.push();
       }
       return right(
-        Result.ok(nutritionalDiagnostics.map(nutritionalDiagnostic => this.mapper.toResponse(nutritionalDiagnostic)))
+        Result.ok(
+          nutritionalDiagnostics.map(nutritionalDiagnostic =>
+            this.mapper.toResponse(nutritionalDiagnostic)
+          )
+        )
       );
     } catch (e: unknown) {
       return left(handleError(e));

@@ -45,6 +45,7 @@ export class PatientCurrentStateMapper
           this.mapToValueTypeDto(value),
         ])
       ),
+      otherData: entity.getOtherData(),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

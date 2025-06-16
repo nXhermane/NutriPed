@@ -60,8 +60,11 @@ function Route() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name={"home"} options={{title: "Home"}} />
-      <Stack.Screen name={"onboarding/index"} options={{title: "Onboarding"}} />
+      <Stack.Screen name={"home"} options={{ title: "Home" }} />
+      <Stack.Screen
+        name={"onboarding/index"}
+        options={{ title: "Onboarding" }}
+      />
       <Stack.Screen name={"screens"} options={{}} />
     </Stack>
   );

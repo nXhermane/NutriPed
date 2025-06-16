@@ -52,7 +52,8 @@ export type GlobalDiagnosticVariable = AnthropometricVariableObject &
  * clinical, and biological data to generate comprehensive nutritional diagnostics
  */
 export class NutritionalAssessmentService
-  implements INutritionalAssessmentService {
+  implements INutritionalAssessmentService
+{
   /**
    * Creates a new instance of NutritionalAssessmentService
    * @param anthropVariableGenerator Service for generating anthropometric variable
@@ -75,7 +76,7 @@ export class NutritionalAssessmentService
       CreateNutritionalAssessmentResultProps,
       NutritionalAssessmentResult
     >
-  ) { }
+  ) {}
 
   /**
    * Evaluates the nutritional status of a patient based on various health indicators
@@ -157,10 +158,11 @@ export class NutritionalAssessmentService
             NutritionalAssessmentResult.name
           )
         );
-      const computingIndicatorRes = await this.growthIndicatorService.calculateAllIndicators(
-        anthropometricDataResult.val
-      );
-      return computingIndicatorRes
+      const computingIndicatorRes =
+        await this.growthIndicatorService.calculateAllIndicators(
+          anthropometricDataResult.val
+        );
+      return computingIndicatorRes;
     } catch (e: unknown) {
       return handleError(e);
     }
@@ -241,7 +243,17 @@ export class NutritionalAssessmentService
           `Detail: ${formatError(combinedResult, NutritionalAssessmentService.name)}`
         );
       }
-      const globalDiagnosticVariable = this.computeGlobalVariable(anthropometricVariableRes.val, clinicalVariable.val, biologicalVariable.val)
+      // BETA:
+      this.validateGrowthIndicatorValuesWithClinicalSigns(
+        growthIndicatorValues,
+        clinicalVariable.val
+      );
+      // BETA:
+      const globalDiagnosticVariable = this.computeGlobalVariable(
+        anthropometricVariableRes.val,
+        clinicalVariable.val,
+        biologicalVariable.val
+      );
       const diagnosticRuleRes = await this.getAllDiagnosticRule();
       if (diagnosticRuleRes.isFailure)
         return handleDiagnosticCoreError(
@@ -327,17 +339,17 @@ export class NutritionalAssessmentService
   ): Result<GlobalDiagnostic[]> {
     try {
       const validateDiagnostic = diagnosticRules.filter(diagnosticRule => {
-        return diagnosticRule
-          .getConditions()
-          .some(condition => {
-            const conditionEvalutationRes = Result.encapsulate(() => {
-              const res = this.evaluateCondition(condition.value, globalVariables)
-              return res
-            })
-            if (conditionEvalutationRes.isFailure) return false
-            return conditionEvalutationRes.val
-          }
-          );
+        return diagnosticRule.getConditions().some(condition => {
+          const conditionEvalutationRes = Result.encapsulate(() => {
+            const res = this.evaluateCondition(
+              condition.value,
+              globalVariables
+            );
+            return res;
+          });
+          if (conditionEvalutationRes.isFailure) return false;
+          return conditionEvalutationRes.val;
+        });
       });
       const globalDiagnostics = validateDiagnostic.map(rule =>
         GlobalDiagnostic.create(
@@ -373,18 +385,71 @@ export class NutritionalAssessmentService
     return conditionEvaluationResult === ConditionResult.True;
   }
 
-  private computeGlobalVariable(anthropometricVariableObject: AnthropometricVariableObject, clinicalVariable: ClinicalVariableObject, biologicalVariable: BiologicalVariableObject): GlobalDiagnosticVariable {
-    // Ici je dois faire une compromis pour la version beta 
-    // BETA: on doit prendre en charge l'élimination des indicateurs en cas d'œdeme 
-    const edemaIsPresent = clinicalVariable[CLINICAL_SIGNS.EDEMA] === ConditionResult.True
-    const weightBasedIndicator = [AnthroSystemCodes.WFH_UNISEX_NCHS, AnthroSystemCodes.WFLH_UNISEX, AnthroSystemCodes.BMI_FOR_AGE, AnthroSystemCodes.WFA, AnthroSystemCodes.WFLH]
+  private computeGlobalVariable(
+    anthropometricVariableObject: AnthropometricVariableObject,
+    clinicalVariable: ClinicalVariableObject,
+    biologicalVariable: BiologicalVariableObject
+  ): GlobalDiagnosticVariable {
+    // Ici je dois faire une compromis pour la version beta
+    // BETA: on doit prendre en charge l'élimination des indicateurs en cas d'œdeme
+    const edemaIsPresent =
+      clinicalVariable[CLINICAL_SIGNS.EDEMA] === ConditionResult.True;
+    const weightBasedIndicator = [
+      AnthroSystemCodes.WFH_UNISEX_NCHS,
+      AnthroSystemCodes.WFLH_UNISEX,
+      AnthroSystemCodes.BMI_FOR_AGE,
+      AnthroSystemCodes.WFA,
+      AnthroSystemCodes.WFLH,
+    ];
     if (edemaIsPresent) {
       for (const indicatorCode of weightBasedIndicator) {
-        anthropometricVariableObject[indicatorCode] = undefined as any
+        anthropometricVariableObject[indicatorCode] = undefined as any;
       }
     }
     return {
-      ...anthropometricVariableObject, ...clinicalVariable, ...biologicalVariable
-    } as GlobalDiagnosticVariable
+      ...anthropometricVariableObject,
+      ...clinicalVariable,
+      ...biologicalVariable,
+    } as GlobalDiagnosticVariable;
+  }
+
+  // BETA:
+  private validateGrowthIndicatorValuesWithClinicalSigns(
+    growthIndicatorValues: GrowthIndicatorValue[],
+    clinicalVariable: ClinicalVariableObject
+  ): GrowthIndicatorValue[] {
+    const edemaIsPresent =
+      clinicalVariable[CLINICAL_SIGNS.EDEMA] === ConditionResult.True;
+    const weightBasedIndicator = [
+      AnthroSystemCodes.WFH_UNISEX_NCHS,
+      AnthroSystemCodes.WFLH_UNISEX,
+      AnthroSystemCodes.BMI_FOR_AGE,
+      AnthroSystemCodes.WFA,
+      AnthroSystemCodes.WFLH,
+    ];
+    if (edemaIsPresent) {
+      for (const indicatorCode of weightBasedIndicator) {
+        const growthIndicatorValueIndex = growthIndicatorValues.findIndex(
+          val => val.unpack().code.unpack() === indicatorCode
+        );
+        if (growthIndicatorValueIndex != -1) {
+          const defaultGrowthIndicatorValue =
+            growthIndicatorValues[growthIndicatorValueIndex].unpack();
+          const growthIndicatorValue = new GrowthIndicatorValue({
+            code: defaultGrowthIndicatorValue.code,
+            growthStandard: defaultGrowthIndicatorValue.growthStandard,
+            interpretation: defaultGrowthIndicatorValue.interpretation,
+            referenceSource: defaultGrowthIndicatorValue.referenceSource,
+            unit: defaultGrowthIndicatorValue.unit,
+            value: defaultGrowthIndicatorValue.value,
+            valueRange: defaultGrowthIndicatorValue.valueRange,
+            isValid: false, // This changes
+          });
+          growthIndicatorValues[growthIndicatorValueIndex] =
+            growthIndicatorValue;
+        }
+      }
+    }
+    return growthIndicatorValues;
   }
 }

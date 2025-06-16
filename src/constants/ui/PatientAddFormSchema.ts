@@ -117,7 +117,9 @@ export const AddPatientFormSchema: FormSchema = [
   },
 ];
 
-export const AddPatientFormZodSchema: SchemaConstraint<typeof AddPatientFormSchema> = z.object({
+export const AddPatientFormZodSchema: SchemaConstraint<
+  typeof AddPatientFormSchema
+> = z.object({
   // Informations personnelles
   fullName: z.string().min(2, "Le nom complet est requis"),
   gender: z.enum([Sex.MALE, Sex.FEMALE], {
@@ -126,13 +128,21 @@ export const AddPatientFormZodSchema: SchemaConstraint<typeof AddPatientFormSche
   birthDate: z.string().min(1, "La date de naissance est requise"),
 
   // Contact
-  email: z.string().email("Email invalide").or(z.string().length(0)).transform(val => val.trim() === "" ? "default@gmail.com" : val),
-  phone: z.string().regex(/^\+?[0-9\s-]{8,}$/, "Numéro de téléphone invalide").or(z.string().length(0)).transform(val => val.trim() === "" ? "+229 XXXXXXXX" : val),
+  email: z
+    .string()
+    .email("Email invalide")
+    .or(z.string().length(0))
+    .transform(val => (val.trim() === "" ? "default@gmail.com" : val)),
+  phone: z
+    .string()
+    .regex(/^\+?[0-9\s-]{8,}$/, "Numéro de téléphone invalide")
+    .or(z.string().length(0))
+    .transform(val => (val.trim() === "" ? "+229 XXXXXXXX" : val)),
 
   // Adresse
   street: z.string(),
   // number: z.string(),
-  city: z.string().transform(val => val.trim() === "" ? "Bénin" : val),
+  city: z.string().transform(val => (val.trim() === "" ? "Bénin" : val)),
   postalCode: z.string(),
   country: z.string(),
 

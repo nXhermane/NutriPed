@@ -30,7 +30,7 @@ import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 export class ClinicalValidationService implements IClinicalValidationService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository
-  ) { }
+  ) {}
 
   async validate(clinicalData: ClinicalData): Promise<Result<ValidateResult>> {
     try {
@@ -49,7 +49,7 @@ export class ClinicalValidationService implements IClinicalValidationService {
   }
 
   private extractClinicalSigns(data: ClinicalData): ClinicalSign<any>[] {
-    return data.unpack().clinicalSigns
+    return data.unpack().clinicalSigns;
   }
 
   private async validateSignsData(
@@ -155,7 +155,7 @@ export class ClinicalValidationService implements IClinicalValidationService {
               const isNumber = typeof signDataValue === "number";
               const inRange =
                 (dataTypeRange as [number, number])[0] <= signDataValue &&
-                (dataTypeRange as [number, number])[1] >= signDataValue
+                (dataTypeRange as [number, number])[1] >= signDataValue;
               validationResult = isNumber && inRange;
             }
             break;

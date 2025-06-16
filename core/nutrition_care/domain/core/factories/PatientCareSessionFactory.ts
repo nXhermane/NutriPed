@@ -15,7 +15,10 @@ import {
   PatientCareSessionStatus,
   PatientCurrentState,
 } from "../models";
-import { ORIENTATION_REF_CODES } from "../../../../constants";
+import {
+  ORIENTATION_REF_CODES,
+  TREATMENT_HISTORY_VARIABLES_CODES,
+} from "../../../../constants";
 import { AppetiteTestResult } from "../../modules";
 import { IPatientDailyJournalGenerator } from "../ports";
 
@@ -50,6 +53,10 @@ export class PatientCareSessionFactory
           biologicalData: {} as never,
           clinicalSignData: {} as never,
           complicationData: {},
+          otherData: {
+            [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
+              ORIENTATION_REF_CODES.ORIENTED_TO_HOME,
+          },
         },
         this.idGenerator.generate().toValue()
       );
@@ -58,6 +65,7 @@ export class PatientCareSessionFactory
         return Result.fail(
           formatError(patientCurrentStateRes, PatientCareSessionFactory.name)
         );
+
       const patientCareSession = new PatientCareSession({
         id: this.idGenerator.generate().toValue(),
         props: {
@@ -68,8 +76,12 @@ export class PatientCareSessionFactory
           dailyJournals: [],
           currentState: patientCurrentStateRes.val,
           status: PatientCareSessionStatus.NOT_READY,
+          currentDailyJournal: undefined,
+          currentPhase: undefined,
+          endDate: undefined,
         },
       });
+
       const result =
         this.patientDailyJournalGenerator.createDailyJournalIfNeeded(
           patientCareSession

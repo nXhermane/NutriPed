@@ -32,11 +32,9 @@ export class AfterPatientCreatedMedicalHandler extends EventHandler<
     await this.onPatientCreatedEvent(event.data);
   }
   private async onPatientCreatedEvent(eventData: PatientCreatedData) {
-    console.log("Medical Record Event handler called");
     const result = await this.createMedicalRecordUseCase.execute({
       patientId: eventData.id,
     });
-    console.log("Results ", result);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (result.isLeft())
       throw new EventHandlerExecutionFailed(

@@ -123,8 +123,7 @@ export const DynamicFormGenerator = forwardRef(
                 field: err.path[0] as string,
                 error: err.message,
               });
-            }else {
-              
+            } else {
             }
           });
           return null;
