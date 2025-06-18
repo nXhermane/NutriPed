@@ -1,7 +1,9 @@
 {
   "expo": {
     "name": "MalNutrix",
-    "slug": "MalNutrix",
+    "slug": "NutriPed",
+    "scheme": "nutriped",
+    "userInterfaceStyle": "automatic",
     "version": "1.0.0",
     "newArchEnabled": true,
     "web": {

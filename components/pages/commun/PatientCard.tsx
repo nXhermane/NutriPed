@@ -5,7 +5,7 @@ import { Center } from "@/components/ui/center";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PATIENT_STATE } from "@/src/constants/ui";
 import { HumanDateFormatter } from "@/utils";
 import { AggregateID } from "@/core/shared";
@@ -28,7 +28,7 @@ export interface PatientCardProps extends PatientCardInfo {
   scaled?: boolean;
   translate?: boolean;
 }
-export const PatientCard: React.FC<PatientCardProps> = ({
+ const PatientCardComponent: React.FC<PatientCardProps> = ({
   name,
   createdAt,
   status,
@@ -126,3 +126,5 @@ export const PatientCardSkeleton = () => {
     </HStack>
   );
 };
+
+export const PatientCard = React.memo(PatientCardComponent)

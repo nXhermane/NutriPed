@@ -11,7 +11,6 @@ import { Box } from "@/components/ui/box";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { useGoogleAuth, useInitialization } from "@/src/context";
-import { ErrorAlert } from "@/components/custom";
 
 export default function Home() {
   const [showInitializationSheet, setShowInitializationSheet] =

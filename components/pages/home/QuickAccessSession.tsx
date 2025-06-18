@@ -4,12 +4,11 @@ import { HStack } from "@/components/ui/hstack";
 import { Center } from "@/components/ui/center";
 import { Text } from "@/components/ui/text";
 import { icons } from "lucide-react-native";
-import { Pressable } from "@/components/ui/pressable";
 import React, { useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { TOOLS_DATA } from "@/src/constants/ui";
-import { MotiView } from "moti";
 import { CardPressEffect } from "@/components/custom/motion";
+import { router } from "expo-router";
 export const QuickAccessSession = () => {
   const QuickAccessTools = TOOLS_DATA.filter(item => item.isQuickAccess);
   return (
@@ -18,7 +17,7 @@ export const QuickAccessSession = () => {
         title="Quick Access"
         actionName="See more"
         onActionPress={() =>
-          console.warn("Implement navigate to tools session")
+         router.navigate('/screens/tools')
         }
       />
       <HStack className={"gap-2 pt-v-4"}>

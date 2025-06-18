@@ -3,7 +3,7 @@
 {
   "expo": {
     "name": "MalNutrix",
-    "slug": "MalNutrix",
+    "slug": "nutriped",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/ic_launcher.png",

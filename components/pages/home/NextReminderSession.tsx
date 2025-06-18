@@ -2,7 +2,6 @@ import { VStack } from "@/components/ui/vstack";
 import { SessionHeader } from "./shared/SessionHeader";
 import { Box } from "@/components/ui/box";
 import { SessionEmpty } from "./shared/SessionEmpty";
-import { Pressable } from "@/components/ui/pressable";
 import { HStack } from "@/components/ui/hstack";
 import { Avatar } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
@@ -10,6 +9,7 @@ import { Stethoscope } from "lucide-react-native";
 import { Text } from "@/components/ui/text";
 import { CardPressEffect } from "@/components/custom/motion";
 import React from "react";
+import { router } from "expo-router";
 
 export interface NextReminderSessionProps {
   useMoked?: boolean;
@@ -29,9 +29,7 @@ export const NextReminderSession: React.FC<NextReminderSessionProps> = ({
       <SessionHeader
         title={"Next Reminder"}
         actionName="See more"
-        onActionPress={() =>
-          console.warn("Implement navigate to reminder session.")
-        }
+        onActionPress={() => router.navigate("/home/reminders")}
       />
       <Box className={"gap-3 pt-4"}>
         {nextReminder === null ? (
