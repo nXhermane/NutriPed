@@ -25,7 +25,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="nutriped"/>
-        <data android:scheme="exp+malnutrix"/>
+        <data android:scheme="exp+nutriped"/>
       </intent-filter>
     </activity>
   </application>
