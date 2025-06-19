@@ -1,0 +1,20 @@
+Pour quoi j'ai cette erreur uniquement lorque je lance mon application pour la premiere fois et je fais appele a la base de donnée ? 
+Mais lorsque je referme et je reload cette erreur ne se present plus. 
+et aussi cette erreur ne se present pas lorsque j'ajoute un console log apres la condition dans le PediatricAppContext (juste apres cette ligne   if (!dbOpened)
+    return (
+      <Center className="flex-1">
+        <Text>Init</Text>
+      </Center>
+    );)
+
+Dons je n'arrive vraiment pas a comprendre comment eviter totalement cette erreur. 
+ build. Learn more: https://docs.expo.dev/guides/linking/
+ LOG  db initialisé avec success.
+ LOG  null
+ LOG  db initialisé avec success.
+ LOG  null
+ LOG  jj
+ LOG  jj
+ INFO  [Domain Event Created]: Patient ==> PatientCreatedEvent
+ ERROR  [Error: Call to function 'NativeDatabase.prepareSync' has been rejected.
+→ Caused by: java.lang.NullPointerException: java.lang.NullPointerException]

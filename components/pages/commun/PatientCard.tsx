@@ -28,7 +28,7 @@ export interface PatientCardProps extends PatientCardInfo {
   scaled?: boolean;
   translate?: boolean;
 }
- const PatientCardComponent: React.FC<PatientCardProps> = ({
+const PatientCardComponent: React.FC<PatientCardProps> = ({
   name,
   createdAt,
   status,
@@ -70,26 +70,30 @@ export interface PatientCardProps extends PatientCardInfo {
       onLongPress={() => handleSelection()}
     >
       <HStack
-        className={`elevation-sm h-v-16 items-center gap-2 rounded-xl ${isSelected ? "border-[1px] border-primary-c bg-gray-100 dark:bg-primary-c/10" : "border-0 bg-background-secondary"} px-2`}
+        className={`elevation-sm h-v-16 justify-between rounded-xl ${isSelected ? "border-[1px] border-primary-c bg-gray-100 dark:bg-primary-c/10" : "border-0 bg-background-secondary"} px-3`}
       >
-        <Center>
-          <Avatar className={`h-9 w-9 ${statusBackground}`}>
-            <AvatarFallbackText className={"font-h2 text-typography-primary"}>
-              {name}
-            </AvatarFallbackText>
-          </Avatar>
-        </Center>
+        <HStack className={"items-center gap-2 "}>
+          <Center className={""}>
+            <Avatar className={`h-10 w-10 ${statusBackground} rounded-lg`}>
+              <AvatarFallbackText className={"font-h2 text-typography-primary"}>
+                {name}
+              </AvatarFallbackText>
+            </Avatar>
+          </Center>
 
-        <VStack>
-          <Text className={"font-body text-base text-typography-primary"}>
-            {name}
-          </Text>
-          <Text className={"font-light text-2xs text-typography-primary_light"}>
-            {HumanDateFormatter.toAge(birthday)} -{" "}
-            {HumanDateFormatter.toFollowUpDate(createdAt)}
-          </Text>
-        </VStack>
-        <Center className={"absolute right-2 gap-1"}>
+          <VStack>
+            <Text className={"font-body text-base text-typography-primary"}>
+              {name}
+            </Text>
+            <Text
+              className={"font-light text-2xs text-typography-primary_light"}
+            >
+              {HumanDateFormatter.toAge(birthday)} -{" "}
+              {HumanDateFormatter.toFollowUpDate(createdAt)}
+            </Text>
+          </VStack>
+        </HStack>
+        <Center className={"gap-1"}>
           <Badge
             className={`${statusBackground} h-v-4 items-center rounded-lg p-0 px-2`}
           >
@@ -127,4 +131,4 @@ export const PatientCardSkeleton = () => {
   );
 };
 
-export const PatientCard = React.memo(PatientCardComponent)
+export const PatientCard = React.memo(PatientCardComponent);

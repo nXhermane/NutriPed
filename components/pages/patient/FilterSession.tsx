@@ -20,6 +20,7 @@ export const QuickFilterSession: React.FC<QuickFilterSessionProps> = ({
   useEffect(() => {
     onChange && onChange(selectedTag);
   }, [selectedTag]);
+  
   return (
     <Box>
       <ScrollView
@@ -33,7 +34,9 @@ export const QuickFilterSession: React.FC<QuickFilterSessionProps> = ({
             value={item.tag === selectedTag}
             key={index}
             onChange={value => {
-              if (value) setSelectedTag(item.tag);
+              if (value) {
+
+                setSelectedTag(item.tag)}
             }}
           />
         ))}
@@ -57,6 +60,7 @@ export const QuickFilterItem: React.FC<QuicFilterItemProps> = ({
   }, [value]);
   const handlePress = () => {
     const _value = !state;
+    if(state) return
     setState(_value);
     onChange && onChange(_value);
   };

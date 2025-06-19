@@ -41,4 +41,4 @@ export const TOOLS_DATA = [
     code: "tables_tools",
     isQuickAccess: false,
   },
-];
+] as const 

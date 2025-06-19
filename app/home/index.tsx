@@ -17,11 +17,13 @@ export default function Home() {
     useState<boolean>(false);
   const { user } = useGoogleAuth();
   const { isInitialized } = useInitialization();
+
   useEffect(() => {
     if (user) {
       if (!isInitialized) setShowInitializationSheet(true);
     }
-  }, []);
+  }, [isInitialized]);
+  
   return (
     <Box className={"flex-1 bg-background-primary"}>
       <HomeHeader />
@@ -32,7 +34,7 @@ export default function Home() {
         <GreetingSession />
         <HomeSearchingBar />
         <QuickAccessSession />
-        <LastPatientsSession useMoked={true} />
+        <LastPatientsSession />
         <NextReminderSession />
         <InitAppBottomSheet
           showInitializationSheet={showInitializationSheet}

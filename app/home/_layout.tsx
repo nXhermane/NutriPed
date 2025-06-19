@@ -1,10 +1,7 @@
-import { Center } from "@/components/ui/center";
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useGoogleAuth } from "@/src/context";
-import { router } from "expo-router";
 import { icons } from "lucide-react-native";
 import {
   TabList,
@@ -13,35 +10,33 @@ import {
   TabTrigger,
   TabTriggerSlotProps,
 } from "expo-router/ui";
-import React, { Children, ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { Icon } from "@/components/ui/icon";
-import { View } from "@/components/ui/view";
+import { ProtectedRoute } from "@/components/pages/shared";
 
 export default function Layout() {
-  const { user } = useGoogleAuth();
-  useEffect(() => {
-    if (user == null) router.replace("./../");
-  }, [user]);
   return (
-    <Tabs>
-      <TabSlot />
-      <TabList asChild>
-        <CustomTabList>
-          <TabTrigger name="Home" href="/home" asChild>
-            <CustomTabButton name={"Accueil"} icon={"House"} />
-          </TabTrigger>
-          <TabTrigger name="Patients" href="/home/patients" asChild>
-            <CustomTabButton name={"Patients"} icon={"Users"} />
-          </TabTrigger>
-          <TabTrigger name="Reminders" href="/home/reminders" asChild>
-            <CustomTabButton name={"Rappels"} icon={"Bell"} />
-          </TabTrigger>
-          <TabTrigger name="Settings" href="/home/settings" asChild>
-            <CustomTabButton name={"Paramètres"} icon={"Settings2"} />
-          </TabTrigger>
-        </CustomTabList>
-      </TabList>
-    </Tabs>
+    <ProtectedRoute>
+      <Tabs>
+        <TabSlot />
+        <TabList asChild>
+          <CustomTabList>
+            <TabTrigger name="Home" href="/home" asChild>
+              <CustomTabButton name={"Accueil"} icon={"House"} />
+            </TabTrigger>
+            <TabTrigger name="Patients" href="/home/patients" asChild>
+              <CustomTabButton name={"Patients"} icon={"Users"} />
+            </TabTrigger>
+            <TabTrigger name="Reminders" href="/home/reminders" asChild>
+              <CustomTabButton name={"Rappels"} icon={"Bell"} />
+            </TabTrigger>
+            <TabTrigger name="Settings" href="/home/settings" asChild>
+              <CustomTabButton name={"Paramètres"} icon={"Settings2"} />
+            </TabTrigger>
+          </CustomTabList>
+        </TabList>
+      </Tabs>
+    </ProtectedRoute>
   );
 }
 

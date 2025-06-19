@@ -1,6 +1,7 @@
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -18,6 +19,7 @@ import {
   allowedExtensions,
 } from "@services/ZipProcessor";
 import { CORE_CONFIG } from "@config/core";
+import { useGoogleAuth } from "./GoogleAuthContext";
 
 const INIT_STATUS_KEY = "app_initialization_status";
 
@@ -48,7 +50,6 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
 }) => {
   const { diagnosticServices, nutritionCareServices, unitService } =
     usePediatricApp();
-
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,11 +61,11 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
     "in_process"
   );
   const [currentPhase, setCurrentPhase] = useState<null | string>(null);
-  const [] = useState("");
   useEffect(() => {
     const checkStatus = async () => {
       try {
         const status = await AsyncStorage.getItem(INIT_STATUS_KEY);
+        console.log(status)
         setIsInitialized(status === "completed");
       } catch {
         setError("Erreur lors de la vérification du statut d'initialisation");
@@ -82,7 +83,7 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
     setCurrentStage("");
     setStatusMessage("");
     setInitStages([]);
-
+   
     try {
       const observer: IZipProcessorObserver = {
         onProgress(event) {

@@ -373,7 +373,7 @@ export const FormField = <T,>({
                   className={"h-4 w-4 border-typography-primary_light"}
                   grid-cols-2
                 >
-                  <RadioIcon as={Circle} />
+                  <RadioIcon as={Circle} className="bg-primary-c_light text-primary-c_light"/>
                 </RadioIndicator>
                 <RadioLabel
                   className={"font-body text-sm text-typography-primary_light"}

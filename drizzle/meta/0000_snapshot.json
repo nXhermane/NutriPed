@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "49988538-7734-4df6-aa64-2360cbb11599",
+  "id": "61e21494-8247-4c7a-abf1-537af4e21cba",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "anthropometric_measures": {
@@ -1403,6 +1403,13 @@
         },
         "complication_data": {
           "name": "complication_data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "other_data": {
+          "name": "other_data",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

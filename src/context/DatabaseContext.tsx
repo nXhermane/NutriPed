@@ -34,8 +34,8 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({
       try {
         await engine.init();
         await engine.open();
-        setDb(engine.getDb() as any | IndexedDBConnection | null);
         if (engine.getDb() != null) {
+          setDb(engine.getDb() as any | IndexedDBConnection | null);
           setDbOpened(true);
         }
       } catch (e: unknown) {

@@ -257,7 +257,7 @@ export const DiagnosticDataForm: React.FC<DiagnosticDataFormProps> = React.memo(
     }, [isOpen]);
 
     return (
-      <Actionsheet isOpen={isOpen}>
+      <Actionsheet isOpen={isOpen} onClose={onClose}>
         <ActionsheetBackdrop />
         <ActionsheetContent className="border-0 bg-background-secondary px-0">
           <ActionsheetDragIndicatorWrapper>

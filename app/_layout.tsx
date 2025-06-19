@@ -59,13 +59,19 @@ function Route() {
       screenOptions={{
         headerShown: false,
       }}
+      // initialRouteName="onboarding/index"
     >
       <Stack.Screen name={"home"} options={{ title: "Home" }} />
       <Stack.Screen
         name={"onboarding/index"}
         options={{ title: "Onboarding" }}
       />
-      <Stack.Screen name={"screens"} options={{}} />
+      <Stack.Screen
+        name={"(screens)"}
+        options={{
+          animation: "slide_from_right",
+        }}
+      />
     </Stack>
   );
 }

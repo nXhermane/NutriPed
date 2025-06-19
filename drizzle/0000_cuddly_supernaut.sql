@@ -228,7 +228,8 @@ CREATE TABLE `patient_current_states` (
 	`clinical_sign_data` text NOT NULL,
 	`biological_data` text NOT NULL,
 	`appetite_test_result` text NOT NULL,
-	`complication_data` text NOT NULL
+	`complication_data` text NOT NULL,
+	`other_data` text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `patients` (

@@ -11,10 +11,6 @@ export const PatientSeachBar: React.FC<PatientSeachBarProps> = ({
     <SearchBar
       fieldProps={{
         placeholder: "Rechercher un patient...",
-        onPress: () =>
-          console.log(
-            "Naviagte to seaching screen or implemente the patient finding logique"
-          ),
         ...fieldProps,
       }}
       {...props}

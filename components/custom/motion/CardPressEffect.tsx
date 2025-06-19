@@ -1,6 +1,7 @@
 import { IPressableProps, Pressable } from "@/components/ui/pressable";
 import { MotiView } from "moti";
 import React, { useState } from "react";
+import { TouchableNativeFeedback } from "react-native";
 
 export interface CardPressEffectProps extends IPressableProps {
   scaled?: boolean;
@@ -36,21 +37,22 @@ export const CardPressEffect: React.FC<CardPressEffectProps> = ({
         delay: 300,
       }}
     >
-      <Pressable
-        onPressIn={e => {
-          setPressed(true);
-          onPressIn && onPressIn(e);
-        }}
-        onPressOut={e => {
-          setPressed(false);
-          onPressOut && onPressOut(e);
-        }}
-        {...props}
-      >
-        {e => {
-          return typeof children === "function" ? children(e) : children;
-        }}
-      </Pressable>
+   
+        <Pressable
+          onPressIn={e => {
+            setPressed(true);
+            onPressIn && onPressIn(e);
+          }}
+          onPressOut={e => {
+            setPressed(false);
+            onPressOut && onPressOut(e);
+          }}
+          {...props}
+        >
+          {typeof children === "function"
+            ? children({ hovered: false, pressed: false })
+            : children}
+        </Pressable>
     </MotiView>
   );
 };

@@ -1,7 +1,7 @@
 import { Box } from "@/components/ui/box";
 import { MokedPatientList } from "@/data";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView } from "react-native";
+import { ActivityIndicator, FlatList, ScrollView } from "react-native";
 import {
   PatientCard,
   PatientCardInfo,
@@ -16,134 +16,102 @@ import { AddPatientBottomSheet } from "./AddPatientBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { usePediatricApp } from "@/adapter";
 import { AggregateID, Message } from "@/core/shared";
-import { PATIENT_STATE } from "@/src/constants/ui";
+import { PATIENT_QUICK_FILTER_TAG, PATIENT_STATE } from "@/src/constants/ui";
 import { AppDispatch, Interaction } from "@/src/store";
 import { recordUiState } from "@/src/store/uiState";
 import { DeletePatientBottomSheet } from "./DeletePatientBottomSheet";
 import { Spinner } from "@/components/ui/spinner";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { router } from "expo-router";
+import { usePatientList } from "@/src/hooks";
+import Fuse from "fuse.js";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
 };
 export interface PatientListSessionProps {
+  searchText: string;
   useMoked?: boolean;
+  filterTag: PATIENT_QUICK_FILTER_TAG;
 }
 export const PatientListSession: React.FC<PatientListSessionProps> = ({
   useMoked = false,
+  searchText,
+  filterTag,
 }) => {
-  const [onLoading, setOnLoading] = useState<boolean>(false);
   const [hideFab, setHideFab] = useState<boolean>(false);
-  const [patientList, setPatientList] = useState<PatientCardInfo[]>([]);
   const [selectedItem, setSelectedItem] = useState<SelectedPatient[]>([]);
   const [showPatientForm, setShowPatientForm] = useState<boolean>(false);
   const [showConfirmDeletionAction, setShowConfirmDeletionAction] =
     useState<boolean>(false);
-  const updatePatientList = useSelector(
-    (state: any) => state.uiReducer.refreshPatientList
-  );
-  const patientInteractionList: Interaction[] = useSelector(
-    (state: any) => state.patientInteractionReducer.interactions
-  );
-  const dispatch = useDispatch<AppDispatch>();
-  const { patientService } = usePediatricApp();
+  const { onLoading, patientList } = usePatientList(filterTag);
+  const fuse = new Fuse(patientList, {
+    keys: ["name"],
+    threshold: 0.3, // ajustable : plus bas = plus strict
+    ignoreLocation: true, // ne tient pas compte de la position du texte
+    includeScore: true,
+  });
 
-  useEffect(() => {
-    // if (useMoked) {
-    //   setPatientList(
-    //     MokedPatientList.concat(MokedPatientList).concat(MokedPatientList)
-    //   );
-    // }
-  }, [useMoked]);
-
-  useEffect(() => {
-    const getPatientList = async () => {
-      setOnLoading(true);
-      const patients = await patientService.get({});
-      const lists: PatientCardInfo[] = [];
-      if (!(patients instanceof Message)) {
-        for (const patientDto of patients.data) {
-          lists.push({
-            birthday: patientDto.birthday,
-            name: patientDto.name,
-            createdAt: patientDto.registrationDate,
-            status:
-              patientInteractionList.find(
-                interaction => interaction.patientId === patientDto.id
-              )?.state || PATIENT_STATE.NORMAL,
-            id: patientDto.id,
-          });
-        }
-      }
-      setPatientList(lists);
-      dispatch(recordUiState({ type: "PATIENT_REFRESHED" }));
-      setOnLoading(false);
-    };
-    getPatientList();
-  }, [updatePatientList]);
-
+  const filteredList = searchText
+    ? fuse.search(searchText).map(result => result.item)
+    : patientList;
   const handleDeleteAction = () => {
     setShowConfirmDeletionAction(true);
   };
 
   return (
     <Box className="h-full max-h-[65%]">
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="gap-3 py-1 pb-v-10"
-        onMomentumScrollEnd={() => setHideFab(false)}
-        onScroll={() => setHideFab(true)}
-      >
-        {onLoading ? (
-          new Array(10)
-            .fill(0)
-            .map((_, index) => <PatientCardSkeleton key={index} />)
-        ) : patientList.length === 0 ? (
+      <FlatList
+        className={"pt-3"}
+        initialNumToRender={10}
+        data={filteredList}
+        keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+        renderItem={({ item }) => (
+          <PatientCard
+            name={item.name}
+            createdAt={item.createdAt}
+            status={item.status as PatientCardProps["status"]}
+            birthday={item.birthday}
+            nextVisitDate={item.nextVisitDate}
+            enableSelection
+            enableQuickSelection={selectedItem.length >= 1}
+            scaled={false}
+            selected={!!selectedItem.find(patient => item.id === patient.id)}
+            onChange={(value: boolean) => {
+              setSelectedItem(prev => {
+                const findedIndex = prev.findIndex(
+                  selectedPatient => selectedPatient.id === item.id
+                );
+                if (findedIndex === -1 && value) {
+                  return [
+                    ...prev,
+                    { id: item.id as AggregateID, name: item.name },
+                  ];
+                }
+                return prev.filter(
+                  selectedPatient => selectedPatient.id != item.id
+                );
+              });
+            }}
+            onPress={() => {
+              item.id &&
+                router.push({
+                  pathname: "/(screens)/patient_detail/[id]",
+                  params: { id: item.id as string },
+                });
+            }}
+          />
+        )}
+        ListEmptyComponent={() => (
           <SessionEmpty
             message={"Aucun patient pour le moment.Veillez ajouter un patient."}
             iconName={"UserLock"}
           />
-        ) : (
-          patientList.map((item, index) => (
-            <PatientCard
-              name={item.name}
-              createdAt={item.createdAt}
-              status={item.status as PatientCardProps["status"]}
-              key={index}
-              birthday={item.birthday}
-              nextVisitDate={item.nextVisitDate}
-              enableSelection
-              enableQuickSelection={selectedItem.length >= 1}
-              scaled={false}
-              selected={!!selectedItem.find(patient => item.id === patient.id)}
-              onChange={(value: boolean) => {
-                setSelectedItem(prev => {
-                  const findedIndex = prev.findIndex(
-                    selectedPatient => selectedPatient.id === item.id
-                  );
-                  if (findedIndex === -1 && value) {
-                    return [
-                      ...prev,
-                      { id: item.id as AggregateID, name: item.name },
-                    ];
-                  }
-                  return prev.filter(
-                    selectedPatient => selectedPatient.id != item.id
-                  );
-                });
-              }}
-              onPress={() => {
-                item.id &&
-                  router.push({
-                    pathname: "/screens/patient_detail/[id]",
-                    params: { id: item.id as string },
-                  });
-              }}
-            />
-          ))
         )}
-      </ScrollView>
+        ItemSeparatorComponent={() => <Box className={"h-v-3"} />}
+        showsVerticalScrollIndicator={false}
+      />
+
       {!hideFab && selectedItem.length === 0 && (
         <Fab
           placement="bottom right"
@@ -187,3 +155,9 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
     </Box>
   );
 };
+
+// onLoading ? (
+//           new Array(10)
+//             .fill(0)
+//             .map((_, index) => <PatientCardSkeleton key={index} />)
+//         )

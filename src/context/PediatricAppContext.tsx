@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useState } from "react";
-import { useDatabase } from "./DatabaseContext";
 import React from "react";
 import { View } from "@/components/ui/view";
 import { Text } from "@/components/ui/text";
@@ -10,6 +9,8 @@ import {
 } from "@/adapter";
 
 import { IEventBus } from "@/core/shared";
+import { Center } from "@/components/ui/center";
+import { useDatabase } from "./DatabaseContext";
 
 export interface IPediatricAppContext {}
 
@@ -27,8 +28,12 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
   const eventBus = useEventBus();
   const { db, dbOpened } = useDatabase();
 
-  if (!dbOpened) return onLoading ? onLoading() : null;
-
+  if (!dbOpened)
+    return (
+      <Center className="flex-1 bg-background-secondary">
+        <Text>Please Reload The App</Text>
+      </Center>
+    );
   return (
     <PediatricAppContext.Provider value={{}}>
       <AdapterPediatricAppProvider

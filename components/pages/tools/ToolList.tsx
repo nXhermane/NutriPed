@@ -24,15 +24,14 @@ export const ToolList = () => {
             name={item.name}
             desc={item.desc}
             iconName={item.iconName as keyof typeof icons}
-            onPress={() =>{
-                
+            onPress={() => {
               router.navigate({
-                pathname: "/screens/tools/[tool]",
+                pathname: "/(screens)/tools/[tool]",
                 params: {
                   tool: item.code,
                 },
-              })}
-            }
+              });
+            }}
           />
         )}
         ListEmptyComponent={() => (

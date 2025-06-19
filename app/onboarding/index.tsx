@@ -4,10 +4,9 @@ import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
-import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { AppConstants } from "@/src/constants";
-import { useGoogleAuth } from "@/src/context";
+import { useGoogleAuth, useToast } from "@/src/context";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { VStack } from "@/components/ui/vstack";
@@ -16,7 +15,7 @@ import { Divider } from "@/components/ui/divider";
 import { useColorScheme, Image as RNImage } from "react-native";
 import { isMobile, rnS, rnVs } from "@/scaling";
 import { Pressable } from "@/components/ui/pressable";
-import { Icon, InfoIcon } from "@/components/ui/icon";
+import { PublicRoute } from "@/components/pages/shared";
 
 export default function Layout() {
   const { user } = useGoogleAuth();
@@ -24,72 +23,70 @@ export default function Layout() {
   const swiperRef = useRef<Swiper>(null);
   const [hideNextBtn, setHideNextBtn] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (user != null) router.replace("./../home");
-  }, [user]);
-
   return (
-    <Box className={"p-safe flex-1 justify-between bg-background-primary"}>
-      <OnBoardingScreenHeader />
+    <PublicRoute>
+      <Box className={"p-safe flex-1 justify-between bg-background-primary"}>
+        <OnBoardingScreenHeader />
 
-      <Center className="flex-1">
-        <Box className={"w-full flex-1 pb-v-3 pt-v-10"}>
-          <Swiper
-            ref={swiperRef}
-            containerStyle={{
-              width: "100%",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onIndexChanged={(index: number) => {
-              if (index === 3) setHideNextBtn(true);
-              else setHideNextBtn(false);
-            }}
-            controlsProps={{
-              prevPos: false,
-              nextPos: false,
-              dotsPos: "bottom",
-              dotsTouchable: true,
-              dotProps: {
-                containerStyle: {},
-              },
-              DotComponent: ({ isActive, onPress }) => {
-                return (
-                  <Pressable
-                    onPress={onPress}
-                    {...{
-                      className: isActive
-                        ? "h-2 w-2 rounded-full bg-black dark:bg-white "
-                        : "h-2 w-2 rounded-full bg-slate-400",
-                    }}
-                  ></Pressable>
-                );
-              },
-              dotsWrapperStyle: {
-                width: isMobile ? rnS(75) : 75,
-                justifyContent: "space-between",
-              },
-            }}
-          >
-            {/** First OnBoarding */}
-            <OnBoardingFirstScreen />
-            {/** Second OnBoarding */}
-            <OnBoardingSecondScreen />
-            {/** OnBoarding 3 */}
-            <OnBoardingThirdScreen />
-            {/** OnBoarding 4 */}
-            <OnBoardingLoginScreen />
-          </Swiper>
-        </Box>
-      </Center>
-      <OnBoardingScreenFooter
-        onNextBtnPress={() => swiperRef.current?.goToNext()}
-        onSkipBtnPress={() => swiperRef.current?.goTo(3)}
-        hideNextBtn={hideNextBtn}
-        hideSkipBtn={hideNextBtn}
-      />
-    </Box>
+        <Center className="flex-1">
+          <Box className={"w-full flex-1 pb-v-3 pt-v-10"}>
+            <Swiper
+              ref={swiperRef}
+              containerStyle={{
+                width: "100%",
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onIndexChanged={(index: number) => {
+                if (index === 3) setHideNextBtn(true);
+                else setHideNextBtn(false);
+              }}
+              controlsProps={{
+                prevPos: false,
+                nextPos: false,
+                dotsPos: "bottom",
+                dotsTouchable: true,
+                dotProps: {
+                  containerStyle: {},
+                },
+                DotComponent: ({ isActive, onPress }) => {
+                  return (
+                    <Pressable
+                      onPress={onPress}
+                      {...{
+                        className: isActive
+                          ? "h-2 w-2 rounded-full bg-primary-c_light "
+                          : "h-2 w-2 rounded-full bg-primary-border/10",
+                      }}
+                    ></Pressable>
+                  );
+                },
+                dotsWrapperStyle: {
+                  width: isMobile ? rnS(75) : 75,
+                  justifyContent: "space-between",
+                },
+              }}
+            >
+              {/** First OnBoarding */}
+              <OnBoardingFirstScreen />
+              {/** Second OnBoarding */}
+              <OnBoardingSecondScreen />
+              {/** OnBoarding 3 */}
+              <OnBoardingThirdScreen />
+              {/** OnBoarding 4 */}
+              <OnBoardingLoginScreen />
+            </Swiper>
+          </Box>
+        </Center>
+        <OnBoardingScreenFooter
+          onNextBtnPress={() => swiperRef.current?.goToNext()}
+          onSkipBtnPress={() => swiperRef.current?.goTo(3)}
+          hideNextBtn={hideNextBtn}
+          hideSkipBtn={hideNextBtn}
+        />
+      </Box>
+    </PublicRoute>
   );
 }
 
@@ -125,7 +122,9 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
         {!hideSkipBtn && (
           <Button
             variant={"outline"}
-            className={"rounded-3xl bg-background-secondary"}
+            className={
+              "rounded-3xl border-[0.5px] border-primary-border/5 bg-background-primary"
+            }
             onPress={onSkipBtnPress}
           >
             <ButtonText
@@ -139,12 +138,12 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
         )}
         {!hideNextBtn && (
           <Button
-            className={"elevation-md rounded-3xl bg-typography-primary"}
+            className={"elevation-md rounded-3xl bg-primary-c_light"}
             // variant={"solid"}
             onPress={onNextBtnPress}
           >
             <ButtonText
-              className={"font-body text-subtitle2 color-background-primary"}
+              className={"font-body text-subtitle2 text-typography-primary"}
             >
               Suivant
             </ButtonText>
@@ -158,21 +157,29 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
 const OnBoardingLoginScreen = () => {
   const { login } = useGoogleAuth();
   const [onLogin, setOnLogin] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const colorScheme = useColorScheme();
+  const toast = useToast();
 
   const handleLogin = () => {
     setOnLogin(true);
-    setError(null);
     login()
       .then(success => {
         if (success) {
+          toast.show(
+            "Success",
+            "Connexion réussie",
+            "Vous êtes connecté avec succès."
+          );
           router.replace("./../home");
         }
       })
       .catch((e: Error) => {
-        setError(e.message);
+        toast.show(
+          "Error",
+          "Echec de connexion",
+          "Echec de la connexion avec Google, veuillez verifier votre connexion internet et reessayer."
+        );
       })
       .finally(() => {
         setOnLogin(false);
@@ -202,7 +209,9 @@ const OnBoardingLoginScreen = () => {
           charge
         </Text>
         <Button
-          className={"mb-v-2 mt-v-5 h-v-10 gap-3 rounded-xl px-8 py-v-2"}
+          className={
+            "mb-v-2 mt-v-5 h-v-10 gap-3 rounded-full bg-primary-c_light px-8 py-v-2 data-[disabled=true]:bg-primary-c_light/50"
+          }
           onPress={() => handleLogin()}
           isDisabled={onLogin}
         >
@@ -212,28 +221,21 @@ const OnBoardingLoginScreen = () => {
               size={"large"}
             />
           ) : (
-            <Image
-              source={require("./../../assets/images/onboarding/google.png")}
-              className={"w-5"}
-              resizeMode={"contain"}
-              alt={"Goolge Icon"}
-            />
+            // <Image
+            //   source={require("./../../assets/images/onboarding/google.png")}
+            //   className={"w-5"}
+            //   resizeMode={"contain"}
+            //   alt={"Goolge Icon"}
+            // />
+            <></>
           )}
 
           <ButtonText
-            className={"font-body text-subtitle2 color-background-primary"}
+            className={"font-body text-subtitle2 text-typography-primary"}
           >
             Se Connecter avec Google
           </ButtonText>
         </Button>
-        {error && (
-          <Box className={"android:w-80 m-0 flex-row items-center gap-3 p-0"}>
-            <Icon as={InfoIcon} className={"text-error-700"} />
-            <Text className={"w-72 text-2xs text-error-700"} numberOfLines={2}>
-              {error}
-            </Text>
-          </Box>
-        )}
 
         <VStack className={"w-full items-center gap-3"}>
           <Divider orientation={"horizontal"} className={"h-[1px] w-56"} />

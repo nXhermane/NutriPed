@@ -1,1 +1,0 @@
-ALTER TABLE `patient_current_states` ADD `other_data` text NOT NULL;

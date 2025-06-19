@@ -17,7 +17,7 @@ export const QuickAccessSession = () => {
         title="Quick Access"
         actionName="See more"
         onActionPress={() =>
-         router.navigate('/screens/tools')
+         router.navigate('/(screens)/tools')
         }
       />
       <HStack className={"gap-2 pt-v-4"}>
@@ -60,20 +60,20 @@ export const QuickToolCard: React.FC<QuickToolCardProps> = ({
         "elevation-sm h-22 w-22 items-center justify-center gap-1 rounded-xl bg-background-secondary"
       }
     >
-      <Center className={"h-9 w-9 rounded-full bg-primary-c_light"}>
-        <Icon as={LucideIcon} className={"h-5 w-5 text-background-primary"} />
+      <Center className={"h-10 w-10 rounded-lg"}>
+        <Icon as={LucideIcon} className={"h-5 w-5 text-typography-primary"} />
       </Center>
       <VStack className={"items-center"}>
         <Text className={"font-body text-xs text-typography-primary"}>
           {name}
         </Text>
-        <Text
+        {/* <Text
           className={
             "text-center font-light text-[8px] text-typography-primary_light"
           }
         >
           {desc}
-        </Text>
+        </Text> */}
       </VStack>
     </CardPressEffect>
   );

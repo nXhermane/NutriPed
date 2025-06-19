@@ -45,7 +45,7 @@ export const LastPatientList: React.FC<LastPatientListProps> = ({
             onPress={() => {
               if (!item.id) return;
               router.navigate({
-                pathname: "/screens/patient_detail/[id]",
+                pathname: "/(screens)/patient_detail/[id]",
                 params: { id: item.id as string },
               });
             }}
