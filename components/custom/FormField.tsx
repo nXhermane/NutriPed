@@ -211,6 +211,7 @@ export const FormField = <T,>({
             <Input className="h-v-10 rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c">
               <InputField
                 type={"text"}
+                className="font-body text-base font-normal text-typography-primary/80"
                 placeholderClassName={
                   "text-base font-body text-typography-primary_light"
                 }
@@ -276,6 +277,10 @@ export const FormField = <T,>({
                             key={index}
                             label={item.label}
                             value={item.unit}
+                            className={`rounded-lg`}
+                            textStyle={{
+                              className: `font-body font-normal text-typography-primary`,
+                            }}
                           />
                         ))}
                       </SelectScrollView>
@@ -373,7 +378,10 @@ export const FormField = <T,>({
                   className={"h-4 w-4 border-typography-primary_light"}
                   grid-cols-2
                 >
-                  <RadioIcon as={Circle} className="bg-primary-c_light text-primary-c_light"/>
+                  <RadioIcon
+                    as={Circle}
+                    className="bg-primary-c_light text-primary-c_light"
+                  />
                 </RadioIndicator>
                 <RadioLabel
                   className={"font-body text-sm text-typography-primary_light"}
@@ -393,6 +401,7 @@ export const FormField = <T,>({
           >
             <SelectTrigger className="h-v-10 justify-between rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c">
               <SelectInput
+                className="font-body text-base font-normal text-typography-primary/80"
                 placeholderClassName={
                   "text-base font-body text-typography-primary_light"
                 }
@@ -432,13 +441,13 @@ export const FormField = <T,>({
             }
           >
             <TextareaInput
+              className="items-start text-start align-text-top font-body text-base font-normal text-typography-primary/80"
               placeholderClassName={
                 "text-base font-body text-typography-primary_light"
               }
               placeholder={field.placeholder}
               value={(value as string) || field.default}
               keyboardType="default"
-              className={"items-start text-start align-text-top"}
               style={{ textAlignVertical: "top" }}
               onChangeText={(text: string) => handleChange(text as T)}
             />
@@ -453,6 +462,7 @@ export const FormField = <T,>({
           >
             <InputField
               type={visible ? "text" : field.type}
+              className="font-body text-base font-normal text-typography-primary/80"
               placeholderClassName={
                 "text-base font-body text-typography-primary_light"
               }
@@ -478,8 +488,9 @@ export const FormField = <T,>({
           >
             <InputField
               type={field.type === "number" ? "text" : field.type}
+              className="font-body text-base font-normal text-typography-primary/80"
               placeholderClassName={
-                "text-base font-body text-typography-primary_light"
+                "text-base font-body text-typography-primary_light font-normal"
               }
               placeholder={field.placeholder}
               value={(value as any) || field.default}
@@ -497,7 +508,6 @@ export const FormField = <T,>({
 
   return (
     <FormControl
-      isRequired={field.isRequire}
       isInvalid={isInvalid}
       isDisabled={field.isDisable}
       isReadOnly={field.type === "date" ? true : field.isReadOnly}
@@ -505,9 +515,10 @@ export const FormField = <T,>({
     >
       <FormControlLabel className="m-0">
         <FormControlLabelText
-          className={"font-body text-sm text-typography-primary"}
+          className={"font-body text-sm font-normal text-typography-primary"}
         >
-          {field.label}
+          {field.label}{" "}
+          {field.isRequire && <Text className="text-red-500">*</Text>}
         </FormControlLabelText>
       </FormControlLabel>
 
@@ -515,14 +526,14 @@ export const FormField = <T,>({
 
       {field.helperText && (
         <FormControlHelper>
-          <FormControlHelperText className="text-xs">
+          <FormControlHelperText className="font-body text-xs font-normal">
             {field.helperText}
           </FormControlHelperText>
         </FormControlHelper>
       )}
       <FormControlError>
         <FormControlErrorIcon as={AlertCircleIcon} />
-        <FormControlErrorText className={"text-xs"}>
+        <FormControlErrorText className={"font-body text-xs font-normal"}>
           {error}
         </FormControlErrorText>
       </FormControlError>

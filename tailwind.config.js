@@ -285,7 +285,7 @@ module.exports = {
         heading: "Poppins_600SemiBold",
         body: "Poppins_400Regular",
         mono: "Poppins_300Light",
-        h1: "Poppins_700Bold",
+        h1: "Poppins_800ExtraBold",
         h2: "Poppins_600SemiBold",
         h3: "Poppins_600SemiBold",
         h4: "Poppins_500Medium",

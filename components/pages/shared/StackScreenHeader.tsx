@@ -28,7 +28,7 @@ export const StackScreenHeader: React.FC<StackScreenHeaderProps> = ({
         <Icon as={ChevronLeft} className={"h-7 w-7 text-typography-primary"} />
       </Pressable>
       <Center className={"ml-4"}>
-        <Heading className={"font-h1 text-lg text-typography-primary"}>
+        <Heading className={"font-h2 text-lg text-typography-primary font-semibold"}>
           {name}
         </Heading>
         {desc && (

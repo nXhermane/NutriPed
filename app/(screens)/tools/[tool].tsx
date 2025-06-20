@@ -33,7 +33,7 @@ const Tool = () => {
   };
 
   return (
-    <Box className="flex-1 bg-background-primary">
+    <Box className="flex-1 bg-background-secondary">
       <Stack.Screen
         options={{
           title: tool?.name || "Oops! Tool Not Found",

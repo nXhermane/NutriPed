@@ -64,7 +64,7 @@ export const QuickToolCard: React.FC<QuickToolCardProps> = ({
         <Icon as={LucideIcon} className={"h-5 w-5 text-typography-primary"} />
       </Center>
       <VStack className={"items-center"}>
-        <Text className={"font-body text-xs text-typography-primary"}>
+        <Text className={"font-body text-xs text-typography-primary font-normal"}>
           {name}
         </Text>
         {/* <Text

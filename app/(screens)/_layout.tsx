@@ -11,7 +11,7 @@ const ScreenLayout = () => {
           animation: "slide_from_right",
           animationDuration: 500,
         }}
-      />
+      ></Stack>
     </ProtectedRoute>
   );
 };

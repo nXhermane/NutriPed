@@ -43,12 +43,19 @@ const PatientCardComponent: React.FC<PatientCardProps> = ({
   translate = undefined,
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
+
   const statusBackground =
     status == PATIENT_STATE.NEW
-      ? "bg-info-100"
+      ? "bg-info-100/40"
       : status == PATIENT_STATE.ATTENTION
-        ? "bg-warning-100"
-        : "bg-success-100";
+        ? "bg-warning-100/40"
+        : "bg-success-100/40";
+  const statusColor =
+    status == PATIENT_STATE.NEW
+      ? "text-info-500"
+      : status == PATIENT_STATE.ATTENTION
+        ? "text-warning-500"
+        : "text-success-500";
   const handleSelection = () => {
     if (!enableSelection) return;
     const _value = !isSelected;
@@ -72,17 +79,19 @@ const PatientCardComponent: React.FC<PatientCardProps> = ({
       <HStack
         className={`elevation-sm h-v-16 justify-between rounded-xl ${isSelected ? "border-[1px] border-primary-c bg-gray-100 dark:bg-primary-c/10" : "border-0 bg-background-secondary"} px-3`}
       >
-        <HStack className={"items-center gap-2 "}>
+        <HStack className={"items-center gap-2"}>
           <Center className={""}>
             <Avatar className={`h-10 w-10 ${statusBackground} rounded-lg`}>
-              <AvatarFallbackText className={"font-h2 text-typography-primary"}>
+              <AvatarFallbackText className={"font-h2 " + statusColor}>
                 {name}
               </AvatarFallbackText>
             </Avatar>
           </Center>
 
           <VStack>
-            <Text className={"font-body text-base text-typography-primary"}>
+            <Text
+              className={"font-h4 text-h3 font-medium text-typography-primary"}
+            >
               {name}
             </Text>
             <Text
@@ -95,9 +104,11 @@ const PatientCardComponent: React.FC<PatientCardProps> = ({
         </HStack>
         <Center className={"gap-1"}>
           <Badge
-            className={`${statusBackground} h-v-4 items-center rounded-lg p-0 px-2`}
+            className={`${statusBackground} h-v-5 items-center rounded-lg p-0 px-2`}
           >
-            <BadgeText className={"font-light text-2xs normal-case"}>
+            <BadgeText
+              className={`font-light text-2xs uppercase ${statusColor}`}
+            >
               {status}
             </BadgeText>
           </Badge>

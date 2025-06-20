@@ -54,6 +54,7 @@ const PatientDetail = () => {
 
   return (
     <React.Fragment>
+     
       <Box className={"flex-1 bg-background-primary"}>
         <PatientDetailHeader patientId={patientId as AggregateID} />
         <DiagnosticDataForm

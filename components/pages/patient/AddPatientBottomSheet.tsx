@@ -119,7 +119,7 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
         </ActionsheetDragIndicatorWrapper>
         <VStack className={"h-[85vh] w-full"}>
           <HStack className={"w-full items-center justify-between px-4 py-v-3"}>
-            <Heading className={"font-h2 text-2xl text-typography-primary"}>
+            <Heading className={"font-h2 text-2xl text-typography-primary font-semibold"}>
               Nouveau Patient
             </Heading>
             <Button
@@ -129,7 +129,7 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
               {onSubmit && <ButtonSpinner />}
               {onError && <Icon as={X} />}
               <ButtonText
-                className={"font-body text-xs text-typography-primary"}
+                className={"font-body text-xs text-typography-primary font-normal"}
               >
                 Ajouter
               </ButtonText>

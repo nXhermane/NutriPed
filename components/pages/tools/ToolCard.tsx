@@ -44,7 +44,7 @@ const ToolCardComponent: React.FC<ToolCardProps> = ({
           <Icon as={LucideIcon} className={"text-typography-primary"} />
         </Box>
         <VStack className="flex-1 gap-1">
-          <Heading className={"font-h4 text-base text-typography-primary"}>
+          <Heading className={"font-h4 text-base text-typography-primary font-medium"}>
             {name}
           </Heading>
           <Text className={"font-light text-xs text-typography-primary_light"}>

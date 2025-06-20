@@ -35,7 +35,7 @@ export default function Home() {
         <HomeSearchingBar />
         <QuickAccessSession />
         <LastPatientsSession />
-        <NextReminderSession />
+        <NextReminderSession useMoked />
         <InitAppBottomSheet
           showInitializationSheet={showInitializationSheet}
           onClose={() => setShowInitializationSheet(false)}

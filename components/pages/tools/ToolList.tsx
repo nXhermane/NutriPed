@@ -11,7 +11,7 @@ import { router } from "expo-router";
 export const ToolList = () => {
   return (
     <VStack className="mt-4 flex-1 gap-4 px-4">
-      <Heading className="font-h2 text-xl text-typography-primary">
+      <Heading className="font-h2 text-xl text-typography-primary font-semibold">
         Tous les Outils
       </Heading>
       <FlatList
