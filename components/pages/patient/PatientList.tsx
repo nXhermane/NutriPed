@@ -115,7 +115,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
       {!hideFab && selectedItem.length === 0 && (
         <Fab
           placement="bottom right"
-          className="-mr-2 mb-4 h-11 w-11 bg-primary-c"
+          className="-mr-2 mb-4 h-11 w-11 bg-primary-c_light"
           onPress={() => setShowPatientForm(true)}
         >
           <FabIcon as={UserPlus} className="h-6 w-6 text-typography-primary" />

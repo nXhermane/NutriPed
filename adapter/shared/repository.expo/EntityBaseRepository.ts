@@ -31,8 +31,7 @@ export abstract class EntityBaseRepositoryExpo<
   DomainEntity extends Entity<EntityPropsBaseType>,
   PersistenceModel extends object,
   TableSchema extends SQLiteTable & BaseTableFields,
-> implements Repository<DomainEntity>
-{
+> implements Repository<DomainEntity> {
   protected readonly db: ExpoSQLiteDatabase;
   constructor(
     expo: SQLiteDatabase,
@@ -116,6 +115,7 @@ export abstract class EntityBaseRepositoryExpo<
         .all()) as PersistenceModel[];
       return entityPersistenceTypes.map(this.mapper.toDomain);
     } catch (e: unknown) {
+      console.error(e)
       throw new RepositoryException(
         `Repository getting all internal error`,
         e as Error

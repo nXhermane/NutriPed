@@ -16,9 +16,7 @@ export const QuickAccessSession = () => {
       <SessionHeader
         title="Quick Access"
         actionName="See more"
-        onActionPress={() =>
-         router.navigate('/(screens)/tools')
-        }
+        onActionPress={() => router.navigate("/(screens)/tools")}
       />
       <HStack className={"gap-2 pt-v-4"}>
         {QuickAccessTools.map((item, index) => (
@@ -27,7 +25,14 @@ export const QuickAccessSession = () => {
             desc={item.desc}
             iconName={item.iconName as keyof typeof icons}
             key={index}
-            onPress={() => console.log("Pressed on tools", item.code)}
+            onPress={() =>
+              router.navigate({
+                pathname: "/(screens)/tools/[tool]",
+                params: {
+                  tool: item.code,
+                },
+              })
+            }
           />
         ))}
       </HStack>
@@ -64,7 +69,9 @@ export const QuickToolCard: React.FC<QuickToolCardProps> = ({
         <Icon as={LucideIcon} className={"h-5 w-5 text-typography-primary"} />
       </Center>
       <VStack className={"items-center"}>
-        <Text className={"font-body text-xs text-typography-primary font-normal"}>
+        <Text
+          className={"font-body text-xs font-normal text-typography-primary"}
+        >
           {name}
         </Text>
         {/* <Text

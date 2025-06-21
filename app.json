@@ -4,7 +4,7 @@
     "slug": "NutriPed",
     "version": "1.0.0",
     "newArchEnabled": true,
-      "scheme": "nutriped",
+    "scheme": "nutriped",
     "userInterfaceStyle": "automatic",
     "web": {
       "bundler": "metro",
@@ -25,6 +25,9 @@
           "web": "418037002764-4om6hoj6nat09m4qdqjb6oegcch4okh8.apps.googleusercontent.com"
         }
       }
-    }
+    },
+    "plugins": [
+      "expo-web-browser"
+    ]
   }
 }

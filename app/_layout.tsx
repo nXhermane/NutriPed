@@ -70,6 +70,7 @@ function Route() {
         name={"(screens)"}
         options={{
           animation: "slide_from_right",
+          animationDuration: 0 
         }}
       />
     </Stack>

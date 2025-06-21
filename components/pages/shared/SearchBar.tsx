@@ -16,12 +16,13 @@ export interface SearchBarProps extends IInputProps {
 }
 export const SearchBar: React.FC<SearchBarProps> = ({
   fieldProps,
+  className,
   ...props
 }) => {
   return (
     <Box>
       <Input
-        className={`rounded-xl border-[0.5px] border-primary-border/10 bg-background-secondary data-[focus=true]:border-primary-c`}
+        className={`rounded-xl border-[0.5px] border-primary-border/10 bg-background-secondary data-[focus=true]:border-primary-c ${className}`}
         {...props}
       >
         <InputSlot className={"pl-3"}>

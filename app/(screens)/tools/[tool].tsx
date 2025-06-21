@@ -7,6 +7,7 @@ import { SessionEmpty } from "@/components/pages/home/shared/SessionEmpty";
 import React from "react";
 import {
   AppetiteTestTool,
+  ChartTools,
   ToolDetailScreenHeader,
 } from "@/components/pages/tools";
 
@@ -20,6 +21,8 @@ const Tool = () => {
     switch (code) {
       case "appetite_test_tools":
         return <AppetiteTestTool />;
+      case "chart_tools":
+        return <ChartTools />;
       default:
         return (
           <Center className="flex-1">
