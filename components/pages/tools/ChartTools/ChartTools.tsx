@@ -1,64 +1,23 @@
-import { Box } from "@/components/ui/box";
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useGrowthCharts } from "@/src/hooks";
-import React, { ReactNode } from "react";
-import { ScrollView } from "react-native";
+import React, { useState } from "react";
 import { ChartToolsTopSession } from "./ChartToolsTopSession";
-import { BottomSheet, BottomSheetPortal } from "@/components/ui/bottomsheet";
+import { ChartListSession } from "./ChartListSession";
 
 export function ChartTools() {
+  const [searchOptions, setSearchOptions] = useState<{
+    searchText: string;
+    filterTag: string;
+  }>({
+    searchText: "",
+    filterTag: "all",
+  });
   return (
     <React.Fragment>
-      <ChartToolsTopSession onChange={(value) => console.log(value)}/>
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1 bg-background-primary">
-        <VStack className="gap-v-4 pb-8">
-          <ChartListSession />
-        </VStack>
-      </ScrollView>
+      <ChartToolsTopSession onChange={value => setSearchOptions(value)} />
+      <VStack className="flex-1 gap-v-4 bg-background-primary ">
+        <ChartListSession searchOptions={searchOptions} />
+      </VStack>
+     
     </React.Fragment>
   );
 }
-
-export interface ChartToolsSessionProps {
-  children?: ReactNode;
-  title?: string;
-}
-
-export const ChartToolsSession: React.FC<ChartToolsSessionProps> = ({
-  children,
-  title,
-}) => {
-  return (
-    <VStack className={"gap-v-4"}>
-      {title && (
-        <Heading
-          className={
-            "text-center font-h2 text-lg font-semibold text-typography-primary"
-          }
-        >
-          {title}
-        </Heading>
-      )}
-      {children && <Box>{children}</Box>}
-    </VStack>
-  );
-};
-
-export const ChartListSession = () => {
-  const growthChartList = useGrowthCharts();
-
-  return (
-  
-
-     
-<ChartToolsSession title="Courbes de Croissance de l'OMS">
-      {growthChartList.map((item, index) => (
-        <Text key={index}>{item.sex}</Text>
-      ))}
-    </ChartToolsSession>
-  
-    
-  );
-};

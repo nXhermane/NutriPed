@@ -11,6 +11,9 @@ import {
 import { IEventBus } from "@/core/shared";
 import { Center } from "@/components/ui/center";
 import { useDatabase } from "./DatabaseContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// BETA:
+const queryClient = new QueryClient();
 
 export interface IPediatricAppContext {}
 
@@ -36,13 +39,15 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
     );
   return (
     <PediatricAppContext.Provider value={{}}>
-      <AdapterPediatricAppProvider
-        dbConnection={db as any}
-        expo={db as any}
-        eventBus={eventBus as unknown as IEventBus}
-      >
-        {children}
-      </AdapterPediatricAppProvider>
+      <QueryClientProvider client={queryClient}>
+        <AdapterPediatricAppProvider
+          dbConnection={db as any}
+          expo={db as any}
+          eventBus={eventBus as unknown as IEventBus}
+        >
+          {children}
+        </AdapterPediatricAppProvider>
+      </QueryClientProvider>
     </PediatricAppContext.Provider>
   );
 };

@@ -1,4 +1,4 @@
-import { useLastPatientList } from "@/src/hooks";
+import { useFuseSearch, useLastPatientList } from "@/src/hooks";
 import { FlatList } from "react-native";
 import { PatientCard } from "../commun";
 import { router } from "expo-router";
@@ -8,24 +8,36 @@ import { Heading } from "@/components/ui/heading";
 import React from "react";
 import Fuse from "fuse.js";
 import { Box } from "@/components/ui/box";
+import { Guard } from "@/core/shared";
+import { Spinner } from "@/components/ui/spinner";
+import colors from "tailwindcss/colors";
 export interface LastPatientListProps {
   searchText?: string;
 }
 export const LastPatientList: React.FC<LastPatientListProps> = ({
   searchText,
 }) => {
-  const patientList = useLastPatientList();
+  const { patientList, onLoading } = useLastPatientList();
 
-  const fuse = new Fuse(patientList, {
-    keys: ["name"],
-    threshold: 0.3, // ajustable : plus bas = plus strict
-    ignoreLocation: true, // ne tient pas compte de la position du texte
-    includeScore: true,
+  const searchResults = useFuseSearch({
+    list: patientList,
+    options: {
+      keys: ["name"],
+      threshold: 0.3, // ajustable : plus bas = plus strict
+      ignoreLocation: true, // ne tient pas compte de la position du texte
+      includeScore: true,
+    },
+    searchParams: !Guard.isEmpty(searchText).succeeded
+      ? {
+          pattern: searchText as string,
+        }
+      : undefined,
   });
 
-  const filteredList = searchText
-    ? fuse.search(searchText).map(result => result.item)
-    : patientList;
+  if (onLoading)
+    return (
+      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
+    );
   return (
     <VStack className="flex-1 gap-4 px-4">
       <Heading className="font-h2 text-xl text-typography-primary">
@@ -33,7 +45,10 @@ export const LastPatientList: React.FC<LastPatientListProps> = ({
       </Heading>
       <FlatList
         initialNumToRender={10}
-        data={filteredList}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        removeClippedSubviews
+        data={searchResults}
         keyExtractor={(item, index) => item.id?.toString() || index.toString()}
         renderItem={({ item }) => (
           <PatientCard
@@ -57,7 +72,7 @@ export const LastPatientList: React.FC<LastPatientListProps> = ({
             iconName={"SearchSlash"}
           />
         )}
-        ItemSeparatorComponent={() => <Box className={"h-v-3"}/>}
+        ItemSeparatorComponent={() => <Box className={"h-v-3"} />}
         showsVerticalScrollIndicator={false}
       />
     </VStack>

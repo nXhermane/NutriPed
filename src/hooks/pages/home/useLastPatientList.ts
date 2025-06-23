@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 export function useLastPatientList() {
     const { patientService } = usePediatricApp();
+    const [onLoading, setOnLoading] = useState<boolean>(false)
     const [patientList, setPatientList] = useState<PatientCardInfo[]>(
         []
     );
@@ -17,6 +18,7 @@ export function useLastPatientList() {
 
     useEffect(() => {
         const getPatientList = async () => {
+            setOnLoading(true)
             const patientLastInteractions = patientInteractionList
                 .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
             const patients = await Promise.all(
@@ -41,11 +43,12 @@ export function useLastPatientList() {
                 }
             }
             setPatientList(lists);
+            setOnLoading(false)
         };
 
         getPatientList();
     }, [patientInteractionList]);
-    return patientList
+    return { patientList, onLoading }
 }
 
 

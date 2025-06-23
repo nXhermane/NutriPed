@@ -8,8 +8,9 @@ import {
   InputIcon,
   InputSlot,
 } from "@/components/ui/input";
+import { Guard } from "@/core/shared";
 
-import { Search } from "lucide-react-native";
+import { Search, X, XCircle } from "lucide-react-native";
 import React from "react";
 export interface SearchBarProps extends IInputProps {
   fieldProps?: IInputFieldProps;
@@ -19,6 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   className,
   ...props
 }) => {
+  const valueIsNotEmtpy = !Guard.isEmpty(fieldProps?.value).succeeded;
   return (
     <Box>
       <Input
@@ -36,12 +38,25 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           />
         </InputSlot>
         <InputField
-          className={"font-body text-sm text-typography-primary font-normal"}
+          className={"font-body text-sm font-normal text-typography-primary"}
           placeholderClassName={
             "text-typography-primary_light/60 font-body text-base  font-normal "
           }
           {...fieldProps}
         />
+        {valueIsNotEmtpy && (
+          <InputSlot
+            className="pr-3"
+            onPress={() => {
+              fieldProps?.onChangeText && fieldProps.onChangeText("");
+            }}
+          >
+            <InputIcon
+              as={XCircle}
+              className={"h-5 w-5 text-typography-primary_light/60"}
+            />
+          </InputSlot>
+        )}
       </Input>
     </Box>
   );

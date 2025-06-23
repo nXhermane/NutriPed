@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 export type PatientInfo = PatientCardInfo & {
     date: string
 }
-export function usePatientList(filterTag: PATIENT_QUICK_FILTER_TAG) {
+export function usePatientList() {
     const [onLoading, setOnLoading] = useState<boolean>(false);
     const [patientList, setPatientList] = useState<PatientInfo[]>([]);
     const updatePatientList = useSelector(
@@ -43,13 +43,13 @@ export function usePatientList(filterTag: PATIENT_QUICK_FILTER_TAG) {
                     });
                 }
             }
-            const $patientList = filterTag === PATIENT_QUICK_FILTER_TAG.ALL ? lists : filterTag === PATIENT_QUICK_FILTER_TAG.RECENT ? lists.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) : lists.filter(patient => patient.status === filterTag as any)
-            setPatientList($patientList);
+
+            setPatientList(lists.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
             dispatch(recordUiState({ type: "PATIENT_REFRESHED" }));
             setOnLoading(false);
         };
         getPatientList();
-    
-    }, [updatePatientList,filterTag]);
+
+    }, [updatePatientList]);
     return { onLoading, patientList }
 }

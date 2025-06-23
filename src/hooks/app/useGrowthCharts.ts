@@ -1,21 +1,27 @@
 import { usePediatricApp } from "@/adapter";
-import { GrowthReferenceChartDto } from "@/core/diagnostics";
-import { useEffect, useState } from "react";
+import { GetGrowthReferenceChartRequest, GrowthReferenceChartDto } from "@/core/diagnostics";
+import { useEffect, useMemo, useState } from "react";
 
 
-export function useGrowthCharts() {
+export function useGrowthCharts(request?: GetGrowthReferenceChartRequest) {
     const { diagnosticServices: { growthChart } } = usePediatricApp()
     const [growthChartList, setGrowthChartList] = useState<GrowthReferenceChartDto[]>([])
+    const [error, setError] = useState<string | null>(null)
+    const [onLoading, setOnLoading] = useState<boolean>(false)
     useEffect(() => {
         const getGrowthCharts = async () => {
-            const result = await growthChart.get({})
+            setError(null)
+            setOnLoading(true)
+            const result = await growthChart.get(request ? request : {})
             if ('data' in result) {
                 setGrowthChartList(result.data)
             } else {
                 console.error(result.content)
+                setError(result.content)
             }
+            setOnLoading(false)
         }
         getGrowthCharts()
-    }, [])
-    return growthChartList
+    }, [request])
+    return { data: growthChartList, onLoading, error }
 }

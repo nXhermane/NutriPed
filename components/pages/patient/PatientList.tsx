@@ -1,6 +1,6 @@
 import { Box } from "@/components/ui/box";
 import { MokedPatientList } from "@/data";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, ScrollView } from "react-native";
 import {
   PatientCard,
@@ -15,7 +15,7 @@ import { ActionBtnSession } from "./ActionsSession";
 import { AddPatientBottomSheet } from "./AddPatientBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { usePediatricApp } from "@/adapter";
-import { AggregateID, Message } from "@/core/shared";
+import { AggregateID, Guard, Message } from "@/core/shared";
 import { PATIENT_QUICK_FILTER_TAG, PATIENT_STATE } from "@/src/constants/ui";
 import { AppDispatch, Interaction } from "@/src/store";
 import { recordUiState } from "@/src/store/uiState";
@@ -23,8 +23,9 @@ import { DeletePatientBottomSheet } from "./DeletePatientBottomSheet";
 import { Spinner } from "@/components/ui/spinner";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { router } from "expo-router";
-import { usePatientList } from "@/src/hooks";
+import { PatientInfo, useFuseSearch, usePatientList } from "@/src/hooks";
 import Fuse from "fuse.js";
+import colors from "tailwindcss/colors";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
@@ -44,27 +45,48 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
   const [showPatientForm, setShowPatientForm] = useState<boolean>(false);
   const [showConfirmDeletionAction, setShowConfirmDeletionAction] =
     useState<boolean>(false);
-  const { onLoading, patientList } = usePatientList(filterTag);
-  const fuse = new Fuse(patientList, {
-    keys: ["name"],
-    threshold: 0.3, // ajustable : plus bas = plus strict
-    ignoreLocation: true, // ne tient pas compte de la position du texte
-    includeScore: true,
+  const { onLoading, patientList } = usePatientList();
+  const filterResultCallback = useMemo(() => {
+    return (list: PatientInfo[]) => {
+      return filterTag === PATIENT_QUICK_FILTER_TAG.ALL
+        ? list
+        : list.filter(patient => patient.status === (filterTag as any));
+    };
+  }, [filterTag]);
+  const searchResults = useFuseSearch({
+    list: patientList,
+    options: {
+      keys: ["name"],
+      threshold: 0.3, // ajustable : plus bas = plus strict
+      ignoreLocation: true, // ne tient pas compte de la position du texte
+      includeScore: true,
+    },
+    filterResultCallback,
+    searchParams: !Guard.isEmpty(searchText).succeeded
+      ? {
+          pattern: searchText,
+        }
+      : undefined,
   });
 
-  const filteredList = searchText
-    ? fuse.search(searchText).map(result => result.item)
-    : patientList;
   const handleDeleteAction = () => {
     setShowConfirmDeletionAction(true);
   };
+
+  if (onLoading)
+    return (
+      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
+    );
 
   return (
     <Box className="h-full max-h-[65%]">
       <FlatList
         className={"pt-3"}
         initialNumToRender={10}
-        data={filteredList}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        removeClippedSubviews
+        data={searchResults}
         keyExtractor={(item, index) => item.id?.toString() || index.toString()}
         renderItem={({ item }) => (
           <PatientCard
@@ -155,9 +177,3 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
     </Box>
   );
 };
-
-// onLoading ? (
-//           new Array(10)
-//             .fill(0)
-//             .map((_, index) => <PatientCardSkeleton key={index} />)
-//         )

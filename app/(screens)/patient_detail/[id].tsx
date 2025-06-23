@@ -5,8 +5,7 @@ import {
 import { Box } from "@/components/ui/box";
 import { AggregateID } from "@/core/shared";
 import { AppDispatch, Interaction, recordInteraction } from "@/src/store";
-import { router, Stack, useLocalSearchParams } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
