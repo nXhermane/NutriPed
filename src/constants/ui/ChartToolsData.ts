@@ -5,52 +5,80 @@ import {
 const Age_0_5yUIData = {
     label: "0-5 ans",
     by: "age",
+    defaultDisplayMode: "months",
+    availableDisplayMode: ["years", "months"]
 } as const;
 const Age_5_10yUIData = {
     label: "5-10 ans",
     by: "age",
+    defaultDisplayMode: "years",
+    availableDisplayMode: ["years"]
 } as const;
 const Age_5_19yUIData = {
     by: "age",
     label: "5-19 ans",
+    defaultDisplayMode: "years",
+    availableDisplayMode: ["years"]
 } as const;
 const Age_3m_5yUIData = {
     by: "age",
     label: "3 mois - 5 ans",
+    defaultDisplayMode: "months",
+    availableDisplayMode: ["years", "months"]
 } as const;
 const Height_65_120cmUIData = {
     by: "height",
     label: "65-120 cm",
+    defaultDisplayMode: "height",
+    availableDisplayMode: ["height"]
 } as const;
 const Length_45_110cmUIData = {
     by: "length",
     label: "45-110 cm",
+    defaultDisplayMode: "length",
+    availableDisplayMode: ["length"]
 } as const;
+export const AxisLabel = {
+    weight: "Poids (kg)",
+    length: "Taille couchée (cm)",
+    height: "Taille debout (cm)",
+    lenhei: "Taille debout/couchée (cm)",
+    age_month: "Age (mois)",
+    age_day: "Age (jours)",
+    age_years: "Age (année)",
+    muac: "Périmètre brachial (cm)",
+    hc: "Périmètre cranien (cm)",
+    ssf: "Pli cutané sous-scapulaire (mm)",
+    tsf: "Pli cutané tricipital (mm)",
+    bmi: `IMC (kg/m${String.fromCharCode(178)})`
+
+} 
+
 export const CHART_UI_DATA = {
-    [GrowthRefChartAndTableCodes.WFA_BOYS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.BMIAGE_BOYS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.BMIAGE_GIRLS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.HCFA_BOYS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.HCFA_GIRLS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.HFA_BOYS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.HFA_GIRLS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.WFA_GIRLS_0_5_CHART]: Age_0_5yUIData,
-    [GrowthRefChartAndTableCodes.WFA_BOYS_5_10_CHART]: Age_5_10yUIData,
-    [GrowthRefChartAndTableCodes.WFA_GIRLS_5_10_CHART]: Age_5_10yUIData,
-    [GrowthRefChartAndTableCodes.BMIAGE_BOYS_5_19_CHART]: Age_5_19yUIData,
-    [GrowthRefChartAndTableCodes.BMIAGE_GIRLS_5_19_CHART]: Age_5_19yUIData,
-    [GrowthRefChartAndTableCodes.HFA_BOYS_5_19_CHART]: Age_5_19yUIData,
-    [GrowthRefChartAndTableCodes.HFA_GIRLS_5_19_CHART]: Age_5_19yUIData,
-    [GrowthRefChartAndTableCodes.MUAC_BOYS_3M_5Y_CHART]: Age_3m_5yUIData,
-    [GrowthRefChartAndTableCodes.MUAC_GIRLS_3M_5Y_CHART]: Age_3m_5yUIData,
-    [GrowthRefChartAndTableCodes.SSF_BOYS_3M_5Y_CHART]: Age_3m_5yUIData,
-    [GrowthRefChartAndTableCodes.SSF_GIRLS_3M_5Y_CHART]: Age_3m_5yUIData,
-    [GrowthRefChartAndTableCodes.TSF_GIRLS_3M_5Y_CHART]: Age_3m_5yUIData,
-    [GrowthRefChartAndTableCodes.TSF_BOYS_3M_5Y_CHART]: Age_3m_5yUIData,
-    [GrowthRefChartAndTableCodes.WFH_BOYS_65_120_CHART]: Height_65_120cmUIData,
-    [GrowthRefChartAndTableCodes.WFH_GIRLS_65_120_CHART]: Height_65_120cmUIData,
-    [GrowthRefChartAndTableCodes.WFL_BOYS_45_110_CHART]: Length_45_110cmUIData,
-    [GrowthRefChartAndTableCodes.WFL_GIRLS_45_110_CHART]: Length_45_110cmUIData,
+    [GrowthRefChartAndTableCodes.WFA_BOYS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.weight, },
+    [GrowthRefChartAndTableCodes.BMIAGE_BOYS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.bmi },
+    [GrowthRefChartAndTableCodes.BMIAGE_GIRLS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.bmi },
+    [GrowthRefChartAndTableCodes.HCFA_BOYS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.hc },
+    [GrowthRefChartAndTableCodes.HCFA_GIRLS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.hc },
+    [GrowthRefChartAndTableCodes.HFA_BOYS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.lenhei },
+    [GrowthRefChartAndTableCodes.HFA_GIRLS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.lenhei },
+    [GrowthRefChartAndTableCodes.WFA_GIRLS_0_5_CHART]: { ...Age_0_5yUIData, yAxisLabel: AxisLabel.weight },
+    [GrowthRefChartAndTableCodes.WFA_BOYS_5_10_CHART]: { ...Age_5_10yUIData, yAxisLabel: AxisLabel.weight },
+    [GrowthRefChartAndTableCodes.WFA_GIRLS_5_10_CHART]: { ...Age_5_10yUIData, yAxisLabel: AxisLabel.weight },
+    [GrowthRefChartAndTableCodes.BMIAGE_BOYS_5_19_CHART]: { ...Age_5_19yUIData, yAxisLabel: AxisLabel.bmi },
+    [GrowthRefChartAndTableCodes.BMIAGE_GIRLS_5_19_CHART]: { ...Age_5_19yUIData, yAxisLabel: AxisLabel.bmi },
+    [GrowthRefChartAndTableCodes.HFA_BOYS_5_19_CHART]: { ...Age_5_19yUIData, yAxisLabel: AxisLabel.height },
+    [GrowthRefChartAndTableCodes.HFA_GIRLS_5_19_CHART]: { ...Age_5_19yUIData, yAxisLabel: AxisLabel.height },
+    [GrowthRefChartAndTableCodes.MUAC_BOYS_3M_5Y_CHART]: { ...Age_3m_5yUIData, yAxisLabel: AxisLabel.muac },
+    [GrowthRefChartAndTableCodes.MUAC_GIRLS_3M_5Y_CHART]: { ...Age_3m_5yUIData, yAxisLabel: AxisLabel.muac },
+    [GrowthRefChartAndTableCodes.SSF_BOYS_3M_5Y_CHART]: { ...Age_3m_5yUIData, yAxisLabel: AxisLabel.ssf },
+    [GrowthRefChartAndTableCodes.SSF_GIRLS_3M_5Y_CHART]: { ...Age_3m_5yUIData, yAxisLabel: AxisLabel.ssf },
+    [GrowthRefChartAndTableCodes.TSF_GIRLS_3M_5Y_CHART]: { ...Age_3m_5yUIData, yAxisLabel: AxisLabel.tsf },
+    [GrowthRefChartAndTableCodes.TSF_BOYS_3M_5Y_CHART]: { ...Age_3m_5yUIData, yAxisLabel: AxisLabel.tsf },
+    [GrowthRefChartAndTableCodes.WFH_BOYS_65_120_CHART]: { ...Height_65_120cmUIData, yAxisLabel: AxisLabel.weight },
+    [GrowthRefChartAndTableCodes.WFH_GIRLS_65_120_CHART]: { ...Height_65_120cmUIData, yAxisLabel: AxisLabel.weight },
+    [GrowthRefChartAndTableCodes.WFL_BOYS_45_110_CHART]: { ...Length_45_110cmUIData, yAxisLabel: AxisLabel.weight },
+    [GrowthRefChartAndTableCodes.WFL_GIRLS_45_110_CHART]: { ...Length_45_110cmUIData, yAxisLabel: AxisLabel.weight },
 } as const;
 
 export const GROWTH_INDICATORS = {
@@ -101,7 +129,7 @@ export const GROWTH_INDICATORS = {
         tableCodes: [],
     },
     [AnthroSystemCodes.WFLH]: {
-        tag:AnthroSystemCodes.WFLH,
+        tag: AnthroSystemCodes.WFLH,
         label: "Poids pour la taille",
         icon: "Users",
         color: "bg-orange-100 text-orange-800",
@@ -119,7 +147,7 @@ export const GROWTH_INDICATORS = {
         ],
     },
     [AnthroSystemCodes.HC_FOR_AGE]: {
-        tag:AnthroSystemCodes.HC_FOR_AGE,
+        tag: AnthroSystemCodes.HC_FOR_AGE,
         label: "Périmètre crânien",
         icon: "Brain",
         color: "bg-pink-100 text-pink-800",
@@ -133,7 +161,7 @@ export const GROWTH_INDICATORS = {
         tableCodes: [],
     },
     [AnthroSystemCodes.MUAC_FOR_AGE]: {
-        tag:AnthroSystemCodes.MUAC_FOR_AGE,
+        tag: AnthroSystemCodes.MUAC_FOR_AGE,
         label: "Périmètre brachial",
         icon: "Zap",
         color: "bg-yellow-100 text-yellow-800",
@@ -146,7 +174,7 @@ export const GROWTH_INDICATORS = {
         tableCodes: [],
     },
     [AnthroSystemCodes.SSF_FOR_AGE]: {
-        tag:AnthroSystemCodes.SSF_FOR_AGE,
+        tag: AnthroSystemCodes.SSF_FOR_AGE,
         label: "Pli cutané sous-scapulaire",
         icon: "Baby",
         color: "bg-indigo-100 text-indigo-800",
@@ -158,7 +186,7 @@ export const GROWTH_INDICATORS = {
         tableCodes: [],
     },
     [AnthroSystemCodes.TSF_FOR_AGE]: {
-        tag:AnthroSystemCodes.TSF_FOR_AGE,
+        tag: AnthroSystemCodes.TSF_FOR_AGE,
         label: "Pli cutané tricipital",
         icon: "Baby",
         color: "bg-indigo-100 text-indigo-800",

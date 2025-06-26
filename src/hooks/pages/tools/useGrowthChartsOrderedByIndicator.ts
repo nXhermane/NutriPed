@@ -1,13 +1,16 @@
 import { useCallback } from "react";
-import { GROWTH_INDICATORS } from "@/src/constants/ui";
+import { CHART_UI_DATA, GROWTH_INDICATORS } from "@/src/constants/ui";
 import { GrowthReferenceChartDto } from "@/core/diagnostics";
 import { useQuery } from "@tanstack/react-query";
 import { usePediatricApp } from "@/adapter";
 type ValueOf<T> = T[keyof T]
 export type IndicatorUIType = ValueOf<typeof GROWTH_INDICATORS>
+export type ChartUiDataType = ValueOf<typeof CHART_UI_DATA>
+type AllDisplayModes<T> = T extends { availableDisplayMode: readonly (infer U)[] } ? U : never;
+export type DisplayMode = AllDisplayModes<ChartUiDataType>;
 export type GrowthChartListOrderedByIndicatorType = {
     indicator: IndicatorUIType,
-    data: { chart: GrowthReferenceChartDto, uiData: { label: string, by: string } }[]
+    data: { chart: GrowthReferenceChartDto, uiData: ChartUiDataType }[]
 }[]
 
 
@@ -18,7 +21,7 @@ export function useGrowthChartsOrderedByIndicator() {
         const growthChartsOrderdByIndicator: {
             [key: string]: {
                 indicator: IndicatorUIType,
-                data: { chart: GrowthReferenceChartDto, uiData: { label: string, by: string } }[]
+                data: { chart: GrowthReferenceChartDto, uiData: ChartUiDataType }[]
             }
         } = {}
         const indicatorUiData = Object.entries(GROWTH_INDICATORS)
@@ -29,7 +32,7 @@ export function useGrowthChartsOrderedByIndicator() {
                 if (chart) {
                     const chartWithUIData = {
                         chart,
-                        uiData: uiData as { label: string, by: string }
+                        uiData: uiData as ChartUiDataType
                     }
                     if (growthChartsOrderdByIndicator[indicator[0]]) {
                         growthChartsOrderdByIndicator[indicator[0]].data.push(chartWithUIData)

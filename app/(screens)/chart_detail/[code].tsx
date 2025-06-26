@@ -1,6 +1,5 @@
 import { Center } from "@/components/ui/center";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Text } from "@/components/ui/text";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   IndicatorUIType,
@@ -14,6 +13,7 @@ import { VStack } from "@/components/ui/vstack";
 import {
   ChartDetailHeader,
   InteractiveChartSession,
+  PatientDataSession,
 } from "@/components/pages/chart_detail";
 import { GROWTH_INDICATORS } from "@/src/constants/ui";
 import {
@@ -66,14 +66,13 @@ const ChartDetail = () => {
       setIndicatorUiData(indicatorData);
     }
   }, [params.indicatorCode]);
-  
+
   if (onLoading || indicatorLoading)
     return (
       <Center className="flex-1 bg-background-primary">
         <Spinner size={"large"} color={colors.blue["600"]} />
       </Center>
     );
-   
 
   return (
     <React.Fragment>
@@ -86,7 +85,14 @@ const ChartDetail = () => {
       />
       <VStack className="flex-1 bg-background-primary">
         <ChartDetailHeader name={indicatorUiData?.label || ""} />
-        <InteractiveChartSession title="Courbe de croissance interactive" />
+        <PatientDataSession
+          growthChartDto={growthCharts[0]}
+          indicatorDto={indicators[0]}
+        />
+        <InteractiveChartSession
+          title="Courbe de croissance interactive"
+          growthChartDto={growthCharts[0]}
+        />
       </VStack>
     </React.Fragment>
   );
