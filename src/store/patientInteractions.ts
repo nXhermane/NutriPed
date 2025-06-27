@@ -10,7 +10,7 @@ export type Interaction = {
 interface PatientInteractionsState {
   interactions: Interaction[];
 }
-export const initialState: PatientInteractionsState = {
+ const initialState: PatientInteractionsState = {
   interactions: [],
 };
 export const patientInteractionsSlice = createSlice({

@@ -1,4 +1,3 @@
-import { AggregateID } from "@/core/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export type UI_STATE = {
   refreshPatientList: boolean;

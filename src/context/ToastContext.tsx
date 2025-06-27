@@ -3,9 +3,11 @@ import { ErrorToast } from "@/components/custom/ErrorToast";
 import { useToast as useGluestackToast } from "@/components/ui/toast";
 import React, { createContext, ReactNode, useContext } from "react";
 import { Dimensions } from "react-native";
+import { InfoToast } from "@/components/custom";
 
+type ToastType = "Success" | "Error" | "Info"
 export interface ToastContextType {
-  show: (type: "Success" | "Error", title?: string, desc?: string) => void;
+  show: (type: ToastType, title?: string, desc?: string) => void;
 }
 export const ToastContext = createContext<ToastContextType>(
   {} as ToastContextType
@@ -18,23 +20,12 @@ export interface ToastProviderProps {
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const toast = useGluestackToast();
   const [toastId, setToastId] = React.useState("0");
-  const handleToast = (
-    type: "Success" | "Error",
+
+  const show = (
+    type: ToastType,
     title?: string,
     desc?: string
   ) => {
-    if (!toast.isActive(toastId)) {
-      showNewToast(type);
-    }
-  };
-
-  const showNewToast = (
-    type: "Success" | "Error",
-    title?: string,
-    desc?: string
-  ) => {};
-
-  const show = (type: "Success" | "Error", title?: string, desc?: string) => {
     const newId = Math.random().toString();
     setToastId(newId);
     if (!toast.isActive(toastId))
@@ -46,11 +37,18 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
           width: Dimensions.get("screen").width,
         },
         render: ({ id }) => {
-          return type === "Success" ? (
-            <SuccessToast id={id} title={title} desc={desc} />
-          ) : (
-            <ErrorToast id={id} title={title} desc={desc} />
-          );
+          switch (type) {
+            case "Success":
+              return <SuccessToast id={id} title={title} desc={desc} />;
+            case "Error":
+              return <ErrorToast id={id} title={title} desc={desc} />;
+            case "Info":
+              return <InfoToast id={id} title={title} desc={desc} />;
+            default: {
+              console.warn("This toast type is not supported.");
+              return <></>;
+            }
+          }
         },
       });
   };

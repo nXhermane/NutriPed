@@ -3,6 +3,7 @@
 // CHAMPS DE FORMULAIRE INDIVIDUELS
 // =============================================
 
+import { IField } from "@/components/custom/FormField";
 import { AnthroSystemCodes, CLINICAL_SIGNS, MAX_LENHEI, MIN_LENHEI } from "@/core/constants";
 import z from "zod";
 
@@ -113,6 +114,28 @@ export const SSFField = {
   placeholder: "Ex: 20",
 };
 
+export const BirthDateField: IField = {
+  label: "Date de naissance",
+  type: "date",
+  name: "birthDate",
+  mode: "date",
+  maxDate: new Date(),
+  placeholder: "2025-03-20",
+  isRequire: true,
+  default: new Date().toISOString().split("T")[0],
+
+}
+export const RegisterDateField: IField = {
+  label: "Date d'enregistrement",
+  type: "date",
+  name: "registerDate",
+  mode: "date",
+  maxDate: new Date(),
+  placeholder: "25-03-20",
+  isRequire: true,
+  default: new Date().toISOString().split("T")[0],
+  helperText: "C'est la date d'enregistrement des mesures anthropometriques."
+}
 export const EdemaField = {
   type: "select" as const,
   default: "Absent",
@@ -150,8 +173,10 @@ export const WeightZodSchema = z
     }
   );
 
-export const HeightZodSchema = z.preprocess(
+export const HeightZodSchema = 
+z.preprocess(
   (raw: any) => {
+    console.log("call height")
     if (!raw || typeof raw !== "object" || raw.value === 0)
       return undefined;
     return raw;
@@ -339,5 +364,10 @@ export const SSFZodSchema = z.preprocess(
     )
     .optional()
 );
+
+export const dateZodSchema = (message?: string, fieldName?: string) => z.string().refine(val => {
+  console.log(val,Date.parse("kk"))
+  return !isNaN(Date.parse(val))
+}, { message: message || "Date invalide.", path: fieldName ? [fieldName] : [] })
 
 export const EdemaZodSchema = z.enum(["yes", "no"]);

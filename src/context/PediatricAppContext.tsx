@@ -57,9 +57,9 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
           {uiMessage}
         </Text>
         {!isTimeOut && <Spinner size={"large"} color={colors.blue["600"]} />}
-        <Link href="https://github.com/nXhermane">
+        {isTimeOut && <Link href="https://github.com/nXhermane">
           <LinkText>Contacter le developpeur</LinkText>
-        </Link>
+        </Link>}
       </Center>
     );
   return (

@@ -1,0 +1,93 @@
+import { AnthroSystemCodes, GrowthRefChartAndTableCodes } from "@/core/constants";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { nanoid } from "@reduxjs/toolkit";
+export type ChartMeasurement = {
+    data: Partial<{ [k in AnthroSystemCodes]: number }>
+    id: string
+}
+export type ChartMeasurementSerie = {
+    id: string,
+    label: string,
+    data: ChartMeasurement[],
+    createdAt: string
+    updatedAt: string
+}
+
+type AddMeasureToSerieReducerData = {
+    chartCode: GrowthRefChartAndTableCodes, serieId: string, measurement: ChartMeasurement["data"]
+}
+type DeleteMeasureFromSerieReducerData = {
+    chartCode: GrowthRefChartAndTableCodes, serieId: string, measurementId: string
+}
+type AddNewSerieData = {
+    chartCode: GrowthRefChartAndTableCodes, serieLabel: string
+}
+type DeleteSerieData = {
+    chartCode: GrowthRefChartAndTableCodes,
+    serieId: string
+}
+export interface IChartToolStore {
+    growthMeasurements: Partial<{
+        [key in GrowthRefChartAndTableCodes]: {
+            series: ChartMeasurementSerie[]
+        }
+    }>
+}
+const initialState: IChartToolStore = {
+    growthMeasurements: {
+    }
+}
+
+export const chartToolStore = createSlice({
+    name: "ChartToolState",
+    initialState,
+    reducers: {
+        addMeasureToSerie(state, { payload: { chartCode, measurement, serieId } }: PayloadAction<AddMeasureToSerieReducerData>) {
+            const growthChartSeries = state.growthMeasurements[chartCode]?.series
+            if (growthChartSeries) {
+                const serieIndex = growthChartSeries.findIndex(serie => serie.id === serieId)
+                if (serieIndex != -1) {
+                    growthChartSeries[serieIndex].data.push({ data: measurement, id: nanoid() })
+                    growthChartSeries[serieIndex].updatedAt = new Date().toISOString()
+                }
+            }
+        },
+        deleteMeasureFromSerie(state, { payload: { chartCode, measurementId, serieId } }: PayloadAction<DeleteMeasureFromSerieReducerData>) {
+            const growthChartSeries = state.growthMeasurements[chartCode]?.series
+            if (growthChartSeries) {
+                const serieIndex = growthChartSeries.findIndex(serie => serie.id === serieId)
+                if (serieIndex != -1) {
+                    const measurementIndex = growthChartSeries[serieIndex].data.findIndex(measurement => measurement.id === measurementId)
+                    if (measurementIndex != -1) growthChartSeries[serieIndex].data.splice(measurementIndex, 1)
+                    growthChartSeries[serieIndex].updatedAt = new Date().toISOString()
+                }
+            }
+        },
+        addNewSerie(state, { payload: { chartCode, serieLabel } }: PayloadAction<AddNewSerieData>) {
+            if (!state.growthMeasurements[chartCode]) {
+                state.growthMeasurements[chartCode] = {
+                    series: []
+                }
+            }
+            const newSerie: ChartMeasurementSerie = {
+                id: nanoid(),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                data: [],
+                label: serieLabel
+            }
+            state.growthMeasurements[chartCode].series.push(newSerie)
+        },
+        deleteSerie(state, { payload: { chartCode, serieId } }: PayloadAction<DeleteSerieData>) {
+            if (state.growthMeasurements[chartCode]) {
+                const serieIndex = state.growthMeasurements[chartCode].series.findIndex((serie) => serie.id === serieId)
+                if (serieIndex != -1) state.growthMeasurements[chartCode].series.splice(serieIndex, 1)
+            }
+        }
+
+
+    }
+})
+
+export const { addMeasureToSerie, addNewSerie, deleteMeasureFromSerie, deleteSerie } = chartToolStore.actions
+export const chartToolStoreReducer = chartToolStore.reducer

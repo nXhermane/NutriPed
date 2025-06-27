@@ -72,6 +72,7 @@ export type SchemaConstraint<IFormSchema extends FormSchema> = ZodObject<
 export interface DynamicFormGeneratorProps<T extends FormSchema> {
   schema: T;
   zodSchema?: SchemaConstraint<T>;
+  className?: string;
 }
 export interface FormHandler<T extends FormSchema> {
   submit: () => Promise<z.infer<SchemaConstraint<T>> | null>;
@@ -80,7 +81,7 @@ export interface FormHandler<T extends FormSchema> {
 
 export const DynamicFormGenerator = forwardRef(
   <T extends FormSchema>(
-    { schema, zodSchema }: DynamicFormGeneratorProps<T>,
+    { schema, zodSchema, className }: DynamicFormGeneratorProps<T>,
     ref: React.Ref<FormHandler<T>>
   ) => {
     const [formState, dispatchFromState] = useReducer(
@@ -139,7 +140,10 @@ export const DynamicFormGenerator = forwardRef(
 
     return (
       <VStack
-        className={"w-full flex-1 gap-y-4 bg-background-secondary px-4 py-v-4"}
+        className={
+          "w-full flex-1 gap-y-4 bg-background-secondary px-4 py-v-4" +
+          className
+        }
       >
         {schema.map((section, sectionIndex) => {
           return (
@@ -151,7 +155,9 @@ export const DynamicFormGenerator = forwardRef(
             >
               {section.section && (
                 <HStack className={"items-center gap-2"}>
-                  <Heading className={"font-h4 text-base text-primary-c font-medium"}>
+                  <Heading
+                    className={"font-h4 text-base font-medium text-primary-c"}
+                  >
                     {section.section}
                   </Heading>
                 </HStack>
