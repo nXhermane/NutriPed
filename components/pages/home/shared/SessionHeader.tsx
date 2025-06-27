@@ -16,12 +16,18 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
 }) => {
   return (
     <HStack className={"items-center justify-between"}>
-      <Heading className={"font-h2 text-base text-typography-primary font-semibold"}>
+      <Heading
+        className={"font-h2 text-base font-semibold text-typography-primary"}
+      >
         {title}
       </Heading>
       {actionName && (
         <Pressable onPress={onActionPress}>
-          <Text className={"font-body text-xs dark:text-blue-200 text-blue-800  font-normal"}>
+          <Text
+            className={
+              "font-body text-xs font-normal text-blue-800 dark:text-blue-200"
+            }
+          >
             {actionName}
           </Text>
         </Pressable>

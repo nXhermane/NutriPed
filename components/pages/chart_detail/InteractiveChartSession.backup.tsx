@@ -326,7 +326,6 @@ export const InteractiveChartSession: React.FC<
                   </React.Fragment>
                 );
               }}
-              
             >
               {({ points, canvasSize, xScale, yScale, yTicks }) => {
                 const plottedPoints = childPlotedPointData.map(
@@ -485,7 +484,3 @@ export function ToolTip({
 }) {
   return <Circle cx={x} cy={y} r={4} color={color} />;
 }
-
-
-
-

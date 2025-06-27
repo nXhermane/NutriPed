@@ -8,5 +8,5 @@ export interface ToolDetailScreenHeaderProps {
 export const ToolDetailScreenHeader: React.FC<ToolDetailScreenHeaderProps> = ({
   name,
 }) => {
-  return <StackScreenHeader name={name}  />;
+  return <StackScreenHeader name={name} />;
 };

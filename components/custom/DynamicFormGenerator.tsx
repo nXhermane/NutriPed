@@ -15,6 +15,8 @@ enum ACTION_TYPE {
   SET_ERROR = "set_error",
   RESET = "reset",
 }
+
+
 type Action =
   | {
       type: ACTION_TYPE.UPDATE_FIELD;
@@ -30,6 +32,9 @@ type Action =
       field: string;
       error?: string;
     };
+
+
+
 const dynamicFromReducer = (
   state: Record<string, { value: any; error?: string }>,
   action: Action
@@ -51,16 +56,28 @@ const dynamicFromReducer = (
           error: action?.error,
         },
       };
-    case ACTION_TYPE.RESET:
-      return action.payload;
+    case ACTION_TYPE.RESET: {
+     
+      return {
+        ...Object.fromEntries(
+          Object.entries(state).map(([field, value]) => [
+            field,
+            { ...value, value: undefined },
+          ])
+        ),
+      };
+    }
     default:
       return state;
   }
 };
+
+
 export type FormSchema = {
   fields: IField[];
   section?: string;
 }[];
+
 type ExtractFieldNames<T extends FormSchema> =
   T[number]["fields"][number]["name"];
 type BuildZodShape<Keys extends string> = {
@@ -69,21 +86,37 @@ type BuildZodShape<Keys extends string> = {
 export type SchemaConstraint<IFormSchema extends FormSchema> = ZodObject<
   BuildZodShape<ExtractFieldNames<IFormSchema>>
 >;
+
+export type DynamicFormZodSchemaType =
+  | {
+      validate: (
+        data: any
+      ) => { success: false; error: z.ZodError } | { success: true; data: any };
+    }
+  | z.ZodObject<any, any, any, any>;
+
+
 export interface DynamicFormGeneratorProps<T extends FormSchema> {
   schema: T;
-  zodSchema?: SchemaConstraint<T>;
+  zodSchema?: DynamicFormZodSchemaType | SchemaConstraint<T>;
   className?: string;
 }
+
+
 export interface FormHandler<T extends FormSchema> {
   submit: () => Promise<z.infer<SchemaConstraint<T>> | null>;
   reset: () => void;
 }
+
+
+
 
 export const DynamicFormGenerator = forwardRef(
   <T extends FormSchema>(
     { schema, zodSchema, className }: DynamicFormGeneratorProps<T>,
     ref: React.Ref<FormHandler<T>>
   ) => {
+
     const [formState, dispatchFromState] = useReducer(
       dynamicFromReducer,
       Object.fromEntries(
@@ -95,6 +128,7 @@ export const DynamicFormGenerator = forwardRef(
           ])
       )
     );
+
 
     const handleFieldChange = (fieldName: ExtractFieldNames<T>, value: any) => {
       dispatchFromState({
@@ -108,6 +142,8 @@ export const DynamicFormGenerator = forwardRef(
         error: undefined,
       });
     };
+
+
     const submit = useCallback(async (): Promise<z.infer<
       SchemaConstraint<T>
     > | null> => {
@@ -115,29 +151,45 @@ export const DynamicFormGenerator = forwardRef(
         Object.entries(formState).map(value => [value[0], value[1].value])
       ) as z.infer<SchemaConstraint<T>>;
       if (zodSchema) {
-        const result = zodSchema.safeParse(formData);
+        const result =
+          "safeParse" in zodSchema
+            ? zodSchema.safeParse(formData)
+            : zodSchema.validate(formData);
         if (!result.success) {
           result.error.errors.forEach(err => {
-            if (err.path[0]) {
+            err.path.forEach(path =>
               dispatchFromState({
                 type: ACTION_TYPE.SET_ERROR,
-                field: err.path[0] as string,
+                field: path as string,
                 error: err.message,
-              });
-            } else {
-            }
+              })
+            );
           });
           return null;
+        } else {
+          Object.keys(formData).map(keys => {
+            dispatchFromState({
+              type: ACTION_TYPE.SET_ERROR,
+              field: keys,
+              error: undefined,
+            });
+          });
         }
         return result.data;
       }
       return formData;
     }, [formState, zodSchema]);
+
+
     const reset = () => {
       dispatchFromState({ type: ACTION_TYPE.RESET, payload: {} });
     };
+
+
     useImperativeHandle(ref, () => ({ submit, reset }), [submit]);
 
+
+    
     return (
       <VStack
         className={

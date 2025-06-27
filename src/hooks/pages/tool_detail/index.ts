@@ -1,2 +1,2 @@
-export * from "./useGenerateSchemaForIndicator"
-export * from "./useChartDetailMenuHandler"
+export * from "./useGenerateSchemaForIndicator";
+export * from "./useChartDetailMenuHandler";

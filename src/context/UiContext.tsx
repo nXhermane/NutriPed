@@ -10,7 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import variables from "@/scaling";
 import { vars } from "nativewind";
 import { View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export interface UIContextType {
   colorMode: "dark" | "light";
@@ -58,7 +58,9 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
           ]}
         >
           <GestureHandlerRootView style={{ flex: 1 }}>
-          <GluestackUIProvider mode={colorMode}>{children}</GluestackUIProvider>
+            <GluestackUIProvider mode={colorMode}>
+              {children}
+            </GluestackUIProvider>
           </GestureHandlerRootView>
         </View>
       </UIContext.Provider>

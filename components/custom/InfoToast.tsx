@@ -29,7 +29,7 @@ export const InfoToast: React.FC<InfoToastProps> = ({ id, title, desc }) => {
           }
         />
 
-        <VStack>
+        <VStack className="w-[90%]">
           {title && (
             <ToastTitle className={"text-base font-semibold text-blue-400"}>
               {title}

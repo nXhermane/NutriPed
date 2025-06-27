@@ -37,22 +37,21 @@ export const CardPressEffect: React.FC<CardPressEffectProps> = ({
         delay: 300,
       }}
     >
-   
-        <Pressable
-          onPressIn={e => {
-            setPressed(true);
-            onPressIn && onPressIn(e);
-          }}
-          onPressOut={e => {
-            setPressed(false);
-            onPressOut && onPressOut(e);
-          }}
-          {...props}
-        >
-          {typeof children === "function"
-            ? children({ hovered: false, pressed: false })
-            : children}
-        </Pressable>
+      <Pressable
+        onPressIn={e => {
+          setPressed(true);
+          onPressIn && onPressIn(e);
+        }}
+        onPressOut={e => {
+          setPressed(false);
+          onPressOut && onPressOut(e);
+        }}
+        {...props}
+      >
+        {typeof children === "function"
+          ? children({ hovered: false, pressed: false })
+          : children}
+      </Pressable>
     </MotiView>
   );
 };

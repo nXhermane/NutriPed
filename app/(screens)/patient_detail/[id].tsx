@@ -5,6 +5,7 @@ import {
 import { Box } from "@/components/ui/box";
 import { AggregateID } from "@/core/shared";
 import { AppDispatch, Interaction, recordInteraction } from "@/src/store";
+import { useIsFocused } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,9 +30,11 @@ const PatientDetail = () => {
       );
       if (patientInteraction) {
         setCurrentPatientInteraction(patientInteraction);
-        setShowDiagnosticDataFormForFirstVisist(
-          patientInteraction.isFirstVisitToPatientDetail
-        );
+        setTimeout(() => {
+          setShowDiagnosticDataFormForFirstVisist(
+            patientInteraction.isFirstVisitToPatientDetail
+          );
+        }, 300);
       }
     };
     checkIfItFirstVisit();
@@ -53,12 +56,11 @@ const PatientDetail = () => {
 
   return (
     <React.Fragment>
-     
       <Box className={"flex-1 bg-background-primary"}>
         <PatientDetailHeader patientId={patientId as AggregateID} />
         <DiagnosticDataForm
           patientId={patientId as AggregateID}
-          isOpen={showDiagnosticDataFormForFirstVisit}
+          isOpen={ showDiagnosticDataFormForFirstVisit}
           onClose={() => {
             if (currentPatientInteraction?.isFirstVisitToPatientDetail) {
               router.back();

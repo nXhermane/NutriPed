@@ -9,7 +9,11 @@ export const LastPatientSearchInput: React.FC<LastPatientSearchInputProps> = ({
   fieldProps,
 }) => {
   return (
-    <HStack className={"gap-1 px-4 pt-4 mb-4 bg-background-secondary  h-v-16 border-t-[1px] border-primary-border/5 "}>
+    <HStack
+      className={
+        "mb-4 h-v-16 gap-1 border-t-[1px] border-primary-border/5 bg-background-secondary px-4 pt-4"
+      }
+    >
       <Box className="w-[100%]">
         <SearchBar
           fieldProps={{

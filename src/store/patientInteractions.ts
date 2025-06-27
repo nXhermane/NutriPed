@@ -5,12 +5,12 @@ export type Interaction = {
   patientId: AggregateID;
   date: string;
   state: PATIENT_STATE;
-  isFirstVisitToPatientDetail: boolean 
+  isFirstVisitToPatientDetail: boolean;
 };
 interface PatientInteractionsState {
   interactions: Interaction[];
 }
- const initialState: PatientInteractionsState = {
+const initialState: PatientInteractionsState = {
   interactions: [],
 };
 export const patientInteractionsSlice = createSlice({

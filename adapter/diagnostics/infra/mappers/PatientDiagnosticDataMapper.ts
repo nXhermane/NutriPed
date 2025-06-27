@@ -23,8 +23,8 @@ export class PatientDiagnosticDataInfraMapper
       birthday: entity.getBirthDay().unpack(),
       anthropMeasures: entity
         .getAnthropometricData()
-        .unpack().entry
-        .map(anthroEntry => ({
+        .unpack()
+        .entry.map(anthroEntry => ({
           code: anthroEntry.code.unpack(),
           unit: anthroEntry.unit.unpack(),
           value: anthroEntry.value,

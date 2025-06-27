@@ -33,7 +33,7 @@ export const SuccessToast: React.FC<SuccessToastProps> = ({
           }
         />
 
-        <VStack>
+        <VStack className="w-[90%]">
           {title && (
             <ToastTitle className={"text-base font-semibold text-green-400"}>
               {title}

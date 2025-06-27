@@ -17,8 +17,8 @@ export class PatientDiagnosticDataMapper
       anthropometricData: {
         data: entity
           .getAnthropometricData()
-          .unpack().entry
-          .map((val: AnthropEntry) => ({
+          .unpack()
+          .entry.map((val: AnthropEntry) => ({
             code: val.code.unpack(),
             unit: val.unit.unpack(),
             value: val.value,

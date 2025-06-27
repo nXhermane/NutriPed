@@ -23,7 +23,7 @@ export default function Home() {
       if (!isInitialized) setShowInitializationSheet(true);
     }
   }, [isInitialized]);
-  
+
   return (
     <Box className={"flex-1 bg-background-primary"}>
       <HomeHeader />

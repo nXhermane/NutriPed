@@ -1,3 +1,2 @@
-export * from "./ChartDetailHeader"
-export * from "./InteractiveChartSession"
-export * from "./PatientDataSession"
+export * from "./ChartDetailHeader";
+export * from "./PatientDataSession";

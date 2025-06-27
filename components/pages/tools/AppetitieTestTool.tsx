@@ -108,8 +108,6 @@ export const AppetiteTestTool: React.FC<AppetiteTestToolProps> = () => {
   );
 };
 
-
-
 const AppetiteTestToolHeader = () => {
   return (
     <HStack className="px-4 py-2">
@@ -121,8 +119,6 @@ const AppetiteTestToolHeader = () => {
     </HStack>
   );
 };
-
-
 
 interface AppetiteTestSessionProps {
   title?: string;
@@ -151,9 +147,6 @@ const AppetiteTestSession: React.FC<AppetiteTestSessionProps> = ({
     </VStack>
   );
 };
-
-
-
 
 export interface AppetiteTestProductProps {
   onChange: (productType: APPETITE_TEST_PRODUCT_TYPE) => void;
@@ -280,9 +273,6 @@ export const AppetiteTestProductSession: React.FC<AppetiteTestProductProps> = ({
   );
 };
 
-
-
-
 type AnthroData = {
   weight: number;
 };
@@ -314,9 +304,6 @@ export const AppetiteTextAnthroDataSession: React.FC<
     </AppetiteTestSession>
   );
 };
-
-
-
 
 interface AppetiteTestResultComponentProps {
   result?: AppetiteTestResultDto;

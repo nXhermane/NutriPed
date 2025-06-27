@@ -198,10 +198,16 @@ export const FormField = <T,>({
     }
   }, [value, field.default]);
 
-  if (field.type === "quantity")
+  if (field.type === "quantity") {
     useEffect(() => {
       setCurrentQuantityUnit(field.defaultUnit);
     }, [field?.defaultUnit]);
+    useEffect(() => {
+      if (value === undefined) {
+        setCurrentQuantityValue(0);
+      }
+    }, [value]);
+  }
 
   const renderForm = () => {
     switch (field.type) {
@@ -515,7 +521,7 @@ export const FormField = <T,>({
     >
       <FormControlLabel className="m-0">
         <FormControlLabelText
-          className={"font-body text-sm font-normal text-typography-primary"}
+          className={"font-body text-xs font-normal text-typography-primary"}
         >
           {field.label}{" "}
           {field.isRequire && <Text className="text-red-500">*</Text>}
@@ -526,14 +532,14 @@ export const FormField = <T,>({
 
       {field.helperText && (
         <FormControlHelper>
-          <FormControlHelperText className="font-body text-xs font-normal">
+          <FormControlHelperText className="font-body text-2xs font-normal">
             {field.helperText}
           </FormControlHelperText>
         </FormControlHelper>
       )}
       <FormControlError>
         <FormControlErrorIcon as={AlertCircleIcon} />
-        <FormControlErrorText className={"font-body text-xs font-normal"}>
+        <FormControlErrorText className={"font-body text-2xs font-normal"}>
           {error}
         </FormControlErrorText>
       </FormControlError>

@@ -71,7 +71,7 @@ const CustomTabButton: React.FC<CustomTabButtonProps> = ({
       <VStack className={"items-center"}>
         <CustomTabButtonIcon name={icon} isFocused={isFocused} />
         <Text
-          className={`font-light text-2xs text-typography-primary_light font-normal ${isFocused ? "text-primary-c" : ""} `}
+          className={`font-light text-2xs font-normal text-typography-primary_light ${isFocused ? "text-primary-c" : ""} `}
         >
           {name}
         </Text>

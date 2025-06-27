@@ -1,5 +1,5 @@
-import { StackScreenHeader } from "../shared"
+import { StackScreenHeader } from "../shared";
 
-export const ToolsScreenHeader = () => { 
- return <StackScreenHeader name={"Outils Nutritionnels"} />   
-}
+export const ToolsScreenHeader = () => {
+  return <StackScreenHeader name={"Outils Nutritionnels"} />;
+};

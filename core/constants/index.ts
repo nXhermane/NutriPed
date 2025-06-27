@@ -21,8 +21,6 @@ export enum StandardShape {
   CURVE = "growth_curve",
 }
 
-
-
 export enum AnthroSystemCodes {
   HEIGHT = "height",
   LENGTH = "length",
@@ -48,10 +46,10 @@ export enum AnthroSystemCodes {
   SEX = "sex",
 }
 export const ZScoreVarName = "zscore";
-// BETA: 
+// BETA:
 export const AnthroSystemDefaultValue = {
-  [AnthroSystemCodes.MUAC]: 140
-} as const 
+  [AnthroSystemCodes.MUAC]: 140,
+} as const;
 /**
  * Nombre moyen de jours dans un mois (approximé à 30.4375 jours).
  * @constant

@@ -25,12 +25,13 @@ type PatientOrientationContext = {
   [x: string]: number | APPETITE_TEST_RESULT_CODES | PreviousTreatment;
 };
 export class OrientPatientUseCase
-  implements UseCase<OrientPatientRequest, OrientPatientResponse> {
+  implements UseCase<OrientPatientRequest, OrientPatientResponse>
+{
   constructor(
     private readonly orientUseCase: UseCase<OrientRequest, OrientResponse>,
     private readonly dailyJournalGenerator: IPatientDailyJournalGenerator,
     private readonly repo: PatientCareSessionRepository
-  ) { }
+  ) {}
   async execute(request: OrientPatientRequest): Promise<OrientPatientResponse> {
     try {
       const patientCareSession = await this.repo.getByIdOrPatientId(
@@ -91,9 +92,9 @@ export class OrientPatientUseCase
       [AnthroSystemCodes.WEIGHT]: patientContext[
         AnthroSystemCodes.WEIGHT
       ] as number,
-      [AnthroSystemCodes.MUAC]: (patientContext[
-        AnthroSystemCodes.MUAC
-      ] as number) || AnthroSystemDefaultValue[AnthroSystemCodes.MUAC],
+      [AnthroSystemCodes.MUAC]:
+        (patientContext[AnthroSystemCodes.MUAC] as number) ||
+        AnthroSystemDefaultValue[AnthroSystemCodes.MUAC],
       [AnthroSystemCodes.WFA]: patientContext[AnthroSystemCodes.WFA] as number,
       [AnthroSystemCodes.WFH_UNISEX_NCHS]: patientContext[
         AnthroSystemCodes.WFH_UNISEX_NCHS

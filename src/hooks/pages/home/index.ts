@@ -1,1 +1,1 @@
-export * from "./useLastPatientList"
+export * from "./useLastPatientList";

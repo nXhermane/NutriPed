@@ -13,9 +13,13 @@ import {
 } from "@/core/constants";
 import { PATIENT_STATE } from "@/src/constants/ui";
 
-export function useDiagnosticDataForm(patientId: AggregateID, onClose: () => void) {
+export function useDiagnosticDataForm(
+  patientId: AggregateID,
+  onClose: () => void
+) {
   const dispatch = useDispatch<AppDispatch>();
-  const { diagnosticServices, medicalRecordService, patientService } = usePediatricApp();
+  const { diagnosticServices, medicalRecordService, patientService } =
+    usePediatricApp();
   const toast = useToast();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +44,9 @@ export function useDiagnosticDataForm(patientId: AggregateID, onClose: () => voi
     if (!formData) return;
 
     setIsSubmitting(true);
-    const entries = Object.entries(formData).filter(([, val]) => val != undefined);
+    const entries = Object.entries(formData).filter(
+      ([, val]) => val != undefined
+    );
     const anthroData = entries
       .filter(([key]) =>
         [
@@ -59,17 +65,18 @@ export function useDiagnosticDataForm(patientId: AggregateID, onClose: () => voi
       const patientRes = await patientService.get({ id: patientId });
       if (patientRes instanceof Message) throw new Error();
 
-      const patientDto = (patientRes.data[0] as PatientDto);
-      const nutritionalDiag = await diagnosticServices.nutritionalDiagnostic.create({
-        patientId,
-        patientDiagnosticData: {
-          sex: patientDto.gender,
-          birthday: patientDto.birthday,
-          anthropometricData: { anthropometricMeasures: [] },
-          clinicalSigns: { clinicalSigns: [] },
-          biologicalTestResults: [],
-        },
-      });
+      const patientDto = patientRes.data[0] as PatientDto;
+      const nutritionalDiag =
+        await diagnosticServices.nutritionalDiagnostic.create({
+          patientId,
+          patientDiagnosticData: {
+            sex: patientDto.gender,
+            birthday: patientDto.birthday,
+            anthropometricData: { anthropometricMeasures: [] },
+            clinicalSigns: { clinicalSigns: [] },
+            biologicalTestResults: [],
+          },
+        });
       if (!("data" in nutritionalDiag)) throw new Error();
 
       const medicalRes = await medicalRecordService.addData({
@@ -83,14 +90,16 @@ export function useDiagnosticDataForm(patientId: AggregateID, onClose: () => voi
             recordedAt: DateManager.formatDate(new Date()),
           })),
           biologicalData: [],
-          clinicalData: [{
-            code: CLINICAL_SIGNS.EDEMA,
-            data: {
-              [OBSERVATIONS.EDEMA_PRESENCE]: true,
-              [OBSERVATIONS.EDEMA_GODET_COUNT]: 2,
+          clinicalData: [
+            {
+              code: CLINICAL_SIGNS.EDEMA,
+              data: {
+                [OBSERVATIONS.EDEMA_PRESENCE]: true,
+                [OBSERVATIONS.EDEMA_GODET_COUNT]: 2,
+              },
+              recordedAt: DateManager.formatDate(new Date()),
             },
-            recordedAt: DateManager.formatDate(new Date()),
-          }],
+          ],
         },
       });
       if (!("data" in medicalRes)) throw new Error();
@@ -101,12 +110,14 @@ export function useDiagnosticDataForm(patientId: AggregateID, onClose: () => voi
         "Données enregistrées",
         "Données initiales enregistrées avec succès, vous pouvez effectuer un diagnostic."
       );
-      dispatch(recordInteraction({
-        patientId,
-        date: new Date().toISOString(),
-        state: PATIENT_STATE.NEW,
-        isFirstVisitToPatientDetail: false,
-      }));
+      dispatch(
+        recordInteraction({
+          patientId,
+          date: new Date().toISOString(),
+          state: PATIENT_STATE.NEW,
+          isFirstVisitToPatientDetail: false,
+        })
+      );
       setTimeout(() => {
         setSuccess(false);
         setIsSubmitting(false);
@@ -120,7 +131,10 @@ export function useDiagnosticDataForm(patientId: AggregateID, onClose: () => voi
   };
 
   return {
-    isSubmitting, error, success,
-    handleSubmit, handleResetFlags,
+    isSubmitting,
+    error,
+    success,
+    handleSubmit,
+    handleResetFlags,
   };
 }

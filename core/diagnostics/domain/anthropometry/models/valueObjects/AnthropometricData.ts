@@ -23,13 +23,15 @@ export type AnthropEntry = {
   unit: UnitCode;
 };
 // LE model a été mise a jour pour passer a un tableau de donnée anthropometric
-export type IAnthropometricData = {entry: AnthropEntry[]};
+export type IAnthropometricData = { entry: AnthropEntry[] };
 export type CreateAnthropometricData = {
   anthropometricMeasures: { code: string; value: number; unit: string }[];
 };
 export class AnthropometricData extends ValueObject<IAnthropometricData> {
   protected validate(props: Readonly<IAnthropometricData>): void {
-    if (props.entry.some(anthrop => Guard.isNegative(anthrop.value).succeeded)) {
+    if (
+      props.entry.some(anthrop => Guard.isNegative(anthrop.value).succeeded)
+    ) {
       throw new NegativeValueError(
         "The anthropometric measure value can't be negative."
       );
@@ -61,7 +63,9 @@ export class AnthropometricData extends ValueObject<IAnthropometricData> {
         return Result.fail(formatError(combinedRes, AnthropometricData.name));
 
       return Result.ok(
-        new AnthropometricData({entry: anthropometricMeasuresRes.map(res => res.val)})
+        new AnthropometricData({
+          entry: anthropometricMeasuresRes.map(res => res.val),
+        })
       );
     } catch (e: unknown) {
       return handleError(e);

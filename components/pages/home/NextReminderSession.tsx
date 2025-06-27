@@ -62,17 +62,14 @@ export const ReminderCard: React.FC<ReminderCardProps> = ({
           "elevation-sm h-v-14 items-center gap-2 overflow-hidden rounded-xl bg-background-secondary px-2"
         }
       >
-        <Box
-          className={"absolute -ml-1 h-full w-2 bg-primary-c_light"}
-        ></Box>
-        <Avatar className={"h-10 w-10 bg-primary-c_light/40 rounded-lg"}>
-          <Icon
-            as={Stethoscope}
-            className={"h-5 w-5 text-primary-c_light"}
-          />
+        <Box className={"absolute -ml-1 h-full w-2 bg-primary-c_light"}></Box>
+        <Avatar className={"h-10 w-10 rounded-lg bg-primary-c_light/40"}>
+          <Icon as={Stethoscope} className={"h-5 w-5 text-primary-c_light"} />
         </Avatar>
         <VStack>
-          <Text className={"font-h4 font-semibold text-sm text-typography-primary"}>
+          <Text
+            className={"font-h4 text-sm font-semibold text-typography-primary"}
+          >
             {title}
           </Text>
           <Text className={"font-light text-2xs text-typography-primary_light"}>

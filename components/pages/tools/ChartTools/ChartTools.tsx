@@ -14,10 +14,9 @@ export function ChartTools() {
   return (
     <React.Fragment>
       <ChartToolsTopSession onChange={value => setSearchOptions(value)} />
-      <VStack className="flex-1 gap-v-4 bg-background-primary ">
+      <VStack className="flex-1 gap-v-4 bg-background-primary">
         <ChartListSession searchOptions={searchOptions} />
       </VStack>
-     
     </React.Fragment>
   );
 }

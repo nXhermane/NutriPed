@@ -21,7 +21,9 @@ export const TabHeader: React.FC<TabHeaderProps> = ({
       }
     >
       <VStack className={"ml-4"}>
-        <Heading className={"font-h2 font-semibold text-xl text-typography-primary"}>
+        <Heading
+          className={"font-h2 text-xl font-semibold text-typography-primary"}
+        >
           {name}
         </Heading>
         {desc && (

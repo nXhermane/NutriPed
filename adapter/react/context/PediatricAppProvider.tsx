@@ -26,7 +26,9 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
   expo,
   eventBus,
 }) => {
-  const [pediatricApp, setPediatricApp] = useState<PediatricAppContextType>({} as PediatricAppContextType);
+  const [pediatricApp, setPediatricApp] = useState<PediatricAppContextType>(
+    {} as PediatricAppContextType
+  );
 
   // Clean up function to properly dispose contexts when component unmounts
   React.useEffect(() => {

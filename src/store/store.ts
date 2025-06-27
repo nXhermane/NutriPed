@@ -12,7 +12,7 @@ const persistConfig = {
 export const rootReducer = combineReducers({
   patientInteractionReducer,
   uiReducer,
-  chartToolStoreReducer
+  chartToolStoreReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

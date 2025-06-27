@@ -12,12 +12,14 @@ const LastPatientScreen = () => {
   const [searchText, setSearchText] = useState("");
   return (
     <React.Fragment>
-      <Stack.Screen options={{
-        headerShown: false,
-        animation: "slide_from_right",
-        animationDuration: 300, 
-        animationMatchesGesture: true,
-      }} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          animation: "slide_from_right",
+          animationDuration: 300,
+          animationMatchesGesture: true,
+        }}
+      />
       <Box className={"flex-1 bg-background-primary"}>
         <LastPatientScreenHeader />
         <LastPatientSearchInput

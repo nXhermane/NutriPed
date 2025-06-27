@@ -1,10 +1,14 @@
-
 // =============================================
 // CHAMPS DE FORMULAIRE INDIVIDUELS
 // =============================================
 
 import { IField } from "@/components/custom/FormField";
-import { AnthroSystemCodes, CLINICAL_SIGNS, MAX_LENHEI, MIN_LENHEI } from "@/core/constants";
+import {
+  AnthroSystemCodes,
+  CLINICAL_SIGNS,
+  MAX_LENHEI,
+  MIN_LENHEI,
+} from "@/core/constants";
 import z from "zod";
 
 export const WeightField = {
@@ -123,8 +127,7 @@ export const BirthDateField: IField = {
   placeholder: "2025-03-20",
   isRequire: true,
   default: new Date().toISOString().split("T")[0],
-
-}
+};
 export const RegisterDateField: IField = {
   label: "Date d'enregistrement",
   type: "date",
@@ -134,8 +137,8 @@ export const RegisterDateField: IField = {
   placeholder: "25-03-20",
   isRequire: true,
   default: new Date().toISOString().split("T")[0],
-  helperText: "C'est la date d'enregistrement des mesures anthropometriques."
-}
+  helperText: "C'est la date d'enregistrement des mesures anthropometriques.",
+};
 export const EdemaField = {
   type: "select" as const,
   default: "Absent",
@@ -157,7 +160,8 @@ export const WeightZodSchema = z
     value: z.number().positive("Le poids doit être positive."),
     unit: z.enum(["kg", "g"], {
       errorMap: (issue, ctx) => ({
-        message: "Unité invalide. Seules les valeurs 'kg' et 'g' sont acceptées.",
+        message:
+          "Unité invalide. Seules les valeurs 'kg' et 'g' sont acceptées.",
       }),
     }),
   })
@@ -173,12 +177,9 @@ export const WeightZodSchema = z
     }
   );
 
-export const HeightZodSchema = 
-z.preprocess(
+export const HeightZodSchema = z.preprocess(
   (raw: any) => {
-    console.log("call height")
-    if (!raw || typeof raw !== "object" || raw.value === 0)
-      return undefined;
+    if (!raw || typeof raw !== "object" || raw.value === 0) return undefined;
     return raw;
   },
   z
@@ -187,7 +188,8 @@ z.preprocess(
       value: z.number().positive("La taille debout doit être positive."),
       unit: z.enum(["cm", "m"], {
         errorMap: (issue, ctx) => ({
-          message: "Unité invalide. Seules les valeurs 'cm' et 'm' sont acceptées.",
+          message:
+            "Unité invalide. Seules les valeurs 'cm' et 'm' sont acceptées.",
         }),
       }),
     })
@@ -207,13 +209,11 @@ z.preprocess(
         path: ["value"],
       }
     )
-    .optional()
 );
 
 export const LengthZodSchema = z.preprocess(
   (raw: any) => {
-    if (!raw || typeof raw !== "object" || raw.value === 0)
-      return undefined;
+    if (!raw || typeof raw !== "object" || raw.value === 0) return undefined;
     return raw;
   },
   z
@@ -222,7 +222,8 @@ export const LengthZodSchema = z.preprocess(
       value: z.number().positive("La taille couchée doit être positive."),
       unit: z.enum(["cm", "m"], {
         errorMap: (issue, ctx) => ({
-          message: "Unité invalide. Seules les valeurs 'cm' et 'm' sont acceptées.",
+          message:
+            "Unité invalide. Seules les valeurs 'cm' et 'm' sont acceptées.",
         }),
       }),
     })
@@ -242,13 +243,11 @@ export const LengthZodSchema = z.preprocess(
         path: ["value"],
       }
     )
-    .optional()
 );
 
 export const MUACZodSchema = z.preprocess(
   (raw: any) => {
-    if (!raw || typeof raw !== "object" || raw.value === 0)
-      return undefined;
+    if (!raw || typeof raw !== "object" || raw.value === 0) return undefined;
     return raw;
   },
   z
@@ -257,7 +256,8 @@ export const MUACZodSchema = z.preprocess(
       value: z.number().positive("Le périmètre brachial doit être positif."),
       unit: z.enum(["cm", "mm"], {
         errorMap: (issue, ctx) => ({
-          message: "Unité invalide. Seules les valeurs 'cm' et 'mm' sont acceptées.",
+          message:
+            "Unité invalide. Seules les valeurs 'cm' et 'mm' sont acceptées.",
         }),
       }),
     })
@@ -268,17 +268,16 @@ export const MUACZodSchema = z.preprocess(
         return true;
       },
       {
-        message: "Le périmètre brachial doit être compris entre 5cm et 100cm ou 50mm et 1000mm.",
+        message:
+          "Le périmètre brachial doit être compris entre 5cm et 100cm ou 50mm et 1000mm.",
         path: ["value"],
       }
     )
-    .optional()
 );
 
 export const HeadCircumferenceZodSchema = z.preprocess(
   (raw: any) => {
-    if (!raw || typeof raw !== "object" || raw.value === 0)
-      return undefined;
+    if (!raw || typeof raw !== "object" || raw.value === 0) return undefined;
     return raw;
   },
   z
@@ -287,36 +286,42 @@ export const HeadCircumferenceZodSchema = z.preprocess(
       value: z.number().positive("Le périmètre crânien doit être positif."),
       unit: z.enum(["cm", "mm"], {
         errorMap: (issue, ctx) => ({
-          message: "Unité invalide. Seules les valeurs 'cm' et 'mm' sont acceptées.",
+          message:
+            "Unité invalide. Seules les valeurs 'cm' et 'mm' sont acceptées.",
         }),
       }),
     })
     .refine(
       head_circumference => {
         if (head_circumference.unit === "cm")
-          return head_circumference.value >= 5 && head_circumference.value <= 100;
+          return (
+            head_circumference.value >= 5 && head_circumference.value <= 100
+          );
         if (head_circumference.unit === "mm")
-          return head_circumference.value >= 50 && head_circumference.value <= 1000;
+          return (
+            head_circumference.value >= 50 && head_circumference.value <= 1000
+          );
         return true;
       },
       {
-        message: "Le périmètre crânien doit être compris entre 5cm et 100cm ou 50mm et 1000mm.",
+        message:
+          "Le périmètre crânien doit être compris entre 5cm et 100cm ou 50mm et 1000mm.",
         path: ["value"],
       }
     )
-    .optional()
 );
 
 export const TSFZodSchema = z.preprocess(
   (raw: any) => {
-    if (!raw || typeof raw !== "object" || raw.value === 0)
-      return undefined;
+    if (!raw || typeof raw !== "object" || raw.value === 0) return undefined;
     return raw;
   },
   z
     .object({
       code: z.string().nonempty(),
-      value: z.number().positive("La valeur du pli cutané tricipital doit être positif."),
+      value: z
+        .number()
+        .positive("La valeur du pli cutané tricipital doit être positif."),
       unit: z.enum(["mm"], {
         errorMap: (issue, ctx) => ({
           message: "Unité invalide. Seules les valeurs en 'mm' sont acceptées.",
@@ -329,23 +334,24 @@ export const TSFZodSchema = z.preprocess(
         return true;
       },
       {
-        message: "La valeur du pli cutané tricipital doit être compris entre 0mm et 1000mm.",
+        message:
+          "La valeur du pli cutané tricipital doit être compris entre 0mm et 1000mm.",
         path: ["value"],
       }
     )
-    .optional()
 );
 
 export const SSFZodSchema = z.preprocess(
   (raw: any) => {
-    if (!raw || typeof raw !== "object" || raw.value === 0)
-      return undefined;
+    if (!raw || typeof raw !== "object" || raw.value === 0) return undefined;
     return raw;
   },
   z
     .object({
       code: z.string().nonempty(),
-      value: z.number().positive("La valeur du pli cutané sous-scapulaire doit être positif."),
+      value: z
+        .number()
+        .positive("La valeur du pli cutané sous-scapulaire doit être positif."),
       unit: z.enum(["mm"], {
         errorMap: (issue, ctx) => ({
           message: "Unité invalide. Seules les valeurs en 'mm' sont acceptées.",
@@ -358,16 +364,19 @@ export const SSFZodSchema = z.preprocess(
         return true;
       },
       {
-        message: "La valeur du pli cutané sous-scapulaire doit être compris entre 0mm et 1000mm.",
+        message:
+          "La valeur du pli cutané sous-scapulaire doit être compris entre 0mm et 1000mm.",
         path: ["value"],
       }
     )
-    .optional()
 );
 
-export const dateZodSchema = (message?: string, fieldName?: string) => z.string().refine(val => {
-  console.log(val,Date.parse("kk"))
-  return !isNaN(Date.parse(val))
-}, { message: message || "Date invalide.", path: fieldName ? [fieldName] : [] })
+export const dateZodSchema = (message?: string, fieldName?: string) =>
+  z.string().refine(
+    val => {
+      return !isNaN(Date.parse(val));
+    },
+    { message: message || "Date invalide.", path: fieldName ? [fieldName] : [] }
+  );
 
 export const EdemaZodSchema = z.enum(["yes", "no"]);

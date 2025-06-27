@@ -5,7 +5,7 @@ import React, { createContext, ReactNode, useContext } from "react";
 import { Dimensions } from "react-native";
 import { InfoToast } from "@/components/custom";
 
-type ToastType = "Success" | "Error" | "Info"
+type ToastType = "Success" | "Error" | "Info";
 export interface ToastContextType {
   show: (type: ToastType, title?: string, desc?: string) => void;
 }
@@ -21,11 +21,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const toast = useGluestackToast();
   const [toastId, setToastId] = React.useState("0");
 
-  const show = (
-    type: ToastType,
-    title?: string,
-    desc?: string
-  ) => {
+  const show = (type: ToastType, title?: string, desc?: string) => {
     const newId = Math.random().toString();
     setToastId(newId);
     if (!toast.isActive(toastId))

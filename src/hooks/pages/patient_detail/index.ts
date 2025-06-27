@@ -1,1 +1,1 @@
-export * from "./useDiagnosticDataForm"
+export * from "./useDiagnosticDataForm";

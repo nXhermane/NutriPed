@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import { useFonts } from "expo-font"
+import { useFonts } from "expo-font";
 import {
   Poppins_400Regular,
   Poppins_100Thin,
@@ -13,8 +13,7 @@ import {
   Poppins_800ExtraBold,
   Poppins_800ExtraBold_Italic,
   Poppins_900Black,
-  Poppins_900Black_Italic
-
+  Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 
 export const useAppInitialization = () => {
@@ -30,8 +29,7 @@ export const useAppInitialization = () => {
     Poppins_800ExtraBold,
     Poppins_800ExtraBold_Italic,
     Poppins_900Black,
-    Poppins_900Black_Italic
-
+    Poppins_900Black_Italic,
   });
 
   const onLayoutRootView = useCallback(async () => {

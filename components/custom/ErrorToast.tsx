@@ -29,7 +29,7 @@ export const ErrorToast: React.FC<ErrorToastProps> = ({ id, title, desc }) => {
           }
         />
 
-        <VStack className="">
+        <VStack className="w-[90%]">
           {title && (
             <ToastTitle className={"text-base font-semibold text-red-400"}>
               {title}

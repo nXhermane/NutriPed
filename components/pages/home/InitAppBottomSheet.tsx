@@ -73,7 +73,7 @@ export const InitAppBottomSheet: React.FC<InitAppBottomSheetProps> = ({
             <VStack className="items-center">
               <Heading
                 className={
-                  "text-center font-h3 text-xl text-typography-primary font-semibold"
+                  "text-center font-h3 text-xl font-semibold text-typography-primary"
                 }
               >
                 Initialisation en cours

@@ -12,7 +12,6 @@ import { useToast } from "@/src/context";
 import { VStack } from "@/components/ui/vstack";
 import {
   ChartDetailHeader,
-  InteractiveChartSession,
   PatientDataSession,
 } from "@/components/pages/chart_detail";
 import { GROWTH_INDICATORS } from "@/src/constants/ui";
@@ -20,6 +19,7 @@ import {
   GetGrowthReferenceChartRequest,
   GetIndicatorRequest,
 } from "@/core/diagnostics";
+import { ScrollView } from "react-native";
 
 const ChartDetail = () => {
   const params = useLocalSearchParams<{
@@ -83,17 +83,18 @@ const ChartDetail = () => {
           presentation: "modal",
         }}
       />
-      <VStack className="flex-1 bg-background-primary">
-        <ChartDetailHeader name={indicatorUiData?.label || ""} />
-        <PatientDataSession
-          growthChartDto={growthCharts[0]}
-          indicatorDto={indicators[0]}
-        />
-        <InteractiveChartSession
-          title="Courbe de croissance interactive"
-          growthChartDto={growthCharts[0]}
-        />
-      </VStack>
+      <ChartDetailHeader name={indicatorUiData?.label || ""} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="bg-background-primary"
+      >
+        <VStack className="flex-1 bg-background-primary pb-20">
+          <PatientDataSession
+            growthChartDto={growthCharts[0]}
+            indicatorDto={indicators[0]}
+          />
+        </VStack>
+      </ScrollView>
     </React.Fragment>
   );
 };

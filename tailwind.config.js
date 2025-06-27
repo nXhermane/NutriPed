@@ -34,6 +34,9 @@ module.exports = {
     "text-indigo-500",
     "text-blue-600",
     "text-red-600",
+    "bg-indigo-600",
+    "bg-emerald-600",
+    "bg-orange-600",
   ],
   theme: {
     spacing: {

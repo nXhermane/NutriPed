@@ -96,7 +96,7 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
             patientId: result.data.id,
             date: new Date().toISOString(),
             state: PATIENT_STATE.NEW,
-            isFirstVisitToPatientDetail: true 
+            isFirstVisitToPatientDetail: true,
           })
         );
         dispatch(recordUiState({ type: "PATIENT_ADDED" }));
@@ -119,7 +119,11 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
         </ActionsheetDragIndicatorWrapper>
         <VStack className={"h-[85vh] w-full"}>
           <HStack className={"w-full items-center justify-between px-4 py-v-3"}>
-            <Heading className={"font-h2 text-2xl text-typography-primary font-semibold"}>
+            <Heading
+              className={
+                "font-h2 text-2xl font-semibold text-typography-primary"
+              }
+            >
               Nouveau Patient
             </Heading>
             <Button
@@ -129,14 +133,16 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
               {onSubmit && <ButtonSpinner />}
               {onError && <Icon as={X} />}
               <ButtonText
-                className={"font-body text-xs text-typography-primary font-normal"}
+                className={
+                  "font-body text-xs font-normal text-typography-primary"
+                }
               >
                 Ajouter
               </ButtonText>
               {onSuccess && <Icon as={Check} />}
             </Button>
           </HStack>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
             <DynamicFormGenerator
               ref={dynamicFormRef}
               schema={AddPatientFormSchema}

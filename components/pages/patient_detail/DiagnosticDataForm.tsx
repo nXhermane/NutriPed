@@ -37,7 +37,7 @@ export const DiagnosticDataForm: React.FC<DiagnosticDataFormProps> = React.memo(
       const formData = await dynamicFormRef.current?.submit();
       handleSubmit(formData as any);
     }, [dynamicFormRef, handleSubmit]);
-    
+
     useEffect(() => {
       if (!isOpen) {
         dynamicFormRef.current?.reset();
@@ -69,10 +69,10 @@ export const DiagnosticDataForm: React.FC<DiagnosticDataFormProps> = React.memo(
                 </ButtonText>
               </Button>
             </HStack>
-            <KeyboardAwareScrollView>
+            <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
               <DynamicFormGenerator
                 schema={DiagnosticDataFormSchema}
-                zodSchema={DiagnosticDataFormZodSchema}
+                zodSchema={DiagnosticDataFormZodSchema as any}
                 ref={dynamicFormRef}
               />
             </KeyboardAwareScrollView>

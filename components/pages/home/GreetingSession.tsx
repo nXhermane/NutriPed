@@ -13,10 +13,16 @@ export function GreetingSession() {
   };
   return (
     <VStack className={""}>
-      <Heading className={"font-h2 text-lg text-typography-primary font-semibold"}>
+      <Heading
+        className={"font-h2 text-lg font-semibold text-typography-primary"}
+      >
         {getGreetingWithName(user?.given_name!)}
       </Heading>
-      <Text className={"font-body text-sm text-typography-primary_light font-normal"}>
+      <Text
+        className={
+          "font-body text-sm font-normal text-typography-primary_light"
+        }
+      >
         Diagnostic nutritionnel pédiatrique
       </Text>
     </VStack>

@@ -65,7 +65,7 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
     const checkStatus = async () => {
       try {
         const status = await AsyncStorage.getItem(INIT_STATUS_KEY);
-        console.log(status)
+        console.log(status);
         setIsInitialized(status === "completed");
       } catch {
         setError("Erreur lors de la vérification du statut d'initialisation");
@@ -83,7 +83,7 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
     setCurrentStage("");
     setStatusMessage("");
     setInitStages([]);
-   
+
     try {
       const observer: IZipProcessorObserver = {
         onProgress(event) {
