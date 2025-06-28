@@ -12,7 +12,7 @@ import { useToast } from "@/src/context";
 import { VStack } from "@/components/ui/vstack";
 import {
   ChartDetailHeader,
-  PatientDataSession,
+  PatientMeasurementPanel,
 } from "@/components/pages/chart_detail";
 import { GROWTH_INDICATORS } from "@/src/constants/ui";
 import {
@@ -89,7 +89,7 @@ const ChartDetail = () => {
         className="bg-background-primary"
       >
         <VStack className="flex-1 bg-background-primary pb-20">
-          <PatientDataSession
+          <PatientMeasurementPanel
             growthChartDto={growthCharts[0]}
             indicatorDto={indicators[0]}
           />

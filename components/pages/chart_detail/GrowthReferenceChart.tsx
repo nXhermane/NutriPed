@@ -14,10 +14,10 @@ import { VStack } from "@/components/ui/vstack";
 import { ChevronUp } from "lucide-react-native";
 import React from "react";
 
-export interface GrowthChartComponentProps {
+export interface GrowthReferenceChartProps {
   isOpen?: boolean;
 }
-export const GrowthChartComponent: React.FC<GrowthChartComponentProps> = () => {
+export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> = () => {
   return (
     <BottomSheet>
       <VStack className="m-4">

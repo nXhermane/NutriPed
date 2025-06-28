@@ -6,14 +6,15 @@ import {
   validateWithSchemaPipeline,
 } from "@/src/constants/ui";
 import { useEffect, useMemo, useState } from "react";
-import z, { any } from "zod";
 
-
-export function useGenerateSchemaForIndicator(indicatorDto?: IndicatorDto) {
-  const [schema, setSchema] = useState<{
+export type MeasurementFormSchema =
+  {
     fields: IField[];
     zodSchema: DynamicFormZodSchemaType;
-  }>();
+  }
+
+export function useDynamicFormSchemaForIndicator(indicatorDto?: IndicatorDto) {
+  const [schema, setSchema] = useState<MeasurementFormSchema>();
   const generateFieldSchema = useMemo(
     () => (neededMeasures: AnthroSystemCodes[]) => {
       const fieldLists: Set<IField> = new Set();

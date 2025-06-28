@@ -16,6 +16,25 @@ import {
 } from "@/src/store/chartToolStore";
 import { useToast } from "@/src/context";
 import { Alert } from "react-native";
+type SeriesAction =
+  | { type: "addMeasure"; payload: AddMeasurePayload }
+  | { type: "new"; payload: NewSeriesPayload }
+  | { type: "delete"; payload: DeleteSeriesPayload }
+  | { type: "deleteSerie"; payload: DeleteSeriePayload }
+  | { type: "choose"; payload: ChooseSeriePayload }
+  | { type: "deleteMeasure"; payload: DeleteMeasurePayload };
+
+// Définis chaque payload selon tes besoins
+type AddMeasurePayload = { /* ... */ };
+type NewSeriesPayload = void
+type DeleteSeriesPayload = { /* ... */ };
+type DeleteSeriePayload = string; // exemple
+type ChooseSeriePayload = { serieId: string };
+type DeleteMeasurePayload = string;
+
+type HandleSeriesAction = <T extends SeriesAction["type"]>(
+  action: T
+) => (payload: Extract<SeriesAction, { type: T }>["payload"]) => Promise<any> | any;
 
 type ActionCodeItemKeyType =
   | (typeof ChartDetailMenuOtpionData)[number]["key"]
@@ -23,22 +42,22 @@ type ActionCodeItemKeyType =
   | "deleteSerie"
   | "addMeasure";
 
-export function useChartDetailHandler(chartCode: GrowthRefChartAndTableCodes) {
+export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCodes) {
   const {
-    closePicker: closeLabelPicker,
-    isOpen: labelPickerIsOpen,
+    closePicker: closeSeriesLabelModal,
+    isOpen: isSeriesLabelModalOpen,
     openPicker: openLabelPicker,
   } = usePicker<{ serieLabel: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
-  const chartSeries = useSelector<any, ChartMeasurementSerie[]>(
+  const measurementSeries = useSelector<any, ChartMeasurementSerie[]>(
     state => state.chartToolStoreReducer.growthMeasurements[chartCode]?.series
   );
   const [selectedSerie, setSelectedSerie] = useState<{
     serieId: string;
   } | null>(null);
 
-  const handleAction = useCallback(
+  const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
       if (!chartCode) return () => { };
       switch (value) {
@@ -63,10 +82,10 @@ export function useChartDetailHandler(chartCode: GrowthRefChartAndTableCodes) {
         }
         case "delete": {
           return () => {
-            if (!chartSeries) return void 0;
+            if (!measurementSeries) return void 0;
             Alert.alert("Confirmation de l'action", "Voulez-vous vraiment supprimer toutes les series de mesures de cette courbe de croissance ? ", [{
               text: "Oui", onPress() {
-                const serieIds = chartSeries.map(serie => serie.id);
+                const serieIds = measurementSeries.map(serie => serie.id);
                 serieIds.forEach(serieId =>
                   dispatch(deleteSerie({ chartCode, serieId }))
                 );
@@ -85,8 +104,8 @@ export function useChartDetailHandler(chartCode: GrowthRefChartAndTableCodes) {
         }
         case "deleteSerie": {
           return (serieId: string) => {
-            if (!chartSeries) return void 0;
-            const findedSerie = chartSeries.find(serie => serie.id === serieId)
+            if (!measurementSeries) return void 0;
+            const findedSerie = measurementSeries.find(serie => serie.id === serieId)
             if (!findedSerie) return
             Alert.alert("Confirmation de l'action", `Voulez-vous vraiment supprimer la serie de mesures ${findedSerie.label}? `, [{
               text: "Oui", onPress() {
@@ -152,14 +171,14 @@ export function useChartDetailHandler(chartCode: GrowthRefChartAndTableCodes) {
         }
       }
     },
-    [chartSeries, chartCode, selectedSerie]
+    [measurementSeries, chartCode, selectedSerie]
   );
 
   return {
-    handleAction,
-    closeLabelPicker,
-    labelPickerIsOpen,
+    handleSeriesAction,
+    closeSeriesLabelModal,
+    isSeriesLabelModalOpen,
     selectedSerie,
-    series: chartSeries,
+    measurementSeries,
   };
 }

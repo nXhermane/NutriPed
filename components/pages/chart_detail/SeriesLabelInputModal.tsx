@@ -4,11 +4,11 @@ import { ModalBackdrop, ModalContent, ModalBody, ModalFooter, Modal } from "@/co
 import React, { useState } from "react";
 import {  } from "react-native";
 
-export interface GetSerieLabelModalProps {
+export interface SeriesLabelInputModalProps {
   isOpen?: boolean;
   onClose?: (value: { serieLabel: string } | null) => void;
 }
-export const GetSerieLabelModal: React.FC<GetSerieLabelModalProps> = React.memo(
+export const SeriesLabelInputModal: React.FC<SeriesLabelInputModalProps> = React.memo(
   ({ isOpen, onClose }) => {
     const [serieLabel, setSerieLabel] = useState<string>("");
     const [error, setError] = useState<string | undefined>(undefined);
