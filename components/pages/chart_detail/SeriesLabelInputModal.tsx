@@ -1,15 +1,21 @@
 import { FormField } from "@/components/custom/FormField";
 import { Button, ButtonText } from "@/components/ui/button";
-import { ModalBackdrop, ModalContent, ModalBody, ModalFooter, Modal } from "@/components/ui/modal";
+import {
+  ModalBackdrop,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  Modal,
+} from "@/components/ui/modal";
 import React, { useState } from "react";
-import {  } from "react-native";
+import {} from "react-native";
 
 export interface SeriesLabelInputModalProps {
   isOpen?: boolean;
   onClose?: (value: { serieLabel: string } | null) => void;
 }
-export const SeriesLabelInputModal: React.FC<SeriesLabelInputModalProps> = React.memo(
-  ({ isOpen, onClose }) => {
+export const SeriesLabelInputModal: React.FC<SeriesLabelInputModalProps> =
+  React.memo(({ isOpen, onClose }) => {
     const [serieLabel, setSerieLabel] = useState<string>("");
     const [error, setError] = useState<string | undefined>(undefined);
     return (
@@ -27,7 +33,8 @@ export const SeriesLabelInputModal: React.FC<SeriesLabelInputModalProps> = React
                 default: "",
                 label: "Entrer le nom de la serie de mesures",
                 name: "serieLabel",
-                helperText: "!! Le nom de la serie de mesures n'est pas modifiable après sa definition."
+                helperText:
+                  "!! Le nom de la serie de mesures n'est pas modifiable après sa definition.",
               }}
               value={serieLabel}
               onChange={(fieldName: string, value: string) => {
@@ -66,5 +73,4 @@ export const SeriesLabelInputModal: React.FC<SeriesLabelInputModalProps> = React
         </ModalContent>
       </Modal>
     );
-  }
-);
+  });

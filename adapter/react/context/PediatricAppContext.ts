@@ -24,6 +24,9 @@ export interface PediatricAppContextType {
     growthTable: ReturnType<
       typeof DiagnosticContext.prototype.getGrowthReferenceTableService
     >;
+    growthIndicatorValue: ReturnType<
+      typeof DiagnosticContext.prototype.getGrowthIndicatorValueService
+    >;
     clinicalSign: ReturnType<
       typeof DiagnosticContext.prototype.getClinicalSignReferenceService
     >;

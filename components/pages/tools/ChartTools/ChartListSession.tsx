@@ -14,6 +14,7 @@ import { ChartListSessionHeader } from "./ChartListSessionHeader";
 import { Box } from "@/components/ui/box";
 import { router } from "expo-router";
 import { useToast } from "@/src/context";
+import { FadeInCardY } from "@/components/custom/motion";
 
 export interface ChartListSessionProps {
   searchOptions: { searchText: string; filterTag: string };
@@ -85,26 +86,28 @@ export const ChartListSession: React.FC<ChartListSessionProps> = ({
           maxToRenderPerBatch={10}
           windowSize={5}
           removeClippedSubviews
-          renderItem={({ item, section: { indicator } }) => {
+          renderItem={({ item, section: { indicator }, index }) => {
             return (
-              <ChartCard
-                key={item.chart.code}
-                name={item.chart.name}
-                indicator={indicator}
-                sex={item.chart.sex as Sex}
-                standard={item.chart.standard}
-                updatedAt={item.chart.updatedAt}
-                uiData={item.uiData}
-                onPress={() => {
-                  router.navigate({
-                    pathname: "/(screens)/chart_detail/[code]",
-                    params: {
-                      code: item.chart.code,
-                      indicatorCode: indicator.tag,
-                    },
-                  });
-                }}
-              />
+              <FadeInCardY key={item.chart.code} delayNumber={index + 1}>
+                <ChartCard
+                  key={item.chart.code}
+                  name={item.chart.name}
+                  indicator={indicator}
+                  sex={item.chart.sex as Sex}
+                  standard={item.chart.standard}
+                  updatedAt={item.chart.updatedAt}
+                  uiData={item.uiData}
+                  onPress={() => {
+                    router.navigate({
+                      pathname: "/(screens)/chart_detail/[code]",
+                      params: {
+                        code: item.chart.code,
+                        indicatorCode: indicator.tag,
+                      },
+                    });
+                  }}
+                />
+              </FadeInCardY>
             );
           }}
           renderSectionHeader={({ section: { indicator } }) => {

@@ -7,11 +7,10 @@ import {
 } from "@/src/constants/ui";
 import { useEffect, useMemo, useState } from "react";
 
-export type MeasurementFormSchema =
-  {
-    fields: IField[];
-    zodSchema: DynamicFormZodSchemaType;
-  }
+export type MeasurementFormSchema = {
+  fields: IField[];
+  zodSchema: DynamicFormZodSchemaType;
+};
 
 export function useDynamicFormSchemaForIndicator(indicatorDto?: IndicatorDto) {
   const [schema, setSchema] = useState<MeasurementFormSchema>();

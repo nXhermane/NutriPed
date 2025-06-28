@@ -4,24 +4,19 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import {
-  ChartDataDto,
   DAY_IN_MONTHS,
   DAY_IN_YEARS,
-  GrowthRefChartAndTableCodes,
   GrowthReferenceChartDto,
 } from "@/core/diagnostics";
-import { AxisLabel, CHART_UI_DATA } from "@/src/constants/ui";
+import { CHART_UI_DATA, ChartUiDataType, DisplayMode } from "@/src/constants/ui";
 import { useUI } from "@/src/context";
-import { ChartUiDataType, DisplayMode } from "@/src/hooks";
+
 import { Poppins_200ExtraLight } from "@expo-google-fonts/poppins";
 import {
   useFont,
   Text as SkiaText,
   Line as SkiaLine,
-  center,
-  Group,
   Circle,
-  AnimatedProp,
 } from "@shopify/react-native-skia";
 import React, { useEffect, useRef, useState } from "react";
 import colors from "tailwindcss/colors";
@@ -34,8 +29,6 @@ import {
 } from "victory-native";
 import Animated, {
   SharedValue,
-  useAnimatedProps,
-  useDerivedValue,
 } from "react-native-reanimated";
 import { Pressable } from "@/components/ui/pressable";
 import { Gesture } from "react-native-gesture-handler";

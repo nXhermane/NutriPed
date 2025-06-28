@@ -8,8 +8,7 @@ const ScreenLayout = () => {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: "slide_from_right",
-          animationDuration: 500,
+          animation: "none",
         }}
       ></Stack>
     </ProtectedRoute>

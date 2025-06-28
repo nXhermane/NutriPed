@@ -25,16 +25,22 @@ type SeriesAction =
   | { type: "deleteMeasure"; payload: DeleteMeasurePayload };
 
 // Définis chaque payload selon tes besoins
-type AddMeasurePayload = { /* ... */ };
-type NewSeriesPayload = void
-type DeleteSeriesPayload = { /* ... */ };
+type AddMeasurePayload = {
+  /* ... */
+};
+type NewSeriesPayload = void;
+type DeleteSeriesPayload = {
+  /* ... */
+};
 type DeleteSeriePayload = string; // exemple
 type ChooseSeriePayload = { serieId: string };
 type DeleteMeasurePayload = string;
 
 type HandleSeriesAction = <T extends SeriesAction["type"]>(
   action: T
-) => (payload: Extract<SeriesAction, { type: T }>["payload"]) => Promise<any> | any;
+) => (
+  payload: Extract<SeriesAction, { type: T }>["payload"]
+) => Promise<any> | any;
 
 type ActionCodeItemKeyType =
   | (typeof ChartDetailMenuOtpionData)[number]["key"]
@@ -42,7 +48,9 @@ type ActionCodeItemKeyType =
   | "deleteSerie"
   | "addMeasure";
 
-export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCodes) {
+export function useMeasurementSeriesManager(
+  chartCode: GrowthRefChartAndTableCodes
+) {
   const {
     closePicker: closeSeriesLabelModal,
     isOpen: isSeriesLabelModalOpen,
@@ -59,7 +67,7 @@ export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCod
 
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
-      if (!chartCode) return () => { };
+      if (!chartCode) return () => {};
       switch (value) {
         case "new": {
           return async () => {
@@ -77,50 +85,67 @@ export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCod
         case "choose": {
           return ({ serieId }: { serieId: string }) => {
             if (selectedSerie === null) setSelectedSerie({ serieId });
-            else setSelectedSerie(null)
+            else setSelectedSerie(null);
           };
         }
         case "delete": {
           return () => {
             if (!measurementSeries) return void 0;
-            Alert.alert("Confirmation de l'action", "Voulez-vous vraiment supprimer toutes les series de mesures de cette courbe de croissance ? ", [{
-              text: "Oui", onPress() {
-                const serieIds = measurementSeries.map(serie => serie.id);
-                serieIds.forEach(serieId =>
-                  dispatch(deleteSerie({ chartCode, serieId }))
-                );
-              },
-              isPreferred: true,
-              style: 'default'
-            }, {
-              text: "Non",
-              style: "destructive",
-              onPress: () => {
-                return void 0
-              }
-            }])
+            Alert.alert(
+              "Confirmation de l'action",
+              "Voulez-vous vraiment supprimer toutes les series de mesures de cette courbe de croissance ? ",
+              [
+                {
+                  text: "Oui",
+                  onPress() {
+                    const serieIds = measurementSeries.map(serie => serie.id);
+                    serieIds.forEach(serieId =>
+                      dispatch(deleteSerie({ chartCode, serieId }))
+                    );
+                  },
+                  isPreferred: true,
+                  style: "default",
+                },
+                {
+                  text: "Non",
+                  style: "destructive",
+                  onPress: () => {
+                    return void 0;
+                  },
+                },
+              ]
+            );
             return void 0;
           };
         }
         case "deleteSerie": {
           return (serieId: string) => {
             if (!measurementSeries) return void 0;
-            const findedSerie = measurementSeries.find(serie => serie.id === serieId)
-            if (!findedSerie) return
-            Alert.alert("Confirmation de l'action", `Voulez-vous vraiment supprimer la serie de mesures ${findedSerie.label}? `, [{
-              text: "Oui", onPress() {
-                dispatch(deleteSerie({ chartCode, serieId }));
-              },
-              isPreferred: true,
-              style: 'default'
-            }, {
-              text: "Non",
-              style: "destructive",
-              onPress: () => {
-                return void 0
-              }
-            }])
-
+            const findedSerie = measurementSeries.find(
+              serie => serie.id === serieId
+            );
+            if (!findedSerie) return;
+            Alert.alert(
+              "Confirmation de l'action",
+              `Voulez-vous vraiment supprimer la serie de mesures ${findedSerie.label}? `,
+              [
+                {
+                  text: "Oui",
+                  onPress() {
+                    dispatch(deleteSerie({ chartCode, serieId }));
+                  },
+                  isPreferred: true,
+                  style: "default",
+                },
+                {
+                  text: "Non",
+                  style: "destructive",
+                  onPress: () => {
+                    return void 0;
+                  },
+                },
+              ]
+            );
           };
         }
         case "deleteMeasure": {
@@ -133,7 +158,7 @@ export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCod
                   serieId: selectedSerie.serieId,
                 })
               );
-              return void 0
+              return void 0;
             }
             toast.show(
               "Info",
@@ -152,7 +177,7 @@ export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCod
                   measurement: data,
                 })
               );
-              return true
+              return true;
             }
             toast.show(
               "Info",
@@ -167,7 +192,7 @@ export function useMeasurementSeriesManager(chartCode: GrowthRefChartAndTableCod
             "This key is not supported on chart tools action.[key]:",
             value
           );
-          return () => { };
+          return () => {};
         }
       }
     },

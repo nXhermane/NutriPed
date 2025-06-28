@@ -27,8 +27,8 @@ export const NextReminderSession: React.FC<NextReminderSessionProps> = ({
   return (
     <VStack>
       <SessionHeader
-        title={"Next Reminder"}
-        actionName="See more"
+        title={"Rappel à venir"}
+        actionName="Voir plus"
         onActionPress={() => router.navigate("/home/reminders")}
       />
       <Box className={"gap-3 pt-4"}>

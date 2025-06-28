@@ -1,19 +1,20 @@
+import { FadeInCardX } from "@/components/custom/motion";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import React from "react";
 import { ScrollView } from "react-native";
 
-export interface FilterChipsProps {
-  value?: string;
-  onChange?: (value: string) => void;
-  data: { value: string; label: string }[];
+export interface FilterChipsProps<T> {
+  value?: T;
+  onChange?: (value: T) => void;
+  data: { value: T; label: string }[];
 }
 
-export const FilterChips: React.FC<FilterChipsProps> = ({
+export const FilterChips = <T,>({
   onChange,
   value,
   data,
-}) => {
+}: FilterChipsProps<T>) => {
   return (
     <ScrollView
       horizontal
@@ -21,13 +22,15 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
       contentContainerClassName={"gap-3 overflow-visible"}
       className="max-h-7"
     >
-      {data.map(item => (
-        <FilterChipItem
-          key={item.value}
-          title={item.label}
-          state={item.value === value}
-          onChange={state => state && onChange && onChange(item.value)}
-        />
+      {data.map((item, index) => (
+        <FadeInCardX key={item.label} delayNumber={index + 3}>
+          <FilterChipItem
+            key={item.label}
+            title={item.label}
+            state={JSON.stringify(item.value) === JSON.stringify(value)}
+            onChange={state => state && onChange && onChange(item.value)}
+          />
+        </FadeInCardX>
       ))}
     </ScrollView>
   );

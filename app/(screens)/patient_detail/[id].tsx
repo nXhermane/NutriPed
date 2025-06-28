@@ -60,7 +60,7 @@ const PatientDetail = () => {
         <PatientDetailHeader patientId={patientId as AggregateID} />
         <DiagnosticDataForm
           patientId={patientId as AggregateID}
-          isOpen={ showDiagnosticDataFormForFirstVisit}
+          isOpen={showDiagnosticDataFormForFirstVisit}
           onClose={() => {
             if (currentPatientInteraction?.isFirstVisitToPatientDetail) {
               router.back();

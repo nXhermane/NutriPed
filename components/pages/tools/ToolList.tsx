@@ -7,6 +7,7 @@ import { ToolCard } from "./ToolCard";
 import { icons } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
 import { router } from "expo-router";
+import { FadeInCardY as FadeInCard } from "@/components/custom/motion";
 
 export const ToolList = () => {
   return (
@@ -19,20 +20,22 @@ export const ToolList = () => {
         initialNumToRender={10}
         data={TOOLS_DATA}
         keyExtractor={(item, index) => item.code}
-        renderItem={({ item }) => (
-          <ToolCard
-            name={item.name}
-            desc={item.desc}
-            iconName={item.iconName as keyof typeof icons}
-            onPress={() => {
-              router.navigate({
-                pathname: "/(screens)/tools/[tool]",
-                params: {
-                  tool: item.code,
-                },
-              });
-            }}
-          />
+        renderItem={({ item, index }) => (
+          <FadeInCard key={item.code} delayNumber={index + 1}>
+            <ToolCard
+              name={item.name}
+              desc={item.desc}
+              iconName={item.iconName as keyof typeof icons}
+              onPress={() => {
+                router.navigate({
+                  pathname: "/(screens)/tools/[tool]",
+                  params: {
+                    tool: item.code,
+                  },
+                });
+              }}
+            />
+          </FadeInCard>
         )}
         ListEmptyComponent={() => (
           <SessionEmpty

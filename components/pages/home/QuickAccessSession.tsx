@@ -7,33 +7,37 @@ import { icons } from "lucide-react-native";
 import React, { useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { TOOLS_DATA } from "@/src/constants/ui";
-import { CardPressEffect } from "@/components/custom/motion";
+import { CardPressEffect, FadeInCardX } from "@/components/custom/motion";
 import { router } from "expo-router";
 export const QuickAccessSession = () => {
   const QuickAccessTools = TOOLS_DATA.filter(item => item.isQuickAccess);
   return (
     <VStack>
       <SessionHeader
-        title="Quick Access"
-        actionName="See more"
-        onActionPress={() => router.navigate("/(screens)/tools")}
+        title="Accès rapide"
+        actionName="Voir plus"
+        onActionPress={() => {
+          router.push("/(screens)/tools");
+        }}
       />
       <HStack className={"gap-2 pt-v-4"}>
         {QuickAccessTools.map((item, index) => (
-          <QuickToolCard
-            name={item.name}
-            desc={item.desc}
-            iconName={item.iconName as keyof typeof icons}
-            key={index}
-            onPress={() =>
-              router.navigate({
-                pathname: "/(screens)/tools/[tool]",
-                params: {
-                  tool: item.code,
-                },
-              })
-            }
-          />
+          <FadeInCardX key={item.code} delayNumber={index + 3}>
+            <QuickToolCard
+              name={item.name}
+              desc={item.desc}
+              iconName={item.iconName as keyof typeof icons}
+              key={index}
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(screens)/tools/[tool]",
+                  params: {
+                    tool: item.code,
+                  },
+                })
+              }
+            />
+          </FadeInCardX>
         ))}
       </HStack>
     </VStack>

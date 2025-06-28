@@ -1,9 +1,10 @@
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
-import { IndicatorUIType } from "@/src/hooks";
+
 import { icons } from "lucide-react-native";
 import { Text } from "@/components/ui/text";
+import { IndicatorUIType } from "@/src/constants/ui";
 
 export interface ChartListSessionHeaderProps {
   indicator: IndicatorUIType;

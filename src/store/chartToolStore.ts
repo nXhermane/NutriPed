@@ -5,10 +5,18 @@ import {
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { nanoid } from "@reduxjs/toolkit";
 export type ChartMeasurement = {
-  data: Partial<{ [k in AnthroSystemCodes]: { value: number, code: AnthroSystemCodes, unit: string } } & {
-    [AnthroSystemCodes.AGE_IN_DAY]: number
-    [AnthroSystemCodes.AGE_IN_MONTH]: number
-  }>;
+  data: Partial<
+    {
+      [k in AnthroSystemCodes]: {
+        value: number;
+        code: AnthroSystemCodes;
+        unit: string;
+      };
+    } & {
+      [AnthroSystemCodes.AGE_IN_DAY]: number;
+      [AnthroSystemCodes.AGE_IN_MONTH]: number;
+    }
+  >;
   id: string;
 };
 export type ChartMeasurementSerie = {

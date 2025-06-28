@@ -18,14 +18,14 @@ export const InfoToast: React.FC<InfoToastProps> = ({ id, title, desc }) => {
         alignSelf: "center",
       }}
       className={
-        "w-[95%] overflow-hidden rounded-2xl border border-primary-border/5 bg-background-secondary p-4"
+        "elevation-sm w-[95%] overflow-hidden rounded-2xl border border-primary-border/5 bg-background-secondary p-4"
       }
     >
       <HStack className="gap-3">
         <Icon
           as={InfoIcon}
           className={
-            "h-6 w-6 items-center justify-center rounded-full bg-blue-500"
+            "h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-white"
           }
         />
 
@@ -36,7 +36,11 @@ export const InfoToast: React.FC<InfoToastProps> = ({ id, title, desc }) => {
             </ToastTitle>
           )}
           {desc && (
-            <ToastDescription className={"mt-1 text-sm text-blue-300"}>
+            <ToastDescription
+              className={
+                "mt-1 text-sm text-typography-primary_light dark:text-gray-300"
+              }
+            >
               {desc}
             </ToastDescription>
           )}

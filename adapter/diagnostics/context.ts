@@ -27,6 +27,9 @@ import {
   BiologicalInterpretationService,
   BiologicalValidationService,
   BiologicalVariableGeneratorService,
+  CalculateGrowthIndicatorValueRequest,
+  CalculateGrowthIndicatorValueResponse,
+  CalculateGrowthIndicatorValueUseCase,
   ClinicalAnalysisService,
   ClinicalSignReference,
   ClinicalSignReferenceDto,
@@ -127,6 +130,7 @@ import {
   GetNutritionalRiskFactorResponse,
   GetNutritionalRiskFactorUseCase,
   GrowthIndicatorService,
+  GrowthIndicatorValueAppService,
   GrowthReferenceChart,
   GrowthReferenceChartDto,
   GrowthReferenceChartMapper,
@@ -151,6 +155,7 @@ import {
   IClinicalVariableGeneratorService,
   IDiagnosticRuleService,
   IGrowthIndicatorService,
+  IGrowthIndicatorValueAppService,
   IGrowthReferenceChartService,
   IGrowthReferenceTableService,
   IIndicatorService,
@@ -508,6 +513,10 @@ export class DiagnosticContext {
     DeleteGrowthReferenceTableRequest,
     DeleteGrowthReferenceTableResponse
   >;
+  private readonly calculateGrowthIndicatorValueUC: UseCase<
+    CalculateGrowthIndicatorValueRequest,
+    CalculateGrowthIndicatorValueResponse
+  >;
   private readonly createClinicalRefUC: UseCase<
     CreateClinicalSignReferenceRequest,
     CreateClinicalSignReferenceResponse
@@ -620,6 +629,7 @@ export class DiagnosticContext {
   private readonly biochemicalRefAppService: IBiochemicalReferenceService;
   private readonly nutritionalDiagnosticAppService: INutritionalDiagnosticService;
   private readonly validatePatientMeasurementsAppService: IValidatePatientMeasurementsService;
+  private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
 
   // ACL
 
@@ -957,7 +967,14 @@ export class DiagnosticContext {
       this.growthRefTableAppMapper,
       this.growthRefTableRepo
     );
+    // Growth Indicator value Use Cases
 
+    this.calculateGrowthIndicatorValueUC =
+      new CalculateGrowthIndicatorValueUseCase(
+        this.anthroValidationService,
+        this.anthroVariableGenerator,
+        this.growthIndicatorService
+      );
     // Clinical Reference Use Cases
     this.createClinicalRefUC = new CreateClinicalSignReferenceUseCase(
       this.idGenerator,
@@ -1119,7 +1136,9 @@ export class DiagnosticContext {
       updateUC: this.updateGrowthRefTableUC,
       deleteUC: this.deleteGrowthRefTableUC,
     });
-
+    this.growthIndicatorValueAppService = new GrowthIndicatorValueAppService({
+      calculateIndicator: this.calculateGrowthIndicatorValueUC,
+    });
     this.clinicalRefAppService = new ClinicalSignReferenceService({
       createUC: this.createClinicalRefUC,
       getUC: this.getClinicalRefUC,
@@ -1185,7 +1204,9 @@ export class DiagnosticContext {
   getGrowthReferenceTableService(): IGrowthReferenceTableService {
     return this.growthTableAppService;
   }
-
+  getGrowthIndicatorValueService(): IGrowthIndicatorValueAppService {
+    return this.growthIndicatorValueAppService;
+  }
   getClinicalSignReferenceService(): IClinicalSignReferenceService {
     return this.clinicalRefAppService;
   }

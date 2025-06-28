@@ -39,7 +39,6 @@ export const ChartDetailHeader: React.FC<ChartDetailHeaderProps> = ({
           </Text>
         )}
       </Center>
-      
     </HStack>
   );
 };

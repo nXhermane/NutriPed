@@ -16,7 +16,6 @@ enum ACTION_TYPE {
   RESET = "reset",
 }
 
-
 type Action =
   | {
       type: ACTION_TYPE.UPDATE_FIELD;
@@ -32,8 +31,6 @@ type Action =
       field: string;
       error?: string;
     };
-
-
 
 const dynamicFromReducer = (
   state: Record<string, { value: any; error?: string }>,
@@ -57,7 +54,6 @@ const dynamicFromReducer = (
         },
       };
     case ACTION_TYPE.RESET: {
-     
       return {
         ...Object.fromEntries(
           Object.entries(state).map(([field, value]) => [
@@ -71,7 +67,6 @@ const dynamicFromReducer = (
       return state;
   }
 };
-
 
 export type FormSchema = {
   fields: IField[];
@@ -95,28 +90,22 @@ export type DynamicFormZodSchemaType =
     }
   | z.ZodObject<any, any, any, any>;
 
-
 export interface DynamicFormGeneratorProps<T extends FormSchema> {
   schema: T;
   zodSchema?: DynamicFormZodSchemaType | SchemaConstraint<T>;
   className?: string;
 }
 
-
 export interface FormHandler<T extends FormSchema> {
   submit: () => Promise<z.infer<SchemaConstraint<T>> | null>;
   reset: () => void;
 }
-
-
-
 
 export const DynamicFormGenerator = forwardRef(
   <T extends FormSchema>(
     { schema, zodSchema, className }: DynamicFormGeneratorProps<T>,
     ref: React.Ref<FormHandler<T>>
   ) => {
-
     const [formState, dispatchFromState] = useReducer(
       dynamicFromReducer,
       Object.fromEntries(
@@ -128,7 +117,6 @@ export const DynamicFormGenerator = forwardRef(
           ])
       )
     );
-
 
     const handleFieldChange = (fieldName: ExtractFieldNames<T>, value: any) => {
       dispatchFromState({
@@ -142,7 +130,6 @@ export const DynamicFormGenerator = forwardRef(
         error: undefined,
       });
     };
-
 
     const submit = useCallback(async (): Promise<z.infer<
       SchemaConstraint<T>
@@ -180,16 +167,12 @@ export const DynamicFormGenerator = forwardRef(
       return formData;
     }, [formState, zodSchema]);
 
-
     const reset = () => {
       dispatchFromState({ type: ACTION_TYPE.RESET, payload: {} });
     };
 
-
     useImperativeHandle(ref, () => ({ submit, reset }), [submit]);
 
-
-    
     return (
       <VStack
         className={

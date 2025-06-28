@@ -6,30 +6,32 @@ import { Trash, Plus } from "lucide-react-native";
 import React from "react";
 
 export interface MeasurementSeriesHeaderProps {
-    onAddSeries: () => void
-    onDeleteSeries: () => void
+  onAddSeries: () => void;
+  onDeleteSeries: () => void;
 }
 
-
-export const MeasurementSeriesHeader: React.FC<MeasurementSeriesHeaderProps> = ({ onAddSeries, onDeleteSeries }) => {
-
-    return (<HStack className="items-center justify-between">
-        <Heading className="font-h4 text-base font-medium text-typography-primary">
-            Series
-        </Heading>
-        <HStack className="gap-2">
-            <Pressable
-                className="rounded-full bg-red-500"
-                onPress={onDeleteSeries}
-            >
-                <Icon as={Trash} className={"m-1 h-5 w-5"} />
-            </Pressable>
-            <Pressable
-                className="rounded-full bg-primary-c_light p-1"
-                onPress={onAddSeries}
-            >
-                <Icon as={Plus} className={"h-5 w-5"} />
-            </Pressable>
-        </HStack>
-    </HStack>)
-} 
+export const MeasurementSeriesHeader: React.FC<
+  MeasurementSeriesHeaderProps
+> = ({ onAddSeries, onDeleteSeries }) => {
+  return (
+    <HStack className="items-center justify-between">
+      <Heading className="font-h4 text-base font-medium text-typography-primary">
+        Series
+      </Heading>
+      <HStack className="gap-2">
+        <Pressable
+          className="rounded-full bg-red-500 p-1"
+          onPress={onDeleteSeries}
+        >
+          <Icon as={Trash} className={"h-5 w-5 text-white"} />
+        </Pressable>
+        <Pressable
+          className="rounded-full bg-primary-c_light p-1"
+          onPress={onAddSeries}
+        >
+          <Icon as={Plus} className={"h-5 w-5 text-white"} />
+        </Pressable>
+      </HStack>
+    </HStack>
+  );
+};

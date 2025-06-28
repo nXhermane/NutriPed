@@ -1,31 +1,20 @@
 import { Box } from "@/components/ui/box";
-import { MokedPatientList } from "@/data";
-import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, ScrollView } from "react-native";
-import {
-  PatientCard,
-  PatientCardInfo,
-  PatientCardProps,
-  PatientCardSkeleton,
-} from "../commun";
+import React, { useMemo, useState } from "react";
+import { FlatList } from "react-native";
+import { PatientCard, PatientCardProps } from "../commun";
 import { SessionEmpty } from "../home/shared/SessionEmpty";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { UserPlus } from "lucide-react-native";
 import { ActionBtnSession } from "./ActionsSession";
 import { AddPatientBottomSheet } from "./AddPatientBottomSheet";
-import { useDispatch, useSelector } from "react-redux";
-import { usePediatricApp } from "@/adapter";
-import { AggregateID, Guard, Message } from "@/core/shared";
-import { PATIENT_QUICK_FILTER_TAG, PATIENT_STATE } from "@/src/constants/ui";
-import { AppDispatch, Interaction } from "@/src/store";
-import { recordUiState } from "@/src/store/uiState";
+import { AggregateID, Guard } from "@/core/shared";
+import { PATIENT_QUICK_FILTER_TAG } from "@/src/constants/ui";
 import { DeletePatientBottomSheet } from "./DeletePatientBottomSheet";
 import { Spinner } from "@/components/ui/spinner";
-import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { router } from "expo-router";
 import { PatientInfo, useFuseSearch, usePatientList } from "@/src/hooks";
-import Fuse from "fuse.js";
 import colors from "tailwindcss/colors";
+import { FadeInCardY } from "@/components/custom/motion";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
@@ -88,41 +77,43 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
         removeClippedSubviews
         data={searchResults}
         keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-        renderItem={({ item }) => (
-          <PatientCard
-            name={item.name}
-            createdAt={item.createdAt}
-            status={item.status as PatientCardProps["status"]}
-            birthday={item.birthday}
-            nextVisitDate={item.nextVisitDate}
-            enableSelection
-            enableQuickSelection={selectedItem.length >= 1}
-            scaled={false}
-            selected={!!selectedItem.find(patient => item.id === patient.id)}
-            onChange={(value: boolean) => {
-              setSelectedItem(prev => {
-                const findedIndex = prev.findIndex(
-                  selectedPatient => selectedPatient.id === item.id
-                );
-                if (findedIndex === -1 && value) {
-                  return [
-                    ...prev,
-                    { id: item.id as AggregateID, name: item.name },
-                  ];
-                }
-                return prev.filter(
-                  selectedPatient => selectedPatient.id != item.id
-                );
-              });
-            }}
-            onPress={() => {
-              item.id &&
-                router.push({
-                  pathname: "/(screens)/patient_detail/[id]",
-                  params: { id: item.id as string },
+        renderItem={({ item, index }) => (
+          <FadeInCardY delayNumber={index + 3}>
+            <PatientCard
+              name={item.name}
+              createdAt={item.createdAt}
+              status={item.status as PatientCardProps["status"]}
+              birthday={item.birthday}
+              nextVisitDate={item.nextVisitDate}
+              enableSelection
+              enableQuickSelection={selectedItem.length >= 1}
+              scaled={false}
+              selected={!!selectedItem.find(patient => item.id === patient.id)}
+              onChange={(value: boolean) => {
+                setSelectedItem(prev => {
+                  const findedIndex = prev.findIndex(
+                    selectedPatient => selectedPatient.id === item.id
+                  );
+                  if (findedIndex === -1 && value) {
+                    return [
+                      ...prev,
+                      { id: item.id as AggregateID, name: item.name },
+                    ];
+                  }
+                  return prev.filter(
+                    selectedPatient => selectedPatient.id != item.id
+                  );
                 });
-            }}
-          />
+              }}
+              onPress={() => {
+                item.id &&
+                  router.push({
+                    pathname: "/(screens)/patient_detail/[id]",
+                    params: { id: item.id as string },
+                  });
+              }}
+            />
+          </FadeInCardY>
         )}
         ListEmptyComponent={() => (
           <SessionEmpty

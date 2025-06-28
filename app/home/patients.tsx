@@ -1,3 +1,4 @@
+import { FadeInCardY } from "@/components/custom/motion";
 import {
   PatientListSession,
   PatientSeachBar,
@@ -18,15 +19,24 @@ export default function Patients() {
     <Box className={"flex-1 bg-background-primary"}>
       <TabHeader name={"Mes Patients"} desc={"Gestion et suivi nutritionnel"} />
       <PageBody>
-        <PatientSeachBar
-          fieldProps={{
-            value: searchText,
-            onChangeText: setSearchText,
-          }}
-        />
-        <PatientStatSession />
-        <QuickFilterSession onChange={setFilterTag} />
-        <PatientListSession searchText={searchText} filterTag={filterTag} />
+        <FadeInCardY delayNumber={1}>
+          <PatientSeachBar
+            fieldProps={{
+              value: searchText,
+              onChangeText: setSearchText,
+            }}
+          />
+        </FadeInCardY>
+
+        <FadeInCardY delayNumber={2}>
+          <PatientStatSession />
+        </FadeInCardY>
+        <FadeInCardY delayNumber={4}>
+          <QuickFilterSession onChange={setFilterTag} />
+        </FadeInCardY>
+        <FadeInCardY delayNumber={5}>
+          <PatientListSession searchText={searchText} filterTag={filterTag} />
+        </FadeInCardY>
       </PageBody>
     </Box>
   );

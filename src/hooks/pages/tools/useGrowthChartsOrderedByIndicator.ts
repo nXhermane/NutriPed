@@ -1,17 +1,10 @@
 import { useCallback } from "react";
-import { CHART_UI_DATA, GROWTH_INDICATORS } from "@/src/constants/ui";
+import { ChartUiDataType, GROWTH_INDICATORS, IndicatorUIType } from "@/src/constants/ui";
 import { GrowthReferenceChartDto } from "@/core/diagnostics";
 import { useQuery } from "@tanstack/react-query";
 import { usePediatricApp } from "@/adapter";
-type ValueOf<T> = T[keyof T];
-export type IndicatorUIType = ValueOf<typeof GROWTH_INDICATORS>;
-export type ChartUiDataType = ValueOf<typeof CHART_UI_DATA>;
-type AllDisplayModes<T> = T extends {
-  availableDisplayMode: readonly (infer U)[];
-}
-  ? U
-  : never;
-export type DisplayMode = AllDisplayModes<ChartUiDataType>;
+
+
 export type GrowthChartListOrderedByIndicatorType = {
   indicator: IndicatorUIType;
   data: { chart: GrowthReferenceChartDto; uiData: ChartUiDataType }[];

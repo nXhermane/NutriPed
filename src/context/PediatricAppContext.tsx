@@ -66,7 +66,7 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
         {isTimeOut && (
           <>
             <Button
-              className="rounded-full bg-primary-c_light "
+              className="rounded-full bg-primary-c_light"
               onPress={() => ReactNativeResart.restart()}
             >
               <ButtonIcon as={RotateCcw} className="text-typography-primary" />
@@ -78,10 +78,7 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
                   console.log("NON IMplementer");
                 }}
               >
-                <Icon
-                  as={MessageCircle}
-                  className=" text-typography-primary"
-                />
+                <Icon as={MessageCircle} className="text-typography-primary" />
               </Pressable>
               <Pressable
                 className="rounded-full bg-emerald-600 p-3"

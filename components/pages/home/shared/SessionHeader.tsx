@@ -22,7 +22,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
         {title}
       </Heading>
       {actionName && (
-        <Pressable onPress={onActionPress}>
+        <Pressable onPress={onActionPress} className="p-1">
           <Text
             className={
               "font-body text-xs font-normal text-blue-800 dark:text-blue-200"

@@ -12,6 +12,7 @@ import { ChevronUp, ChevronDown } from "lucide-react-native";
 import React from "react";
 import { AnthroSystemCodes } from "@/core/constants";
 import { MeasurementItem } from "./MeasurementItem";
+import { FadeInCardY } from "@/components/custom/motion";
 
 export interface MeasurementSeriesListProps {
   series: ChartMeasurementSerie[];
@@ -69,16 +70,19 @@ export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
                   </AccordionTrigger>
                 </AccordionHeader>
                 <AccordionContent>
-                  {serie.data.map(item => (
-                    <MeasurementItem
-                      key={item.id}
-                      data={item.data}
-                      id={item.id}
-                      neededMeasureCodes={neededMeasureCodes}
-                      onDeleteMeasureAction={() => {
-                        onDeleteMeasureAction && onDeleteMeasureAction(item.id);
-                      }}
-                    />
+                  {serie.data.map((item , index) => (
+                    <FadeInCardY key={item.id} delayNumber={index + 2}>
+                      <MeasurementItem
+                        key={item.id}
+                        data={item.data}
+                        id={item.id}
+                        neededMeasureCodes={neededMeasureCodes}
+                        onDeleteMeasureAction={() => {
+                          onDeleteMeasureAction &&
+                            onDeleteMeasureAction(item.id);
+                        }}
+                      />
+                    </FadeInCardY>
                   ))}
                 </AccordionContent>
               </AccordionItem>

@@ -3,7 +3,7 @@ import { ErrorToast } from "@/components/custom/ErrorToast";
 import { useToast as useGluestackToast } from "@/components/ui/toast";
 import React, { createContext, ReactNode, useContext } from "react";
 import { Dimensions } from "react-native";
-import { InfoToast } from "@/components/custom";
+import { InfoToast } from "@/components/custom/InfoToast";
 
 type ToastType = "Success" | "Error" | "Info";
 export interface ToastContextType {

@@ -1,3 +1,4 @@
+import { FadeInCardX } from "@/components/custom/motion";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
@@ -91,7 +92,9 @@ export const PatientStatSession: React.FC<PatientStatSessionProps> = ({
         showsHorizontalScrollIndicator={false}
       >
         {patientStats.map((item, index) => (
-          <PatientStatCard key={index} value={item.value} desc={item.tag} />
+          <FadeInCardX key={index} delayNumber={index + 3}>
+            <PatientStatCard key={index} value={item.value} desc={item.tag} />
+          </FadeInCardX>
         ))}
       </ScrollView>
     </HStack>

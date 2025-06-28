@@ -18,14 +18,14 @@ export const ErrorToast: React.FC<ErrorToastProps> = ({ id, title, desc }) => {
         alignSelf: "center",
       }}
       className={
-        "w-[95%] overflow-hidden rounded-2xl border border-primary-border/5 bg-background-secondary p-4"
+        "w-[95%] overflow-hidden rounded-2xl border border-primary-border/5 bg-background-secondary p-4 elevation-sm"
       }
     >
-      <HStack className="gap-3">
+      <HStack className="gap-3 ">
         <Icon
           as={X}
           className={
-            "h-6 w-6 items-center justify-center rounded-full bg-red-500"
+            "h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white"
           }
         />
 
@@ -36,7 +36,7 @@ export const ErrorToast: React.FC<ErrorToastProps> = ({ id, title, desc }) => {
             </ToastTitle>
           )}
           {desc && (
-            <ToastDescription className={"mt-1 text-sm text-gray-300"}>
+            <ToastDescription className={"mt-1 text-sm text-typography-primary_light dark:text-gray-300"}>
               {desc}
             </ToastDescription>
           )}

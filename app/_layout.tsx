@@ -69,7 +69,7 @@ function Route() {
       <Stack.Screen
         name={"(screens)"}
         options={{
-          animation: "slide_from_right",
+          animation: "none",
           animationDuration: 0,
         }}
       />
