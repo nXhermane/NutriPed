@@ -5,124 +5,124 @@ import {
   GrowthRefChartAndTableCodes,
 } from "@/core/constants";
 import { ValueOf } from "@/utils";
-const AgeInDay0 = 0
-const AgeInDay6m = 6 * DAY_IN_MONTHS
-const AgeInDay3m = 3 * DAY_IN_MONTHS
-const AgeInDay1y = 1 * DAY_IN_YEARS
-const AgeInDay2y = 2 * DAY_IN_YEARS
-const AgeInDay5y = 5 * DAY_IN_YEARS
-const AgeInDay7_5y = (7 * DAY_IN_YEARS) - (DAY_IN_YEARS / 2)
-const AgeInDay10y = 10 * DAY_IN_YEARS
-const AgeInDay15y = 15 * DAY_IN_YEARS
-const AgeInDay19y = 19 * DAY_IN_YEARS
+const AgeInDay0 = 0;
+const AgeInDay6m = 6 * DAY_IN_MONTHS;
+const AgeInDay3m = 3 * DAY_IN_MONTHS;
+const AgeInDay1y = 1 * DAY_IN_YEARS;
+const AgeInDay2y = 2 * DAY_IN_YEARS;
+const AgeInDay5y = 5 * DAY_IN_YEARS;
+const AgeInDay7_5y = 7 * DAY_IN_YEARS - DAY_IN_YEARS / 2;
+const AgeInDay10y = 10 * DAY_IN_YEARS;
+const AgeInDay15y = 15 * DAY_IN_YEARS;
+const AgeInDay19y = 19 * DAY_IN_YEARS;
 const generateXAxisValue = (ageInDay: number) => {
   return {
     ageInDay: ageInDay,
     ageInMonth: ageInDay / DAY_IN_MONTHS,
-    ageInYear: ageInDay / DAY_IN_YEARS
-  }
-}
+    ageInYear: ageInDay / DAY_IN_YEARS,
+  };
+};
 const DisplayRange_0_6m = {
-  label: '0 - 6 mois',
-  range: [
-    generateXAxisValue(AgeInDay0),
-    generateXAxisValue(AgeInDay6m)
-  ]
-} as const
+  label: "0 - 6 mois",
+  range: [generateXAxisValue(AgeInDay0), generateXAxisValue(AgeInDay6m)],
+} as const;
 
 const DisplayRange_0_2y = {
-  label: "0 - 2 ans", range: [
-    generateXAxisValue(AgeInDay0),
-    generateXAxisValue(AgeInDay2y)
-  ]
-} as const
+  label: "0 - 2 ans",
+  range: [generateXAxisValue(AgeInDay0), generateXAxisValue(AgeInDay2y)],
+} as const;
 const DisplayRange_3m_2y = {
-  label: '3 mois - 2 ans',
-  range: [generateXAxisValue(AgeInDay3m), generateXAxisValue(AgeInDay2y)]
-} as const
+  label: "3 mois - 2 ans",
+  range: [generateXAxisValue(AgeInDay3m), generateXAxisValue(AgeInDay2y)],
+} as const;
 const DisplayRange_6m_2y = {
-  label: "6 mois - 2 ans", range: [
-    generateXAxisValue(AgeInDay6m),
-    generateXAxisValue(AgeInDay2y)
-  ]
-} as const
+  label: "6 mois - 2 ans",
+  range: [generateXAxisValue(AgeInDay6m), generateXAxisValue(AgeInDay2y)],
+} as const;
 const DisplayRange_2y_5y = {
   label: "2 - 5 ans",
-  range: [generateXAxisValue(AgeInDay2y), generateXAxisValue(AgeInDay5y)]
-} as const
+  range: [generateXAxisValue(AgeInDay2y), generateXAxisValue(AgeInDay5y)],
+} as const;
 const DisplayRange_5y_7_5y = {
-  label: '5 - 7,5 ans',
-  range: [generateXAxisValue(AgeInDay5y), generateXAxisValue(AgeInDay7_5y)]
-} as const
+  label: "5 - 7,5 ans",
+  range: [generateXAxisValue(AgeInDay5y), generateXAxisValue(AgeInDay7_5y)],
+} as const;
 const DisplayRange_7_5y_10y = {
-  label: '7,5 - 10 ans',
-  range: [generateXAxisValue(AgeInDay7_5y), generateXAxisValue(AgeInDay10y)]
-} as const
+  label: "7,5 - 10 ans",
+  range: [generateXAxisValue(AgeInDay7_5y), generateXAxisValue(AgeInDay10y)],
+} as const;
 const DisplayRange_5y_10y = {
-  label: '5 - 10 ans',
-  range: [generateXAxisValue(AgeInDay5y), generateXAxisValue(AgeInDay10y)]
-} as const
+  label: "5 - 10 ans",
+  range: [generateXAxisValue(AgeInDay5y), generateXAxisValue(AgeInDay10y)],
+} as const;
 
 const DisplayRange_10y_19y = {
-  label: '10 - 19 ans',
-  range: [generateXAxisValue(AgeInDay10y), generateXAxisValue(AgeInDay19y)]
-} as const
+  label: "10 - 19 ans",
+  range: [generateXAxisValue(AgeInDay10y), generateXAxisValue(AgeInDay19y)],
+} as const;
 const DisplayRange_5y_15y = {
-  label: '5 - 15 ans',
-  range: [generateXAxisValue(AgeInDay5y), generateXAxisValue(AgeInDay15y)]
-} as const
+  label: "5 - 15 ans",
+  range: [generateXAxisValue(AgeInDay5y), generateXAxisValue(AgeInDay15y)],
+} as const;
 
 const Age_0_5yUIData = {
   label: "0-5 ans",
   by: "age",
   defaultDisplayMode: "months",
   availableDisplayMode: ["years", "months"],
-  availableDisplayRange: [DisplayRange_0_6m, DisplayRange_0_2y, DisplayRange_2y_5y]
+  availableDisplayRange: [
+    DisplayRange_0_6m,
+    DisplayRange_0_2y,
+    DisplayRange_2y_5y,
+  ],
 } as const;
 const Age_5_10yUIData = {
   label: "5-10 ans",
   by: "age",
   defaultDisplayMode: "years",
-  availableDisplayMode: ["years","months"],
-  availableDisplayRange: [DisplayRange_5y_7_5y, DisplayRange_7_5y_10y]
+  availableDisplayMode: ["years", "months"],
+  availableDisplayRange: [DisplayRange_5y_7_5y, DisplayRange_7_5y_10y],
 } as const;
 const Age_5_19yUIData = {
   by: "age",
   label: "5-19 ans",
   defaultDisplayMode: "years",
-  availableDisplayMode: ["years","months"],
-  availableDisplayRange: [DisplayRange_5y_10y, DisplayRange_10y_19y, DisplayRange_5y_15y]
+  availableDisplayMode: ["years", "months"],
+  availableDisplayRange: [
+    DisplayRange_5y_10y,
+    DisplayRange_10y_19y,
+    DisplayRange_5y_15y,
+  ],
 } as const;
 const Age_3m_5yUIData = {
   by: "age",
   label: "3 mois - 5 ans",
   defaultDisplayMode: "months",
   availableDisplayMode: ["years", "months"],
-  availableDisplayRange: [DisplayRange_3m_2y, DisplayRange_2y_5y]
+  availableDisplayRange: [DisplayRange_3m_2y, DisplayRange_2y_5y],
 } as const;
 const Height_65_120cmUIData = {
   by: "height",
   label: "65-120 cm",
   defaultDisplayMode: "height",
   availableDisplayMode: ["height"],
-  availableDisplayRange: []
+  availableDisplayRange: [],
 } as const;
 const Length_45_110cmUIData = {
   by: "length",
   label: "45-110 cm",
   defaultDisplayMode: "length",
   availableDisplayMode: ["length"],
-  availableDisplayRange: []
+  availableDisplayRange: [],
 } as const;
 
-
-export const LengthHeightMode = ["height", "length"] as const
+export const LengthHeightMode = ["height", "length"] as const;
 export const DisplayModeUiLabel = {
-  "length": "Taille Couchée",
-  "height": "Taille Debout",
-  "years": "Années",
-  "months": "Mois"
-} as const
+  length: "Taille Couchée",
+  height: "Taille Debout",
+  years: "Années",
+  months: "Mois",
+} as const;
 export type ChartUiDataType = ValueOf<typeof CHART_UI_DATA>;
 
 export type IndicatorUIType = ValueOf<typeof GROWTH_INDICATORS>;

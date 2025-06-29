@@ -5,9 +5,9 @@ import {
 } from "./../../../../../domain";
 
 export type CalculateGrowthIndicatorValueRequest = {
-  indicatorCode: string 
+  indicatorCode: string;
   anthropometricData: CreateAnthropometricData;
   sex: Sex;
   [AnthroSystemCodes.AGE_IN_DAY]: number;
-  [AnthroSystemCodes.AGE_IN_MONTH]: number
+  [AnthroSystemCodes.AGE_IN_MONTH]: number;
 };

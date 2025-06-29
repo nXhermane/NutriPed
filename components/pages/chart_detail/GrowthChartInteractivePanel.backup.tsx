@@ -8,7 +8,11 @@ import {
   DAY_IN_YEARS,
   GrowthReferenceChartDto,
 } from "@/core/diagnostics";
-import { CHART_UI_DATA, ChartUiDataType, DisplayMode } from "@/src/constants/ui";
+import {
+  CHART_UI_DATA,
+  ChartUiDataType,
+  DisplayMode,
+} from "@/src/constants/ui";
 import { useUI } from "@/src/context";
 
 import { Poppins_200ExtraLight } from "@expo-google-fonts/poppins";
@@ -27,9 +31,7 @@ import {
   useChartPressState,
   CartesianActionsHandle,
 } from "victory-native";
-import Animated, {
-  SharedValue,
-} from "react-native-reanimated";
+import Animated, { SharedValue } from "react-native-reanimated";
 import { Pressable } from "@/components/ui/pressable";
 import { Gesture } from "react-native-gesture-handler";
 type ChildPlotedPointData = ((

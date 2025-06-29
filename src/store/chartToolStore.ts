@@ -2,7 +2,10 @@ import {
   AnthroSystemCodes,
   GrowthRefChartAndTableCodes,
 } from "@/core/constants";
-import { AnthropometricVariableObject, GrowthIndicatorValueDto } from "@/core/diagnostics";
+import {
+  AnthropometricVariableObject,
+  GrowthIndicatorValueDto,
+} from "@/core/diagnostics";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { nanoid } from "@reduxjs/toolkit";
 export type ChartMeasurement = {
@@ -19,13 +22,10 @@ export type ChartMeasurement = {
     }
   >;
   id: string;
-  results:
-  {
-    variables: AnthropometricVariableObject,
-    growthIndicatorValue: GrowthIndicatorValueDto
-  }
-
-
+  results: {
+    variables: AnthropometricVariableObject;
+    growthIndicatorValue: GrowthIndicatorValueDto;
+  };
 };
 export type ChartMeasurementSerie = {
   id: string;
@@ -39,7 +39,7 @@ type AddMeasureToSerieReducerData = {
   chartCode: GrowthRefChartAndTableCodes;
   serieId: string;
   measurement: ChartMeasurement["data"];
-  results: ChartMeasurement['results']
+  results: ChartMeasurement["results"];
 };
 type DeleteMeasureFromSerieReducerData = {
   chartCode: GrowthRefChartAndTableCodes;
@@ -84,7 +84,7 @@ export const chartToolStore = createSlice({
           growthChartSeries[serieIndex].data.push({
             data: measurement,
             id: nanoid(),
-            results
+            results,
           });
           growthChartSeries[serieIndex].updatedAt = new Date().toISOString();
         }

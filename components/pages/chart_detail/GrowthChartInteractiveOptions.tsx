@@ -65,7 +65,7 @@ export const GrowthChartInteractiveOptions: React.FC<
         </Text>
         <Switch
           size="md"
-          trackColor={{false: colors.neutral['400'],true: colors.green[600]}}
+          trackColor={{ false: colors.neutral["400"], true: colors.green[600] }}
           thumbColor={colors.neutral[50]}
           value={zoomActivate}
           onToggle={() => setZoomActivate(!zoomActivate)}

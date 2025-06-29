@@ -22,7 +22,7 @@ export const SuccessToast: React.FC<SuccessToastProps> = ({
         alignSelf: "center",
       }}
       className={
-        "w-[95%] overflow-hidden rounded-2xl border border-primary-border/5 bg-background-secondary p-4 elevation-sm"
+        "elevation-sm w-[95%] overflow-hidden rounded-2xl border border-primary-border/5 bg-background-secondary p-4"
       }
     >
       <HStack className="gap-3">
@@ -40,7 +40,11 @@ export const SuccessToast: React.FC<SuccessToastProps> = ({
             </ToastTitle>
           )}
           {desc && (
-            <ToastDescription className={"mt-1 text-sm text-typography-primary_light  dark:text-gray-300"}>
+            <ToastDescription
+              className={
+                "mt-1 text-sm text-typography-primary_light dark:text-gray-300"
+              }
+            >
               {desc}
             </ToastDescription>
           )}

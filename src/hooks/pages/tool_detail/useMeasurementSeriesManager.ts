@@ -68,11 +68,13 @@ export function useMeasurementSeriesManager(
   const [selectedSerie, setSelectedSerie] = useState<{
     serieId: string;
   } | null>(null);
-  const { diagnosticServices: { growthIndicatorValue } } = usePediatricApp()
+  const {
+    diagnosticServices: { growthIndicatorValue },
+  } = usePediatricApp();
 
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
-      if (!chartCode || !sex || !indicatorCode) return () => { };
+      if (!chartCode || !sex || !indicatorCode) return () => {};
       switch (value) {
         case "new": {
           return async () => {
@@ -176,13 +178,17 @@ export function useMeasurementSeriesManager(
           return async (data: ChartMeasurement["data"]) => {
             if (selectedSerie) {
               const result = await growthIndicatorValue.calculateIndicator({
-                anthropometricData: { anthropometricMeasures: Object.values(data).filter(value => typeof value != 'number' && value.code != 'lenhei') },
-                age_in_day: data["age_in_day"] as number || 0,
-                age_in_month: data['age_in_month'] as number || 0,
+                anthropometricData: {
+                  anthropometricMeasures: Object.values(data).filter(
+                    value => typeof value != "number" && value.code != "lenhei"
+                  ),
+                },
+                age_in_day: (data["age_in_day"] as number) || 0,
+                age_in_month: (data["age_in_month"] as number) || 0,
                 indicatorCode: indicatorCode,
-                sex: sex
-              })
-              if ('data' in result) {
+                sex: sex,
+              });
+              if ("data" in result) {
                 dispatch(
                   addMeasureToSerie({
                     chartCode,
@@ -190,14 +196,14 @@ export function useMeasurementSeriesManager(
                     measurement: data,
                     results: {
                       variables: result.data.variables,
-                      growthIndicatorValue: result.data.growthIndicatorValue
-                    }
+                      growthIndicatorValue: result.data.growthIndicatorValue,
+                    },
                   })
                 );
                 return true;
               } else {
-              console.log("Error",result)
-            }
+                console.log("Error", result);
+              }
             }
             toast.show(
               "Info",
@@ -212,7 +218,7 @@ export function useMeasurementSeriesManager(
             "This key is not supported on chart tools action.[key]:",
             value
           );
-          return () => { };
+          return () => {};
         }
       }
     },

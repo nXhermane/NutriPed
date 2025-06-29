@@ -70,7 +70,7 @@ export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
                   </AccordionTrigger>
                 </AccordionHeader>
                 <AccordionContent>
-                  {serie.data.map((item , index) => (
+                  {serie.data.map((item, index) => (
                     <FadeInCardY key={item.id} delayNumber={index + 2}>
                       <MeasurementItem
                         key={item.id}

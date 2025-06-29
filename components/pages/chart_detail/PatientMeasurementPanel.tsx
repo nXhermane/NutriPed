@@ -41,7 +41,7 @@ export const PatientMeasurementPanel: React.FC<
   } = useMeasurementSeriesManager(
     growthChartDto?.code as GrowthRefChartAndTableCodes,
     growthChartDto?.sex as Sex,
-    indicatorDto?.code 
+    indicatorDto?.code
   );
   const dynamicFormRef = useRef<FormHandler<any> | null>(null);
 

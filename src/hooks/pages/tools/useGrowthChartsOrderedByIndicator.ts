@@ -1,9 +1,12 @@
 import { useCallback } from "react";
-import { ChartUiDataType, GROWTH_INDICATORS, IndicatorUIType } from "@/src/constants/ui";
+import {
+  ChartUiDataType,
+  GROWTH_INDICATORS,
+  IndicatorUIType,
+} from "@/src/constants/ui";
 import { GrowthReferenceChartDto } from "@/core/diagnostics";
 import { useQuery } from "@tanstack/react-query";
 import { usePediatricApp } from "@/adapter";
-
 
 export type GrowthChartListOrderedByIndicatorType = {
   indicator: IndicatorUIType;
