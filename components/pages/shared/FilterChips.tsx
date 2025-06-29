@@ -21,6 +21,8 @@ export const FilterChips = <T,>({
       showsHorizontalScrollIndicator={false}
       contentContainerClassName={"gap-3 overflow-visible"}
       className="max-h-7"
+      nestedScrollEnabled
+      keyboardShouldPersistTaps={"handled"}
     >
       {data.map((item, index) => (
         <FadeInCardX key={item.label} delayNumber={index + 3}>

@@ -134,6 +134,8 @@ export function getAnthropDataFormSchemaWithCode(code: AnthroSystemCodes) {
                 value: measure.value,
                 unit: measure.unit,
               },
+              ...(data[AnthroSystemCodes.HEIGHT] && { [AnthroSystemCodes.HEIGHT]: data[AnthroSystemCodes.HEIGHT] }),
+              ...(data[AnthroSystemCodes.LENGTH] && { [AnthroSystemCodes.LENGTH]: data[AnthroSystemCodes.LENGTH] })
             };
           }),
       };

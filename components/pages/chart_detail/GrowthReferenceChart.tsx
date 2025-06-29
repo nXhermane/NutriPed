@@ -12,7 +12,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useUI } from "@/src/context";
 import { ChevronUp } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 import colors from "tailwindcss/colors";
 import { GrowthInteractiveChart } from "./GrowthChartInteractive";
 import { ChartDataDto, GrowthRefChartAndTableCodes } from "@/core/diagnostics";
@@ -23,10 +23,12 @@ import { GrowthChartInteractiveOptions } from "./GrowthChartInteractiveOptions";
 export interface GrowthReferenceChartProps {
   code: GrowthRefChartAndTableCodes;
   chartData: ChartDataDto[];
+  chartName: string;
 }
 export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
-  React.memo(({ chartData, code }) => {
+  React.memo(({ chartData, code, chartName }) => {
     const { colorMode } = useUI();
+    const [zoomActivate, setZoomActivate] = useState<boolean>(false);
     const {
       data,
       setDisplayedXAxisRange,
@@ -59,7 +61,8 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
         </VStack>
 
         <BottomSheetPortal
-          snapPoints={["25%", "50%", "75%", "90%", "100%"]}
+          snapPoints={["25%", "50%", "75%", "90%"]}
+          enableContentPanningGesture={false}
           backdropComponent={BottomSheetBackdrop}
           handleIndicatorStyle={{
             backgroundColor:
@@ -80,6 +83,8 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
               data={data}
               displayMode={displayMode as DisplayMode}
               chartUiData={chartUiData as ChartUiDataType}
+              chartName={chartName}
+              zoomActivate={zoomActivate}
             />
             <GrowthChartInteractiveOptions
               chartUiData={chartUiData as ChartUiDataType}
@@ -89,6 +94,10 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
                   | "all"
               }
               setDisplayRange={setDisplayedXAxisRange as any}
+              displayMode={displayMode as DisplayMode}
+              setDisplayMode={setDisplayMode}
+              zoomActivate={zoomActivate}
+              setZoomActivate={setZoomActivate}
             />
           </BottomSheetContent>
         </BottomSheetPortal>

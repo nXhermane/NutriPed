@@ -83,14 +83,14 @@ const Age_5_10yUIData = {
   label: "5-10 ans",
   by: "age",
   defaultDisplayMode: "years",
-  availableDisplayMode: ["years"],
+  availableDisplayMode: ["years","months"],
   availableDisplayRange: [DisplayRange_5y_7_5y, DisplayRange_7_5y_10y]
 } as const;
 const Age_5_19yUIData = {
   by: "age",
   label: "5-19 ans",
   defaultDisplayMode: "years",
-  availableDisplayMode: ["years"],
+  availableDisplayMode: ["years","months"],
   availableDisplayRange: [DisplayRange_5y_10y, DisplayRange_10y_19y, DisplayRange_5y_15y]
 } as const;
 const Age_3m_5yUIData = {
@@ -117,6 +117,12 @@ const Length_45_110cmUIData = {
 
 
 export const LengthHeightMode = ["height", "length"] as const
+export const DisplayModeUiLabel = {
+  "length": "Taille Couchée",
+  "height": "Taille Debout",
+  "years": "Années",
+  "months": "Mois"
+} as const
 export type ChartUiDataType = ValueOf<typeof CHART_UI_DATA>;
 
 export type IndicatorUIType = ValueOf<typeof GROWTH_INDICATORS>;

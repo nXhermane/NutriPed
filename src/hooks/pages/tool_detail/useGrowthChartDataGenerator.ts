@@ -52,17 +52,16 @@ export function useGrowthChartDataGenerator(chartData: ChartDataDto[], code: Gro
                 const processedData: ChartDataPoint[] = []
                 for (let index = 0; index <= chartData.length - 1; index++) {
                     const { curvePoints, value } = chartData[index]
+
                     if (displayedXAxisRange === "all") {
-                        if (index % lenHeiInterval && index === chartData.length - 1) {
-                            processedData.push({
-                                lenhei: value,
-                                ...curvePoints
-                            } as ChartDataPoint)
-                        }
+                        processedData.push({
+                            lenhei: value,
+                            ...curvePoints
+                        } as ChartDataPoint)
                     } else {
                         const displayedStart = displayedXAxisRange[0] as ChartDataXAxisPropsLenHeiBased
                         const displayedEnd = displayedXAxisRange[1] as ChartDataXAxisPropsLenHeiBased
-                        if ((index % lenHeiInterval || value === displayedStart.lenhei || value === displayedEnd.lenhei) && value >= displayedStart.lenhei && value <= displayedEnd.lenhei) {
+                        if ((value === displayedStart.lenhei || value === displayedEnd.lenhei) && value >= displayedStart.lenhei && value <= displayedEnd.lenhei) {
                             processedData.push({
                                 lenhei: value,
                                 ...curvePoints
@@ -78,7 +77,7 @@ export function useGrowthChartDataGenerator(chartData: ChartDataDto[], code: Gro
                     for (let index = 0; index <= chartData.length - 1; index++) {
                         const { curvePoints, value } = chartData[index]
                         const ageInDays =
-                            displayMode === "years"
+                            chartUiData.defaultDisplayMode === "years"
                                 ? value * DAY_IN_MONTHS
                                 : value;
                         const ageInMonths = ageInDays / DAY_IN_MONTHS;
@@ -95,7 +94,7 @@ export function useGrowthChartDataGenerator(chartData: ChartDataDto[], code: Gro
                         } else {
                             const displayedStart = displayedXAxisRange[0] as ChartDataXAxisPropsAgeBased
                             const displayedEnd = displayedXAxisRange[1] as ChartDataXAxisPropsAgeBased
-                            if ((index % dayInterval || value === displayedStart.ageInDay || value === displayedEnd.ageInDay) && value >= displayedStart.ageInDay && value <= displayedEnd.ageInDay) {
+                            if ((index % dayInterval || ageInDays === displayedStart.ageInDay || ageInDays === displayedEnd.ageInDay) && ageInDays >= displayedStart.ageInDay && ageInDays <= displayedEnd.ageInDay) {
                                 processedData.push({
                                     ageInDay: ageInDays,
                                     ageInMonth: parseFloat(ageInMonths.toFixed(1)),

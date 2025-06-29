@@ -1,3 +1,5 @@
+import { Box } from "@/components/ui/box";
+import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 import { ChartDataDto } from "@/core/diagnostics";
 import {
@@ -9,20 +11,32 @@ import {
 import { useUI } from "@/src/context";
 import { ChartDataPoint, ChartDataXAxisProps } from "@/src/hooks";
 import { Poppins_500Medium } from "@expo-google-fonts/poppins";
-import { useFont } from "@shopify/react-native-skia";
-import React, { useEffect, useMemo, useState } from "react";
+import { Circle, useFont } from "@shopify/react-native-skia";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Gesture } from "react-native-gesture-handler";
+import { SharedValue } from "react-native-reanimated";
 import colors from "tailwindcss/colors";
-import { CartesianChart, Line } from "victory-native";
+import {
+  CartesianActionsHandle,
+  CartesianChart,
+  Line,
+  useChartPressState,
+  useChartTransformState,
+} from "victory-native";
 
 export interface GrowthInteractiveChartProps {
   data: ChartDataPoint[];
   displayMode: DisplayMode;
   chartUiData: ChartUiDataType;
+  chartName: string;
+  zoomActivate: boolean;
 }
 export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   data,
   displayMode,
   chartUiData,
+  chartName,
+  zoomActivate,
 }) => {
   const font = useFont(Poppins_500Medium, 8);
   const { colorMode } = useUI();
@@ -64,6 +78,10 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           : `${colors.gray["300"]}`,
       enableRescaling: true,
       formatXLabel(label: number) {
+        if (label === undefined) {
+          console.log("label undefined");
+          return "";
+        }
         return (
           label.toString() +
           (xKey === "lenhei"
@@ -93,77 +111,194 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
       labelRotate: 45,
       formatYLabel: (label: number) =>
         label.toString() + chartUiData.yAxisLabel,
-      
     }),
     [colorMode, font, chartUiData]
   );
+  const transformState = useChartTransformState({
+    scaleX: 1,
+    scaleY: 1.0,
+  });
+  const { state, isActive } = useChartPressState({
+    x: 0,
+    y: {
+      SD4neg: 1,
+      SD3neg: 1,
+      SD2neg: 1,
+      SD1neg: 1,
+      SD0: 1,
+      SD1: 1,
+      SD2: 1,
+      SD3: 1,
+      SD4: 1,
+    },
+  });
+  const actionsRef = useRef<CartesianActionsHandle<typeof state>>(null);
+  const tapGesture = Gesture.Tap().onStart(e => {
+    state.isActive.value = true;
+    actionsRef.current?.handleTouch(state, e.x, e.y);
+  });
+  const composed = Gesture.Race(tapGesture);
+
   return (
-    <VStack className=" h-v-96 rounded-xl bg-background-primary">
-      <CartesianChart
-        data={data as any[]}
-        xKey={xKey}
-        yKeys={yKeys}
-        xAxis={xAxisConfig}
-        yAxis={[yAxisConfig]}
-        domainPadding={{right: 10}}
-         padding={{
-          left: 10,
-          right:10,
-          bottom: 20
-         }}
-      >
-        {({ canvasSize, chartBounds, points }) => {
-          return (
-            <React.Fragment>
-              <Line
-                points={points.SD4neg}
-                color={colors.red["700"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD3neg}
-                color={colors.red["500"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD2neg}
-                color={colors.orange["400"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD1neg}
-                color={colors.yellow["300"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD0}
-                color={colors.green["500"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD1}
-                color={colors.sky["400"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD2}
-                color={colors.indigo["500"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD3}
-                color={colors.purple["500"]}
-                strokeWidth={1}
-              />
-              <Line
-                points={points.SD4}
-                color={colors.rose["600"]}
-                strokeWidth={1}
-              />
-            </React.Fragment>
-          );
-        }}
-      </CartesianChart>
-    </VStack>
+    <React.Fragment>
+      <Box className="m-1 mb-3">
+        <Heading className="text-center font-h4 text-base font-medium">
+          {chartName}
+        </Heading>
+      </Box>
+      <VStack className="m-1 h-v-96 rounded-xl bg-background-primary">
+        <CartesianChart
+          data={data as any[]}
+          xKey={xKey}
+          yKeys={yKeys}
+          xAxis={xAxisConfig}
+          yAxis={[yAxisConfig]}
+          domainPadding={{ right: 10 }}
+          padding={{
+            left: 10,
+            right: 10,
+            bottom: 20,
+          }}
+          actionsRef={actionsRef as any}
+          customGestures={composed}
+          transformState={zoomActivate ? transformState.state : undefined}
+          chartPressState={state as any}
+          chartPressConfig={{
+            pan: {
+              activateAfterLongPress: 0,
+              activeOffsetX: 0,
+              activeOffsetY: 0,
+              failOffsetX: 0,
+              failOffsetY: 0,
+            },
+          }}
+        >
+          {({ canvasSize, chartBounds, points }) => {
+            return (
+              <React.Fragment>
+                <Line
+                  points={points.SD4neg}
+                  color={colors.red["700"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD3neg}
+                  color={colors.red["500"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD2neg}
+                  color={colors.orange["400"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD1neg}
+                  color={colors.yellow["300"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD0}
+                  color={colors.green["500"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD1}
+                  color={colors.sky["400"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD2}
+                  color={colors.indigo["500"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD3}
+                  color={colors.purple["500"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+                <Line
+                  points={points.SD4}
+                  color={colors.rose["600"]}
+                  strokeWidth={1}
+                  animate={{ type: "timing", duration: 300 }}
+                />
+
+                {isActive && (
+                  <React.Fragment>
+                    <React.Fragment>
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD4neg.position}
+                        color={colors.red["700"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD3neg.position}
+                        color={colors.red["500"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD2neg.position}
+                        color={colors.orange["400"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD1neg.position}
+                        color={colors.yellow["300"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD0.position}
+                        color={colors.green["500"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD1.position}
+                        color={colors.sky["400"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD2.position}
+                        color={colors.indigo["500"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD3.position}
+                        color={colors.purple["500"]}
+                      />
+                      <ToolTip
+                        x={state.x.position}
+                        y={state.y.SD4.position}
+                        color={colors.rose["600"]}
+                      />
+                    </React.Fragment>
+                  </React.Fragment>
+                )}
+              </React.Fragment>
+            );
+          }}
+        </CartesianChart>
+      </VStack>
+    </React.Fragment>
   );
 };
+
+export function ToolTip({
+  x,
+  y,
+  color,
+}: {
+  x: SharedValue<number>;
+  y: SharedValue<number>;
+  color: string;
+}) {
+  return <Circle cx={x} cy={y} r={4} color={color} />;
+}
