@@ -3,14 +3,13 @@ import {
   DAY_IN_MONTHS,
   DAY_IN_YEARS,
   GrowthRefChartAndTableCodes,
-  GrowthReferenceChartDto,
 } from "@/core/diagnostics";
 import {
   CHART_UI_DATA,
   DisplayMode,
   LengthHeightMode,
 } from "@/src/constants/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export interface ChartDataXAxisPropsAgeBased {
   ageInDay: number;

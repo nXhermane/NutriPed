@@ -1,10 +1,7 @@
 import { Center } from "@/components/ui/center";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  useGrowthCharts,
-  useGrowthIndicators,
-} from "@/src/hooks";
+import { useGrowthCharts, useGrowthIndicators } from "@/src/hooks";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
 import { useToast } from "@/src/context";
@@ -96,7 +93,7 @@ const ChartDetail = () => {
           />
         </VStack>
       </ScrollView>
-         <GrowthReferenceChart
+      <GrowthReferenceChart
         chartData={growthCharts[0]?.data || []}
         code={growthCharts[0]?.code as GrowthRefChartAndTableCodes}
         chartName={growthCharts[0]?.name || ""}

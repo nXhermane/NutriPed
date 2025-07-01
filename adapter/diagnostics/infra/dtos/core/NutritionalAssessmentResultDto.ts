@@ -18,7 +18,7 @@ export interface NutritionalAssessmentResultPersistenceDto
     interpretation: string;
     value: number;
     isValid: boolean;
-    computedValue: [xAxis: number, yAxis: number]
+    computedValue: [xAxis: number, yAxis: number];
   }[];
   clinicalAnalysis: {
     clinicalSign: string;

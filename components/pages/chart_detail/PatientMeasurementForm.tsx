@@ -6,7 +6,6 @@ import { HStack } from "@/components/ui/hstack";
 import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import React, { Ref } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import colors from "tailwindcss/colors";
 import { MeasurementFormSchema } from "@/src/hooks";
 import { Plus } from "lucide-react-native";
@@ -29,20 +28,18 @@ export const PatientMeasurementForm: React.FC<PatientMeasurementFormProps> = ({
         </Heading>
       </HStack>
 
-      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-        {!schema ? (
-          <Center className="flex-1 bg-background-primary">
-            <Spinner size={"large"} color={colors.blue["600"]} />
-          </Center>
-        ) : (
-          <DynamicFormGenerator
-            schema={[{ fields: schema?.fields || [], section: "" }]}
-            zodSchema={schema?.zodSchema}
-            ref={formRef}
-            className="p-0 px-0"
-          />
-        )}
-      </KeyboardAwareScrollView>
+      {!schema ? (
+        <Center className="flex-1 bg-background-primary">
+          <Spinner size={"large"} color={colors.blue["600"]} />
+        </Center>
+      ) : (
+        <DynamicFormGenerator
+          schema={[{ fields: schema?.fields || [], section: "" }]}
+          zodSchema={schema?.zodSchema}
+          ref={formRef}
+          className="p-0 px-0"
+        />
+      )}
 
       <Button
         className="h-v-10 rounded-xl bg-primary-c_light"

@@ -5,7 +5,7 @@ import {
   DisplayMode,
   DisplayModeUiLabel,
 } from "@/src/constants/ui";
-import React, { useState } from "react";
+import React from "react";
 import { FilterChips } from "../shared";
 import { Switch } from "@/components/ui/switch";
 import { HStack } from "@/components/ui/hstack";

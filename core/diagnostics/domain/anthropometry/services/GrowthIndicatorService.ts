@@ -53,7 +53,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     private growthReferenceSelectionService: IReferenceSelectionService,
     private zScoreService: IZScoreCalculationService,
     private interpretationService: IZScoreInterpretationService
-  ) { }
+  ) {}
 
   /**
    * @method identifyPossibleIndicator
@@ -234,15 +234,15 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const growthRef =
         indicator.getStandardShape() === StandardShape.CURVE
           ? await this.growthReferenceSelectionService.selectChartForIndicator(
-            data,
-            indicator,
-            standard
-          )
+              data,
+              indicator,
+              standard
+            )
           : await this.growthReferenceSelectionService.selectTableForIndicator(
-            data,
-            indicator,
-            standard
-          );
+              data,
+              indicator,
+              standard
+            );
 
       if (growthRef.isFailure)
         return Result.fail(formatError(growthRef, GrowthIndicatorService.name));
@@ -278,8 +278,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
         interpretation: interpretationResult.val.unpack().code.unpack(),
         valueRange: interpretationResult.val.unpack().range,
         isValid: true,
-        computedValue: zScoreResult.val.computedValue
-
+        computedValue: zScoreResult.val.computedValue,
       };
       return GrowthIndicatorValue.create(growthIndicatorValueProps);
     } catch (e: unknown) {

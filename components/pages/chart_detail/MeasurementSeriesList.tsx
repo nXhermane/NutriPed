@@ -51,7 +51,7 @@ export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
               <AccordionItem
                 value={serie.id}
                 key={serie.id}
-                className={`rounded-xl ${selectedSerie === serie.id ? "border-[1px] border-blue-500/50" : ""} ${multipleSeries.findIndex(s => s.serieId === serie.id) != -1 ? "border-primary-c_light border-[1px]" : ""} `}
+                className={`rounded-xl ${selectedSerie === serie.id ? "border-[1px] border-blue-500/50" : ""} ${multipleSeries.findIndex(s => s.serieId === serie.id) != -1 ? "border-[1px] border-primary-c_light" : ""} `}
               >
                 <AccordionHeader className="">
                   <AccordionTrigger

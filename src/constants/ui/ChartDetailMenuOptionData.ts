@@ -11,13 +11,7 @@ export const ChartDetailMenuOtpionData = [
     iconName: "ListOrdered",
     color: "text-indigo-500",
   },
-  // {
-  //     key: "save",
-  //     label: "Sauvegarder cette serie",
-  //     iconName: "Save",
-  //     color: "text-blue-600",
 
-  // },
   {
     key: "delete",
     label: "Supprimer toutes les mesures",

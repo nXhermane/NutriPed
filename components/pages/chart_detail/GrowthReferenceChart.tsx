@@ -42,8 +42,8 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
       displayMode,
       displayedXAxisRange,
     } = useGrowthChartDataGenerator(chartData, code);
-  const {plottedSeriesData}  = useSeriePlottingDataGenerator(code);
-    
+    const { plottedSeriesData } = useSeriePlottingDataGenerator(code);
+
     return (
       <BottomSheet>
         <VStack className="bg-background-primary p-4">

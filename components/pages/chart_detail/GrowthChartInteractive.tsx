@@ -3,7 +3,7 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { ChartDataDto, DAY_IN_YEARS } from "@/core/diagnostics";
+import { DAY_IN_YEARS } from "@/core/diagnostics";
 import {
   AxisLabel,
   CHART_LEGEND,
@@ -12,11 +12,7 @@ import {
   LengthHeightMode,
 } from "@/src/constants/ui";
 import { useUI } from "@/src/context";
-import {
-  ChartDataPoint,
-  ChartDataXAxisProps,
-  PlottedSerieData,
-} from "@/src/hooks";
+import { ChartDataPoint, PlottedSerieData } from "@/src/hooks";
 import { Poppins_500Medium } from "@expo-google-fonts/poppins";
 import { Circle, useFont } from "@shopify/react-native-skia";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -31,8 +27,6 @@ import {
   useChartPressState,
   useChartTransformState,
 } from "victory-native";
-import { Grid, GridItem } from "@/components/ui/grid";
-import { View } from "@/components/ui/view";
 import { Pressable } from "@/components/ui/pressable";
 
 export interface GrowthInteractiveChartProps {

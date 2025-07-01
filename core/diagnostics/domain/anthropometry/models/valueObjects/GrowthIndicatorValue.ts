@@ -22,7 +22,7 @@ export interface IGrowthIndicatorValue {
   interpretation: string;
   value: number;
   isValid: boolean;
-  computedValue: [xAxis: number, yAxis: number]
+  computedValue: [xAxis: number, yAxis: number];
 }
 export type CreateGrowthIndicatorValueProps = {
   code: string;
@@ -33,7 +33,7 @@ export type CreateGrowthIndicatorValueProps = {
   interpretation: string;
   value: number;
   isValid: boolean;
-  computedValue: [xAxis: number, yAxis: number]
+  computedValue: [xAxis: number, yAxis: number];
 };
 export class GrowthIndicatorValue extends ValueObject<IGrowthIndicatorValue> {
   protected validate(props: Readonly<IGrowthIndicatorValue>): void {
@@ -61,7 +61,7 @@ export class GrowthIndicatorValue extends ValueObject<IGrowthIndicatorValue> {
         value: createProps.value,
         interpretation: createProps.interpretation,
         isValid: createProps.isValid,
-        computedValue: createProps.computedValue
+        computedValue: createProps.computedValue,
       });
       return Result.ok(growthIndicatorValue);
     } catch (e: unknown) {

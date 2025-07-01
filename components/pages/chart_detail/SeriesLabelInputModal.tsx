@@ -8,7 +8,6 @@ import {
   Modal,
 } from "@/components/ui/modal";
 import React, { useState } from "react";
-import {} from "react-native";
 
 export interface SeriesLabelInputModalProps {
   isOpen?: boolean;

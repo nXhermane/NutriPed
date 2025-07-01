@@ -3,10 +3,9 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { router } from "expo-router";
-import { ChartLineIcon, X } from "lucide-react-native";
+import { X } from "lucide-react-native";
 import { Pressable } from "react-native";
 import { Text } from "@/components/ui/text";
-import { Box } from "@/components/ui/box";
 export interface ChartDetailHeaderProps {
   name: string;
   desc?: string;

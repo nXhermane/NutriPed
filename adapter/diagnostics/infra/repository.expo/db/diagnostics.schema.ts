@@ -246,7 +246,7 @@ export const nutritional_assessment_results = sqliteTable(
           interpretation: string;
           value: number;
           isValid: boolean;
-          computedValue: [xAxis: number, yAxis: number]
+          computedValue: [xAxis: number, yAxis: number];
         }[]
       >()
       .notNull(),

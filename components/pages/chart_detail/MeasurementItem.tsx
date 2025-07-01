@@ -72,10 +72,10 @@ export const MeasurementItem: React.FunctionComponent<MeasurementItemProps> = ({
       rightThreshold={40}
       renderRightActions={MeasurementItemRightAction}
     >
-      <VStack className="mt-2 items-center gap-1 rounded-xl dark:bg-background-secondary px-2 overflow-hidden bg-gray-50 ">
-        <Box className={`absolute left-0 w-1 h-full rounded-full ${indicatorInterpretationData?.color}`}>
-          
-        </Box>
+      <VStack className="mt-2 items-center gap-1 overflow-hidden rounded-xl bg-gray-50 px-2 dark:bg-background-secondary">
+        <Box
+          className={`absolute left-0 h-full w-1 rounded-full ${indicatorInterpretationData?.color}`}
+        ></Box>
         <HStack className="w-full items-center justify-between py-1">
           <HStack className="items-center gap-1">
             {neededMeasureCodes
