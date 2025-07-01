@@ -1,4 +1,4 @@
 export const CORE_CONFIG = {
   pediatricDataZipUrl:
-    "https://cdn.jsdelivr.net/gh/nxh-labs/Pediatric_Software_Data_Extraction@v0.0.2-beta/dist/PediatricSoftWareData.zip",
+    "https://cdn.jsdelivr.net/gh/nxh-labs/Pediatric_Software_Data_Extraction@v0.0.3-beta/dist/PediatricSoftWareData.zip",
 } as const;

@@ -11,9 +11,15 @@ import Reanimated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import { VStack } from "@/components/ui/vstack";
+import React, { useEffect, useState } from "react";
+import { Badge, BadgeText } from "@/components/ui/badge";
+import { IndicatorInterpretionBadgeUiData } from "@/src/constants/ui";
+import { Box } from "@/components/ui/box";
 
 export interface MeasurementItemProps {
   data: ChartMeasurement["data"];
+  result: ChartMeasurement["results"];
   id: string;
   neededMeasureCodes: AnthroSystemCodes[];
   onDeleteMeasureAction?: () => void;
@@ -23,7 +29,17 @@ export const MeasurementItem: React.FunctionComponent<MeasurementItemProps> = ({
   data,
   neededMeasureCodes,
   onDeleteMeasureAction,
+  result,
 }) => {
+  const [indicatorInterpretationData, setIndicatorInterpretationData] =
+    useState<
+      (typeof IndicatorInterpretionBadgeUiData)[keyof typeof IndicatorInterpretionBadgeUiData]
+    >();
+  useEffect(() => {
+    setIndicatorInterpretationData(
+      IndicatorInterpretionBadgeUiData[result.growthIndicatorValue.valueRange]
+    );
+  }, [result]);
   function MeasurementItemRightAction(
     prog: SharedValue<number>,
     drag: SharedValue<number>
@@ -56,35 +72,59 @@ export const MeasurementItem: React.FunctionComponent<MeasurementItemProps> = ({
       rightThreshold={40}
       renderRightActions={MeasurementItemRightAction}
     >
-      <HStack className="mt-2 h-10 items-center gap-1 rounded-xl bg-background-secondary px-2">
-        {neededMeasureCodes
-          .filter(
-            code =>
-              ![
-                AnthroSystemCodes.AGE_IN_DAY,
-                AnthroSystemCodes.AGE_IN_MONTH,
-              ].includes(code)
-          )
-          .map(code => {
-            const value = data[code];
-            if (!value) return null;
-            return (
-              <Text
-                key={code}
-                className="font-h4 text-sm font-normal text-typography-primary"
-              >
-                {value.value} {value.unit}
-              </Text>
-            );
-          })}
-        <Divider className="h-1 w-1 rounded-full bg-primary-border/50" />
-        <Text className="font-body text-sm font-normal text-typography-primary">
-          {data[AnthroSystemCodes.AGE_IN_MONTH] &&
-          data[AnthroSystemCodes.AGE_IN_MONTH] >= 1
-            ? `${data[AnthroSystemCodes.AGE_IN_MONTH]} mois`
-            : `${data[AnthroSystemCodes.AGE_IN_DAY]} jours`}
-        </Text>
-      </HStack>
+      <VStack className="mt-2 items-center gap-1 rounded-xl dark:bg-background-secondary px-2 overflow-hidden bg-gray-50 ">
+        <Box className={`absolute left-0 w-1 h-full rounded-full ${indicatorInterpretationData?.color}`}>
+          
+        </Box>
+        <HStack className="w-full items-center justify-between py-1">
+          <HStack className="items-center gap-1">
+            {neededMeasureCodes
+              .filter(
+                code =>
+                  ![
+                    AnthroSystemCodes.AGE_IN_DAY,
+                    AnthroSystemCodes.AGE_IN_MONTH,
+                  ].includes(code)
+              )
+              .map(code => {
+                const value = data[code];
+                if (!value) return null;
+                return (
+                  <React.Fragment key={code}>
+                    <Text
+                      key={code}
+                      className="font-h3 text-xl font-semibold text-typography-primary"
+                    >
+                      {value.value}
+                    </Text>
+                    <Text className="font-light text-xs text-typography-primary_light">
+                      {value.unit}
+                    </Text>
+                  </React.Fragment>
+                );
+              })}
+          </HStack>
+          <Text className="font-body text-2xs font-normal text-typography-primary">
+            {data[AnthroSystemCodes.AGE_IN_MONTH] &&
+            data[AnthroSystemCodes.AGE_IN_MONTH] >= 1
+              ? `${data[AnthroSystemCodes.AGE_IN_MONTH]} mois`
+              : `${data[AnthroSystemCodes.AGE_IN_DAY]} jours`}
+          </Text>
+        </HStack>
+        <Divider className="h-[1px] bg-primary-border/5" />
+        <HStack className="w-full items-center justify-between py-2">
+          <Text className="font-h3 text-xs font-semibold text-typography-primary">
+            Z-Score: {result?.growthIndicatorValue?.value}
+          </Text>
+          <Badge
+            className={` ${indicatorInterpretationData?.color} rounded-full`}
+          >
+            <BadgeText className="text-normal font-body text-2xs text-white">
+              {indicatorInterpretationData?.label}
+            </BadgeText>
+          </Badge>
+        </HStack>
+      </VStack>
     </Swipeable>
   );
 };

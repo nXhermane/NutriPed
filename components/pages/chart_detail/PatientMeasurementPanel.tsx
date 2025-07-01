@@ -38,6 +38,7 @@ export const PatientMeasurementPanel: React.FC<
     isSeriesLabelModalOpen,
     selectedSerie,
     measurementSeries,
+    selectedSeries,
   } = useMeasurementSeriesManager(
     growthChartDto?.code as GrowthRefChartAndTableCodes,
     growthChartDto?.sex as Sex,
@@ -90,6 +91,10 @@ export const PatientMeasurementPanel: React.FC<
           <MeasurementSeriesList
             series={measurementSeries}
             selectedSerie={selectedSerie?.serieId}
+            multipleSeries={selectedSeries}
+            onMultipleSerieSelection={(serieId: string) =>
+              handleSeriesAction("multipleSelection")({ serieId } as any)
+            }
             onChooseAction={value =>
               handleSeriesAction("choose")({ serieId: value.serieId } as any)
             }
@@ -102,11 +107,6 @@ export const PatientMeasurementPanel: React.FC<
           />
         </VStack>
       </FadeInCardY>
-      <GrowthReferenceChart
-        chartData={growthChartDto?.data || []}
-        code={growthChartDto?.code as GrowthRefChartAndTableCodes}
-        chartName={growthChartDto.name}
-      />
     </React.Fragment>
   );
 };

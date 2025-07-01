@@ -4,7 +4,6 @@ import {
 } from "@/components/custom/motion";
 import { VStack } from "@/components/ui/vstack";
 import { GrowthStandard } from "@/core/constants";
-import { IndicatorUIType } from "@/src/hooks";
 import { HumanDateFormatter } from "@/utils";
 import { ChartCardBadge } from "./ChartCardBadge";
 import { HStack } from "@/components/ui/hstack";
@@ -15,6 +14,7 @@ import { Divider } from "@/components/ui/divider";
 import { Text } from "@/components/ui/text";
 import { Sex } from "@/core/shared";
 import React from "react";
+import { IndicatorUIType } from "@/src/constants/ui";
 
 export interface ChartCardProps extends CardPressEffectProps {
   name: string;

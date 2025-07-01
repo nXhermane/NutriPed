@@ -11,7 +11,7 @@ import { ZScoreComputingStrategy } from "../policies/interfaces/ZScoreComputingS
 import { GROWTH_INDICATOR_ERRORS, handleGrowthIndicatorError } from "../errors";
 
 export class ZScoreCalculationService implements IZScoreCalculationService {
-  constructor(private readonly strategies: ZScoreComputingStrategy[]) {}
+  constructor(private readonly strategies: ZScoreComputingStrategy[]) { }
 
   private findStrategy(
     indicator: Indicator,
@@ -28,7 +28,7 @@ export class ZScoreCalculationService implements IZScoreCalculationService {
     indicator: Indicator,
     growthRef: T,
     standard: GrowthStandard
-  ): Promise<Result<number>> {
+  ): Promise<Result<{ zScore: number, computedValue: [xAxis: number, yAxis: number] }>> {
     try {
       const strategy = this.findStrategy(indicator, standard);
       if (!strategy) {
@@ -50,7 +50,10 @@ export class ZScoreCalculationService implements IZScoreCalculationService {
           `ZScore : ${zscore}, Indicator: ${indicator.getCode()}, GrowthRef: ${growthRef.getCode()}, Standard: ${standard}`
         );
       }
-      return Result.ok(zscore);
+      return Result.ok({
+        zScore: zscore,
+        computedValue: [axeX, axeY]
+      });
     } catch (e: unknown) {
       return handleError(e);
     }

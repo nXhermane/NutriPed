@@ -1,8 +1,8 @@
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
-import { IndicatorUIType } from "@/src/hooks";
 import { icons } from "lucide-react-native";
 import { Text } from "@/components/ui/text";
+import { IndicatorUIType } from "@/src/constants/ui";
 
 export interface ChartCardBadgeProps {
   icon: keyof typeof icons;

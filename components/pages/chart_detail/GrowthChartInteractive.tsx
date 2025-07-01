@@ -1,15 +1,22 @@
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { ChartDataDto } from "@/core/diagnostics";
+import { Text } from "@/components/ui/text";
+import { ChartDataDto, DAY_IN_YEARS } from "@/core/diagnostics";
 import {
   AxisLabel,
+  CHART_LEGEND,
   ChartUiDataType,
   DisplayMode,
   LengthHeightMode,
 } from "@/src/constants/ui";
 import { useUI } from "@/src/context";
-import { ChartDataPoint, ChartDataXAxisProps } from "@/src/hooks";
+import {
+  ChartDataPoint,
+  ChartDataXAxisProps,
+  PlottedSerieData,
+} from "@/src/hooks";
 import { Poppins_500Medium } from "@expo-google-fonts/poppins";
 import { Circle, useFont } from "@shopify/react-native-skia";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -20,9 +27,13 @@ import {
   CartesianActionsHandle,
   CartesianChart,
   Line,
+  Scatter,
   useChartPressState,
   useChartTransformState,
 } from "victory-native";
+import { Grid, GridItem } from "@/components/ui/grid";
+import { View } from "@/components/ui/view";
+import { Pressable } from "@/components/ui/pressable";
 
 export interface GrowthInteractiveChartProps {
   data: ChartDataPoint[];
@@ -30,6 +41,7 @@ export interface GrowthInteractiveChartProps {
   chartUiData: ChartUiDataType;
   chartName: string;
   zoomActivate: boolean;
+  plottedSeriesData: PlottedSerieData[];
 }
 export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   data,
@@ -37,8 +49,11 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   chartUiData,
   chartName,
   zoomActivate,
+  plottedSeriesData,
 }) => {
   const font = useFont(Poppins_500Medium, 8);
+  const [pointIsPlottedOnChart, setPointIsPLottedOnChart] =
+    useState<boolean>(false);
   const { colorMode } = useUI();
   const xKey = useMemo(() => {
     if (
@@ -139,6 +154,9 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   });
   const composed = Gesture.Race(tapGesture);
 
+  useEffect(() => {
+    setPointIsPLottedOnChart(plottedSeriesData.length != 0);
+  }, [plottedSeriesData]);
   return (
     <React.Fragment>
       <Box className="m-1 mb-3">
@@ -173,64 +191,78 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
             },
           }}
         >
-          {({ canvasSize, chartBounds, points }) => {
+          {({ canvasSize, chartBounds, points, xScale, yScale }) => {
             return (
               <React.Fragment>
-                <Line
+                <MemoLine
                   points={points.SD4neg}
                   color={colors.red["700"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD3neg}
                   color={colors.red["500"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD2neg}
                   color={colors.orange["400"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD1neg}
                   color={colors.yellow["300"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD0}
                   color={colors.green["500"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD1}
                   color={colors.sky["400"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD2}
                   color={colors.indigo["500"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD3}
                   color={colors.purple["500"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-                <Line
+                <MemoLine
                   points={points.SD4}
                   color={colors.rose["600"]}
                   strokeWidth={1}
                   animate={{ type: "timing", duration: 300 }}
+                  opacity={pointIsPlottedOnChart ? 0.5 : 1}
                 />
-
+                <PlottedSeriesDataRenderComponent
+                  data={plottedSeriesData}
+                  xKey={xKey}
+                  xScale={xScale}
+                  yScale={yScale}
+                />
                 {isActive && (
                   <React.Fragment>
                     <React.Fragment>
@@ -287,6 +319,17 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           }}
         </CartesianChart>
       </VStack>
+      <HStack className="flex-wrap justify-center gap-2">
+        {[
+          ...CHART_LEGEND,
+          ...plottedSeriesData.map(({ label, ui: { lineColor } }) => ({
+            label: label,
+            color: lineColor,
+          })),
+        ].map(({ color, label }) => (
+          <LegendItem key={label} color={color} label={label} />
+        ))}
+      </HStack>
     </React.Fragment>
   );
 };
@@ -302,3 +345,73 @@ export function ToolTip({
 }) {
   return <Circle cx={x} cy={y} r={4} color={color} />;
 }
+
+const MemoLine = React.memo(Line);
+const MemoScatter = React.memo(Scatter);
+export interface PlottedSeriesDataRenderComponentProps {
+  data: PlottedSerieData[];
+  xScale: (x: number) => number;
+  yScale: (y: number) => number;
+  xKey: "lenhei" | "ageInMonth" | "ageInYear";
+}
+export const PlottedSeriesDataRenderComponent: React.FC<PlottedSeriesDataRenderComponentProps> =
+  React.memo(({ data, xKey, xScale, yScale }) => {
+    return (
+      <React.Fragment>
+        {data.map(({ data: serieData, ui: { lineColor }, id }) => {
+          const plottedPoints = serieData.map(({ variables, yAxis }) => {
+            const xValue = (
+              xKey === "lenhei"
+                ? variables["lenhei"]
+                : xKey === "ageInMonth"
+                  ? variables["age_in_month"]
+                  : xKey === "ageInYear"
+                    ? (variables["age_in_day"] as number) / DAY_IN_YEARS
+                    : 0
+            ) as number;
+            return {
+              x: xScale(xValue) as number,
+              y: yScale(yAxis) as number,
+              yValue: yAxis as number,
+              xValue,
+            };
+          });
+
+          return (
+            <React.Fragment key={id}>
+              <MemoLine
+                points={plottedPoints}
+                color={lineColor}
+                strokeWidth={1}
+                curveType="linear"
+              />
+              <MemoScatter
+                points={plottedPoints}
+                color={lineColor}
+                radius={4}
+              />
+            </React.Fragment>
+          );
+        })}
+      </React.Fragment>
+    );
+  });
+export interface LegendItemProps {
+  color: string;
+  label: string;
+}
+export const LegendItem: React.FC<LegendItemProps> = ({ color, label }) => {
+  return (
+    <Pressable className="w-fit flex-row items-center gap-2 rounded-xl bg-background-primary p-1">
+      <Box
+        style={{
+          backgroundColor: color,
+        }}
+        className="h-v-1 w-5"
+      />
+      <Text className="w-fit max-w-fit font-body text-2xs font-normal text-typography-primary">
+        {label}
+      </Text>
+    </Pressable>
+  );
+};

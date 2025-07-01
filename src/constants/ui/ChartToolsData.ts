@@ -2,9 +2,11 @@ import {
   AnthroSystemCodes,
   DAY_IN_MONTHS,
   DAY_IN_YEARS,
+  GrowthIndicatorRange,
   GrowthRefChartAndTableCodes,
 } from "@/core/constants";
 import { ValueOf } from "@/utils";
+import colors from "tailwindcss/colors";
 const AgeInDay0 = 0;
 const AgeInDay6m = 6 * DAY_IN_MONTHS;
 const AgeInDay3m = 3 * DAY_IN_MONTHS;
@@ -381,3 +383,67 @@ export const GROWTH_INDICATORS = {
     tableCodes: [],
   },
 } as const;
+
+export const IndicatorInterpretionBadgeUiData = {
+  [GrowthIndicatorRange.BELOW_M4]: {
+    color: "bg-red-700",
+    label: "Sévère"
+  },
+  [GrowthIndicatorRange.BELOW_M3]: {
+    color: 'bg-red-500',
+    label: "Modérée"
+  },
+  [GrowthIndicatorRange.BELOW_M2]: {
+    color: "bg-orange-500",
+    label: 'Risque'
+  },
+  [GrowthIndicatorRange.BELOW_M1]: {
+    color: 'bg-yellow-500',
+    label: "Normal"
+  },
+  [GrowthIndicatorRange.MEDIAN]: {
+    color: 'bg-green-500',
+    label: 'Normal'
+  },
+  [GrowthIndicatorRange.ABOVE_1]: {
+    color: 'bg-yellow-400',
+    label: 'Normal'
+  },
+  [GrowthIndicatorRange.ABOVE_2]: {
+    color: "bg-orange-400",
+    label: "Risque"
+  },
+  [GrowthIndicatorRange.ABOVE_3]: {
+    color: 'bg-red-400',
+    label: 'Modérée'
+  },
+  [GrowthIndicatorRange.ABOVE_4]: {
+    color: 'bg-red-600',
+    label: 'Sévère'
+  }
+} as const
+
+export function getSerieColor(index: number, colorMode: "light" | "dark"): string {
+  const lightColors = [
+    "#3b82f6", "#10b981", "#f59e0b", "#f43f5e", "#06b6d4",
+    "#84cc16", "#8b5cf6", "#f97316", "#0ea5e9", "#ec4899"
+  ];
+  const darkColors = [
+    "#60a5fa", "#34d399", "#fbbf24", "#fb7185", "#22d3ee",
+    "#a3e635", "#a78bfa", "#fb923c", "#38bdf8", "#f472b6"
+  ];
+  const palette = colorMode === "dark" ? darkColors : lightColors;
+  return palette[index % palette.length];
+}
+
+export const CHART_LEGEND = [
+  { color: colors.rose["600"], label: "Z-Score 4" },
+  { color: colors.purple["500"], label: "Z-Score 3" },
+  { color: colors.indigo["500"], label: "Z-Score 2" },
+  { color: colors.sky["400"], label: "Z-Score 1" },
+  { color: colors.green["500"], label: "Z-Score 0" },
+  { color: colors.yellow["300"], label: "Z-Score -1" },
+  { color: colors.orange["400"], label: "Z-Score -2" },
+  { color: colors.red["500"], label: "Z-Score -3" },
+  { color: colors.red["700"], label: "Z-Score -4" },
+] as const 

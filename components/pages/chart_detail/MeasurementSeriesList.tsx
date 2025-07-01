@@ -13,13 +13,19 @@ import React from "react";
 import { AnthroSystemCodes } from "@/core/constants";
 import { MeasurementItem } from "./MeasurementItem";
 import { FadeInCardY } from "@/components/custom/motion";
-
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import { Divider } from "@/components/ui/divider";
+import { Text } from "@/components/ui/text";
+import { HumanDateFormatter } from "@/utils";
 export interface MeasurementSeriesListProps {
   series: ChartMeasurementSerie[];
   onChooseAction?: (value: { serieId: string }) => void;
   onDeleteMeasureAction?: (measureId: string) => void;
   selectedSerie?: string;
   neededMeasureCodes?: AnthroSystemCodes[];
+  multipleSeries: { serieId: string }[];
+  onMultipleSerieSelection: (serieId: string) => void;
 }
 
 export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
@@ -30,6 +36,8 @@ export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
       selectedSerie,
       neededMeasureCodes = [],
       onDeleteMeasureAction,
+      multipleSeries,
+      onMultipleSerieSelection,
     }) => {
       return (
         <Accordion className="gap-3 bg-transparent">
@@ -43,27 +51,47 @@ export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
               <AccordionItem
                 value={serie.id}
                 key={serie.id}
-                className={`rounded-xl ${selectedSerie === serie.id ? "border-[1px] border-blue-500/50" : ""}`}
+                className={`rounded-xl ${selectedSerie === serie.id ? "border-[1px] border-blue-500/50" : ""} ${multipleSeries.findIndex(s => s.serieId === serie.id) != -1 ? "border-primary-c_light border-[1px]" : ""} `}
               >
-                <AccordionHeader>
+                <AccordionHeader className="">
                   <AccordionTrigger
                     onLongPress={() =>
                       onChooseAction && onChooseAction({ serieId: serie.id })
+                    }
+                    onPress={() =>
+                      onMultipleSerieSelection &&
+                      onMultipleSerieSelection(serie.id)
                     }
                   >
                     {({ isExpanded }: any) => {
                       return (
                         <>
-                          <AccordionTitleText
-                            className={`font-h4 text-lg font-medium`}
-                          >
-                            {serie.label}
-                          </AccordionTitleText>
-                          {isExpanded ? (
-                            <AccordionIcon as={ChevronUp} />
-                          ) : (
-                            <AccordionIcon as={ChevronDown} />
-                          )}
+                          <VStack className="w-full">
+                            <HStack>
+                              <AccordionTitleText
+                                className={`font-h4 text-lg font-medium`}
+                              >
+                                {serie.label}
+                              </AccordionTitleText>
+                              {isExpanded ? (
+                                <AccordionIcon as={ChevronUp} />
+                              ) : (
+                                <AccordionIcon as={ChevronDown} />
+                              )}
+                            </HStack>
+                            <Divider className="h-[1px] bg-primary-border/5" />
+                            <HStack className="justify-between pt-3">
+                              <Text className="font-body text-2xs font-normal text-primary-border/50">
+                                Mise à jour:{" "}
+                                {HumanDateFormatter.toRelativeDate(
+                                  serie.updatedAt
+                                )}
+                              </Text>
+                              <Text className="font-body text-2xs font-normal text-primary-border/50">
+                                {serie.data.length} mesures
+                              </Text>
+                            </HStack>
+                          </VStack>
                         </>
                       );
                     }}
@@ -75,6 +103,7 @@ export const MeasurementSeriesList: React.FC<MeasurementSeriesListProps> =
                       <MeasurementItem
                         key={item.id}
                         data={item.data}
+                        result={item.results}
                         id={item.id}
                         neededMeasureCodes={neededMeasureCodes}
                         onDeleteMeasureAction={() => {

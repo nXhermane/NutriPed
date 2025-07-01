@@ -2,7 +2,6 @@ import { Center } from "@/components/ui/center";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  IndicatorUIType,
   useGrowthCharts,
   useGrowthIndicators,
 } from "@/src/hooks";
@@ -12,12 +11,14 @@ import { useToast } from "@/src/context";
 import { VStack } from "@/components/ui/vstack";
 import {
   ChartDetailHeader,
+  GrowthReferenceChart,
   PatientMeasurementPanel,
 } from "@/components/pages/chart_detail";
-import { GROWTH_INDICATORS } from "@/src/constants/ui";
+import { GROWTH_INDICATORS, IndicatorUIType } from "@/src/constants/ui";
 import {
   GetGrowthReferenceChartRequest,
   GetIndicatorRequest,
+  GrowthRefChartAndTableCodes,
 } from "@/core/diagnostics";
 import { ScrollView } from "react-native";
 
@@ -95,6 +96,11 @@ const ChartDetail = () => {
           />
         </VStack>
       </ScrollView>
+         <GrowthReferenceChart
+        chartData={growthCharts[0]?.data || []}
+        code={growthCharts[0]?.code as GrowthRefChartAndTableCodes}
+        chartName={growthCharts[0]?.name || ""}
+      />
     </React.Fragment>
   );
 };

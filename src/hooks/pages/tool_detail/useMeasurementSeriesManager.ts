@@ -1,5 +1,5 @@
 import { ChartDetailMenuOtpionData } from "@/src/constants/ui";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePicker } from "../../usePicker";
 import {
   addNewSerie,
@@ -13,6 +13,7 @@ import { GrowthRefChartAndTableCodes } from "@/core/constants";
 import {
   addMeasureToSerie,
   ChartMeasurement,
+  recordSelectedSeries,
 } from "@/src/store/chartToolStore";
 import { useToast } from "@/src/context";
 import { Alert } from "react-native";
@@ -48,7 +49,7 @@ type ActionCodeItemKeyType =
   | (typeof ChartDetailMenuOtpionData)[number]["key"]
   | "deleteMeasure"
   | "deleteSerie"
-  | "addMeasure";
+  | "addMeasure" | "multipleSelection"
 
 export function useMeasurementSeriesManager(
   chartCode: GrowthRefChartAndTableCodes,
@@ -68,13 +69,20 @@ export function useMeasurementSeriesManager(
   const [selectedSerie, setSelectedSerie] = useState<{
     serieId: string;
   } | null>(null);
+  const [selectedSeries, setSelectedSeries] = useState<{ serieId: string }[]>([])
   const {
     diagnosticServices: { growthIndicatorValue },
   } = usePediatricApp();
 
+
+  useEffect(() => {
+    if (chartCode)
+      dispatch(recordSelectedSeries({ chartCode, selectedSeries }))
+  }, [JSON.stringify(selectedSeries)])
+
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
-      if (!chartCode || !sex || !indicatorCode) return () => {};
+      if (!chartCode || !sex || !indicatorCode) return () => { };
       switch (value) {
         case "new": {
           return async () => {
@@ -91,9 +99,33 @@ export function useMeasurementSeriesManager(
         }
         case "choose": {
           return ({ serieId }: { serieId: string }) => {
-            if (selectedSerie === null) setSelectedSerie({ serieId });
-            else setSelectedSerie(null);
+            if (selectedSerie === null) {
+              setSelectedSerie({ serieId });
+              setSelectedSeries([])
+            }
+            else {
+              setSelectedSerie(null);
+              setSelectedSeries([])
+            }
           };
+        }
+        case "multipleSelection": {
+          return ({ serieId }: { serieId: string }) => {
+            if (selectedSerie != null) {
+              setSelectedSeries(prev => {
+                let series = []
+                if (prev.length === 0) {
+                  series.push(selectedSerie)
+                  if (serieId === selectedSerie.serieId) return series
+                }
+                const findedIndex = prev.findIndex(serie => serie.serieId === serieId)
+                if (findedIndex === -1) series = [...series, ...prev, { serieId }]
+                else series = prev.filter(serie => serie.serieId != serieId || serie.serieId === selectedSerie.serieId)
+                return series
+              })
+
+            }
+          }
         }
         case "delete": {
           return () => {
@@ -200,6 +232,7 @@ export function useMeasurementSeriesManager(
                     },
                   })
                 );
+                console.log(result)
                 return true;
               } else {
                 console.log("Error", result);
@@ -218,7 +251,7 @@ export function useMeasurementSeriesManager(
             "This key is not supported on chart tools action.[key]:",
             value
           );
-          return () => {};
+          return () => { };
         }
       }
     },
@@ -231,5 +264,6 @@ export function useMeasurementSeriesManager(
     isSeriesLabelModalOpen,
     selectedSerie,
     measurementSeries,
+    selectedSeries,
   };
 }

@@ -28,12 +28,12 @@ export interface IZScoreCalculationService {
    * @param {Indicator} indicator - The growth indicator being calculated
    * @param {T} growthRef - The reference to use for calculations
    * @param {GrowthStandard} standard - The growth standard being applied
-   * @returns {Promise<Result<number>>} The calculated z-score value
+   * @returns {Promise<Result<{ zScore: number, computedValue: [xAxis: number, yAxis: number] }>>} The calculated z-score value and computedValue [xAxis and yAxis] - 
    */
   calculateZScore<T extends GrowthReferenceChart | GrowthReferenceTable>(
     data: AnthropometricVariableObject,
     indicator: Indicator,
     growthRef: T,
     standard: GrowthStandard
-  ): Promise<Result<number>>;
+  ): Promise<Result<{ zScore: number, computedValue: [xAxis: number, yAxis: number] }>>;
 }

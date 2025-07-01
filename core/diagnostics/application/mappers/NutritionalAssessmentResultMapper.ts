@@ -16,11 +16,10 @@ import {
 
 export class NutritionalAssessmentResultMapper
   implements
-    ApplicationMapper<
-      NutritionalAssessmentResult,
-      NutritionalAssessmentResultDto
-    >
-{
+  ApplicationMapper<
+    NutritionalAssessmentResult,
+    NutritionalAssessmentResultDto
+  > {
   toResponse(
     entity: NutritionalAssessmentResult
   ): NutritionalAssessmentResultDto {
@@ -54,6 +53,7 @@ export class NutritionalAssessmentResultMapper
       value,
       valueRange,
       isValid,
+      computedValue
     } = growthIndicatorValue.unpack();
     return {
       code: code.unpack(),
@@ -64,6 +64,7 @@ export class NutritionalAssessmentResultMapper
       value,
       valueRange,
       isValid,
+      computedValue
     };
   }
   private mapClinicalAnalysisResult(

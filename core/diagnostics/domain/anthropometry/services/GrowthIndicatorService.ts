@@ -53,7 +53,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     private growthReferenceSelectionService: IReferenceSelectionService,
     private zScoreService: IZScoreCalculationService,
     private interpretationService: IZScoreInterpretationService
-  ) {}
+  ) { }
 
   /**
    * @method identifyPossibleIndicator
@@ -234,15 +234,15 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const growthRef =
         indicator.getStandardShape() === StandardShape.CURVE
           ? await this.growthReferenceSelectionService.selectChartForIndicator(
-              data,
-              indicator,
-              standard
-            )
+            data,
+            indicator,
+            standard
+          )
           : await this.growthReferenceSelectionService.selectTableForIndicator(
-              data,
-              indicator,
-              standard
-            );
+            data,
+            indicator,
+            standard
+          );
 
       if (growthRef.isFailure)
         return Result.fail(formatError(growthRef, GrowthIndicatorService.name));
@@ -261,7 +261,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const interpretationResult =
         await this.interpretationService.findInterpretation(
           data,
-          zScoreResult.val,
+          zScoreResult.val.zScore,
           indicator
         );
       if (interpretationResult.isFailure)
@@ -274,10 +274,12 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
         unit: "zscore",
         growthStandard: standard,
         referenceSource: indicator.getStandardShape(),
-        value: zScoreResult.val,
+        value: zScoreResult.val.zScore,
         interpretation: interpretationResult.val.unpack().code.unpack(),
         valueRange: interpretationResult.val.unpack().range,
         isValid: true,
+        computedValue: zScoreResult.val.computedValue
+
       };
       return GrowthIndicatorValue.create(growthIndicatorValueProps);
     } catch (e: unknown) {

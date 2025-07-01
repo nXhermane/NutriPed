@@ -37,6 +37,13 @@ module.exports = {
     "bg-indigo-600",
     "bg-emerald-600",
     "bg-orange-600",
+    "bg-red-700",
+    "bg-orange-500",
+    "bg-yellow-500",
+    "bg-green-500",
+    "bg-orange-400",
+    "bg-red-400",
+    "bg-red-600",
   ],
   theme: {
     spacing: {

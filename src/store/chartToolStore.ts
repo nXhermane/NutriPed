@@ -54,10 +54,15 @@ type DeleteSerieData = {
   chartCode: GrowthRefChartAndTableCodes;
   serieId: string;
 };
+type RecordSelectedSeriesData = {
+  chartCode: GrowthRefChartAndTableCodes
+  selectedSeries: { serieId: string }[]
+}
 export interface IChartToolStore {
   growthMeasurements: Partial<{
     [key in GrowthRefChartAndTableCodes]: {
       series: ChartMeasurementSerie[];
+      selectedSeries: { serieId: string }[]
     };
   }>;
 }
@@ -118,6 +123,7 @@ export const chartToolStore = createSlice({
       if (!state.growthMeasurements[chartCode]) {
         state.growthMeasurements[chartCode] = {
           series: [],
+          selectedSeries: []
         };
       }
       const newSerie: ChartMeasurementSerie = {
@@ -137,10 +143,17 @@ export const chartToolStore = createSlice({
         const serieIndex = state.growthMeasurements[chartCode].series.findIndex(
           serie => serie.id === serieId
         );
-        if (serieIndex != -1)
+        if (serieIndex != -1) {
           state.growthMeasurements[chartCode].series.splice(serieIndex, 1);
+          state.growthMeasurements[chartCode].selectedSeries = []
+        }
       }
     },
+    recordSelectedSeries(state, { payload: { chartCode, selectedSeries } }: PayloadAction<RecordSelectedSeriesData>) {
+      if (state.growthMeasurements[chartCode]) {
+        state.growthMeasurements[chartCode].selectedSeries = selectedSeries
+      }
+    }
   },
 });
 
@@ -149,5 +162,6 @@ export const {
   addNewSerie,
   deleteMeasureFromSerie,
   deleteSerie,
+  recordSelectedSeries
 } = chartToolStore.actions;
 export const chartToolStoreReducer = chartToolStore.reducer;

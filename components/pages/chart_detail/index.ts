@@ -1,5 +1,4 @@
 export * from "./ChartDetailHeader";
-export * from "./GrowthChartInteractivePanel.backup";
 export * from "./GrowthReferenceChart";
 export * from "./MeasurementItem";
 export * from "./MeasurementSeriesHeader";

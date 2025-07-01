@@ -13,4 +13,5 @@ export interface GrowthIndicatorValueDto {
   interpretation: string;
   value: number;
   isValid: boolean;
+  computedValue: [xAxis: number, yAxis: number]
 }

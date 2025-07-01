@@ -5,6 +5,7 @@ import {
   BottomSheetDragIndicator,
   BottomSheetPortal,
   BottomSheetTrigger,
+  BottomSheetScrollView,
 } from "@/components/ui/bottomsheet";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
@@ -16,7 +17,10 @@ import React, { useState } from "react";
 import colors from "tailwindcss/colors";
 import { GrowthInteractiveChart } from "./GrowthChartInteractive";
 import { ChartDataDto, GrowthRefChartAndTableCodes } from "@/core/diagnostics";
-import { useGrowthChartDataGenerator } from "@/src/hooks/pages/tool_detail";
+import {
+  useGrowthChartDataGenerator,
+  useSeriePlottingDataGenerator,
+} from "@/src/hooks/pages/tool_detail";
 import { ChartUiDataType, DisplayMode } from "@/src/constants/ui";
 import { GrowthChartInteractiveOptions } from "./GrowthChartInteractiveOptions";
 
@@ -24,6 +28,7 @@ export interface GrowthReferenceChartProps {
   code: GrowthRefChartAndTableCodes;
   chartData: ChartDataDto[];
   chartName: string;
+  selectedSeries: { serieId: string }[];
 }
 export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
   React.memo(({ chartData, code, chartName }) => {
@@ -32,17 +37,16 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
     const {
       data,
       setDisplayedXAxisRange,
-      setLenHeiInterval,
-      setDayInterval,
       setDisplayMode,
       chartUiData,
       displayMode,
       displayedXAxisRange,
     } = useGrowthChartDataGenerator(chartData, code);
-
+  const {plottedSeriesData}  = useSeriePlottingDataGenerator(code);
+    
     return (
       <BottomSheet>
-        <VStack className="m-4">
+        <VStack className="bg-background-primary p-4">
           <BottomSheetTrigger>
             <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl bg-blue-500">
               <VStack className="gap-0">
@@ -61,7 +65,7 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
         </VStack>
 
         <BottomSheetPortal
-          snapPoints={["25%", "50%", "75%", "90%"]}
+          snapPoints={["75%", "90%"]}
           enableContentPanningGesture={false}
           backdropComponent={BottomSheetBackdrop}
           handleIndicatorStyle={{
@@ -79,26 +83,33 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
           }}
         >
           <BottomSheetContent className="bg-background-secondary">
-            <GrowthInteractiveChart
-              data={data}
-              displayMode={displayMode as DisplayMode}
-              chartUiData={chartUiData as ChartUiDataType}
-              chartName={chartName}
-              zoomActivate={zoomActivate}
-            />
-            <GrowthChartInteractiveOptions
-              chartUiData={chartUiData as ChartUiDataType}
-              displayRange={
-                displayedXAxisRange as
-                  | ChartUiDataType["availableDisplayRange"][number]["range"]
-                  | "all"
-              }
-              setDisplayRange={setDisplayedXAxisRange as any}
-              displayMode={displayMode as DisplayMode}
-              setDisplayMode={setDisplayMode}
-              zoomActivate={zoomActivate}
-              setZoomActivate={setZoomActivate}
-            />
+            <BottomSheetScrollView
+              className={"h-[90vh]"}
+              contentContainerClassName={""}
+              showsVerticalScrollIndicator={false}
+            >
+              <GrowthInteractiveChart
+                data={data}
+                displayMode={displayMode as DisplayMode}
+                chartUiData={chartUiData as ChartUiDataType}
+                chartName={chartName}
+                zoomActivate={zoomActivate}
+                plottedSeriesData={plottedSeriesData}
+              />
+              <GrowthChartInteractiveOptions
+                chartUiData={chartUiData as ChartUiDataType}
+                displayRange={
+                  displayedXAxisRange as
+                    | ChartUiDataType["availableDisplayRange"][number]["range"]
+                    | "all"
+                }
+                setDisplayRange={setDisplayedXAxisRange as any}
+                displayMode={displayMode as DisplayMode}
+                setDisplayMode={setDisplayMode}
+                zoomActivate={zoomActivate}
+                setZoomActivate={setZoomActivate}
+              />
+            </BottomSheetScrollView>
           </BottomSheetContent>
         </BottomSheetPortal>
       </BottomSheet>
