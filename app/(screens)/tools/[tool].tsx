@@ -8,6 +8,7 @@ import React from "react";
 import {
   AppetiteTestTool,
   ChartTools,
+  TableTools,
   ToolDetailScreenHeader,
 } from "@/components/pages/tools";
 
@@ -23,6 +24,8 @@ const Tool = () => {
         return <AppetiteTestTool />;
       case "chart_tools":
         return <ChartTools />;
+      case "tables_tools":
+        return <TableTools />;
       default:
         return (
           <Center className="flex-1">

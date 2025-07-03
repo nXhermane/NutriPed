@@ -8,26 +8,32 @@ import { VStack } from "@/components/ui/vstack";
 import React, { Ref } from "react";
 import colors from "tailwindcss/colors";
 import { MeasurementFormSchema } from "@/src/hooks";
-import { Plus } from "lucide-react-native";
+import { icons, Plus } from "lucide-react-native";
+import { Box } from "@/components/ui/box";
 
 export interface PatientMeasurementFormProps {
   schema?: MeasurementFormSchema;
   onSubmit: () => void;
   formRef: Ref<FormHandler<any>>;
+  submitBtnLabel: string;
+  submitBtnRightIcon: keyof typeof icons;
 }
 export const PatientMeasurementForm: React.FC<PatientMeasurementFormProps> = ({
   formRef,
   onSubmit,
   schema,
+  submitBtnLabel,
+  submitBtnRightIcon,
 }) => {
+  const LucideIcon = icons[submitBtnRightIcon]
   return (
-    <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
+    <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3 min-h-fit">
       <HStack className="items-center justify-between">
         <Heading className="font-h4 text-base font-medium text-typography-primary">
           Données du patient
         </Heading>
       </HStack>
-
+      <Box>
       {!schema ? (
         <Center className="flex-1 bg-background-primary">
           <Spinner size={"large"} color={colors.blue["600"]} />
@@ -40,14 +46,17 @@ export const PatientMeasurementForm: React.FC<PatientMeasurementFormProps> = ({
           className="p-0 px-0"
         />
       )}
-
+</Box>
       <Button
         className="h-v-10 rounded-xl bg-primary-c_light"
         onPress={onSubmit}
       >
-        <ButtonIcon as={Plus} className="text-typography-primary" />
+        <ButtonIcon
+          as={LucideIcon}
+          className="text-typography-primary"
+        />
         <ButtonText className="font-h4 font-medium text-typography-primary">
-          Ajouter mesure
+          {submitBtnLabel}
         </ButtonText>
       </Button>
     </VStack>

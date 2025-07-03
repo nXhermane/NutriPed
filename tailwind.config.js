@@ -44,6 +44,7 @@ module.exports = {
     "bg-orange-400",
     "bg-red-400",
     "bg-red-600",
+    "bg-green-400"
   ],
   theme: {
     spacing: {

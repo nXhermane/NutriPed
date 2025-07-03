@@ -28,6 +28,8 @@ import {
   useChartTransformState,
 } from "victory-native";
 import { Pressable } from "@/components/ui/pressable";
+import { Icon } from "@/components/ui/icon";
+import { InfoIcon } from "lucide-react-native";
 
 export interface GrowthInteractiveChartProps {
   data: ChartDataPoint[];
@@ -48,6 +50,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   const font = useFont(Poppins_500Medium, 8);
   const [pointIsPlottedOnChart, setPointIsPLottedOnChart] =
     useState<boolean>(false);
+  const [showLegend, setShowLegend] = useState<boolean>(false);
   const { colorMode } = useUI();
   const xKey = useMemo(() => {
     if (
@@ -313,17 +316,25 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           }}
         </CartesianChart>
       </VStack>
-      <HStack className="flex-wrap justify-center gap-2">
-        {[
-          ...CHART_LEGEND,
-          ...plottedSeriesData.map(({ label, ui: { lineColor } }) => ({
-            label: label,
-            color: lineColor,
-          })),
-        ].map(({ color, label }) => (
-          <LegendItem key={label} color={color} label={label} />
-        ))}
-      </HStack>
+      <Pressable
+        className="rounded-full bg-primary-c_light w-5 h-5 items-center justify-center mt-2 ml-1 "
+        onPress={() => setShowLegend(prev => !prev)}
+      >
+        <Icon as={InfoIcon} className="h-3 w-3 text-typography-primary" />
+      </Pressable>
+      {showLegend && (
+        <HStack className="flex-wrap justify-center gap-2">
+          {[
+            ...CHART_LEGEND,
+            ...plottedSeriesData.map(({ label, ui: { lineColor } }) => ({
+              label: label,
+              color: lineColor,
+            })),
+          ].map(({ color, label }) => (
+            <LegendItem key={label} color={color} label={label} />
+          ))}
+        </HStack>
+      )}
     </React.Fragment>
   );
 };

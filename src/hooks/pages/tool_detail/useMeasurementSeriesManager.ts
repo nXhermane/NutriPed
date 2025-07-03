@@ -240,7 +240,6 @@ export function useMeasurementSeriesManager(
                     },
                   })
                 );
-                console.log(result);
                 return true;
               } else {
                 console.log("Error", result);

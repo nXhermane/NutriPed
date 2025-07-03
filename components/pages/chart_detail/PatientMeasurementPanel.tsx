@@ -74,6 +74,8 @@ export const PatientMeasurementPanel: React.FC<
           onSubmit={handleSubmitAddForm}
           formRef={dynamicFormRef}
           schema={schema}
+          submitBtnLabel="Ajouter mesure"
+          submitBtnRightIcon="Plus"
         />
       </FadeInCardY>
       <FadeInCardY delayNumber={3}>

@@ -265,7 +265,7 @@ export class PediatricSoftwareDataManager {
                   isUnisex: item.isUnisex,
                   median: item.median ?? 0,
                   normalNeg: item.normalNeg ?? 0,
-                  outComeTargetValueNeg: item.hightSeverNeg ?? 0,
+                  outComeTargetValueNeg: item.outComeTargetValueNeg ?? 0,
                   moderateNeg: item.moderateNeg ?? 0,
                   severeNeg: item.severeNeg ?? 0,
                   hightSeverNeg: item.hightSeverNeg ?? 0,

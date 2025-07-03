@@ -84,7 +84,7 @@ const ChartDetail = () => {
       <ChartDetailHeader name={indicatorUiData?.label || ""} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="bg-background-primary"
+        className="bg-background-primary flex-1"
       >
         <VStack className="flex-1 bg-background-primary pb-20">
           <PatientMeasurementPanel
