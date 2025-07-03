@@ -1,6 +1,5 @@
 import { VStack } from "@/components/ui/vstack";
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { GrowthRefrenceTableTopSession } from "./GrowthReferenceTableTopSession";
 import { GrowthReferenceTableDto, TableDataDto } from "@/core/diagnostics";
 import {
   BottomSheet,
@@ -8,7 +7,6 @@ import {
   BottomSheetContent,
   BottomSheetDragIndicator,
   BottomSheetPortal,
-  BottomSheetScrollView,
   BottomSheetTrigger,
 } from "@/components/ui/bottomsheet";
 import { HStack } from "@/components/ui/hstack";
@@ -162,11 +160,11 @@ export const AminatedTableRow: React.FC<AnimatedTableRowProps> = ({
 }) => {
   return (
     <TableRow
-      className={` ${isHightLight ? "border-y border-primary-c_light bg-background-secondary" : ""}`}
+    //  className={` ${isHightLight ? "border-y border-primary-c_light bg-background-secondary" : ""}`}
     >
       <TableData useRNView={true} className="px-0">
         <Box className="">
-          <Text className="text-center">{data.value}</Text>
+          <Text className="text-center">{data.value.toString().split('.').join(",")}</Text>
         </Box>
       </TableData>
       {tableStruct?.colUiData.map(({ key }) => {
@@ -175,7 +173,7 @@ export const AminatedTableRow: React.FC<AnimatedTableRowProps> = ({
             key={key}
             className={`${key === "median" ? "bg-green-600/30" : key === "normalNeg" ? "bg-green-500/30" : key === "outComeTargetValueNeg" ? "bg-green-300/30" : key === "moderateNeg" ? "bg-yellow-300/30" : key === "severeNeg" ? "bg-red-400/30" : "bg-red-500/30"}`}
           >
-            {data[key]}
+            {data[key].toString().split('.').join(",")}
           </TableData>
         );
       })}

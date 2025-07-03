@@ -1,13 +1,18 @@
 import { FadeInCardY } from "@/components/custom/motion";
-import { GrowthReferenceTableDto, IndicatorDto } from "@/core/diagnostics";
+import {
+  GrowthIndicatorValueDto,
+  GrowthReferenceTableDto,
+  IndicatorDto,
+} from "@/core/diagnostics";
 import {
   useDynamicFormSchemaForIndicator,
   useGrowthIndicatorValueGeneratorForTable,
 } from "@/src/hooks";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { PatientMeasurementForm } from "../chart_detail";
 import { FormHandler } from "@/components/custom";
 import { useToast } from "@/src/context";
+import { TableInterpretationResult } from "./TableInterpretationResult";
 
 export interface PatientMeasurementPanelProps {
   indicatorDto: IndicatorDto;
@@ -22,13 +27,17 @@ export const PatientMeasurementPanel: React.FC<
     indicatorDto?.code
   );
   const dynamicFormRef = useRef<FormHandler<any> | null>(null);
+  const [growthIndicatorValue, setGrowthIndicatorValue] =
+    useState<GrowthIndicatorValueDto | null>(null);
 
   const handleSubmitForm = async () => {
+    setGrowthIndicatorValue(null);
     const data = await dynamicFormRef.current?.submit();
     if (data) {
       const result = await submit(data as any);
       if (result) {
-        console.log(result);
+        setGrowthIndicatorValue(result.growthIndicatorValue);
+        console.log(result.growthIndicatorValue);
       } else {
         toast.show(
           "Error",
@@ -49,6 +58,14 @@ export const PatientMeasurementPanel: React.FC<
           submitBtnRightIcon="Activity"
         />
       </FadeInCardY>
+      {growthIndicatorValue && (
+        <FadeInCardY delayNumber={3}>
+          <TableInterpretationResult
+            indicatorValue={growthIndicatorValue}
+            indicatorName={indicatorDto?.name}
+          />
+        </FadeInCardY>
+      )}
     </React.Fragment>
   );
 };

@@ -157,6 +157,7 @@ export enum Sex {
 }
 
 export enum ZScorePossibleValueLimit {
+  pos4 = "4",
   pos3 = "3",
   pos2 = "2",
   pos1 = "1",
@@ -164,6 +165,7 @@ export enum ZScorePossibleValueLimit {
   neg1 = "(-1)",
   neg2 = "(-2)",
   neg3 = "(-3)",
+  neg4 = "(-4)"
 }
 
 export const ALWAYS_TRUE_CONDITION = "0==0";
