@@ -316,25 +316,24 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           }}
         </CartesianChart>
       </VStack>
-      <Pressable
+      {/* <Pressable
         className="rounded-full bg-primary-c_light w-5 h-5 items-center justify-center mt-2 ml-1 "
         onPress={() => setShowLegend(prev => !prev)}
       >
         <Icon as={InfoIcon} className="h-3 w-3 text-typography-primary" />
-      </Pressable>
-      {showLegend && (
-        <HStack className="flex-wrap justify-center gap-2">
-          {[
-            ...CHART_LEGEND,
-            ...plottedSeriesData.map(({ label, ui: { lineColor } }) => ({
-              label: label,
-              color: lineColor,
-            })),
-          ].map(({ color, label }) => (
-            <LegendItem key={label} color={color} label={label} />
-          ))}
-        </HStack>
-      )}
+      </Pressable> */}
+
+      <HStack className="flex-wrap justify-center gap-2">
+        {[
+          ...CHART_LEGEND,
+          ...plottedSeriesData.map(({ label, ui: { lineColor } }) => ({
+            label: label,
+            color: lineColor,
+          })),
+        ].map(({ color, label }) => (
+          <LegendItem key={label} color={color} label={label} />
+        ))}
+      </HStack>
     </React.Fragment>
   );
 };

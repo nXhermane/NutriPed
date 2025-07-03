@@ -69,46 +69,50 @@ export const PatientMeasurementPanel: React.FC<
 
   return (
     <React.Fragment>
-      <FadeInCardY delayNumber={2}>
-        <PatientMeasurementForm
-          onSubmit={handleSubmitAddForm}
-          formRef={dynamicFormRef}
-          schema={schema}
-          submitBtnLabel="Ajouter mesure"
-          submitBtnRightIcon="Plus"
-        />
-      </FadeInCardY>
-      <FadeInCardY delayNumber={3}>
-        <SeriesLabelInputModal
-          isOpen={isSeriesLabelModalOpen}
-          onClose={closeSeriesLabelModal}
-        />
-      </FadeInCardY>
-      <FadeInCardY delayNumber={4}>
-        <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
-          <MeasurementSeriesHeader
-            onAddSeries={handleAddSeries}
-            onDeleteSeries={handleDeleteSerieAction}
-          />
-          <MeasurementSeriesList
-            series={measurementSeries}
-            selectedSerie={selectedSerie?.serieId}
-            multipleSeries={selectedSeries}
-            onMultipleSerieSelection={(serieId: string) =>
-              handleSeriesAction("multipleSelection")({ serieId } as any)
-            }
-            onChooseAction={value =>
-              handleSeriesAction("choose")({ serieId: value.serieId } as any)
-            }
-            onDeleteMeasureAction={(measureId: string) => {
-              handleSeriesAction("deleteMeasure")(measureId as any);
-            }}
-            neededMeasureCodes={
-              indicatorDto?.neededMeasureCodes as AnthroSystemCodes[]
-            }
-          />
+      <VStack>
+        <VStack>
+          <FadeInCardY delayNumber={2}>
+            <PatientMeasurementForm
+              onSubmit={handleSubmitAddForm}
+              formRef={dynamicFormRef}
+              schema={schema}
+              submitBtnLabel="Ajouter mesure"
+              submitBtnRightIcon="Plus"
+            />
+          </FadeInCardY>
         </VStack>
-      </FadeInCardY>
+        <FadeInCardY delayNumber={3}>
+          <SeriesLabelInputModal
+            isOpen={isSeriesLabelModalOpen}
+            onClose={closeSeriesLabelModal}
+          />
+        </FadeInCardY>
+        <FadeInCardY delayNumber={4}>
+          <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
+            <MeasurementSeriesHeader
+              onAddSeries={handleAddSeries}
+              onDeleteSeries={handleDeleteSerieAction}
+            />
+            <MeasurementSeriesList
+              series={measurementSeries}
+              selectedSerie={selectedSerie?.serieId}
+              multipleSeries={selectedSeries}
+              onMultipleSerieSelection={(serieId: string) =>
+                handleSeriesAction("multipleSelection")({ serieId } as any)
+              }
+              onChooseAction={value =>
+                handleSeriesAction("choose")({ serieId: value.serieId } as any)
+              }
+              onDeleteMeasureAction={(measureId: string) => {
+                handleSeriesAction("deleteMeasure")(measureId as any);
+              }}
+              neededMeasureCodes={
+                indicatorDto?.neededMeasureCodes as AnthroSystemCodes[]
+              }
+            />
+          </VStack>
+        </FadeInCardY>
+      </VStack>
     </React.Fragment>
   );
 };
