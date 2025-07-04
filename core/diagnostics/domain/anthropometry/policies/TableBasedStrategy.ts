@@ -26,7 +26,9 @@ export class TableBasedStrategy extends AbstractZScoreComputingStrategy {
     );
     if (!tableRow) return NaN;
     if (!tableRow.isUnisex && tableRow.sex != data.sex) {
-      console.warn(`Sexe incompatible : la ligne attend '${tableRow.sex}' mais le patient est de sexe '${data.sex}'`);
+      console.warn(
+        `Sexe incompatible : la ligne attend '${tableRow.sex}' mais le patient est de sexe '${data.sex}'`
+      );
 
       return NaN;
     }

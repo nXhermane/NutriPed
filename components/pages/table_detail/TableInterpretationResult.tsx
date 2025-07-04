@@ -10,14 +10,19 @@ import {
 import { Divider } from "@/components/ui/divider";
 import { Badge, BadgeText } from "@/components/ui/badge";
 
-function returnPercentileValueMachedZScoreValue (zScore: number) {
- switch(zScore) {
-  case 0: return "100%"
-  case (-1.5) : return "85%"
-  case (-2): return "< 80%"
-  case (-3):return "< 70%"
-  default: return "none"
- }
+function returnPercentileValueMachedZScoreValue(zScore: number) {
+  switch (zScore) {
+    case 0:
+      return "100%";
+    case -1.5:
+      return "85%";
+    case -2:
+      return "< 80%";
+    case -3:
+      return "< 70%";
+    default:
+      return "none";
+  }
 }
 export interface TableInterpretationResultProps {
   indicatorValue: GrowthIndicatorValueDto;
@@ -38,7 +43,7 @@ export const TableInterpretationResult: React.FC<
   }, [indicatorValue]);
   return (
     <VStack className="m-4 rounded-xl bg-background-secondary px-2 py-2">
-      <HStack className="w-full h-v-8 items-center">
+      <HStack className="h-v-8 w-full items-center">
         <Text className="font-h4 text-sm font-medium text-typography-primary">
           {indicatorName}
         </Text>

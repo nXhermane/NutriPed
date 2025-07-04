@@ -1,20 +1,5 @@
-Pour quoi j'ai cette erreur uniquement lorque je lance mon application pour la premiere fois et je fais appele a la base de donnée ? 
-Mais lorsque je referme et je reload cette erreur ne se present plus. 
-et aussi cette erreur ne se present pas lorsque j'ajoute un console log apres la condition dans le PediatricAppContext (juste apres cette ligne   if (!dbOpened)
-    return (
-      <Center className="flex-1">
-        <Text>Init</Text>
-      </Center>
-    );)
+Pour le tools calcule la première fonctionnalite serai la suggestion de lait ? avec les donnee ou pourra calculer la quantité que l'enfant doit consommer rapporter a son poids et les autres informations complementaire 
 
-Dons je n'arrive vraiment pas a comprendre comment eviter totalement cette erreur. 
- build. Learn more: https://docs.expo.dev/guides/linking/
- LOG  db initialisé avec success.
- LOG  null
- LOG  db initialisé avec success.
- LOG  null
- LOG  jj
- LOG  jj
- INFO  [Domain Event Created]: Patient ==> PatientCreatedEvent
- ERROR  [Error: Call to function 'NativeDatabase.prepareSync' has been rejected.
-→ Caused by: java.lang.NullPointerException: java.lang.NullPointerException]
+la deuxième serait la fonctionnalite de calcule du dosage du medicament en fonction du poids. On affiche d'abord la liste des médicaments puis on pourra cliquer sur chaque médicamenet et donnee le poids et on pourra obtenir la dose a consommer par l'enfant
+
+Pour le tools diagnostic on pourra proposer la liste de diagnostic a faire mais je ne sais pas si cela pourrai marcher ou bien il serai judicieux de bien penser l'archi 

@@ -1,5 +1,8 @@
 import { ChartDetailHeader } from "@/components/pages/chart_detail";
-import { GrwothReferenceTable, PatientMeasurementPanel } from "@/components/pages/table_detail";
+import {
+  GrwothReferenceTable,
+  PatientMeasurementPanel,
+} from "@/components/pages/table_detail";
 import { Center } from "@/components/ui/center";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -77,10 +80,7 @@ export default function TableDetailScreen() {
         showsVerticalScrollIndicator={false}
         className="flex-1 bg-background-primary"
       >
-        <PatientMeasurementPanel
-          indicatorDto={indicators[0]}
-       
-        />
+        <PatientMeasurementPanel indicatorDto={indicators[0]} />
       </ScrollView>
       <GrwothReferenceTable growthTableData={growthTables[0]} />
     </React.Fragment>

@@ -4,4 +4,4 @@ export * from "./ToolList";
 export * from "./AppetitieTestTool";
 export * from "./ToolDetailScreenHeader";
 export * from "./ChartTools";
-export * from "./TableTools"
+export * from "./TableTools";

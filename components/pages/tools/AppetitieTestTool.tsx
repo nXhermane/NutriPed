@@ -138,7 +138,9 @@ const AppetiteTestSession: React.FC<AppetiteTestSessionProps> = ({
     >
       <HStack>
         {title && (
-          <Text className={"font-h4 text-base text-typography-primary"}>
+          <Text
+            className={"font-h4 text-base font-medium text-typography-primary"}
+          >
             {title}
           </Text>
         )}
@@ -192,7 +194,7 @@ export const AppetiteTestProductSession: React.FC<AppetiteTestProductProps> = ({
                 className={"bg-primary-c_light text-primary-c_light"}
               />
             </RadioIndicator>
-            <RadioLabel className="font-h4 text-sm text-typography-primary">
+            <RadioLabel className="font-body text-sm font-normal text-typography-primary_light">
               {item.uiName}
             </RadioLabel>
           </Radio>
@@ -204,7 +206,9 @@ export const AppetiteTestProductSession: React.FC<AppetiteTestProductProps> = ({
             "mt-4 rounded-2xl border-l-4 border-primary-c_light bg-background-secondary px-3 py-3"
           }
         >
-          <Text className={"mb-3 font-h4 text-base text-typography-primary"}>
+          <Text
+            className={"mb-3 font-body text-base text-typography-primary_light"}
+          >
             {currentProduct.amountUiText}
           </Text>
           {currentProduct.type === APPETITE_TEST_PRODUCT_TYPE.IN_POT && (

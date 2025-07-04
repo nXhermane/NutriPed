@@ -1,1 +1,1 @@
-export * from "./TableTools"
+export * from "./TableTools";

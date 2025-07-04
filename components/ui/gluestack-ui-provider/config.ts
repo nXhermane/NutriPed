@@ -324,8 +324,8 @@ export const config = {
     '--color-indicator-info': '161 199 245',
     '--color-indicator-error': '232 70 69',
     /** Custom dark colors */
-    '--color-background-primary': '18, 18, 18',
-    '--color-background-secondary': '30, 30, 30',
+    '--color-background-primary': '18 18 18',
+    '--color-background-secondary': '30 30 30',
     '--color-c-primary': '129, 199, 132',
     '--color-c-primary-light': '76, 175, 80',
     '--color-c-secondary': '100, 181, 246',

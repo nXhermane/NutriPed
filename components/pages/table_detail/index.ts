@@ -1,3 +1,3 @@
-export * from "./PatientMeasurementPanel"
+export * from "./PatientMeasurementPanel";
 
-export * from "./GrowthReferenceTable"
+export * from "./GrowthReferenceTable";

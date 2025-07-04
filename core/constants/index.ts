@@ -165,7 +165,7 @@ export enum ZScorePossibleValueLimit {
   neg1 = "(-1)",
   neg2 = "(-2)",
   neg3 = "(-3)",
-  neg4 = "(-4)"
+  neg4 = "(-4)",
 }
 
 export const ALWAYS_TRUE_CONDITION = "0==0";
@@ -174,7 +174,7 @@ export const APPETITE_TEST_CODES = {
   CODE: "appetite_test_result",
   POSITIVE: "Positive",
   NEGATIVE: "Negative",
-};
+} as const;
 export enum APPETITE_TEST_PRODUCT_TYPE {
   IN_SACHET = "in_sachet",
   IN_POT = "in_pot",
@@ -278,7 +278,7 @@ export enum ClinicalDataType {
 }
 export const COMPLICATION_CODES = {
   COMPLICATIONS_NUMBER: "complications_number",
-};
+} as const;
 export const ORIENTATION_REF_CODES = {
   ORIENTED_TO_HOME: "ORIENTATION_HOME",
   ORIENTED_TO_CRENAM: "ORIENTATION_CRENAM",

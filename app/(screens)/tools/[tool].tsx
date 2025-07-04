@@ -11,6 +11,8 @@ import {
   TableTools,
   ToolDetailScreenHeader,
 } from "@/components/pages/tools";
+import { ProtocoleTool } from "@/components/pages/tools/ProtocoleTool";
+import { CalculTools } from "@/components/pages/tools/CalculationTools";
 
 const Tool = () => {
   const { tool: toolCode } = useLocalSearchParams<{ tool: string }>();
@@ -26,6 +28,10 @@ const Tool = () => {
         return <ChartTools />;
       case "tables_tools":
         return <TableTools />;
+      case "protocols_tools":
+        return <ProtocoleTool />;
+      case "calculs_tools":
+        return <CalculTools />;
       default:
         return (
           <Center className="flex-1">

@@ -402,7 +402,7 @@ export const FormField = <T,>({
       case "select":
         return (
           <Select
-            selectedValue={(value as string) || field.default}
+            selectedValue={(value as string) || field.default }
             onValueChange={arg => handleChange(arg as T)}
           >
             <SelectTrigger className="h-v-10 justify-between rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c">
@@ -412,6 +412,7 @@ export const FormField = <T,>({
                   "text-base font-body text-typography-primary_light"
                 }
                 placeholder={field.placeholder}
+                value={field.selectOptions.find(item => item.value === value || (!value && item.value === field.default))?.label}
               />
               <SelectIcon
                 as={ChevronDownIcon}

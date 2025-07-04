@@ -164,7 +164,9 @@ export const AminatedTableRow: React.FC<AnimatedTableRowProps> = ({
     >
       <TableData useRNView={true} className="px-0">
         <Box className="">
-          <Text className="text-center">{data.value.toString().split('.').join(",")}</Text>
+          <Text className="text-center">
+            {data.value.toString().split(".").join(",")}
+          </Text>
         </Box>
       </TableData>
       {tableStruct?.colUiData.map(({ key }) => {
@@ -173,7 +175,7 @@ export const AminatedTableRow: React.FC<AnimatedTableRowProps> = ({
             key={key}
             className={`${key === "median" ? "bg-green-600/30" : key === "normalNeg" ? "bg-green-500/30" : key === "outComeTargetValueNeg" ? "bg-green-300/30" : key === "moderateNeg" ? "bg-yellow-300/30" : key === "severeNeg" ? "bg-red-400/30" : "bg-red-500/30"}`}
           >
-            {data[key].toString().split('.').join(",")}
+            {data[key].toString().split(".").join(",")}
           </TableData>
         );
       })}

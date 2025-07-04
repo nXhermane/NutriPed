@@ -10,13 +10,13 @@ import {
 } from "../../../../appetiteTest";
 import { Milk, MilkSuggestionResult } from "../../../models";
 
-export interface MilkSuggestionInput {
+export type MilkSuggestionInput = {
   [AnthroSystemCodes.AGE_IN_MONTH]: number;
   [AnthroSystemCodes.WEIGHT]: number;
   [APPETITE_TEST_CODES.CODE]: APPETITE_TEST_RESULT_CODES;
   [COMPLICATION_CODES.COMPLICATIONS_NUMBER]: number;
   [CLINICAL_SIGNS.EDEMA]: number;
-}
+};
 
 export interface ITherapeuticMilkAdvisorService {
   suggest(

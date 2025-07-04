@@ -36,7 +36,7 @@ export const DiagnosticDataFormSchema: FormSchema = [
   },
   {
     section: "Clinique",
-    fields: [EdemaField],
+    fields: [Object.assign(EdemaField)],
   },
 ];
 

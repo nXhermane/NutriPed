@@ -2,7 +2,7 @@ export const APPETITE_TEST_CODES = {
   CODE: "appetite_test_result",
   POSITIVE: "Positive",
   NEGATIVE: "Negative",
-};
+} as const;
 export enum APPETITE_TEST_RESULT_CODES {
   GOOD = "Positive",
   BAD = "Negative",

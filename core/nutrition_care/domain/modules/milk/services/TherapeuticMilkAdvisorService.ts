@@ -15,9 +15,8 @@ import {
 import { ITherapeuticMilkAdvisorService, MilkSuggestionInput } from "../ports";
 
 export class TherapeuticMilkAdvisorService
-  implements ITherapeuticMilkAdvisorService
-{
-  constructor() {}
+  implements ITherapeuticMilkAdvisorService {
+  constructor() { }
   suggest(
     input: MilkSuggestionInput,
     milks: Milk[]
@@ -45,7 +44,7 @@ export class TherapeuticMilkAdvisorService
         const condition = milk.getCondition();
         const conditionContext = condition.variables.reduce(
           (context, variable) => {
-            context[variable] = input[variable];
+            context[variable] = input[variable as never];
             return context;
           },
           {} as Record<string, unknown>
@@ -70,7 +69,7 @@ export class TherapeuticMilkAdvisorService
       const volumeFormula = milk.getDoseFormula();
       const volumeContext = volumeFormula.variables.reduce(
         (context, variable) => {
-          context[variable] = input[variable];
+          context[variable] = input[variable as never];
           return context;
         },
         {} as Record<string, unknown>
@@ -87,7 +86,7 @@ export class TherapeuticMilkAdvisorService
       const suggestedDailyVolume =
         Number(feedingFrequencies[0]) *
         recommendedRange.recommendedQuantityPerMilkRecommendationPerDay[
-          feedingFrequencies[0] as RecommendedMilkPerDay
+        feedingFrequencies[0] as RecommendedMilkPerDay
         ]!;
 
       return MilkSuggestionResult.create({
