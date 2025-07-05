@@ -174,7 +174,7 @@ CREATE TABLE `medicines` (
 	`name` text(255) NOT NULL,
 	`code` text(255) NOT NULL,
 	`category` text NOT NULL,
-	`administration_routes` text NOT NULL,
+	`administration_routes` text,
 	`base_dosage` text NOT NULL,
 	`dosage_ranges` text NOT NULL,
 	`warnings` text,

@@ -5,6 +5,7 @@ import {
   TREATMENT_HISTORY_VARIABLES_CODES,
 } from "@core/constants";
 import {
+  AdministrationRoute,
   Amount,
   APPETITE_TEST_RESULT_CODES,
   CarePhaseDto,
@@ -68,18 +69,8 @@ export const medicines = sqliteTable("medicines", {
       "alternatives",
     ],
   }).notNull(),
-  administrationRoutes: text("administration_routes", {
-    enum: [
-      "oral",
-      "iv",
-      "im",
-      "iv/im",
-      "rectal",
-      "topical",
-      "oral/iv",
-      "oral/im",
-    ],
-  }).notNull(),
+  administrationRoutes: text("administration_routes", { mode: "json" }).$type<
+    AdministrationRoute[]>(),
   baseDosage: text("base_dosage", { mode: "json" })
     .$type<{
       label: string;
@@ -209,10 +200,10 @@ export const patient_current_states = sqliteTable("patient_current_states", {
   otherData: text("other_data", { mode: "json" })
     .$type<{
       [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
-        | "ORIENTATION_HOME"
-        | "ORIENTATION_CRENAM"
-        | "ORIENTATION_CNT"
-        | "ORIENTATION_CNA";
+      | "ORIENTATION_HOME"
+      | "ORIENTATION_CRENAM"
+      | "ORIENTATION_CNT"
+      | "ORIENTATION_CNA";
     }>()
     .notNull(),
 });

@@ -7,7 +7,6 @@ export function useMedicines(req?: GetMedicineRequest) {
     const [medicineList, setMedicineList] = useState<MedicineDto[]>([])
     const [error, setError] = useState<string | null>(null)
     const [onLoading, setOnLoading] = useState<boolean>(false)
-
     useEffect(() => {
         const getMedicines = async () => {
             setError(null)

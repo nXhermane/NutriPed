@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "61e21494-8247-4c7a-abf1-537af4e21cba",
+  "id": "84976e12-6ac1-495b-b747-ee4a97da3a00",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "anthropometric_measures": {
@@ -1071,7 +1071,7 @@
           "name": "administration_routes",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "base_dosage": {

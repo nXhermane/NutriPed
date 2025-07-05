@@ -18,6 +18,7 @@ export const MedicineDosagePanel = () => {
         <MedicineDetailBottomSheet
           isOpen={selectedMedicine != null}
           medicineDto={selectedMedicine}
+          onClose={() => setSelectedMedicine(null)}
         />
       )}
     </React.Fragment>

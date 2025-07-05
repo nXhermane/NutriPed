@@ -73,16 +73,15 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
         placement="bottom right"
         className="h-12 w-12 bg-primary-c_light"
         onPress={async () => {
-          // const contentUri = await FileSystem.getContentUriAsync(uri);
-          await Sharing.shareAsync(uri);
-          // await IntentLauncher.startActivityAsync(
-          //   "android.intent.action.VIEW",
-          //   {
-          //     data: contentUri,
-          //     type: "application/pdf",
-          //     flags: 1, // FLAG_ACTIVITY_NEW_TASK
-          //   }
-          // );
+          const contentUri = await FileSystem.getContentUriAsync(uri);
+          await IntentLauncher.startActivityAsync(
+            "android.intent.action.VIEW",
+            {
+              data: contentUri,
+              type: "application/pdf",
+              flags: 1,
+            }
+          );
         }}
       >
         <FabIcon
@@ -109,6 +108,7 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
             setReadProgress((page / numberOfPages) * 100);
           }}
           onError={error => {
+            console.error(error);
             toast.show(
               "Error",
               "Erreur technique",
