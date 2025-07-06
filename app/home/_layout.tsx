@@ -71,7 +71,7 @@ const CustomTabButton: React.FC<CustomTabButtonProps> = ({
       <VStack className={"items-center"}>
         <CustomTabButtonIcon name={icon} isFocused={isFocused} />
         <Text
-          className={`font-light text-2xs font-normal text-typography-primary_light ${isFocused ? "text-primary-c" : ""} `}
+          className={`font-light text-2xs font-normal text-typography-primary_light ${isFocused ? "text-primary-c_light" : ""} `}
         >
           {name}
         </Text>
@@ -91,19 +91,7 @@ const CustomTabButtonIcon: React.FC<CustomTabButtonIconProps> = ({
   return (
     <Icon
       as={LucideIcon}
-      className={`h-v-5 w-5 text-typography-primary_light ${isFocused ? "text-primary-c" : ""}`}
+      className={`h-v-5 w-5 text-typography-primary_light ${isFocused ? "text-primary-c_light" : ""}`}
     />
   );
 };
-// export function HomeHeader() {
-//   const { user } = useGoogleAuth();
-//   return (
-//      <View style={{
-//         //  height: 140,
-//         width: '100%',
-
-//      }} className={"w-full bg-background-secondary h-v-24"}>
-
-//      </View>
-//   );
-// }

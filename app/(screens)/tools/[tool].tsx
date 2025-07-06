@@ -1,5 +1,4 @@
 import { Box } from "@/components/ui/box";
-import { Text } from "@/components/ui/text";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { TOOLS_DATA } from "@/src/constants/ui";
 import { Center } from "@/components/ui/center";
@@ -7,12 +6,13 @@ import { SessionEmpty } from "@/components/pages/home/shared/SessionEmpty";
 import React from "react";
 import {
   AppetiteTestTool,
+  CalculTools,
   ChartTools,
+  DiagnosticTools,
+  ProtocoleTool,
   TableTools,
   ToolDetailScreenHeader,
 } from "@/components/pages/tools";
-import { ProtocoleTool } from "@/components/pages/tools/ProtocoleTool";
-import { CalculTools } from "@/components/pages/tools/CalculationTools";
 
 const Tool = () => {
   const { tool: toolCode } = useLocalSearchParams<{ tool: string }>();
@@ -32,6 +32,8 @@ const Tool = () => {
         return <ProtocoleTool />;
       case "calculs_tools":
         return <CalculTools />;
+      case "diagnostic_tools": 
+      return <DiagnosticTools />
       default:
         return (
           <Center className="flex-1">

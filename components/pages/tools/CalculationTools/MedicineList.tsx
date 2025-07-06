@@ -1,4 +1,8 @@
-import { CardPressEffect, FadeInCardY } from "@/components/custom/motion";
+import {
+  CardPressEffect,
+  FadeInCardX,
+  FadeInCardY,
+} from "@/components/custom/motion";
 import { Center } from "@/components/ui/center";
 import { HStack } from "@/components/ui/hstack";
 import { Spinner } from "@/components/ui/spinner";
@@ -42,16 +46,18 @@ export const MedicineList: React.FC<MedicineListProps> = ({
     <React.Fragment>
       <VStack className="p-4">
         {data.map((item, index) => (
-          <FadeInCardY key={item.code} delayNumber={index}>
-            <MedicineItem
-              name={item.name}
-              code={item.code}
-              updatedAt={item.updatedAt}
-              category={item.category}
-              onPress={() => {
-                onMedicineChoosed && onMedicineChoosed(item);
-              }}
-            />
+          <FadeInCardY key={item.code} delayNumber={index * 0.75}>
+            <FadeInCardX delayNumber={index * 1.5}>
+              <MedicineItem
+                name={item.name}
+                code={item.code}
+                updatedAt={item.updatedAt}
+                category={item.category}
+                onPress={() => {
+                  onMedicineChoosed && onMedicineChoosed(item);
+                }}
+              />
+            </FadeInCardX>
           </FadeInCardY>
         ))}
       </VStack>

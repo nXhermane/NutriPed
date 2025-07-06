@@ -29,8 +29,8 @@ export const SuggestMilkResult: React.FC<SuggestMilkResultProps> = ({
     if (error) {
       toast.show(
         "Error",
-        "Erreur de chargement",
-        "Une erreur technique s'est produite, veillez reessayer plutard."
+        "Échec de la récupération du lait",
+        "Impossible d'afficher les informations du lait sélectionné. C'est une erreur technique qui s'est produite. Veuillez réessayer plus tard."
       );
       console.error(error);
     }

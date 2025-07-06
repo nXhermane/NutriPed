@@ -9,7 +9,6 @@ import { useRef, useState } from "react";
 import { FormHandler } from "@/components/custom";
 import { usePediatricApp } from "@/adapter";
 import {
-  MilkSuggestionResult,
   MilkSuggestionResultDto,
   SuggestMilkRequest,
 } from "@/core/nutrition_care";
@@ -36,14 +35,14 @@ export const SuggestMilkPanel = () => {
         if (JSON.parse(result.content) === "Milk is not found.") {
           toast.show(
             "Info",
-            "Correspondance non trouvé",
-            "Le lait adapté a ce profil de patient n'est pas disponible dans la base de donnée."
+            "Correspondance non trouvée",
+            "Aucun lait adapté à ce profil de patient n'est disponible dans la base de données."
           );
         } else {
           toast.show(
             "Error",
             "Erreur technique",
-            `Une erreur s'est producte lors du calcule. \n {Erreur}: ${JSON.parse(result.content)}`
+            `Une erreur est survenue lors du calcul.\nDétail : ${JSON.parse(result.content)}`
           );
         }
       }

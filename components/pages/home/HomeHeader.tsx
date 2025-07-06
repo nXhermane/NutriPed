@@ -20,7 +20,7 @@ export function HomeHeader() {
   return (
     <HStack
       className={
-        "p-safe elevation-md h-v-20 w-full justify-between bg-background-secondary pb-2"
+        "p-safe elevation-sm h-v-20 w-full justify-between bg-background-secondary pb-2"
       }
     >
       <HStack className={"items-center gap-3 pl-4"}>

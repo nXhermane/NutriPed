@@ -17,7 +17,7 @@ export const TabHeader: React.FC<TabHeaderProps> = ({
   return (
     <HStack
       className={
-        "p-safe elevation-md h-v-20 w-full justify-between bg-background-secondary"
+        "p-safe elevation-sm h-v-20 w-full justify-between bg-background-secondary"
       }
     >
       <VStack className={"ml-4"}>

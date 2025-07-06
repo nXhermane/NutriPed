@@ -1,19 +1,13 @@
-import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import {
-  GetMedicineRequest,
   MedicineDosageResultDto,
   MedicineDto,
 } from "@/core/nutrition_care";
-import { useToast } from "@/src/context";
-import { useMedicines } from "@/src/hooks";
 import { BlurView } from "expo-blur";
-import React, { useEffect, useMemo } from "react";
-import colors from "tailwindcss/colors";
+import React, {  } from "react";
 import { Divider } from "@/components/ui/divider";
 import { Icon } from "@/components/ui/icon";
 import { Lightbulb, TriangleAlert, Zap } from "lucide-react-native";

@@ -1,5 +1,4 @@
 import { TopTabNaviagtor } from "@/components/custom";
-import { Text } from "@/components/ui/text";
 import React from "react";
 import { SuggestMilkPanel } from "./SuggestMilkPanel";
 import { MedicineDosagePanel } from "./MedicineDosagePanel";

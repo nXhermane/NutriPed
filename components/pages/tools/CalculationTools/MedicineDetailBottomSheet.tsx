@@ -9,13 +9,6 @@ import {
   ActionsheetDragIndicatorWrapper,
   ActionsheetScrollView,
 } from "@/components/ui/actionsheet";
-import {
-  BottomSheet,
-  BottomSheetBackdrop,
-  BottomSheetContent,
-  BottomSheetDragIndicator,
-  BottomSheetPortal,
-} from "@/components/ui/bottomsheet";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
@@ -30,7 +23,6 @@ import {
 import { useToast, useUI } from "@/src/context";
 import { Calculator } from "lucide-react-native";
 import React, { useRef, useState } from "react";
-import { Dimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import colors from "tailwindcss/colors";
 import { MedicineDosageResult } from "./MedicineDosageResult";
