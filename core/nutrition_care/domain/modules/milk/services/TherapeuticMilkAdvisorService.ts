@@ -15,8 +15,9 @@ import {
 import { ITherapeuticMilkAdvisorService, MilkSuggestionInput } from "../ports";
 
 export class TherapeuticMilkAdvisorService
-  implements ITherapeuticMilkAdvisorService {
-  constructor() { }
+  implements ITherapeuticMilkAdvisorService
+{
+  constructor() {}
   suggest(
     input: MilkSuggestionInput,
     milks: Milk[]
@@ -86,7 +87,7 @@ export class TherapeuticMilkAdvisorService
       const suggestedDailyVolume =
         Number(feedingFrequencies[0]) *
         recommendedRange.recommendedQuantityPerMilkRecommendationPerDay[
-        feedingFrequencies[0] as RecommendedMilkPerDay
+          feedingFrequencies[0] as RecommendedMilkPerDay
         ]!;
 
       return MilkSuggestionResult.create({

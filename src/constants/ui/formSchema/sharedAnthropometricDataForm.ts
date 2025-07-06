@@ -127,7 +127,7 @@ export const BirthDateField: IField = {
   placeholder: "2025-03-20",
   isRequire: true,
   default: new Date().toISOString().split("T")[0],
-} as const
+} as const;
 export const RegisterDateField: IField = {
   label: "Date d'enregistrement",
   type: "date",
@@ -138,7 +138,7 @@ export const RegisterDateField: IField = {
   isRequire: true,
   default: new Date().toISOString().split("T")[0],
   helperText: "C'est la date d'enregistrement des mesures anthropometriques.",
-} as const
+} as const;
 export const EdemaField = {
   type: "select" as const,
   default: "no",
@@ -148,7 +148,7 @@ export const EdemaField = {
     { label: "Present", value: "yes" },
     { label: "Absent", value: "no" },
   ],
-} as const
+} as const;
 
 // =============================================
 // SCHEMAS ZOD INDIVIDUELS

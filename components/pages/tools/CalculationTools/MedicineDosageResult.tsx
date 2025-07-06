@@ -25,7 +25,7 @@ export interface MedicineDosageResultProps {
   name: string;
   warnings: MedicineDto["warnings"];
   interactions: MedicineDto["interactions"];
-  notes: MedicineDto['notes']
+  notes: MedicineDto["notes"];
 }
 
 export const MedicineDosageResult: React.FC<MedicineDosageResultProps> = ({
@@ -33,7 +33,7 @@ export const MedicineDosageResult: React.FC<MedicineDosageResultProps> = ({
   name,
   warnings,
   interactions,
-  notes
+  notes,
 }) => {
   console.log(result);
   return (
@@ -50,7 +50,7 @@ export const MedicineDosageResult: React.FC<MedicineDosageResultProps> = ({
             Médicament:
           </Text>
           <Text
-            className="w-[60%] font-h4 text-sm font-medium text-typography-primary text-right"
+            className="w-[60%] text-right font-h4 text-sm font-medium text-typography-primary"
             numberOfLines={1}
           >
             {name}

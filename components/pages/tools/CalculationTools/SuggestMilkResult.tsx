@@ -43,9 +43,9 @@ export const SuggestMilkResult: React.FC<SuggestMilkResultProps> = ({
     );
   return (
     <React.Fragment>
-      <VStack className="m-4 mb-14 rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-2 py-3 overflow-hidden">
-        <BlurView intensity={10} className="h-[50vh] w-2 absolute -left-1" />
-        <HStack className="mb-3 w-full ">
+      <VStack className="m-4 mb-14 overflow-hidden rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-2 py-3">
+        <BlurView intensity={10} className="absolute -left-1 h-[50vh] w-2" />
+        <HStack className="mb-3 w-full">
           <Heading className="font-h4 text-lg font-medium text-primary-c_light">
             Résultat de la suggestion
           </Heading>

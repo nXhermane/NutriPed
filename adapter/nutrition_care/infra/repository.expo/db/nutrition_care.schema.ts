@@ -70,7 +70,8 @@ export const medicines = sqliteTable("medicines", {
     ],
   }).notNull(),
   administrationRoutes: text("administration_routes", { mode: "json" }).$type<
-    AdministrationRoute[]>(),
+    AdministrationRoute[]
+  >(),
   baseDosage: text("base_dosage", { mode: "json" })
     .$type<{
       label: string;
@@ -200,10 +201,10 @@ export const patient_current_states = sqliteTable("patient_current_states", {
   otherData: text("other_data", { mode: "json" })
     .$type<{
       [TREATMENT_HISTORY_VARIABLES_CODES.PREVIOUS_TREATMENT]:
-      | "ORIENTATION_HOME"
-      | "ORIENTATION_CRENAM"
-      | "ORIENTATION_CNT"
-      | "ORIENTATION_CNA";
+        | "ORIENTATION_HOME"
+        | "ORIENTATION_CRENAM"
+        | "ORIENTATION_CNT"
+        | "ORIENTATION_CNA";
     }>()
     .notNull(),
 });

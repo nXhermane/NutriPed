@@ -76,7 +76,7 @@ export const MedicineItem: React.FC<MedicineItemProps> = ({
   const updateAtUIText = HumanDateFormatter.toRelativeDate(updatedAt);
   return (
     <CardPressEffect onPress={onPress}>
-      <VStack className="mb-4 w-full rounded-xl bg-background-secondary px-3 py-4 border-[1px] border-primary-border/5">
+      <VStack className="mb-4 w-full rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-3 py-4">
         <HStack className="mb-2 items-center justify-between">
           <Text
             className="max-w-[75%] font-h4 text-lg font-medium text-typography-primary"
