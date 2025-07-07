@@ -2,12 +2,10 @@ import {
   GrowthIndicatorRange,
   GrowthRefChartAndTableCodes,
 } from "@/core/constants";
-import { AnthropometricVariableObject } from "@/core/diagnostics";
 import { getSerieColor } from "@/src/constants/ui";
 import { useUI } from "@/src/context";
-import { ChartMeasurementSerie } from "@/src/store";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { SelectedChartMeasurementSerie } from "./useMeasurementSeriesManager";
 
 export type PlottedPointData = {
   xAxis: number;
@@ -25,30 +23,17 @@ export type PlottedSerieData = {
 };
 
 export function useSeriePlottingDataGenerator(
-  chartCode: GrowthRefChartAndTableCodes
+  selectedSeries?: SelectedChartMeasurementSerie[]
 ) {
-  const selectedMeasurementSeries =
-    useSelector<any, { serieId: string }[]>(
-      state =>
-        state.chartToolStoreReducer.growthMeasurements[chartCode]
-          ?.selectedSeries
-    ) || [];
-  const allMeasurementSeries =
-    useSelector<any, ChartMeasurementSerie[]>(
-      state => state.chartToolStoreReducer.growthMeasurements[chartCode]?.series
-    ) || [];
   const { colorMode } = useUI();
   const plottedSeriesData = useMemo<PlottedSerieData[]>(() => {
     if (
-      selectedMeasurementSeries ||
-      (selectedMeasurementSeries as any).length === 0
+      selectedSeries
     ) {
       const plottedSeries: PlottedSerieData[] = [];
-      for (let index = 0; index < selectedMeasurementSeries.length; index++) {
-        const { serieId } = selectedMeasurementSeries[index];
-        const currentSerie = allMeasurementSeries.find(
-          serie => serie.id === serieId
-        );
+      for (let index = 0; index < selectedSeries.length; index++) {
+        const currentSerie = selectedSeries[index];
+
         if (currentSerie) {
           const plottedSerieData: PlottedSerieData = {
             data: currentSerie.data.map(rawMeasurement => ({
@@ -70,6 +55,6 @@ export function useSeriePlottingDataGenerator(
       return plottedSeries;
     }
     return [];
-  }, [selectedMeasurementSeries, allMeasurementSeries, colorMode]);
+  }, [selectedSeries, colorMode]);
   return { plottedSeriesData };
 }

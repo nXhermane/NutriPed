@@ -5,4 +5,5 @@ export * from "./MeasurementSeriesHeader";
 export * from "./MeasurementSeriesList";
 export * from "./PatientMeasurementForm";
 export * from "./PatientMeasurementPanel";
+export * from "./GrowthReferecenceChartBottomSheet"
 export * from "./SeriesLabelInputModal";

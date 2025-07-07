@@ -1,14 +1,18 @@
 import { Center } from "@/components/ui/center";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { useGrowthCharts, useGrowthIndicators } from "@/src/hooks";
+import {
+  SelectedChartMeasurementSerie,
+  useGrowthCharts,
+  useGrowthIndicators,
+} from "@/src/hooks";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
 import { useToast } from "@/src/context";
 import { VStack } from "@/components/ui/vstack";
 import {
   ChartDetailHeader,
-  GrowthReferenceChart,
+  GrowthReferenceChartBottomSheet,
   PatientMeasurementPanel,
 } from "@/components/pages/chart_detail";
 import { GROWTH_INDICATORS, IndicatorUIType } from "@/src/constants/ui";
@@ -46,6 +50,8 @@ const ChartDetail = () => {
     onLoading: indicatorLoading,
   } = useGrowthIndicators(indicatorRequest);
   const toast = useToast();
+  const [selectedChartMeasurementSeries, setSelectedChartMeasurementSeries] =
+    useState<SelectedChartMeasurementSerie[]>([]);
   useEffect(() => {
     if (error || indicatorError) {
       toast.show(
@@ -90,13 +96,17 @@ const ChartDetail = () => {
           <PatientMeasurementPanel
             growthChartDto={growthCharts[0]}
             indicatorDto={indicators[0]}
+            onSelectedSeriesChange={selectedSeries =>
+              setSelectedChartMeasurementSeries(selectedSeries)
+            }
           />
         </VStack>
       </ScrollView>
-      <GrowthReferenceChart
+      <GrowthReferenceChartBottomSheet
         chartData={growthCharts[0]?.data || []}
         code={growthCharts[0]?.code as GrowthRefChartAndTableCodes}
         chartName={growthCharts[0]?.name || ""}
+        selectedSeries={selectedChartMeasurementSeries}
       />
     </React.Fragment>
   );

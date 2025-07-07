@@ -9,11 +9,11 @@ import {
 import {
   useMeasurementSeriesManager,
   useDynamicFormSchemaForIndicator,
+  SelectedChartMeasurementSerie,
 } from "@/src/hooks";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { MeasurementSeriesList } from "./MeasurementSeriesList";
 import { SeriesLabelInputModal } from "./SeriesLabelInputModal";
-import { GrowthReferenceChart } from "./GrowthReferenceChart";
 import { PatientMeasurementForm } from "./PatientMeasurementForm";
 import { MeasurementSeriesHeader } from "./MeasurementSeriesHeader";
 import { FadeInCardY } from "@/components/custom/motion";
@@ -25,11 +25,14 @@ import { Sex } from "@/core/shared";
 export interface PatientMeasurementPanelProps {
   growthChartDto: GrowthReferenceChartDto;
   indicatorDto: IndicatorDto;
+  onSelectedSeriesChange?: (
+    selectedSeries: SelectedChartMeasurementSerie[]
+  ) => void;
 }
 
 export const PatientMeasurementPanel: React.FC<
   PatientMeasurementPanelProps
-> = ({ growthChartDto, indicatorDto }) => {
+> = ({ growthChartDto, indicatorDto, onSelectedSeriesChange }) => {
   const schema = useDynamicFormSchemaForIndicator(indicatorDto);
 
   const {
@@ -60,6 +63,10 @@ export const PatientMeasurementPanel: React.FC<
     if (selectedSerie === null) await handleSeriesAction("delete")({} as any);
     else handleSeriesAction("deleteSerie")(selectedSerie.serieId as any);
   };
+  useEffect(() => {
+    onSelectedSeriesChange && onSelectedSeriesChange(selectedSeries);
+  }, [selectedSeries]);
+
   if (!growthChartDto)
     return (
       <Center className="flex-1 bg-background-primary">
@@ -96,7 +103,9 @@ export const PatientMeasurementPanel: React.FC<
             <MeasurementSeriesList
               series={measurementSeries}
               selectedSerie={selectedSerie?.serieId}
-              multipleSeries={selectedSeries}
+              multipleSeries={selectedSeries.map(serie => ({
+                serieId: serie.id,
+              }))}
               onMultipleSerieSelection={(serieId: string) =>
                 handleSeriesAction("multipleSelection")({ serieId } as any)
               }

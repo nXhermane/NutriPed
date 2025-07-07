@@ -191,7 +191,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
             },
           }}
         >
-          {({ canvasSize, chartBounds, points, xScale, yScale }) => {
+          {({ points, xScale, yScale }) => {
             return (
               <React.Fragment>
                 <MemoLine
