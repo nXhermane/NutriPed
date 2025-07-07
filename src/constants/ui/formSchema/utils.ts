@@ -192,7 +192,6 @@ export function validateWithSchemaPipeline(
   for (const schema of schemas) {
     const parsed = schema.safeParse(input);
     if (!parsed.success) {
-      console.log(parsed,input)
       allIssues.push(...parsed.error.issues);
     } else {
       Object.assign(finalData, parsed.data);

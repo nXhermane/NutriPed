@@ -10,7 +10,6 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 export type PlottedPointData = {
-  variables: AnthropometricVariableObject;
   xAxis: number;
   yAxis: number;
   zScore: number;
@@ -53,7 +52,6 @@ export function useSeriePlottingDataGenerator(
         if (currentSerie) {
           const plottedSerieData: PlottedSerieData = {
             data: currentSerie.data.map(rawMeasurement => ({
-              variables: rawMeasurement.results.variables,
               xAxis:
                 rawMeasurement.results.growthIndicatorValue.computedValue[0],
               yAxis:

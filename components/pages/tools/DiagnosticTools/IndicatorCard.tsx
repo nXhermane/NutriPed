@@ -13,7 +13,7 @@ import {
 } from "@/core/diagnostics";
 import { IndicatorInterpretionBadgeUiData } from "@/src/constants/ui";
 import { useGrowthIndicators } from "@/src/hooks";
-import { BadgeCheck, MapPin, Target } from "lucide-react-native";
+import { BadgeCheck, Lightbulb, MapPin, Target } from "lucide-react-native";
 import React, { useMemo } from "react";
 import colors from "tailwindcss/colors";
 
@@ -58,11 +58,9 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
                 className={`text-right font-body text-xs font-normal ${IndicatorInterpretionBadgeUiData[growthIndicatorValue.valueRange].textColor}`}
               >
                 {
-                  data[0]?.interpretations.find(
-                    interpretation =>
-                      interpretation.code ===
-                      growthIndicatorValue.interpretation
-                  )?.name
+                  IndicatorInterpretionBadgeUiData[
+                    growthIndicatorValue.valueRange
+                  ].label
                 }
               </BadgeText>
             </Badge>
@@ -96,6 +94,24 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
                   </HStack>
                 </Pressable>
               )}
+            </HStack>
+            <HStack className="items-center gap-1">
+              <Icon as={Lightbulb} className={"h-4 w-4 text-primary-c_light"} />
+              <Text className="font-light text-xs text-typography-primary_light">
+                {"Interprétation:"}
+              </Text>
+              <Text
+                className="font-light text-xs text-typography-primary_light"
+                numberOfLines={1}
+              >
+                {
+                  data[0]?.interpretations.find(
+                    interpretation =>
+                      interpretation.code ===
+                      growthIndicatorValue.interpretation
+                  )?.name
+                }
+              </Text>
             </HStack>
             <HStack className="items-center gap-1">
               <Icon

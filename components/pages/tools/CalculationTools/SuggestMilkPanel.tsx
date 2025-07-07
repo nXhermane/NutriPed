@@ -14,6 +14,7 @@ import {
 } from "@/core/nutrition_care";
 import { SuggestMilkResult } from "./SuggestMilkResult";
 import { useToast } from "@/src/context";
+import { ScrollView } from "@/components/ui/scroll-view";
 
 export const SuggestMilkPanel = () => {
   const {
@@ -49,25 +50,27 @@ export const SuggestMilkPanel = () => {
     }
   };
   return (
-    <VStack className="h-full w-full bg-background-primary">
-      <FadeInCardY delayNumber={2}>
-        <SuggestMilkForm
-          formRef={formRef}
-          onSubmit={onSubmit}
-          submitBtnLabel="Caluler la suggestion de lait"
-          submitBtnRightIcon="Calculator"
-          schema={{
-            fields: SuggestMilkFormSchema[0].fields,
-            zodSchema: SuggestMilkFormZodSchema,
-          }}
-        />
-      </FadeInCardY>
-
-      {suggestionResult && (
-        <FadeInCardY delayNumber={3}>
-          <SuggestMilkResult result={suggestionResult} />
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <VStack className="h-full w-full bg-background-primary">
+        <FadeInCardY delayNumber={2}>
+          <SuggestMilkForm
+            formRef={formRef}
+            onSubmit={onSubmit}
+            submitBtnLabel="Caluler la suggestion de lait"
+            submitBtnRightIcon="Calculator"
+            schema={{
+              fields: SuggestMilkFormSchema[0].fields,
+              zodSchema: SuggestMilkFormZodSchema,
+            }}
+          />
         </FadeInCardY>
-      )}
-    </VStack>
+
+        {suggestionResult && (
+          <FadeInCardY delayNumber={3}>
+            <SuggestMilkResult result={suggestionResult} />
+          </FadeInCardY>
+        )}
+      </VStack>
+    </ScrollView>
   );
 };

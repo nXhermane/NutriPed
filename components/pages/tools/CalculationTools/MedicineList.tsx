@@ -16,6 +16,7 @@ import colors from "tailwindcss/colors";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Divider } from "@/components/ui/divider";
 import { HumanDateFormatter } from "@/utils";
+import { FlatList } from "react-native";
 
 export interface MedicineListProps {
   onMedicineChoosed?: (medicine: MedicineDto) => void;
@@ -45,21 +46,31 @@ export const MedicineList: React.FC<MedicineListProps> = ({
   return (
     <React.Fragment>
       <VStack className="p-4">
-        {data.map((item, index) => (
-          <FadeInCardY key={item.code} delayNumber={index * 0.75}>
-            <FadeInCardX delayNumber={index * 1.5}>
-              <MedicineItem
-                name={item.name}
-                code={item.code}
-                updatedAt={item.updatedAt}
-                category={item.category}
-                onPress={() => {
-                  onMedicineChoosed && onMedicineChoosed(item);
-                }}
-              />
-            </FadeInCardX>
-          </FadeInCardY>
-        ))}
+        <FlatList
+          contentContainerClassName="pb-8"
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
+          removeClippedSubviews
+          data={data}
+          keyExtractor={item => item.code}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item, index }) => (
+            <FadeInCardY key={item.code} delayNumber={index * 0.75}>
+              <FadeInCardX delayNumber={index * 1.5}>
+                <MedicineItem
+                  name={item.name}
+                  code={item.code}
+                  updatedAt={item.updatedAt}
+                  category={item.category}
+                  onPress={() => {
+                    onMedicineChoosed && onMedicineChoosed(item);
+                  }}
+                />
+              </FadeInCardX>
+            </FadeInCardY>
+          )}
+        />
       </VStack>
     </React.Fragment>
   );

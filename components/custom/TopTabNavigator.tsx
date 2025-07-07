@@ -44,9 +44,8 @@ export const TopTabNaviagtor: React.FC<TopTabNaviagtorProps> = React.memo(
             pagingEnabled
           />
         </HStack>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {tabs[currentTabIndex].component}
-        </ScrollView>
+
+        {tabs[currentTabIndex].component}
       </VStack>
     );
   }

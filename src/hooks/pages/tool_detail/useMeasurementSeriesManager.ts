@@ -77,10 +77,10 @@ export function useMeasurementSeriesManager(
     diagnosticServices: { growthIndicatorValue },
   } = usePediatricApp();
 
-  useEffect(() => {
-    if (chartCode)
-      dispatch(recordSelectedSeries({ chartCode, selectedSeries }));
-  }, [JSON.stringify(selectedSeries)]);
+  // useEffect(() => {
+  //   if (chartCode)
+  //     dispatch(recordSelectedSeries({ chartCode, selectedSeries }));
+  // }, [JSON.stringify(selectedSeries)]);
 
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {

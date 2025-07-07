@@ -3,7 +3,7 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { DAY_IN_YEARS } from "@/core/diagnostics";
+import { DAY_IN_MONTHS, DAY_IN_YEARS } from "@/core/diagnostics";
 import {
   AxisLabel,
   CHART_LEGEND,
@@ -366,14 +366,14 @@ export const PlottedSeriesDataRenderComponent: React.FC<PlottedSeriesDataRenderC
     return (
       <React.Fragment>
         {data.map(({ data: serieData, ui: { lineColor }, id }) => {
-          const plottedPoints = serieData.map(({ variables, yAxis }) => {
+          const plottedPoints = serieData.map(({ xAxis, yAxis }) => {
             const xValue = (
               xKey === "lenhei"
-                ? variables["lenhei"]
+                ? xAxis
                 : xKey === "ageInMonth"
-                  ? variables["age_in_month"]
+                  ? xAxis / DAY_IN_MONTHS
                   : xKey === "ageInYear"
-                    ? (variables["age_in_day"] as number) / DAY_IN_YEARS
+                    ? xAxis / DAY_IN_YEARS
                     : 0
             ) as number;
             return {
