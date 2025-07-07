@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { GrowthInteractiveChart } from "./GrowthChartInteractive";
 import { ChartDataDto, GrowthRefChartAndTableCodes } from "@/core/diagnostics";
 import {
+  PlottedPointData,
   SelectedChartMeasurementSerie,
   useGrowthChartDataGenerator,
   useSeriePlottingDataGenerator,
@@ -15,9 +16,10 @@ export interface GrowthReferenceChartProps {
   chartData: ChartDataDto[];
   chartName: string;
   selectedSeries?: SelectedChartMeasurementSerie[];
+  singlePlotteData?: PlottedPointData
 }
 export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
-  React.memo(({ chartData, code, chartName, selectedSeries }) => {
+  React.memo(({ chartData, code, chartName, selectedSeries,singlePlotteData }) => {
     const [zoomActivate, setZoomActivate] = useState<boolean>(false);
     const {
       data,
@@ -38,6 +40,7 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
           chartName={chartName}
           zoomActivate={zoomActivate}
           plottedSeriesData={plottedSeriesData}
+          singlePlotteData={singlePlotteData}
         />
         <GrowthChartInteractiveOptions
           chartUiData={chartUiData as ChartUiDataType}

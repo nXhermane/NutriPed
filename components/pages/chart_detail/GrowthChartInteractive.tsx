@@ -12,7 +12,11 @@ import {
   LengthHeightMode,
 } from "@/src/constants/ui";
 import { useUI } from "@/src/context";
-import { ChartDataPoint, PlottedSerieData } from "@/src/hooks";
+import {
+  ChartDataPoint,
+  PlottedPointData,
+  PlottedSerieData,
+} from "@/src/hooks";
 import { Poppins_500Medium } from "@expo-google-fonts/poppins";
 import { Circle, useFont } from "@shopify/react-native-skia";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -38,6 +42,7 @@ export interface GrowthInteractiveChartProps {
   chartName: string;
   zoomActivate: boolean;
   plottedSeriesData: PlottedSerieData[];
+  singlePlotteData?: PlottedPointData;
 }
 export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   data,
@@ -46,6 +51,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   chartName,
   zoomActivate,
   plottedSeriesData,
+  singlePlotteData,
 }) => {
   const font = useFont(Poppins_500Medium, 8);
   const [pointIsPlottedOnChart, setPointIsPLottedOnChart] =
@@ -263,6 +269,14 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
                   xScale={xScale}
                   yScale={yScale}
                 />
+                {singlePlotteData && (
+                  <SinglePlotteRenderComponent
+                    data={singlePlotteData}
+                    xKey={xKey}
+                    xScale={xScale}
+                    yScale={yScale}
+                  />
+                )}
                 {isActive && (
                   <React.Fragment>
                     <React.Fragment>
@@ -422,3 +436,39 @@ export const LegendItem: React.FC<LegendItemProps> = ({ color, label }) => {
     </Pressable>
   );
 };
+
+export interface SinglePlotteRenderComponentProps {
+  data: PlottedPointData;
+  xScale: (x: number) => number;
+  yScale: (y: number) => number;
+  xKey: "lenhei" | "ageInMonth" | "ageInYear";
+}
+export const SinglePlotteRenderComponent: React.FC<SinglePlotteRenderComponentProps> =
+  React.memo(({ data, xKey, xScale, yScale }) => {
+    const { colorMode } = useUI();
+    const xValue = (
+      xKey === "lenhei"
+        ? data.xAxis
+        : xKey === "ageInMonth"
+          ? data.xAxis / DAY_IN_MONTHS
+          : xKey === "ageInYear"
+            ? data.xAxis / DAY_IN_YEARS
+            : 0
+    ) as number;
+    const plottedPoint = {
+      x: xScale(xValue) as number,
+      y: yScale(data.yAxis) as number,
+      yValue: data.yAxis as number,
+      xValue,
+    };
+
+    return (
+      <React.Fragment>
+        <MemoScatter
+          points={[plottedPoint]}
+          color={colorMode === "dark" ? colors.white : colors.black}
+          radius={4}
+        />
+      </React.Fragment>
+    );
+  });
