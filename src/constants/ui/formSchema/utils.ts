@@ -24,6 +24,7 @@ import {
   WeightZodSchema,
 } from "./sharedAnthropometricDataForm";
 import { IField } from "@/components/custom/FormField";
+import { parse } from "@babel/core";
 
 // Fonction utilitaire pour rendre un schema optionnel obligatoire
 export const makeRequired = <T extends z.ZodTypeAny>(
@@ -190,8 +191,8 @@ export function validateWithSchemaPipeline(
 
   for (const schema of schemas) {
     const parsed = schema.safeParse(input);
-
     if (!parsed.success) {
+      console.log(parsed,input)
       allIssues.push(...parsed.error.issues);
     } else {
       Object.assign(finalData, parsed.data);

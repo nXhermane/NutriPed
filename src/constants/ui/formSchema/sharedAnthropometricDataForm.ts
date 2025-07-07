@@ -9,6 +9,7 @@ import {
   MAX_LENHEI,
   MIN_LENHEI,
 } from "@/core/constants";
+import { Sex } from "@/core/shared";
 import z from "zod";
 
 export const WeightField = {
@@ -139,8 +140,26 @@ export const RegisterDateField: IField = {
   default: new Date().toISOString().split("T")[0],
   helperText: "C'est la date d'enregistrement des mesures anthropometriques.",
 } as const;
-export const EdemaField = {
-  type: "select" as const,
+
+export const SexField: IField = {
+  label: "Sexe",
+  type: "radio",
+  radioOptions: [
+    {
+      label: "Garçons",
+      value: Sex.MALE,
+    },
+    {
+      label: "Fille",
+      value: Sex.FEMALE,
+    },
+  ],
+  name: AnthroSystemCodes.SEX,
+  isRequire: true,
+  default: Sex.MALE,
+} as const;
+export const EdemaField: IField = {
+  type: "select",
   default: "no",
   label: "Œdème bilateral",
   name: CLINICAL_SIGNS.EDEMA,

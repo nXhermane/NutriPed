@@ -1,1 +1,1 @@
-export * from "./DiagnoticTools"
+export * from "./DiagnoticTools";

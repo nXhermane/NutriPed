@@ -2,12 +2,9 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import {
-  MedicineDosageResultDto,
-  MedicineDto,
-} from "@/core/nutrition_care";
+import { MedicineDosageResultDto, MedicineDto } from "@/core/nutrition_care";
 import { BlurView } from "expo-blur";
-import React, {  } from "react";
+import React from "react";
 import { Divider } from "@/components/ui/divider";
 import { Icon } from "@/components/ui/icon";
 import { Lightbulb, TriangleAlert, Zap } from "lucide-react-native";
@@ -29,7 +26,6 @@ export const MedicineDosageResult: React.FC<MedicineDosageResultProps> = ({
   interactions,
   notes,
 }) => {
-  console.log(result);
   return (
     <React.Fragment>
       <VStack className="m-4 overflow-hidden rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-2 py-3">

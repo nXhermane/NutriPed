@@ -18,6 +18,7 @@ export interface PatientMeasurementFormProps {
   formRef: Ref<FormHandler<any>>;
   submitBtnLabel: string;
   submitBtnRightIcon: keyof typeof icons;
+  title?: string;
 }
 export const PatientMeasurementForm: React.FC<PatientMeasurementFormProps> = ({
   formRef,
@@ -25,13 +26,14 @@ export const PatientMeasurementForm: React.FC<PatientMeasurementFormProps> = ({
   schema,
   submitBtnLabel,
   submitBtnRightIcon,
+  title = "Données du patient",
 }) => {
   const LucideIcon = icons[submitBtnRightIcon];
   return (
     <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
       <HStack className="items-center justify-between">
         <Heading className="font-h4 text-base font-medium text-typography-primary">
-          Données du patient
+          {title}
         </Heading>
       </HStack>
       <KeyboardAwareScrollView>

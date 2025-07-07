@@ -5,6 +5,6 @@ export * from "./AppetitieTestTool";
 export * from "./ToolDetailScreenHeader";
 export * from "./ChartTools";
 export * from "./TableTools";
-export * from "./DiagnosticTools"
-export * from "./ProtocoleTool"
-export * from "./CalculationTools"
+export * from "./DiagnosticTools";
+export * from "./ProtocoleTool";
+export * from "./CalculationTools";

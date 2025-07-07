@@ -28,7 +28,6 @@ export interface GrowthReferenceChartProps {
   code: GrowthRefChartAndTableCodes;
   chartData: ChartDataDto[];
   chartName: string;
-  
 }
 export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
   React.memo(({ chartData, code, chartName }) => {

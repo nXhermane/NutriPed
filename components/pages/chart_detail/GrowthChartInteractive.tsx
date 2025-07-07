@@ -145,11 +145,14 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
     },
   });
   const actionsRef = useRef<CartesianActionsHandle<typeof state>>(null);
-  const tapGesture = Gesture.Tap().onStart(e => {
-    state.isActive.value = true;
-    actionsRef.current?.handleTouch(state, e.x, e.y);
-  });
-  const composed = Gesture.Race(tapGesture);
+  // FIXME: fixer le warning => Reanimated] Tried to modify key `current` of an object which has been already passed to a worklet.
+  // https://docs.swmansion.com/react-native-reanimated/docs/guides/troubleshooting#tried-to-modify-key-of-an-object-which-has-been-converted-to-a-shareable
+  // for more details.
+  // const tapGesture = Gesture.Tap().onStart(e => {
+  //   state.isActive.value = true;
+  //   actionsRef.current?.handleTouch(state, e.x, e.y);
+  // });
+  // const composed = Gesture.Race(tapGesture);
 
   useEffect(() => {
     setPointIsPLottedOnChart(plottedSeriesData.length != 0);
@@ -175,7 +178,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
             bottom: 20,
           }}
           actionsRef={actionsRef as any}
-          customGestures={composed}
+          // customGestures={composed}
           transformState={zoomActivate ? transformState.state : undefined}
           chartPressState={state as any}
           chartPressConfig={{

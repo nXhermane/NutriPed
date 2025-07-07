@@ -28,7 +28,7 @@ export class AgeBasedStrategy extends AbstractZScoreComputingStrategy {
     if (isTable) return NaN;
     const { measurements, growthReference: growthReferenceChart } = data;
     const { x, y } = measurements;
-    const age_in_day = x;
+    const age_in_day = Math.floor(x);
     // Verification de age
     if (age_in_day <= MAX_AGE_TO_USE_AGE_IN_DAY) {
       const standard = this.findGrowthStandardWhenAgeIsInDay(
@@ -90,7 +90,7 @@ export class AgeBasedStrategy extends AbstractZScoreComputingStrategy {
         median:
           diffAge > 0
             ? standardLow.median +
-              diffAge * (standardUpp.median - standardLow.median)
+            diffAge * (standardUpp.median - standardLow.median)
             : standardLow.median,
         l:
           diffAge > 0

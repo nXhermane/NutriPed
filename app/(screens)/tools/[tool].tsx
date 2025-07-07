@@ -32,8 +32,8 @@ const Tool = () => {
         return <ProtocoleTool />;
       case "calculs_tools":
         return <CalculTools />;
-      case "diagnostic_tools": 
-      return <DiagnosticTools />
+      case "diagnostic_tools":
+        return <DiagnosticTools />;
       default:
         return (
           <Center className="flex-1">

@@ -242,7 +242,13 @@ export function useMeasurementSeriesManager(
                 );
                 return true;
               } else {
-                console.log("Error", result);
+                console.error(result.content);
+                toast.show(
+                  "Error",
+                  "Une erreur s'est produite",
+                  "Pour des erreurs ici veillez verifier si les données entrées sont valides pour la courbe choisie.Par exemple si vous choisissez la courbe 3 mois a 5 ans et que le temps entre la date de naissance et la date d'enregistrement n'est pas supperieur ou égale à 3 mois et inférieur a 5 ans cela peut générer d'erreur."
+                );
+                return null;
               }
             }
             toast.show(

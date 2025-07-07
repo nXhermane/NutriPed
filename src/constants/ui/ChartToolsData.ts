@@ -387,39 +387,48 @@ export const GROWTH_INDICATORS = {
 export const IndicatorInterpretionBadgeUiData = {
   [GrowthIndicatorRange.BELOW_M4]: {
     color: "bg-red-700",
-    label: "Sévère",
+    textColor: "text-white", // Contraste élevé sur rouge foncé
+    label: "Sévère",
   },
   [GrowthIndicatorRange.BELOW_M3]: {
     color: "bg-red-500",
-    label: "Modérée",
+    textColor: "text-white", // Contraste élevé sur rouge moyen
+    label: "Modérée",
   },
   [GrowthIndicatorRange.BELOW_M2]: {
     color: "bg-orange-500",
+    textColor: "text-white", // Contraste élevé sur orange foncé
     label: "Risque",
   },
   [GrowthIndicatorRange.BELOW_M1]: {
     color: "bg-yellow-500",
+    textColor: "text-black", // Contraste élevé sur jaune foncé
     label: "Normal",
   },
   [GrowthIndicatorRange.MEDIAN]: {
     color: "bg-green-500",
+    textColor: "text-white", // Contraste élevé sur vert moyen
     label: "Normal",
   },
   [GrowthIndicatorRange.ABOVE_1]: {
     color: "bg-yellow-400",
+    textColor: "text-black", // Contraste élevé sur jaune clair
     label: "Normal",
   },
   [GrowthIndicatorRange.ABOVE_2]: {
     color: "bg-orange-400",
+    textColor: "text-black", // Contraste élevé sur orange clair
     label: "Risque",
   },
   [GrowthIndicatorRange.ABOVE_3]: {
     color: "bg-red-400",
-    label: "Modérée",
+    textColor: "text-white", // Contraste élevé sur rouge clair
+    label: "Modérée",
   },
   [GrowthIndicatorRange.ABOVE_4]: {
     color: "bg-red-600",
-    label: "Sévère",
+    textColor: "text-white", // Contraste élevé sur rouge moyen-foncé
+    label: "Sévère",
   },
 } as const;
 

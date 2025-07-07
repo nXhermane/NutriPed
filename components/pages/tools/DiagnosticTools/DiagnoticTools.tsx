@@ -1,6 +1,7 @@
 import { TopTabNaviagtor } from "@/components/custom";
 import { Text } from "@/components/ui/text";
 import React from "react";
+import { AnthropometricCalculatorPanel } from "./AnthropometricCalculatorPanel";
 
 export const DiagnosticTools = ({}) => {
   return (
@@ -9,7 +10,7 @@ export const DiagnosticTools = ({}) => {
         tabs={[
           {
             name: "Calcul anthropométrique",
-            component: <Text>Welcome to anthropometric calcul screen</Text>,
+            component: <AnthropometricCalculatorPanel />,
           },
           {
             name: "Évaluation clinique",

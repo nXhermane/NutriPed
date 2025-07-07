@@ -1,3 +1,4 @@
+import { FadeInCardY } from "@/components/custom/motion";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
@@ -70,39 +71,56 @@ export const AppetiteTestTool: React.FC<AppetiteTestToolProps> = () => {
       );
   }, [error]);
   return (
-    <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-      <VStack className="gap-4 px-4 pb-8">
-        <AppetiteTestToolHeader />
-        <AppetiteTestProductSession
-          value={appetiteTestData.givenProductType}
-          onChange={(type: APPETITE_TEST_PRODUCT_TYPE) => {
-            setAppetiteTestData(prev => ({ ...prev, givenProductType: type }));
-          }}
-          onAmountChange={amount => {
-            setAppetiteTestData(prev => ({ ...prev, takenAmount: amount }));
-          }}
-          amount={appetiteTestData.takenAmount}
-        />
-        <AppetiteTextAnthroDataSession
-          value={{ weight: appetiteTestData.patientWeight }}
-          onChange={data =>
-            setAppetiteTestData(prev => ({
-              ...prev,
-              patientWeight: data.weight,
-            }))
-          }
-        />
-        <Button
-          className={`h-v-10 rounded-xl bg-primary-c_light ${error && "bg-red-500"}`}
-          onPress={async () => submit(appetiteTestData)}
-        >
-          {onSubmit && <ButtonSpinner />}
-          {error && <Icon as={X} />}
-          <ButtonText className={"font-h4 font-medium text-typography-primary"}>
-            Caluler le résultat du test
-          </ButtonText>
-        </Button>
-        {result && <AppetiteTestResultComponent result={result} />}
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      className="flex-1 bg-background-primary"
+    >
+      <VStack className="mt-5 gap-4">
+        <FadeInCardY delayNumber={2}>
+          <VStack className="mx-4 gap-4 rounded-xl bg-background-secondary px-3 py-4">
+            <AppetiteTestProductSession
+              value={appetiteTestData.givenProductType}
+              onChange={(type: APPETITE_TEST_PRODUCT_TYPE) => {
+                setAppetiteTestData(prev => ({
+                  ...prev,
+                  givenProductType: type,
+                }));
+              }}
+              onAmountChange={amount => {
+                setAppetiteTestData(prev => ({ ...prev, takenAmount: amount }));
+              }}
+              amount={appetiteTestData.takenAmount}
+            />
+            <AppetiteTextAnthroDataSession
+              value={{ weight: appetiteTestData.patientWeight }}
+              onChange={data =>
+                setAppetiteTestData(prev => ({
+                  ...prev,
+                  patientWeight: data.weight,
+                }))
+              }
+            />
+            <Button
+              className={`h-v-10 rounded-xl bg-primary-c_light ${error && "bg-red-500"}`}
+              onPress={async () => submit(appetiteTestData)}
+            >
+              {onSubmit && <ButtonSpinner />}
+              {error && <Icon as={X} />}
+              <ButtonText
+                className={"font-h4 font-medium text-typography-primary"}
+              >
+                Caluler le résultat du test
+              </ButtonText>
+            </Button>
+          </VStack>
+        </FadeInCardY>
+        {result && (
+          <FadeInCardY delayNumber={3}>
+            <VStack className="mx-4 mb-8 mt-0">
+              <AppetiteTestResultComponent result={result} />
+            </VStack>
+          </FadeInCardY>
+        )}
       </VStack>
     </ScrollView>
   );

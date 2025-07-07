@@ -443,6 +443,7 @@ export class NutritionalAssessmentService
             unit: defaultGrowthIndicatorValue.unit,
             value: defaultGrowthIndicatorValue.value,
             valueRange: defaultGrowthIndicatorValue.valueRange,
+            computedValue: defaultGrowthIndicatorValue.computedValue,
             isValid: false, // This changes
           });
           growthIndicatorValues[growthIndicatorValueIndex] =

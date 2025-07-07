@@ -27,6 +27,9 @@ import {
   BiologicalInterpretationService,
   BiologicalValidationService,
   BiologicalVariableGeneratorService,
+  CalculateAllAvailableGrowthIndicatorValueRequest,
+  CalculateAllAvailableGrowthIndicatorValueResponse,
+  CalculateAllAvailableGrowthIndicatorValueUseCase,
   CalculateGrowthIndicatorValueRequest,
   CalculateGrowthIndicatorValueResponse,
   CalculateGrowthIndicatorValueUseCase,
@@ -517,6 +520,10 @@ export class DiagnosticContext {
     CalculateGrowthIndicatorValueRequest,
     CalculateGrowthIndicatorValueResponse
   >;
+  private readonly calculateAllAvailableGrowthIndicatorValueUC: UseCase<
+    CalculateAllAvailableGrowthIndicatorValueRequest,
+    CalculateAllAvailableGrowthIndicatorValueResponse
+  >;
   private readonly createClinicalRefUC: UseCase<
     CreateClinicalSignReferenceRequest,
     CreateClinicalSignReferenceResponse
@@ -975,6 +982,12 @@ export class DiagnosticContext {
         this.anthroVariableGenerator,
         this.growthIndicatorService
       );
+    this.calculateAllAvailableGrowthIndicatorValueUC =
+      new CalculateAllAvailableGrowthIndicatorValueUseCase(
+        this.anthroValidationService,
+        this.anthroVariableGenerator,
+        this.growthIndicatorService
+      );
     // Clinical Reference Use Cases
     this.createClinicalRefUC = new CreateClinicalSignReferenceUseCase(
       this.idGenerator,
@@ -1138,6 +1151,8 @@ export class DiagnosticContext {
     });
     this.growthIndicatorValueAppService = new GrowthIndicatorValueAppService({
       calculateIndicator: this.calculateGrowthIndicatorValueUC,
+      calculateAllAvailableIndicator:
+        this.calculateAllAvailableGrowthIndicatorValueUC,
     });
     this.clinicalRefAppService = new ClinicalSignReferenceService({
       createUC: this.createClinicalRefUC,
