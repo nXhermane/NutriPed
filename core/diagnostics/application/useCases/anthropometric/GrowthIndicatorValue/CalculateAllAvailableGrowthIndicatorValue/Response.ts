@@ -1,4 +1,4 @@
-import { GrowthIndicatorValueDto } from "@/core/diagnostics/application/dtos";
+import { GrowthIndicatorValueDto } from "./../../../../dtos";
 import { Either, ExceptionBase, Result } from "@/core/shared";
 
 export type CalculateAllAvailableGrowthIndicatorValueResponse = Either<

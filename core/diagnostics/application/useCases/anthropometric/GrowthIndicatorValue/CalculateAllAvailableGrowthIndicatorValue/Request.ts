@@ -1,7 +1,7 @@
 import {
   AnthroSystemCodes,
   CreateAnthropometricData,
-} from "@/core/diagnostics";
+} from "./../../../../../domain";
 import { Sex } from "@/core/shared";
 
 export type CalculateAllAvailableGrowthIndicatorValueRequest = {

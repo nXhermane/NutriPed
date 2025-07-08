@@ -94,7 +94,7 @@ export const AnthropometricCalculatorPanel = ({}) => {
 
   return (
     <React.Fragment>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} className="bg-background-primary">
         <VStack className="pb-16">
           <AnthropometricCalcualtorForm
             formRef={formRef}
