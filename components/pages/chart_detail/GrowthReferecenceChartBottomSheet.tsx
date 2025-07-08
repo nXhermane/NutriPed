@@ -19,6 +19,7 @@ import {
   GrowthReferenceChart,
   GrowthReferenceChartProps,
 } from "./GrowthReferenceChart";
+import { BlurView } from "expo-blur";
 
 export interface GrowthReferenceChartBottomSheetProps
   extends GrowthReferenceChartProps {}
@@ -28,23 +29,30 @@ export const GrowthReferenceChartBottomSheet: React.FC<GrowthReferenceChartBotto
 
     return (
       <BottomSheet>
-        <VStack className="bg-background-primary p-4">
-          <BottomSheetTrigger>
-            <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl bg-blue-500">
-              <VStack className="gap-0">
-                <Icon as={ChevronUp} className="text-white" />
-                <Icon as={ChevronUp} className="text-white/70" />
-              </VStack>
-              <Text className="font-h4 font-medium text-white">
-                Afficher la courbe
-              </Text>
-              <VStack className="gap-0">
-                <Icon as={ChevronUp} className="text-white" />
-                <Icon as={ChevronUp} className="text-white/70" />
-              </VStack>
-            </HStack>
-          </BottomSheetTrigger>
-        </VStack>
+        <HStack className="absolute bottom-0">
+          <BlurView
+            experimentalBlurMethod="dimezisBlurView"
+            intensity={50}
+            tint={colorMode}
+            className="h-full w-full p-4"
+          >
+            <BottomSheetTrigger>
+              <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl bg-blue-500">
+                <VStack className="gap-0">
+                  <Icon as={ChevronUp} className="text-white" />
+                  <Icon as={ChevronUp} className="text-white/70" />
+                </VStack>
+                <Text className="font-h4 font-medium text-white">
+                  Afficher la courbe
+                </Text>
+                <VStack className="gap-0">
+                  <Icon as={ChevronUp} className="text-white" />
+                  <Icon as={ChevronUp} className="text-white/70" />
+                </VStack>
+              </HStack>
+            </BottomSheetTrigger>
+          </BlurView>
+        </HStack>
 
         <BottomSheetPortal
           snapPoints={["75%", "90%"]}

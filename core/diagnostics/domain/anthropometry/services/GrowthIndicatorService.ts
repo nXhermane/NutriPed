@@ -19,6 +19,7 @@ import {
   GrowthStandard,
   CreateGrowthIndicatorValueProps,
   StandardShape,
+  GrowthRefChartAndTableCodes,
 } from "../models";
 import {
   AnthropometricMeasureRepository,
@@ -53,7 +54,7 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
     private growthReferenceSelectionService: IReferenceSelectionService,
     private zScoreService: IZScoreCalculationService,
     private interpretationService: IZScoreInterpretationService
-  ) {}
+  ) { }
 
   /**
    * @method identifyPossibleIndicator
@@ -234,15 +235,15 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const growthRef =
         indicator.getStandardShape() === StandardShape.CURVE
           ? await this.growthReferenceSelectionService.selectChartForIndicator(
-              data,
-              indicator,
-              standard
-            )
+            data,
+            indicator,
+            standard
+          )
           : await this.growthReferenceSelectionService.selectTableForIndicator(
-              data,
-              indicator,
-              standard
-            );
+            data,
+            indicator,
+            standard
+          );
 
       if (growthRef.isFailure)
         return Result.fail(formatError(growthRef, GrowthIndicatorService.name));
@@ -272,8 +273,11 @@ export class GrowthIndicatorService implements IGrowthIndicatorService {
       const growthIndicatorValueProps: CreateGrowthIndicatorValueProps = {
         code: indicator.getCode(),
         unit: "zscore",
-        growthStandard: standard,
-        referenceSource: indicator.getStandardShape(),
+        reference: {
+          standard: standard,
+          source: growthRef.val.getCode() as GrowthRefChartAndTableCodes,
+          sourceType: indicator.getStandardShape(),
+        },
         value: zScoreResult.val.zScore,
         interpretation: interpretationResult.val.unpack().code.unpack(),
         valueRange: interpretationResult.val.unpack().range,

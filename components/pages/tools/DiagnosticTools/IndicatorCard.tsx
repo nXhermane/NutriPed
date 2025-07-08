@@ -13,6 +13,7 @@ import {
 } from "@/core/diagnostics";
 import { IndicatorInterpretionBadgeUiData } from "@/src/constants/ui";
 import { useGrowthIndicators } from "@/src/hooks";
+import { router } from "expo-router";
 import { BadgeCheck, Lightbulb, MapPin, Target } from "lucide-react-native";
 import React, { useMemo } from "react";
 import colors from "tailwindcss/colors";
@@ -70,23 +71,33 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
             <HStack className="justify-between">
               <HStack className="items-center gap-1">
                 <Icon as={Target} className={"h-4 w-4 text-primary-c_light"} />
-                <Text className="font-light text-xs text-typography-primary_light">
+                <Text className="font-light text-xs text-typography-primary dark:text-typography-primary_light">
                   {"Zscore:"}
                 </Text>
-                <Text className="font-light text-xs uppercase text-typography-primary_light">
+                <Text className="font-light text-xs uppercase text-typography-primary dark:text-typography-primary_light">
                   {growthIndicatorValue.value}
                 </Text>
               </HStack>
-              {growthIndicatorValue.referenceSource === "growth_curve" && (
-                <Pressable className="">
-                  <HStack className="items-center gap-1 rounded-lg bg-primary-c_light/50 px-2 py-[1px]">
+              {growthIndicatorValue.reference.sourceType === "growth_curve" && (
+                <Pressable
+                  className=""
+                  onPress={() => {
+                    router.navigate({
+                      pathname: "/(screens)/growth_chart/[info]",
+                      params: {
+                        info: JSON.stringify(growthIndicatorValue),
+                      },
+                    });
+                  }}
+                >
+                  <HStack className="items-center gap-1 rounded-lg bg-primary-c_light dark:bg-primary-c_light/50 px-2 py-[1px]">
                     <Icon
                       as={MapPin}
-                      className="h-3 w-3 text-typography-primary_light"
+                      className="h-3 w-3 text-typography-primary dark:text-typography-primary_light"
                     />
                     <Text
                       className={
-                        "font-body text-xs font-normal text-typography-primary_light"
+                        "font-body text-xs font-normal text-typography-primary dark:text-typography-primary_light"
                       }
                     >
                       Tracer
@@ -97,12 +108,11 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
             </HStack>
             <HStack className="items-center gap-1">
               <Icon as={Lightbulb} className={"h-4 w-4 text-primary-c_light"} />
-              <Text className="font-light text-xs text-typography-primary_light">
+              <Text className="font-light text-xs text-typography-primary dark:text-typography-primary_light">
                 {"Interprétation:"}
               </Text>
               <Text
-                className="font-light text-xs text-typography-primary_light"
-                numberOfLines={1}
+                className="font-light text-xs ttext-typography-primary dark:text-typography-primary_light w-[70%]"
               >
                 {
                   data[0]?.interpretations.find(
@@ -118,11 +128,11 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
                 as={BadgeCheck}
                 className={"h-4 w-4 text-primary-c_light"}
               />
-              <Text className="font-light text-xs text-typography-primary_light">
+              <Text className="font-light text-xs text-typography-primary dark:text-typography-primary_light">
                 {"Standard:"}
               </Text>
-              <Text className="font-light text-xs uppercase text-typography-primary_light">
-                {growthIndicatorValue.growthStandard}
+              <Text className="font-light text-xs uppercase text-typography-primary dark:text-typography-primary_light">
+                {growthIndicatorValue.reference.standard}
               </Text>
             </HStack>
           </VStack>

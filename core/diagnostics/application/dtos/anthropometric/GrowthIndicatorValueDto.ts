@@ -1,5 +1,6 @@
 import {
   GrowthIndicatorRange,
+  GrowthRefChartAndTableCodes,
   GrowthStandard,
   StandardShape,
 } from "../../../domain";
@@ -7,8 +8,11 @@ import {
 export interface GrowthIndicatorValueDto {
   code: string;
   unit: string;
-  growthStandard: GrowthStandard;
-  referenceSource: StandardShape;
+  reference: {
+    standard: GrowthStandard;
+    source: GrowthRefChartAndTableCodes;
+    sourceType: StandardShape;
+  }
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;

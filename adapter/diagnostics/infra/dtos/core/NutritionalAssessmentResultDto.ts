@@ -3,6 +3,7 @@ import {
   StandardShape,
   GrowthIndicatorRange,
   BiochemicalRangeStatus,
+  GrowthRefChartAndTableCodes,
 } from "@core/constants";
 import { EntityPersistenceDto } from "../../../../shared";
 
@@ -12,8 +13,11 @@ export interface NutritionalAssessmentResultPersistenceDto
   growthIndicatorValues: {
     code: string;
     unit: string;
-    growthStandard: `${GrowthStandard}`;
-    referenceSource: `${StandardShape}`;
+    reference: {
+      standard: `${GrowthStandard}`,
+      sourceType: `${StandardShape}`;
+      source: `${GrowthRefChartAndTableCodes}`
+    },
     valueRange: `${GrowthIndicatorRange}`;
     interpretation: string;
     value: number;

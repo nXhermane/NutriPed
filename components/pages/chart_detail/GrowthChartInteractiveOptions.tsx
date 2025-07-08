@@ -37,7 +37,7 @@ export const GrowthChartInteractiveOptions: React.FC<
 }) => {
   return (
     <VStack className="mt-4 gap-4 p-1">
-      <VStack className="gap-3 rounded-xl bg-background-primary px-3 py-3">
+      <VStack className="gap-3 rounded-xl bg-background-primary px-3 py-3 border-[1px] border-primary-border/10 dark:border-0">
         <Text className="font-h4 text-base font-medium text-typography-primary">
           Période à visualiser
         </Text>
@@ -47,7 +47,7 @@ export const GrowthChartInteractiveOptions: React.FC<
           value={displayRange}
         />
       </VStack>
-      <VStack className="gap-3 rounded-xl bg-background-primary px-3 py-3">
+      <VStack className="gap-3 rounded-xl bg-background-primary px-3 py-3 border-[1px] border-primary-border/10 dark:border-0">
         <Text className="font-h4 text-base font-medium text-typography-primary">
           Mode d'affichage
         </Text>
@@ -59,7 +59,7 @@ export const GrowthChartInteractiveOptions: React.FC<
           displayMode={displayMode}
         />
       </VStack>
-      <HStack className="gap-3 rounded-xl bg-background-primary px-3 py-3">
+      <HStack className="gap-3 rounded-xl bg-background-primary px-3 py-3 border-[1px] border-primary-border/10 dark:border-0">
         <Text className="font-h4 text-base font-medium text-typography-primary">
           Activer le zoom
         </Text>

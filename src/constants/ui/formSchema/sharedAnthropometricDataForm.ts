@@ -282,13 +282,13 @@ export const MUACZodSchema = z.preprocess(
     })
     .refine(
       muac => {
-        if (muac.unit === "cm") return muac.value >= 5 && muac.value <= 100;
-        if (muac.unit === "mm") return muac.value >= 50 && muac.value <= 1000;
+        if (muac.unit === "cm") return muac.value >= 6.5 && muac.value <= 35;
+        if (muac.unit === "mm") return muac.value >= 65 && muac.value <= 350;
         return true;
       },
       {
         message:
-          "Le périmètre brachial doit être compris entre 5cm et 100cm ou 50mm et 1000mm.",
+          "Le périmètre brachial doit être compris entre 6.5 cm et 35cm ou 65mm et 350mm.",
         path: ["value"],
       }
     )

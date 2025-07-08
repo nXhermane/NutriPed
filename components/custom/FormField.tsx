@@ -52,6 +52,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useUI } from "@/src/context";
 import { HStack } from "../ui/hstack";
+
 type CommonFieldProps = {
   label: string;
   name: string;
@@ -60,17 +61,20 @@ type CommonFieldProps = {
   isDisable?: boolean;
   isRequire?: boolean;
 };
+
 type TextField = CommonFieldProps & {
   type: "text" | "password" | "number" | "textarea";
   placeholder?: string;
   default: string;
 };
+
 type SelectField = CommonFieldProps & {
   type: "select";
   selectOptions: { label: string; value: string }[];
   placeholder?: string;
   default: string;
 };
+
 type RadioField = CommonFieldProps & {
   type: "radio";
   radioOptions: { label: string; value: string }[];
@@ -82,6 +86,7 @@ type CheckBoxField = CommonFieldProps & {
   checkBoxOptions: { label: string; value: string }[];
   default: string[];
 };
+
 type DateField = CommonFieldProps & {
   type: "date";
   mode: "date" | "countdown" | "time";
@@ -90,6 +95,7 @@ type DateField = CommonFieldProps & {
   maxDate?: Date;
   minDate?: Date;
 };
+
 type QuantityField = CommonFieldProps & {
   type: "quantity";
   placeholder?: string;
@@ -99,6 +105,7 @@ type QuantityField = CommonFieldProps & {
   defaultUnit: { unit: string; label: string; convertionFactor: number };
   default: { unit: string; value: number };
 };
+
 export type IField =
   | TextField
   | SelectField
@@ -106,12 +113,14 @@ export type IField =
   | CheckBoxField
   | DateField
   | QuantityField;
+
 export interface FormFieldProps<T> {
   field: IField;
   value?: T;
   onChange?: (fieldName: string, value: T) => void;
   error?: string;
 }
+
 export const FormField = <T,>({
   field,
   value,
@@ -129,15 +138,47 @@ export const FormField = <T,>({
   }>({} as any);
   const [currentQuantityValue, setCurrentQuantityValue] = useState<number>(0);
 
+  // Fonction utilitaire pour convertir une chaîne avec virgule en nombre
+  const parseNumberFromString = (str: string): number => {
+    return Number(str.replace(/,/g, '.'));
+  };
+
+  // Fonction utilitaire pour formater un nombre avec des virgules
+  const formatNumberWithComma = (num: number): string => {
+    return num.toString().replace(/\./g, ',');
+  };
+
+  // Fonction pour valider et nettoyer l'entrée numérique
+  const validateAndCleanNumberInput = (input: string): string => {
+    // Remplace les points par des virgules pour la cohérence
+    let cleaned = input.replace(/\./g, ',');
+    
+    // Supprime tous les caractères non numériques sauf la virgule et le signe moins
+    cleaned = cleaned.replace(/[^0-9,-]/g, '');
+    
+    // S'assure qu'il n'y a qu'une seule virgule
+    const commaCount = (cleaned.match(/,/g) || []).length;
+    if (commaCount > 1) {
+      const firstCommaIndex = cleaned.indexOf(',');
+      cleaned = cleaned.substring(0, firstCommaIndex + 1) + 
+                cleaned.substring(firstCommaIndex + 1).replace(/,/g, '');
+    }
+    
+    return cleaned;
+  };
+
   const handleChange = (_value: T) => {
     if (onChange) {
       if (field.type === "number") {
-        onChange(field.name, Number(_value) as T);
+        const cleanedValue = validateAndCleanNumberInput(_value as string);
+        const numericValue = parseNumberFromString(cleanedValue);
+        onChange(field.name, numericValue as T);
       } else {
         onChange(field.name, _value);
       }
     }
   };
+
   const handleQuantityChangeHandle = (
     _value: number,
     prevUnit: string,
@@ -179,6 +220,23 @@ export const FormField = <T,>({
           } as T);
       }
     }
+  };
+
+  // Gestionnaire spécifique pour les champs numériques
+  const handleNumberChange = (text: string) => {
+    const cleanedText = validateAndCleanNumberInput(text);
+    handleChange(cleanedText as T);
+  };
+
+  // Gestionnaire spécifique pour les champs quantity
+  const handleQuantityTextChange = (text: string) => {
+    const cleanedText = validateAndCleanNumberInput(text);
+    const numericValue = parseNumberFromString(cleanedText);
+    handleQuantityChangeHandle(
+      numericValue,
+      currentQuantityUnit.unit,
+      currentQuantityUnit.unit
+    );
   };
 
   useEffect(() => {
@@ -223,14 +281,8 @@ export const FormField = <T,>({
                 }
                 placeholder={field.placeholder}
                 keyboardType={"numeric"}
-                onChangeText={num =>
-                  handleQuantityChangeHandle(
-                    Number(num),
-                    currentQuantityUnit.unit,
-                    currentQuantityUnit.unit
-                  )
-                }
-                value={String(currentQuantityValue)}
+                onChangeText={handleQuantityTextChange}
+                value={formatNumberWithComma(currentQuantityValue)}
               />
               <InputSlot
                 onPress={() => setVisible(true)}
@@ -356,7 +408,7 @@ export const FormField = <T,>({
             onChange={handleChange}
           >
             {field.checkBoxOptions.map((item, index) => (
-              <Checkbox value={item.value}>
+              <Checkbox key={index} value={item.value}>
                 <CheckboxIndicator
                   className={"h-4 w-4 border-typography-primary_light"}
                 >
@@ -382,7 +434,6 @@ export const FormField = <T,>({
               <Radio key={index} value={item.value}>
                 <RadioIndicator
                   className={"h-4 w-4 border-typography-primary_light"}
-                  grid-cols-2
                 >
                   <RadioIcon
                     as={Circle}
@@ -492,6 +543,31 @@ export const FormField = <T,>({
           </Input>
         );
 
+      case "number":
+        return (
+          <Input
+            className={
+              "h-v-10 rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c"
+            }
+          >
+            <InputField
+              type="text"
+              className="font-body text-base font-normal text-typography-primary/80"
+              placeholderClassName={
+                "text-base font-body text-typography-primary_light font-normal"
+              }
+              placeholder={field.placeholder}
+              value={
+                typeof value === 'number' 
+                  ? formatNumberWithComma(value) 
+                  : (value as string) || field.default
+              }
+              keyboardType="numeric"
+              onChangeText={handleNumberChange}
+            />
+          </Input>
+        );
+
       default:
         return (
           <Input
@@ -500,20 +576,21 @@ export const FormField = <T,>({
             }
           >
             <InputField
-              type={field.type === "number" ? "text" : field.type}
+              type={field.type}
               className="font-body text-base font-normal text-typography-primary/80"
               placeholderClassName={
                 "text-base font-body text-typography-primary_light font-normal"
               }
               placeholder={field.placeholder}
               value={(value as any) || field.default}
-              keyboardType={field.type === "number" ? "numeric" : "default"}
+              keyboardType="default"
               onChangeText={text => handleChange(text as T)}
             />
           </Input>
         );
     }
   };
+
   useEffect(() => {
     if (error) setIsInvalid(true);
     else setIsInvalid(false);
@@ -531,7 +608,7 @@ export const FormField = <T,>({
           className={"font-body text-xs font-normal text-typography-primary"}
         >
           {field.label}{" "}
-          {field.isRequire && <Text className="text-red-500">*</Text>}
+          {field.isRequire && <Text className="text-red-400">*</Text>}
         </FormControlLabelText>
       </FormControlLabel>
 

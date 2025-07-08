@@ -2,6 +2,7 @@ import {
   BiochemicalRangeStatus,
   ClinicalDataType,
   GrowthIndicatorRange,
+  GrowthRefChartAndTableCodes,
   GrowthStandard,
   StandardShape,
 } from "@core/constants";
@@ -240,8 +241,11 @@ export const nutritional_assessment_results = sqliteTable(
         {
           code: string;
           unit: string;
-          growthStandard: `${GrowthStandard}`;
-          referenceSource: `${StandardShape}`;
+          reference: {
+            standard: `${GrowthStandard}`,
+            sourceType: `${StandardShape}`;
+            source: `${GrowthRefChartAndTableCodes}`
+          },
           valueRange: `${GrowthIndicatorRange}`;
           interpretation: string;
           value: number;

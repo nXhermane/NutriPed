@@ -16,6 +16,7 @@ import { useColorScheme, Image as RNImage } from "react-native";
 import { isMobile, rnS, rnVs } from "@/scaling";
 import { Pressable } from "@/components/ui/pressable";
 import { PublicRoute } from "@/components/pages/shared";
+import { Image } from "@/components/ui/image";
 
 export default function Layout() {
   const { user } = useGoogleAuth();
@@ -123,7 +124,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
           <Button
             variant={"outline"}
             className={
-              "rounded-3xl border-[0.5px] border-primary-border/5 bg-background-primary"
+              "rounded-xl border-[0.5px] border-primary-border/5 bg-background-primary"
             }
             onPress={onSkipBtnPress}
           >
@@ -138,7 +139,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
         )}
         {!hideNextBtn && (
           <Button
-            className={"elevation-md rounded-3xl bg-primary-c_light"}
+            className={"elevation-md rounded-xl bg-primary-c_light"}
             // variant={"solid"}
             onPress={onNextBtnPress}
           >
@@ -209,25 +210,25 @@ const OnBoardingLoginScreen = () => {
           charge
         </Text>
         <Button
-          className={
-            "mb-v-2 mt-v-5 h-v-10 gap-3 rounded-full bg-primary-c_light px-8 py-v-2 data-[disabled=true]:bg-primary-c_light/50"
-          }
+          // className={
+          //   "mb-v-2 mt-v-5 h-v-10 gap-3 rounded-full bg-primary-c_light px-8 py-v-2 data-[disabled=true]:bg-primary-c_light/50"
+          // }
+          className={`h-v-10  rounded-xl mx-4 bg-primary-c_light`}
           onPress={() => handleLogin()}
           isDisabled={onLogin}
         >
           {onLogin ? (
             <ButtonSpinner
-              color={colorScheme === "light" ? "white" : "black"}
-              size={"large"}
+              size={"small"}
+              className="data-[active=true]:text-primary-c_light"
             />
           ) : (
-            // <Image
-            //   source={require("./../../assets/images/onboarding/google.png")}
-            //   className={"w-5"}
-            //   resizeMode={"contain"}
-            //   alt={"Goolge Icon"}
-            // />
-            <></>
+            <Image
+              source={require("./../../assets/images/onboarding/google.png")}
+              className={"w-5"}
+              resizeMode={"contain"}
+              alt={"Goolge Icon"}
+            />
           )}
 
           <ButtonText

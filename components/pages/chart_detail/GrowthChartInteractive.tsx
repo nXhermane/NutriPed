@@ -20,7 +20,6 @@ import {
 import { Poppins_500Medium } from "@expo-google-fonts/poppins";
 import { Circle, useFont } from "@shopify/react-native-skia";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Gesture } from "react-native-gesture-handler";
 import { SharedValue } from "react-native-reanimated";
 import colors from "tailwindcss/colors";
 import {
@@ -32,8 +31,6 @@ import {
   useChartTransformState,
 } from "victory-native";
 import { Pressable } from "@/components/ui/pressable";
-import { Icon } from "@/components/ui/icon";
-import { InfoIcon } from "lucide-react-native";
 
 export interface GrowthInteractiveChartProps {
   data: ChartDataPoint[];
@@ -170,7 +167,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           {chartName}
         </Heading>
       </Box>
-      <VStack className="m-1 h-v-96 rounded-xl bg-background-primary">
+      <VStack className="m-1 h-v-96 rounded-xl bg-background-primary border-[1px] border-primary-border/10 dark:border-0">
         <CartesianChart
           data={data as any[]}
           xKey={xKey}
@@ -197,7 +194,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
             },
           }}
         >
-          {({ points, xScale, yScale }) => {
+          {({ points, xScale, yScale, canvasSize }) => {
             return (
               <React.Fragment>
                 <MemoLine
@@ -275,6 +272,8 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
                     xKey={xKey}
                     xScale={xScale}
                     yScale={yScale}
+                    canvasSize={canvasSize}
+                    color={colorMode === "dark" ? colors.white : colors.black}
                   />
                 )}
                 {isActive && (
@@ -333,13 +332,6 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           }}
         </CartesianChart>
       </VStack>
-      {/* <Pressable
-        className="rounded-full bg-primary-c_light w-5 h-5 items-center justify-center mt-2 ml-1 "
-        onPress={() => setShowLegend(prev => !prev)}
-      >
-        <Icon as={InfoIcon} className="h-3 w-3 text-typography-primary" />
-      </Pressable> */}
-
       <HStack className="flex-wrap justify-center gap-2">
         {[
           ...CHART_LEGEND,
@@ -423,7 +415,7 @@ export interface LegendItemProps {
 }
 export const LegendItem: React.FC<LegendItemProps> = ({ color, label }) => {
   return (
-    <Pressable className="w-fit flex-row items-center gap-2 rounded-xl bg-background-primary p-1">
+    <Pressable className="w-fit flex-row items-center gap-2 rounded-xl bg-background-primary p-1 border-[1px] border-primary-border/10 dark:border-0">
       <Box
         style={{
           backgroundColor: color,
@@ -442,10 +434,11 @@ export interface SinglePlotteRenderComponentProps {
   xScale: (x: number) => number;
   yScale: (y: number) => number;
   xKey: "lenhei" | "ageInMonth" | "ageInYear";
+  canvasSize: { height: number; width: number };
+  color: string;
 }
 export const SinglePlotteRenderComponent: React.FC<SinglePlotteRenderComponentProps> =
-  React.memo(({ data, xKey, xScale, yScale }) => {
-    const { colorMode } = useUI();
+  React.memo(({ data, xKey, xScale, yScale, canvasSize, color }) => {
     const xValue = (
       xKey === "lenhei"
         ? data.xAxis
@@ -464,10 +457,30 @@ export const SinglePlotteRenderComponent: React.FC<SinglePlotteRenderComponentPr
 
     return (
       <React.Fragment>
-        <MemoScatter
-          points={[plottedPoint]}
-          color={colorMode === "dark" ? colors.white : colors.black}
-          radius={4}
+        <MemoScatter points={[plottedPoint]} color={color} radius={2} />
+        <MemoLine
+          points={[
+            { x: plottedPoint.x, xValue: plottedPoint.xValue, y: 0, yValue: 0 },
+            {
+              x: plottedPoint.x,
+              xValue: plottedPoint.xValue,
+              y: canvasSize.height,
+              yValue: canvasSize.height,
+            },
+          ]}
+          color={color}
+        />
+        <MemoLine
+          points={[
+            { x: 0, xValue: 0, y: plottedPoint.y, yValue: plottedPoint.yValue },
+            {
+              x: canvasSize.width,
+              xValue: canvasSize.width,
+              y: plottedPoint.y,
+              yValue: canvasSize.width,
+            },
+          ]}
+          color={color}
         />
       </React.Fragment>
     );

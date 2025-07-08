@@ -9,6 +9,7 @@ import {
 } from "@shared";
 import {
   GrowthIndicatorRange,
+  GrowthRefChartAndTableCodes,
   GrowthStandard,
   StandardShape,
 } from "./../constants";
@@ -16,8 +17,13 @@ import {
 export interface IGrowthIndicatorValue {
   code: SystemCode;
   unit: UnitCode;
-  growthStandard: GrowthStandard;
-  referenceSource: StandardShape;
+  reference: {
+    standard: GrowthStandard,
+    source: GrowthRefChartAndTableCodes,
+    sourceType: StandardShape
+  }
+  // growthStandard: GrowthStandard;
+  // referenceSource: StandardShape;
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;
@@ -27,8 +33,11 @@ export interface IGrowthIndicatorValue {
 export type CreateGrowthIndicatorValueProps = {
   code: string;
   unit: string;
-  growthStandard: GrowthStandard;
-  referenceSource: StandardShape;
+  reference: {
+    standard: GrowthStandard,
+    source: GrowthRefChartAndTableCodes,
+    sourceType: StandardShape
+  }
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;
@@ -55,8 +64,7 @@ export class GrowthIndicatorValue extends ValueObject<IGrowthIndicatorValue> {
       const growthIndicatorValue = new GrowthIndicatorValue({
         code: codeRes.val,
         unit: unitRes.val,
-        growthStandard: createProps.growthStandard,
-        referenceSource: createProps.referenceSource,
+        reference: createProps.reference,
         valueRange: createProps.valueRange,
         value: createProps.value,
         interpretation: createProps.interpretation,
