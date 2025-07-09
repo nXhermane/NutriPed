@@ -17,13 +17,16 @@ export const AnthropometricCalculatorResult: React.FC<
     <React.Fragment>
       <VStack className="mx-4 mt-5 gap-4 pb-8">
         <HStack>
-          <Heading className="font-h4 text-sm font-medium text-typography-primary text-center">Resultat du calcule anthropometrique</Heading>
+          <Heading className="text-center font-h4 text-sm font-medium text-typography-primary">
+            Resultat du calcule anthropometrique
+          </Heading>
         </HStack>
         {results?.map(indicatorValue => (
           <FadeInCardX key={indicatorValue.code}>
             <IndicatorCard value={indicatorValue} />
           </FadeInCardX>
         ))}
+        
       </VStack>
     </React.Fragment>
   );

@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { patientInteractionReducer } from "./patientInteractions";
 import { uiReducer } from "./uiState";
 import { chartToolStoreReducer } from "./chartToolStore";
+import { anthropometricCalculatorResultReducer } from "./anthropometricCalculatorResultStore";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
@@ -13,6 +14,7 @@ export const rootReducer = combineReducers({
   patientInteractionReducer,
   uiReducer,
   chartToolStoreReducer,
+  anthropometricCalculatorResultReducer
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

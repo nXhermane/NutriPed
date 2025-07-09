@@ -1,28 +1,21 @@
-import { TopTabNaviagtor } from "@/components/custom";
 import { Text } from "@/components/ui/text";
-import {
-  NavigationContainer,
-  NavigationContainerProps,
-  NavigationIndependentTree,
-} from "@react-navigation/native";
+import { NavigationIndependentTree } from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
-  DrawerHeaderProps,
-  DrawerItemList,
   useDrawerStatus,
 } from "@react-navigation/drawer";
 import React from "react";
-import { AnthropometricCalculatorPanel } from "./AnthropometricCalculatorPanel";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
-import { Heading } from "@/components/ui/heading";
 import { Box } from "@/components/ui/box";
 import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
+import { AnthropometricCalculatorPanel } from "./AnthropometricCalculatorPanel";
+import { AnthropometricCalculatorHistory } from "./AnthropometricCalculatorHistory";
 const Drawer = createDrawerNavigator();
 export const DiagnosticTools = ({}) => {
   return (
@@ -43,7 +36,7 @@ export const DiagnosticTools = ({}) => {
           />
           <Drawer.Screen
             name="Évaluation clinique"
-            component={() => <Text>Welcome to clinical evaluation screen</Text>}
+            component={AnthropometricCalculatorHistory} //() => <Text>Welcome to clinical evaluation screen</Text>
           />
           <Drawer.Screen
             name="Bilan biologique"
@@ -132,7 +125,7 @@ export const DiagnosticDrawerItem: React.FC<DiagnosticDrawerItemProps> = ({
         className={`h-v-10 items-center justify-center rounded-xl border-[1px] px-4 ${isActive ? "border-primary-c_light/10 bg-primary-c_light/5" : "border-primary-border/5 bg-background-secondary"}`}
       >
         <Text
-          className={`w-full text-left text-sm font-h4 font-medium ${isActive ? "text-primary-c_light" : "text-typography-primary_light"}`}
+          className={`w-full text-left font-h4 text-sm font-medium ${isActive ? "text-primary-c_light" : "text-typography-primary_light"}`}
         >
           {label}
         </Text>
