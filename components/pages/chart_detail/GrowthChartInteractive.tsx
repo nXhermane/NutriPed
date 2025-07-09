@@ -167,7 +167,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           {chartName}
         </Heading>
       </Box>
-      <VStack className="m-1 h-v-96 rounded-xl bg-background-primary border-[1px] border-primary-border/10 dark:border-0">
+      <VStack className="m-1 h-v-96 rounded-xl border-[1px] border-primary-border/10 bg-background-primary dark:border-0">
         <CartesianChart
           data={data as any[]}
           xKey={xKey}
@@ -415,7 +415,7 @@ export interface LegendItemProps {
 }
 export const LegendItem: React.FC<LegendItemProps> = ({ color, label }) => {
   return (
-    <Pressable className="w-fit flex-row items-center gap-2 rounded-xl bg-background-primary p-1 border-[1px] border-primary-border/10 dark:border-0">
+    <Pressable className="w-fit flex-row items-center gap-2 rounded-xl border-[1px] border-primary-border/10 bg-background-primary p-1 dark:border-0">
       <Box
         style={{
           backgroundColor: color,

@@ -12,7 +12,7 @@ export interface GrowthIndicatorValueDto {
     standard: GrowthStandard;
     source: GrowthRefChartAndTableCodes;
     sourceType: StandardShape;
-  }
+  };
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;

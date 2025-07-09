@@ -16,45 +16,48 @@ export interface GrowthReferenceChartProps {
   chartData: ChartDataDto[];
   chartName: string;
   selectedSeries?: SelectedChartMeasurementSerie[];
-  singlePlotteData?: PlottedPointData
+  singlePlotteData?: PlottedPointData;
 }
 export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
-  React.memo(({ chartData, code, chartName, selectedSeries,singlePlotteData }) => {
-    const [zoomActivate, setZoomActivate] = useState<boolean>(false);
-    const {
-      data,
-      setDisplayedXAxisRange,
-      setDisplayMode,
-      chartUiData,
-      displayMode,
-      displayedXAxisRange,
-    } = useGrowthChartDataGenerator(chartData, code);
-    const { plottedSeriesData } = useSeriePlottingDataGenerator(selectedSeries);
+  React.memo(
+    ({ chartData, code, chartName, selectedSeries, singlePlotteData }) => {
+      const [zoomActivate, setZoomActivate] = useState<boolean>(false);
+      const {
+        data,
+        setDisplayedXAxisRange,
+        setDisplayMode,
+        chartUiData,
+        displayMode,
+        displayedXAxisRange,
+      } = useGrowthChartDataGenerator(chartData, code);
+      const { plottedSeriesData } =
+        useSeriePlottingDataGenerator(selectedSeries);
 
-    return (
-      <VStack>
-        <GrowthInteractiveChart
-          data={data}
-          displayMode={displayMode as DisplayMode}
-          chartUiData={chartUiData as ChartUiDataType}
-          chartName={chartName}
-          zoomActivate={zoomActivate}
-          plottedSeriesData={plottedSeriesData}
-          singlePlotteData={singlePlotteData}
-        />
-        <GrowthChartInteractiveOptions
-          chartUiData={chartUiData as ChartUiDataType}
-          displayRange={
-            displayedXAxisRange as
-              | ChartUiDataType["availableDisplayRange"][number]["range"]
-              | "all"
-          }
-          setDisplayRange={setDisplayedXAxisRange as any}
-          displayMode={displayMode as DisplayMode}
-          setDisplayMode={setDisplayMode}
-          zoomActivate={zoomActivate}
-          setZoomActivate={setZoomActivate}
-        />
-      </VStack>
-    );
-  });
+      return (
+        <VStack>
+          <GrowthInteractiveChart
+            data={data}
+            displayMode={displayMode as DisplayMode}
+            chartUiData={chartUiData as ChartUiDataType}
+            chartName={chartName}
+            zoomActivate={zoomActivate}
+            plottedSeriesData={plottedSeriesData}
+            singlePlotteData={singlePlotteData}
+          />
+          <GrowthChartInteractiveOptions
+            chartUiData={chartUiData as ChartUiDataType}
+            displayRange={
+              displayedXAxisRange as
+                | ChartUiDataType["availableDisplayRange"][number]["range"]
+                | "all"
+            }
+            setDisplayRange={setDisplayedXAxisRange as any}
+            displayMode={displayMode as DisplayMode}
+            setDisplayMode={setDisplayMode}
+            zoomActivate={zoomActivate}
+            setZoomActivate={setZoomActivate}
+          />
+        </VStack>
+      );
+    }
+  );

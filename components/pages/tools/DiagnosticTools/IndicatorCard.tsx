@@ -90,7 +90,7 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
                     });
                   }}
                 >
-                  <HStack className="items-center gap-1 rounded-lg bg-primary-c_light dark:bg-primary-c_light/50 px-2 py-[1px]">
+                  <HStack className="items-center gap-1 rounded-lg bg-primary-c_light px-2 py-[1px] dark:bg-primary-c_light/50">
                     <Icon
                       as={MapPin}
                       className="h-3 w-3 text-typography-primary dark:text-typography-primary_light"
@@ -111,9 +111,7 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
               <Text className="font-light text-xs text-typography-primary dark:text-typography-primary_light">
                 {"Interprétation:"}
               </Text>
-              <Text
-                className="font-light text-xs ttext-typography-primary dark:text-typography-primary_light w-[70%]"
-              >
+              <Text className="ttext-typography-primary w-[70%] font-light text-xs dark:text-typography-primary_light">
                 {
                   data[0]?.interpretations.find(
                     interpretation =>

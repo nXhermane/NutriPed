@@ -14,7 +14,7 @@ export const rootReducer = combineReducers({
   patientInteractionReducer,
   uiReducer,
   chartToolStoreReducer,
-  anthropometricCalculatorResultReducer
+  anthropometricCalculatorResultReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

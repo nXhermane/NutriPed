@@ -213,7 +213,7 @@ const OnBoardingLoginScreen = () => {
           // className={
           //   "mb-v-2 mt-v-5 h-v-10 gap-3 rounded-full bg-primary-c_light px-8 py-v-2 data-[disabled=true]:bg-primary-c_light/50"
           // }
-          className={`h-v-10  rounded-xl mx-4 bg-primary-c_light`}
+          className={`mx-4 h-v-10 rounded-xl bg-primary-c_light`}
           onPress={() => handleLogin()}
           isDisabled={onLogin}
         >

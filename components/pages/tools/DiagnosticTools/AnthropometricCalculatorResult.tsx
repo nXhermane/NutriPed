@@ -26,7 +26,6 @@ export const AnthropometricCalculatorResult: React.FC<
             <IndicatorCard value={indicatorValue} />
           </FadeInCardX>
         ))}
-        
       </VStack>
     </React.Fragment>
   );

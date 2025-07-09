@@ -90,7 +90,7 @@ export class AgeBasedStrategy extends AbstractZScoreComputingStrategy {
         median:
           diffAge > 0
             ? standardLow.median +
-            diffAge * (standardUpp.median - standardLow.median)
+              diffAge * (standardUpp.median - standardLow.median)
             : standardLow.median,
         l:
           diffAge > 0

@@ -1,1 +1,1 @@
-export * from "./GrowthChartScreenHeader"
+export * from "./GrowthChartScreenHeader";

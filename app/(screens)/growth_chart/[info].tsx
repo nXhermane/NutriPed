@@ -57,7 +57,10 @@ const GrowthChart = () => {
         intensity={colorMode === "light" ? 50 : 90}
       >
         <GrowthChartScreenHeader name={growthCharts[0]?.name || ""} />
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-8"
+        >
           <GrowthReferenceChart
             chartData={growthCharts[0]?.data || []}
             chartName={""}

@@ -140,30 +140,31 @@ export const FormField = <T,>({
 
   // Fonction utilitaire pour convertir une chaîne avec virgule en nombre
   const parseNumberFromString = (str: string): number => {
-    return Number(str.replace(/,/g, '.'));
+    return Number(str.replace(/,/g, "."));
   };
 
   // Fonction utilitaire pour formater un nombre avec des virgules
   const formatNumberWithComma = (num: number): string => {
-    return num.toString().replace(/\./g, ',');
+    return num.toString().replace(/\./g, ",");
   };
 
   // Fonction pour valider et nettoyer l'entrée numérique
   const validateAndCleanNumberInput = (input: string): string => {
     // Remplace les points par des virgules pour la cohérence
-    let cleaned = input.replace(/\./g, ',');
-    
+    let cleaned = input.replace(/\./g, ",");
+
     // Supprime tous les caractères non numériques sauf la virgule et le signe moins
-    cleaned = cleaned.replace(/[^0-9,-]/g, '');
-    
+    cleaned = cleaned.replace(/[^0-9,-]/g, "");
+
     // S'assure qu'il n'y a qu'une seule virgule
     const commaCount = (cleaned.match(/,/g) || []).length;
     if (commaCount > 1) {
-      const firstCommaIndex = cleaned.indexOf(',');
-      cleaned = cleaned.substring(0, firstCommaIndex + 1) + 
-                cleaned.substring(firstCommaIndex + 1).replace(/,/g, '');
+      const firstCommaIndex = cleaned.indexOf(",");
+      cleaned =
+        cleaned.substring(0, firstCommaIndex + 1) +
+        cleaned.substring(firstCommaIndex + 1).replace(/,/g, "");
     }
-    
+
     return cleaned;
   };
 
@@ -558,8 +559,8 @@ export const FormField = <T,>({
               }
               placeholder={field.placeholder}
               value={
-                typeof value === 'number' 
-                  ? formatNumberWithComma(value) 
+                typeof value === "number"
+                  ? formatNumberWithComma(value)
                   : (value as string) || field.default
               }
               keyboardType="numeric"

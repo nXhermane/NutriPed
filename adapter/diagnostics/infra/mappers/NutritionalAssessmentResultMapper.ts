@@ -11,10 +11,11 @@ import { NutritionalAssessmentResultPersistenceDto } from "../dtos";
 
 export class NutritionalAssessmentResultInfraMapper
   implements
-  InfrastructureMapper<
-    NutritionalAssessmentResult,
-    NutritionalAssessmentResultPersistenceDto
-  > {
+    InfrastructureMapper<
+      NutritionalAssessmentResult,
+      NutritionalAssessmentResultPersistenceDto
+    >
+{
   toPersistence(
     entity: NutritionalAssessmentResult
   ): NutritionalAssessmentResultPersistenceDto {
@@ -52,15 +53,11 @@ export class NutritionalAssessmentResultInfraMapper
       growthIndicatorValues: entity
         .getGrowthIndicatorValues()
         .map(indicator => {
-          const {
-            code,
-            unit,
-            ...otherProps
-          } = indicator.unpack();
+          const { code, unit, ...otherProps } = indicator.unpack();
           return {
             code: code.unpack(),
             unit: unit.unpack(),
-            ...otherProps
+            ...otherProps,
           };
         }),
       createdAt: entity.createdAt,

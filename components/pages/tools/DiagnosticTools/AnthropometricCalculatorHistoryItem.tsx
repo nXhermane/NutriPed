@@ -19,7 +19,6 @@ interface HistoryItemProps {
 export const AnthropometricCalculatorHistoryItem: React.FC<
   HistoryItemProps
 > = ({ item, onDelete, onView }) => {
-    
   return (
     <VStack className="border-border-primary rounded-xl border bg-background-secondary p-4">
       <HStack className="mb-2 items-center justify-between">

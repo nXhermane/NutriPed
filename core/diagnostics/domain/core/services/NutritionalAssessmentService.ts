@@ -52,7 +52,8 @@ export type GlobalDiagnosticVariable = AnthropometricVariableObject &
  * clinical, and biological data to generate comprehensive nutritional diagnostics
  */
 export class NutritionalAssessmentService
-  implements INutritionalAssessmentService {
+  implements INutritionalAssessmentService
+{
   /**
    * Creates a new instance of NutritionalAssessmentService
    * @param anthropVariableGenerator Service for generating anthropometric variable
@@ -75,7 +76,7 @@ export class NutritionalAssessmentService
       CreateNutritionalAssessmentResultProps,
       NutritionalAssessmentResult
     >
-  ) { }
+  ) {}
 
   /**
    * Evaluates the nutritional status of a patient based on various health indicators

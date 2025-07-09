@@ -18,10 +18,10 @@ export interface IGrowthIndicatorValue {
   code: SystemCode;
   unit: UnitCode;
   reference: {
-    standard: GrowthStandard,
-    source: GrowthRefChartAndTableCodes,
-    sourceType: StandardShape
-  }
+    standard: GrowthStandard;
+    source: GrowthRefChartAndTableCodes;
+    sourceType: StandardShape;
+  };
   // growthStandard: GrowthStandard;
   // referenceSource: StandardShape;
   valueRange: GrowthIndicatorRange;
@@ -34,10 +34,10 @@ export type CreateGrowthIndicatorValueProps = {
   code: string;
   unit: string;
   reference: {
-    standard: GrowthStandard,
-    source: GrowthRefChartAndTableCodes,
-    sourceType: StandardShape
-  }
+    standard: GrowthStandard;
+    source: GrowthRefChartAndTableCodes;
+    sourceType: StandardShape;
+  };
   valueRange: GrowthIndicatorRange;
   interpretation: string;
   value: number;

@@ -14,10 +14,10 @@ export interface NutritionalAssessmentResultPersistenceDto
     code: string;
     unit: string;
     reference: {
-      standard: `${GrowthStandard}`,
+      standard: `${GrowthStandard}`;
       sourceType: `${StandardShape}`;
-      source: `${GrowthRefChartAndTableCodes}`
-    },
+      source: `${GrowthRefChartAndTableCodes}`;
+    };
     valueRange: `${GrowthIndicatorRange}`;
     interpretation: string;
     value: number;

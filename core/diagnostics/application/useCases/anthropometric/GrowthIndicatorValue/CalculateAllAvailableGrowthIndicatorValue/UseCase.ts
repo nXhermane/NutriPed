@@ -1,4 +1,11 @@
-import { handleError, left, Result, right, SystemCode, UseCase } from "@/core/shared";
+import {
+  handleError,
+  left,
+  Result,
+  right,
+  SystemCode,
+  UseCase,
+} from "@/core/shared";
 import { CalculateAllAvailableGrowthIndicatorValueRequest } from "./Request";
 import { CalculateAllAvailableGrowthIndicatorValueResponse } from "./Response";
 import {
@@ -18,15 +25,16 @@ import { GrowthIndicatorValueDto } from "./../../../../dtos";
 
 export class CalculateAllAvailableGrowthIndicatorValueUseCase
   implements
-  UseCase<
-    CalculateAllAvailableGrowthIndicatorValueRequest,
-    CalculateAllAvailableGrowthIndicatorValueResponse
-  > {
+    UseCase<
+      CalculateAllAvailableGrowthIndicatorValueRequest,
+      CalculateAllAvailableGrowthIndicatorValueResponse
+    >
+{
   constructor(
     private readonly anthropometricValidationService: IAnthropometricValidationService,
     private readonly anthropometricVariablesService: IAnthropometricVariableGeneratorService,
     private readonly growthIndicatorService: IGrowthIndicatorService
-  ) { }
+  ) {}
   async execute(
     request: CalculateAllAvailableGrowthIndicatorValueRequest
   ): Promise<CalculateAllAvailableGrowthIndicatorValueResponse> {

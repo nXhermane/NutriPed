@@ -38,7 +38,10 @@ type DeleteSeriesPayload = {
 type DeleteSeriePayload = string; // exemple
 type ChooseSeriePayload = { serieId: string };
 type DeleteMeasurePayload = string;
-export type SelectedChartMeasurementSerie = Omit<ChartMeasurementSerie, "createdAt" | "updatedAt">
+export type SelectedChartMeasurementSerie = Omit<
+  ChartMeasurementSerie,
+  "createdAt" | "updatedAt"
+>;
 type HandleSeriesAction = <T extends SeriesAction["type"]>(
   action: T
 ) => (
@@ -70,9 +73,9 @@ export function useMeasurementSeriesManager(
   const [selectedSerie, setSelectedSerie] = useState<{
     serieId: string;
   } | null>(null);
-  const [selectedSeries, setSelectedSeries] = useState<SelectedChartMeasurementSerie[]>(
-    []
-  );
+  const [selectedSeries, setSelectedSeries] = useState<
+    SelectedChartMeasurementSerie[]
+  >([]);
   const {
     diagnosticServices: { growthIndicatorValue },
   } = usePediatricApp();
@@ -84,7 +87,7 @@ export function useMeasurementSeriesManager(
 
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
-      if (!chartCode || !sex || !indicatorCode) return () => { };
+      if (!chartCode || !sex || !indicatorCode) return () => {};
       switch (value) {
         case "new": {
           return async () => {
@@ -112,30 +115,42 @@ export function useMeasurementSeriesManager(
         }
         case "multipleSelection": {
           return ({ serieId }: { serieId: string }) => {
-            const serieObject = measurementSeries.find(serie => serie.id === serieId)
-            if (!serieObject) return null
+            const serieObject = measurementSeries.find(
+              serie => serie.id === serieId
+            );
+            if (!serieObject) return null;
             if (selectedSerie != null) {
               setSelectedSeries(prev => {
                 let series: SelectedChartMeasurementSerie[] = [];
                 if (prev.length === 0) {
-                  const selectedSerieObject = measurementSeries.find(serie => serie.id === selectedSerie.serieId)
-                  if (selectedSerieObject) series.push({
-                    data: selectedSerieObject.data,
-                    id: selectedSerieObject.id,
-                    label: selectedSerieObject.label
-                  });
+                  const selectedSerieObject = measurementSeries.find(
+                    serie => serie.id === selectedSerie.serieId
+                  );
+                  if (selectedSerieObject)
+                    series.push({
+                      data: selectedSerieObject.data,
+                      id: selectedSerieObject.id,
+                      label: selectedSerieObject.label,
+                    });
                   if (serieId === selectedSerie.serieId) return series;
                 }
                 const findedIndex = prev.findIndex(
                   serie => serie.id === serieId
                 );
                 if (findedIndex === -1)
-                  series = [...series, ...prev, { data: serieObject.data, id: serieObject.id, label: serieObject.label }];
+                  series = [
+                    ...series,
+                    ...prev,
+                    {
+                      data: serieObject.data,
+                      id: serieObject.id,
+                      label: serieObject.label,
+                    },
+                  ];
                 else
                   series = prev.filter(
                     serie =>
-                      serie.id != serieId ||
-                      serie.id === selectedSerie.serieId
+                      serie.id != serieId || serie.id === selectedSerie.serieId
                   );
                 return series;
               });
@@ -271,7 +286,7 @@ export function useMeasurementSeriesManager(
             "This key is not supported on chart tools action.[key]:",
             value
           );
-          return () => { };
+          return () => {};
         }
       }
     },

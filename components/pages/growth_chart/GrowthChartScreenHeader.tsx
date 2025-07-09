@@ -15,9 +15,14 @@ export interface GrowthChartScreenHeaderProps {
 export const GrowthChartScreenHeader: React.FC<
   GrowthChartScreenHeaderProps
 > = ({ name }) => {
-    const {colorMode} = useUI()
+  const { colorMode } = useUI();
   return (
-    <BlurView className={'h-v-24 w-full p-0'} experimentalBlurMethod="dimezisBlurView" tint={colorMode} intensity={100}>
+    <BlurView
+      className={"h-v-24 w-full p-0"}
+      experimentalBlurMethod="dimezisBlurView"
+      tint={colorMode}
+      intensity={100}
+    >
       <HStack
         className={
           "p-safe dark:elevation-md w-ful h-full items-center justify-center gap-2 px-2"

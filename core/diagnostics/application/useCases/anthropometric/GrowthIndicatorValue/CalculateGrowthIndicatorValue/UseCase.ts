@@ -24,15 +24,16 @@ import {
 
 export class CalculateGrowthIndicatorValueUseCase
   implements
-  UseCase<
-    CalculateGrowthIndicatorValueRequest,
-    CalculateGrowthIndicatorValueResponse
-  > {
+    UseCase<
+      CalculateGrowthIndicatorValueRequest,
+      CalculateGrowthIndicatorValueResponse
+    >
+{
   constructor(
     private readonly anthropometricValidationService: IAnthropometricValidationService,
     private readonly anthropometricVariablesService: IAnthropometricVariableGeneratorService,
     private readonly growthIndicatorService: IGrowthIndicatorService
-  ) { }
+  ) {}
   async execute(
     request: CalculateGrowthIndicatorValueRequest
   ): Promise<CalculateGrowthIndicatorValueResponse> {
@@ -78,14 +79,16 @@ export class CalculateGrowthIndicatorValueUseCase
       if (anthropometricVariablesIncludeIndicatorValue.isFailure) {
         return left(anthropometricVariablesIncludeIndicatorValue);
       }
-      const { code, unit, ...otherProps } = growthIndicatorValueRes.val.unpack();
+      const { code, unit, ...otherProps } =
+        growthIndicatorValueRes.val.unpack();
 
       return right(
         Result.ok({
           variables: anthropometricVariablesIncludeIndicatorValue.val,
           growthIndicatorValue: {
             code: code.unpack(),
-            unit: unit.unpack(), ...otherProps
+            unit: unit.unpack(),
+            ...otherProps,
           },
         })
       );

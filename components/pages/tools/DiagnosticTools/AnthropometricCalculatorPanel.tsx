@@ -32,13 +32,14 @@ export const AnthropometricCalculatorPanel = () => {
   const {
     diagnosticServices: { growthIndicatorValue },
   } = usePediatricApp();
-  
+
   const { colorMode } = useUI();
   const dispatch = useDispatch();
   const { closePicker, isOpen, openPicker } = usePicker<{ label: string }>();
-  
-  const formRef = useRef<FormHandler<typeof AnthropometricCalculatorFormSchema>>(null);
-  
+
+  const formRef =
+    useRef<FormHandler<typeof AnthropometricCalculatorFormSchema>>(null);
+
   // États pour le calcul
   const [anthropometricCalculatorResult, setAnthropometricCalculatorResult] =
     useState<GrowthIndicatorValueDto[] | null>(null);
@@ -54,7 +55,7 @@ export const AnthropometricCalculatorPanel = () => {
     setError(null);
     setAnthropometricCalculatorResult(null);
     setOnSucess(false);
-    
+
     const data = await formRef.current?.submit();
     if (data) {
       const { sex, age_in_month, age_in_day, ...anthropometricProps } = data;
@@ -67,8 +68,9 @@ export const AnthropometricCalculatorPanel = () => {
         sex,
         anthropometricData: { anthropometricMeasures },
       };
-      
-      const result = await growthIndicatorValue.calculateAllAvailableIndicator(request);
+
+      const result =
+        await growthIndicatorValue.calculateAllAvailableIndicator(request);
       if ("data" in result) {
         setOnSucess(true);
         setAnthropometricCalculatorUsedData(request);
@@ -123,7 +125,7 @@ export const AnthropometricCalculatorPanel = () => {
           />
         </VStack>
       </ScrollView>
-      
+
       <HStack className="absolute bottom-0 w-full overflow-hidden rounded-xl">
         <BlurView
           experimentalBlurMethod="dimezisBlurView"
@@ -160,7 +162,7 @@ export const AnthropometricCalculatorPanel = () => {
         onClose={() => setShowResultModal(false)}
         onSave={handleSaveResult}
       />
-      
+
       <AnthropometricCalculatorSavingLabelModal
         isOpen={isOpen}
         onClose={value => {

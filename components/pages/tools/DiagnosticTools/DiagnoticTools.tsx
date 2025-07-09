@@ -14,8 +14,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
 import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
-import { AnthropometricCalculatorPanel } from "./AnthropometricCalculatorPanel";
-import { AnthropometricCalculatorHistory } from "./AnthropometricCalculatorHistory";
+import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen";
 const Drawer = createDrawerNavigator();
 export const DiagnosticTools = ({}) => {
   return (
@@ -32,11 +31,11 @@ export const DiagnosticTools = ({}) => {
         >
           <Drawer.Screen
             name="Calcul anthropométrique"
-            component={AnthropometricCalculatorPanel}
+            component={AnthropometricCalculatorScreen}
           />
           <Drawer.Screen
             name="Évaluation clinique"
-            component={AnthropometricCalculatorHistory} //() => <Text>Welcome to clinical evaluation screen</Text>
+            component={() => <Text>Welcome to clinical evaluation screen</Text>} //
           />
           <Drawer.Screen
             name="Bilan biologique"

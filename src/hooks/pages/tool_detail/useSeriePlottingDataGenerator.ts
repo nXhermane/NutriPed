@@ -27,9 +27,7 @@ export function useSeriePlottingDataGenerator(
 ) {
   const { colorMode } = useUI();
   const plottedSeriesData = useMemo<PlottedSerieData[]>(() => {
-    if (
-      selectedSeries
-    ) {
+    if (selectedSeries) {
       const plottedSeries: PlottedSerieData[] = [];
       for (let index = 0; index < selectedSeries.length; index++) {
         const currentSerie = selectedSeries[index];
