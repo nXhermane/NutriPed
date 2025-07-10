@@ -33,19 +33,17 @@ const extractFileNameFromUrl = (url: string): string => {
  * @param fileUrl URL du fichier à télécharger
  * @returns chemin local vers le fichier stocké
  */
-export const downloadAndCacheFile = async (fileUrl: string): Promise<string | null> => {
+export const downloadAndCacheFile = async (fileUrl: string, forceDownload: boolean = false): Promise<string | null> => {
   try {
     const fileName = extractFileNameFromUrl(fileUrl);
     const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
-    // Vérifier si le fichier existe déjà
     const { exists } = await FileSystem.getInfoAsync(fileUri);
     if (exists) {
       console.log(`Fichier déjà téléchargé : ${fileUri}`);
-      return fileUri;
+      if (!forceDownload) return fileUri;
     }
 
-    // Téléchargement du fichier
     const downloadResult = await FileSystem.downloadAsync(fileUrl, fileUri);
     console.log(`Fichier téléchargé avec succès : ${downloadResult.uri}`);
 

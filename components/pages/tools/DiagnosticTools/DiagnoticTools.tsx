@@ -15,7 +15,12 @@ import { Box } from "@/components/ui/box";
 import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
 import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen";
+import { ClinicalEvaluationScreen } from "./ClinicalEvaluationScreen";
+import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen";
+import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
+
 const Drawer = createDrawerNavigator();
+
 export const DiagnosticTools = ({}) => {
   return (
     <VStack className="flex-1">
@@ -35,20 +40,15 @@ export const DiagnosticTools = ({}) => {
           />
           <Drawer.Screen
             name="Évaluation clinique"
-            component={() => <Text>Welcome to clinical evaluation screen</Text>} //
+            component={ClinicalEvaluationScreen}
           />
           <Drawer.Screen
             name="Bilan biologique"
-            component={() => (
-              <Text>
-                Welcome to biological and laboratory result interpretation
-                screen
-              </Text>
-            )}
+            component={BiologicalInterpretationScreen}
           />
           <Drawer.Screen
             name="Diagnostic global"
-            component={() => <Text>Welcome to global diagnostic screen</Text>}
+            component={GlobalDiagnosticScreen}
           />
         </Drawer.Navigator>
       </NavigationIndependentTree>

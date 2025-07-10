@@ -14,6 +14,7 @@ import colors from "tailwindcss/colors";
 import { AnthropometricCalculatorResult } from "./AnthropometricCalculatorResult";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { Save } from "lucide-react-native";
+import { Alert } from "react-native";
 
 interface AnthropometricCalculatorResultModalProps {
   title?: string;
@@ -35,12 +36,34 @@ export const AnthropometricCalculatorResultModal: React.FC<
     } else {
       bottomSheetModalRef.current?.close();
     }
-  }, [isVisible])
+  }, [isVisible]);
 
   return (
     <BottomSheetModalProvider>
       <BottomSheetModal
-        onDismiss={onClose}
+        onDismiss={() => {
+          if (onSave) {
+            Alert.alert(
+              "Attention!",
+              "Voulez vous sauvegarder le resultat du calcul ? Sinon vous les perdrez.",
+              [
+                {
+                  text: "Oui",
+                  onPress: async () => {
+                    onSave();
+                  },
+                  isPreferred: true,
+                },
+                {
+                  text: "Non",
+                  onPress: () => {
+                    onClose();
+                  },
+                },
+              ]
+            );
+          } else onClose();
+        }}
         snapPoints={["60%"]}
         ref={bottomSheetModalRef}
         handleIndicatorStyle={{
