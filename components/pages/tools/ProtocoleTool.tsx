@@ -16,6 +16,7 @@ import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { ExternalLink, LineChart } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
+import { downloadAndCacheFile } from "@/utils";
 const ProtocoleCurrentPageStorageKey = "protocole_current_page";
 export interface ProtocoleToolProps {}
 
@@ -30,7 +31,7 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
 
   useEffect(() => {
     if (!isDownload) {
-      downloadPDF(CORE_CONFIG.protocolePdfUrl)
+      downloadAndCacheFile(CORE_CONFIG.protocolePdfUrl)
         .then(async uri => {
           if (uri) {
             setUri(uri);
@@ -46,7 +47,12 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
           }
         })
         .catch(e => {
-          console.log(e);
+          console.error(e);
+          toast.show(
+            "Error",
+            "Erreur de téléchargement",
+            "Une Erreur s'est producte lors du téléchargement. Veillez vous s'assurer que votre connexion internet est activée."
+          );
         });
     }
     const onUnMount = async () => {
@@ -128,18 +134,4 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
       </VStack>
     </React.Fragment>
   );
-};
-
-const downloadPDF = async (pdfUrl: string) => {
-  try {
-    const fileUri = FileSystem.documentDirectory + "protocole.pdf";
-    const { exists } = await FileSystem.getInfoAsync(fileUri);
-    if (exists) return fileUri;
-    const downloadResult = await FileSystem.downloadAsync(pdfUrl, fileUri);
-
-    console.log("PDF téléchargé:", downloadResult.uri);
-    return downloadResult.uri;
-  } catch (error) {
-    console.error("Erreur téléchargement:", error);
-  }
 };

@@ -16,6 +16,7 @@ import { HStack } from "@/components/ui/hstack";
 import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
 import { Button, ButtonText } from "@/components/ui/button";
+import { useExportAnthropometicResultToXlsx } from "@/src/hooks";
 
 export const AnthropometricCalculatorHistory = () => {
   const { colorMode } = useUI();
@@ -26,6 +27,8 @@ export const AnthropometricCalculatorHistory = () => {
     (state: RootState) => state.anthropometricCalculatorResultReducer.histories // Adaptez selon votre store
   );
   const dispatch = useDispatch();
+  const exportHistoryToXlsx = useExportAnthropometicResultToXlsx();
+
   const deleteResult = useCallback((id: string) => {
     dispatch(deleteAnthropometricCalculatorResult({ id }));
   }, []);
@@ -80,7 +83,7 @@ export const AnthropometricCalculatorHistory = () => {
         className="bg-background-primary"
         contentContainerClassName="flex-1"
       >
-        <VStack className="h-full p-4 gap-4">
+        <VStack className="h-full gap-4 p-4">
           {savedResults.map((item, index) => (
             <FadeInCardX key={index} delayNumber={index * 3}>
               <AnthropometricCalculatorHistoryItem
@@ -92,11 +95,9 @@ export const AnthropometricCalculatorHistory = () => {
                   setCurrentTitle(null);
                 }}
                 onView={() => {
-                 
                   setAnthropometricCalculatorResult(item.result);
                   setCurrentTitle(`Resultat stocker de ${item.name}`);
                   setShowResultModal(true);
-                   console.log(item)
                 }}
               />
             </FadeInCardX>
@@ -122,7 +123,12 @@ export const AnthropometricCalculatorHistory = () => {
               Supprimer tout
             </ButtonText>
           </Button>
-          <Button className={`w-1/2 rounded-xl bg-primary-c_light`}>
+          <Button
+            className={`w-1/2 rounded-xl bg-primary-c_light`}
+            onPress={() => {
+              exportHistoryToXlsx(savedResults);
+            }}
+          >
             <ButtonText
               className={`font-h4 text-sm font-medium text-typography-primary`}
             >
