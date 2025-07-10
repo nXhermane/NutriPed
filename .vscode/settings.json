@@ -1,0 +1,24 @@
+{
+  "cSpell.words": [
+    "Actionsheet",
+    "eventrix",
+    "Gluestack",
+    "hstack",
+    "moti",
+    "motify",
+    "nativewind",
+    "nchs",
+    "Nutrix",
+    "Pressable",
+    "vstack"
+  ],
+  "tailwindCSS.experimental.classRegex": [
+    ["tva\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "tailwind-class-sorter.classRegex": {
+    "rescript": [
+      "className\\w*?=\\w*(\"[\\s\\S]+?\")|className\\w*?=\\w*?\\{([\\s\\S]+?)\\}",
+      "\"(.+?)\""
+    ]
+  }
+}

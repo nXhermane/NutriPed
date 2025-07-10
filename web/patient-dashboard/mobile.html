@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NutriPed Mobile</title>
+    <link rel="stylesheet" href="mobile-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header compact -->
+    <header class="mobile-header">
+        <div class="patient-brief">
+            <img src="placeholder.jpg" alt="Patient" class="patient-avatar">
+            <div class="patient-info">
+                <h2>John Doe</h2>
+                <span class="patient-id">ID: 12345</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="score-badge">85</span>
+            <button class="alert-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-dot">2</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="mobile-content">
+        <div class="page active" id="overview">
+            <!-- Quick Stats Cards -->
+            <div class="stats-scroll">
+                <div class="stat-card">
+                    <span class="stat-value">15.2</span>
+                    <span class="stat-label">Poids (kg)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">102</span>
+                    <span class="stat-label">Taille (cm)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">14.6</span>
+                    <span class="stat-label">IMC</span>
+                </div>
+            </div>
+
+            <!-- Growth Chart -->
+            <div class="chart-container">
+                <h3>Évolution</h3>
+                <canvas id="mobileEvolutionChart"></canvas>
+            </div>
+
+            <!-- Next Appointments -->
+            <div class="appointments-section">
+                <h3>Prochains RDV</h3>
+                <div class="appointment-cards">
+                    <!-- Appointments will be inserted by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Other pages will be similar -->
+        <div class="page" id="medical">
+            <!-- Medical content -->
+        </div>
+
+        <div class="page" id="nutrition">
+            <!-- Nutrition content -->
+        </div>
+
+        <div class="page" id="diagnostic">
+            <!-- Diagnostic content -->
+        </div>
+
+        <div class="page" id="journal">
+            <!-- Journal content -->
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-page="overview">
+            <i class="fas fa-home"></i>
+            <span>Accueil</span>
+        </button>
+        <button class="nav-item" data-page="medical">
+            <i class="fas fa-file-medical"></i>
+            <span>Médical</span>
+        </button>
+        <button class="nav-item" data-page="nutrition">
+            <i class="fas fa-apple-alt"></i>
+            <span>Nutrition</span>
+        </button>
+        <button class="nav-item" data-page="diagnostic">
+            <i class="fas fa-chart-line"></i>
+            <span>Diagnostic</span>
+        </button>
+        <button class="nav-item" data-page="journal">
+            <i class="fas fa-book-medical"></i>
+            <span>Journal</span>
+        </button>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="mobile-script.js" type="module"></script>
+</body>
+</html>

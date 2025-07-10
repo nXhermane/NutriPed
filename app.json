@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "MalNutrix",
+    "slug": "NutriPed",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/malnutrix.ic.launcher.dark.png",
+    "scheme": "nutriped",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nxhermano.nutriped"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/malnutrix.ic.launcher.dark.png",
+        "backgroundColor": "#000000"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.nxhermano.nutriped"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-font",
+      "expo-background-task",
+      "@react-native-google-signin/google-signin",
+      "expo-notifications",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/images/malnutrix.ic.launcher.light.png",
+          "resizeMode": "contain",
+          "imageWidth": 300,
+          "dark": {
+            "image": "./assets/images/malnutrix.ic.launcher.dark.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#000000",
+            "imageWidth": 300
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b391153f-b1d6-47ba-a669-6922b774806a"
+      },
+      "env": {
+        "googleKey": {
+          "android": "418037002764-e2533231mh7257eet2r7h6m1v3e3gu9e.apps.googleusercontent.com",
+          "web": "418037002764-4om6hoj6nat09m4qdqjb6oegcch4okh8.apps.googleusercontent.com"
+        }
+      }
+    }
+  }
+}

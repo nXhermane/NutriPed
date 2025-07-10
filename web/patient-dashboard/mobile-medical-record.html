@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Médical</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="mobile-medical-record.css">
+</head>
+<body>
+    <!-- En-tête fixe -->
+    <header class="medical-header">
+        <button class="back-btn">
+            <i class="material-icons">arrow_back</i>
+        </button>
+        <h1>Dossier Médical</h1>
+        <button class="add-data-btn">
+            <i class="material-icons">add</i>
+        </button>
+    </header>
+
+    <!-- Conteneur principal avec défilement -->
+    <main class="medical-content">
+        <!-- Navigation par onglets -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" data-tab="anthropometric">Anthropométrie</button>
+            <button class="tab-btn" data-tab="clinical">Signes Cliniques</button>
+            <button class="tab-btn" data-tab="biological">Biologie</button>
+            <button class="tab-btn" data-tab="complications">Complications</button>
+        </nav>
+
+        <!-- Sections de contenu -->
+        <div class="tab-content active" id="anthropometric">
+            <div class="data-card latest-measures">
+                <h3>Dernières mesures</h3>
+                <div class="measures-grid">
+                    <div class="measure-item">
+                        <span class="measure-value">15.2</span>
+                        <span class="measure-unit">kg</span>
+                        <span class="measure-label">Poids</span>
+                    </div>
+                    <div class="measure-item">
+                        <span class="measure-value">102</span>
+                        <span class="measure-unit">cm</span>
+                        <span class="measure-label">Taille</span>
+                    </div>
+                    <div class="measure-item">
+                        <span class="measure-value">14.6</span>
+                        <span class="measure-unit">kg/m²</span>
+                        <span class="measure-label">IMC</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-card">
+                <h3>Historique des mesures</h3>
+                <div class="chart-container">
+                    <canvas id="anthropometricChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="clinical">
+            <div class="clinical-signs-list">
+                <!-- Les signes cliniques seront ajoutés ici dynamiquement -->
+            </div>
+        </div>
+
+        <div class="tab-content" id="biological">
+            <div class="biological-values-list">
+                <!-- Les valeurs biologiques seront ajoutées ici dynamiquement -->
+            </div>
+        </div>
+
+        <div class="tab-content" id="complications">
+            <div class="complications-list">
+                <!-- Les complications seront ajoutées ici dynamiquement -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal d'ajout de données -->
+    <div class="add-data-modal" id="addDataModal">
+        <div class="modal-content">
+            <h2>Ajouter une donnée</h2>
+            <!-- Le formulaire sera ajouté dynamiquement selon le type de données -->
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // Gestion des onglets
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Retirer la classe active de tous les onglets
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+
+            // Ajouter la classe active à l'onglet sélectionné
+            tab.classList.add('active');
+            const content = document.getElementById(tab.dataset.tab);
+            content.classList.add('active');
+        });
+    });
+
+    // Initialisation du graphique
+    const ctx = document.getElementById('anthropometricChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
+            datasets: [{
+                label: 'Poids (kg)',
+                data: [14.2, 14.5, 14.8, 15.0, 15.2, 15.2],
+                borderColor: '#4CAF50',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+    // Exemple de chargement des données cliniques
+    function loadClinicalSigns() {
+        const clinicalList = document.querySelector('.clinical-signs-list');
+        const sampleData = [
+            { code: 'FEVER', data: { present: true, temperature: 38.5 } },
+            { code: 'APPETITE', data: { score: 3, notes: 'Diminué' } }
+        ];
+
+        clinicalList.innerHTML = sampleData.map(sign => `
+            <div class="data-card">
+                <h3>${sign.code}</h3>
+                <div class="clinical-data">
+                    ${Object.entries(sign.data).map(([key, value]) => `
+                        <div class="data-item">
+                            <span class="label">${key}:</span>
+                            <span class="value">${value}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Gestionnaire du modal d'ajout
+    const addButton = document.querySelector('.add-data-btn');
+    const modal = document.getElementById('addDataModal');
+
+    addButton.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Charger les données initiales
+    loadClinicalSigns();
+});
+    </script>
+</body>
+</html>

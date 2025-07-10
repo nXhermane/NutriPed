@@ -1,0 +1,190 @@
+:root {
+  --primary-color: #4caf50;
+  --secondary-color: #2196f3;
+  --background-color: #f5f5f5;
+  --card-background: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-radius: 12px;
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--background-color);
+  padding-top: calc(60px + var(--safe-area-top));
+  padding-bottom: var(--safe-area-bottom);
+}
+
+/* Header Styles */
+.medical-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--card-background);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  padding-top: var(--safe-area-top);
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.medical-header h1 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.back-btn,
+.add-data-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  color: var(--primary-color);
+}
+
+/* Tabs Navigation */
+.tabs-nav {
+  display: flex;
+  overflow-x: auto;
+  background: var(--card-background);
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  padding: 12px 16px;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.tab-btn.active {
+  color: var(--primary-color);
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--primary-color);
+}
+
+/* Content Styles */
+.medical-content {
+  padding: 16px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.data-card {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.data-card h3 {
+  margin-bottom: 16px;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* Measures Grid */
+.measures-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.measure-item {
+  text-align: center;
+  padding: 12px;
+  background: var(--background-color);
+  border-radius: 8px;
+}
+
+.measure-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.measure-unit {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.measure-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Chart Container */
+.chart-container {
+  height: 200px;
+  margin-top: 16px;
+}
+
+/* Lists Styles */
+.clinical-signs-list,
+.biological-values-list,
+.complications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Modal Styles */
+.add-data-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card-background);
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  padding-bottom: calc(20px + var(--safe-area-bottom));
+}
