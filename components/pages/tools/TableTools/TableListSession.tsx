@@ -1,7 +1,6 @@
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useGrowthTables } from "@/src/hooks";
 import { useEffect } from "react";
@@ -9,7 +8,6 @@ import { ScrollView } from "react-native";
 import colors from "tailwindcss/colors";
 import { TableCard } from "./TableCard";
 import { TABLE_UI_DATA } from "@/src/constants/ui";
-import { GrowthRefChartAndTableCodes } from "@/core/constants";
 import { FadeInCardY } from "@/components/custom/motion";
 import { router } from "expo-router";
 import { useToast } from "@/src/context";

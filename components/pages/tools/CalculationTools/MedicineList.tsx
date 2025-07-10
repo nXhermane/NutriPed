@@ -45,7 +45,7 @@ export const MedicineList: React.FC<MedicineListProps> = ({
 
   return (
     <React.Fragment>
-      <VStack className="p-4">
+      <VStack className="p-4 bg-background-primary">
         <FlatList
           contentContainerClassName="pb-8"
           initialNumToRender={10}

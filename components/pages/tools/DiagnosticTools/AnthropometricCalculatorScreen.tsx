@@ -1,8 +1,13 @@
 import * as React from "react";
-import { View, useWindowDimensions } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { useWindowDimensions } from "react-native";
+import {
+  TabView,
+  SceneMap,
+  TabBar,
+} from "react-native-tab-view";
 import { AnthropometricCalculatorPanel } from "./AnthropometricCalculatorPanel";
 import { AnthropometricCalculatorHistory } from "./AnthropometricCalculatorHistory";
+import { TabBarItem } from "../../shared";
 
 const renderScene = SceneMap({
   first: AnthropometricCalculatorPanel,
@@ -10,7 +15,7 @@ const renderScene = SceneMap({
 });
 
 const routes = [
-  { key: "first", title: "Calculator" },
+  { key: "first", title: "Calcul" },
   { key: "second", title: "Historique" },
 ];
 
@@ -23,6 +28,14 @@ export const AnthropometricCalculatorScreen = () => {
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
+      renderTabBar={tabBarProps => (
+        <TabBar
+          {...tabBarProps}
+          renderTabBarItem={({ key, ...otherProps }) => (
+            <TabBarItem {...otherProps} key={key} />
+          )}
+        />
+      )}
     />
   );
 };

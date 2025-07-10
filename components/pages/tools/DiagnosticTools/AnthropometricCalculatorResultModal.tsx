@@ -16,15 +16,16 @@ import { Button, ButtonIcon } from "@/components/ui/button";
 import { Save } from "lucide-react-native";
 
 interface AnthropometricCalculatorResultModalProps {
+  title?: string;
   isVisible: boolean;
   results: GrowthIndicatorValueDto[] | null;
   onClose: () => void;
-  onSave: () => void;
+  onSave?: () => void;
 }
 
 export const AnthropometricCalculatorResultModal: React.FC<
   AnthropometricCalculatorResultModalProps
-> = ({ isVisible, results, onClose, onSave }) => {
+> = ({ isVisible, results, onClose, onSave, title }) => {
   const { colorMode } = useUI();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -34,7 +35,7 @@ export const AnthropometricCalculatorResultModal: React.FC<
     } else {
       bottomSheetModalRef.current?.close();
     }
-  }, [isVisible]);
+  }, [isVisible])
 
   return (
     <BottomSheetModalProvider>
@@ -57,17 +58,19 @@ export const AnthropometricCalculatorResultModal: React.FC<
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           {results && (
             <FadeInCardY delayNumber={3}>
-              <AnthropometricCalculatorResult results={results} />
+              <AnthropometricCalculatorResult title={title} results={results} />
             </FadeInCardY>
           )}
         </BottomSheetScrollView>
 
-        <Button
-          className="absolute right-4 top-3 rounded-full bg-primary-c_light p-3"
-          onPress={onSave}
-        >
-          <ButtonIcon as={Save} className="text-typography-primary" />
-        </Button>
+        {onSave && (
+          <Button
+            className="absolute right-4 top-3 rounded-full bg-primary-c_light p-3"
+            onPress={onSave}
+          >
+            <ButtonIcon as={Save} className="text-typography-primary" />
+          </Button>
+        )}
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );
