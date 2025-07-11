@@ -52,6 +52,7 @@
     "@gluestack-ui/tooltip": "^0.1.44",
     "@gorhom/bottom-sheet": "^5",
     "@legendapp/motion": "^2.4.0",
+    "@notifee/react-native": "^9.1.8",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
     "@react-native-community/netinfo": "11.4.1",
@@ -187,7 +188,8 @@
           "react-native-web-swiper",
           "redux-persist",
           "react-native-receive-sharing-intent",
-          "react-native-restart"
+          "react-native-restart",
+          "react-native-push-notification"
         ]
       }
     }
