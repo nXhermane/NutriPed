@@ -4,4 +4,4 @@ export * from "./useGrowthIndicators";
 export * from "./useGrowthTables";
 export * from "./useMedicines";
 export * from "./useMilks";
-export * from "./useClinicalReference"
+export * from "./useClinicalReference";

@@ -1,2 +1,2 @@
-export * from "./PdfViewer"
-export * from "./PdfViewerHeader"
+export * from "./PdfViewer";
+export * from "./PdfViewerHeader";

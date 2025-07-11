@@ -1,10 +1,6 @@
 import * as React from "react";
 import { useWindowDimensions } from "react-native";
-import {
-  TabView,
-  SceneMap,
-  TabBar,
-} from "react-native-tab-view";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { AnthropometricCalculatorPanel } from "./AnthropometricCalculatorPanel";
 import { AnthropometricCalculatorHistory } from "./AnthropometricCalculatorHistory";
 import { TabBarItem } from "../../shared";

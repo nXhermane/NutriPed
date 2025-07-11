@@ -1,5 +1,5 @@
 import { FadeInCardX } from "@/components/custom/motion";
-import { GrowthIndicatorValueDto ,AnthroSystemCodes} from "@/core/diagnostics";
+import { GrowthIndicatorValueDto, AnthroSystemCodes } from "@/core/diagnostics";
 import React from "react";
 import { IndicatorCard } from "./IndicatorCard";
 import { VStack } from "@/components/ui/vstack";

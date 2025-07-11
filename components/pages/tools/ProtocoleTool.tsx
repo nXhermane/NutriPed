@@ -3,10 +3,8 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { Pressable } from "@/components/ui/pressable";
 import { View } from "@/components/ui/view";
-import { MokedProtocolList } from "@/data";
-import { FlatList } from "react-native";
+import { FlatList, ToastAndroid } from "react-native";
 import { CardPressEffect, FadeInCardY } from "@/components/custom/motion";
 import { Divider } from "@/components/ui/divider";
 import { router } from "expo-router";
@@ -88,19 +86,25 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
     loadProtocoleList();
   }, []);
 
+  useEffect(() => {
+    if (newVersionAvailable)
+      ToastAndroid.show(
+        "Une nouvelle version du protocole est disponible. Vous pouvez le télécharger en cliquant sur le bouton a droite.",
+        5000
+      );
+  }, [newVersionAvailable]);
   return (
     <React.Fragment>
       <ProtocleToolList data={protocolList} />
       {newVersionAvailable && (
-        <Pressable onPress={downloadProtocole}>
-          <Fab
-            placement="bottom right"
-            className="h-12 w-12 bg-primary-c_light"
-          >
-            <View className="absolute right-0 top-0 h-2 w-2 animate-ping rounded-full bg-red-500" />
-            <FabIcon as={ArrowDownCircle} className="h-6 w-6 text-white" />
-          </Fab>
-        </Pressable>
+        <Fab
+          placement="bottom right"
+          className="h-12 w-12 bg-primary-c_light"
+          onPress={downloadProtocole}
+        >
+          <View className="absolute right-1 top-1 h-2 w-2 animate-ping rounded-full bg-red-500" />
+          <FabIcon as={ArrowDownCircle} className="h-6 w-6 text-white" />
+        </Fab>
       )}
     </React.Fragment>
   );

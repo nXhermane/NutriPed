@@ -1,6 +1,9 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 
-async function waitForFileToExist(uri: string, timeout = 5000): Promise<boolean> {
+async function waitForFileToExist(
+  uri: string,
+  timeout = 5000
+): Promise<boolean> {
   const start = Date.now();
   while (Date.now() - start < timeout) {
     const info = await FileSystem.getInfoAsync(uri);
@@ -20,26 +23,26 @@ const extractFileNameFromUrl = (url: string): string => {
     const urlObj = new URL(url);
     // Prend la partie après le dernier slash
     const pathname = urlObj.pathname;
-    let filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+    let filename = pathname.substring(pathname.lastIndexOf("/") + 1);
 
     // Optionnel : nettoyage pour enlever query params ou autres si présents
-    filename = filename.split('?')[0];
+    filename = filename.split("?")[0];
 
     // Si l'URL ne contient pas de nom de fichier, générer un fallback
     if (!filename) {
-      filename = 'downloaded_file';
+      filename = "downloaded_file";
     }
     return filename;
   } catch {
     // En cas d'URL invalide, fallback
-    return 'downloaded_file';
+    return "downloaded_file";
   }
 };
 
 /**
  * Télécharge un fichier depuis une URL et le stocke localement.
  * S'il existe déjà, renvoie simplement le chemin local.
- * 
+ *
  * @param fileUrl URL du fichier à télécharger
  * @returns chemin local vers le fichier stocké
  */
@@ -67,15 +70,17 @@ export const downloadAndCacheFile = async (
       fileUrl,
       fileUri,
       {
-        cache: true
+        cache: true,
       },
-      (downloadProgress) => {
-        const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+      downloadProgress => {
+        const progress =
+          downloadProgress.totalBytesWritten /
+          downloadProgress.totalBytesExpectedToWrite;
         callback?.(progress);
       }
     );
 
-    const downloadResult = await downloadResumable.downloadAsync()//await FileSystem.downloadAsync(fileUrl, fileUri, {});
+    const downloadResult = await downloadResumable.downloadAsync(); //await FileSystem.downloadAsync(fileUrl, fileUri, {});
 
     if (!downloadResult || !downloadResult.uri) {
       throw new Error("Erreur de téléchargement");

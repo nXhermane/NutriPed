@@ -146,7 +146,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
           trustAllCerts={true}
           source={{ uri }}
           onLoadComplete={(numberOfPages, filePath, size, tableContent) => {
-            // console.log("Table content",tableContent)
+            console.log("Table content", tableContent);
             // console.log(`Number of pages: ${numberOfPages}`);
           }}
           onPageChanged={(page, numberOfPages) => {
