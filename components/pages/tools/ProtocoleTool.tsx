@@ -40,8 +40,7 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
   const downloadProtocole = async () => {
     const fileUri = await downloadAndCacheFile(
       CORE_CONFIG.protocolesUrl,
-      false,
-      progress => console.log("Progress", progress)
+      false
     );
     if (fileUri) {
       const readFile = await FileSystem.readAsStringAsync(fileUri, {
