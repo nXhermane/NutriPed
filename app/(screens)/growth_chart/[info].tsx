@@ -2,10 +2,8 @@ import { GrowthReferenceChart } from "@/components/pages/chart_detail";
 import { GrowthChartScreenHeader } from "@/components/pages/growth_chart";
 import { Center } from "@/components/ui/center";
 import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
 import {
   GetGrowthReferenceChartRequest,
-  GrowthIndicatorValue,
   GrowthIndicatorValueDto,
 } from "@/core/diagnostics";
 import { useUI } from "@/src/context";

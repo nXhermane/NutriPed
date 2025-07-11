@@ -2,22 +2,24 @@ import { useToast, useUI } from "@/src/context";
 import { downloadAndCacheFile } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
-import { Center } from "../ui/center";
-import { Spinner } from "../ui/spinner";
-import { Text } from "../ui/text";
+import { Center } from "../../ui/center";
+import { Spinner } from "../../ui/spinner";
+import { Text } from "../../ui/text";
 import colors from "tailwindcss/colors";
-import { Fab, FabIcon } from "../ui/fab";
+import { Fab, FabIcon } from "../../ui/fab";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import { ExternalLink } from "lucide-react-native";
-import { VStack } from "../ui/vstack";
-import { Progress, ProgressFilledTrack } from "../ui/progress";
+import { VStack } from "../../ui/vstack";
+import { Progress, ProgressFilledTrack } from "../../ui/progress";
 import Pdf from "react-native-pdf";
 import { Linking } from "react-native";
 
 const PdfCurrentPageStorageKey = (uri: string) => `${uri}_current_page`;
+export type PdfSourceUri = `file:///${string}.pdf`;
+export type PdfSourceUrl = `https://${string}.pdf`;
 export interface PdfViewerProps {
-  source: { uri: `file:///${string}` } | { url: `https://${string}` };
+  source: { uri: PdfSourceUri } | { url: PdfSourceUrl };
   forceDownload?: boolean;
 }
 
@@ -96,6 +98,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
               data: contentUri,
               type: "application/pdf",
               flags: 1,
+              
             }
           );
         }}
@@ -115,8 +118,15 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
         </Progress>
 
         <Pdf
+        enableAnnotationRendering={true}
+        enableAntialiasing={true}
+        enableDoubleTapZoom={true}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        trustAllCerts={true}
           source={{ uri }}
-          onLoadComplete={(numberOfPages, filePath, size) => {
+          onLoadComplete={(numberOfPages, filePath, size,tableContent) => {
+            console.log("Table content",tableContent)
             // console.log(`Number of pages: ${numberOfPages}`);
           }}
           onPageChanged={(page, numberOfPages) => {

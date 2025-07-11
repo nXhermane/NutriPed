@@ -6,7 +6,6 @@ import { SessionEmpty } from "../home/shared/SessionEmpty";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import React from "react";
-import Fuse from "fuse.js";
 import { Box } from "@/components/ui/box";
 import { Guard } from "@/core/shared";
 import { Spinner } from "@/components/ui/spinner";

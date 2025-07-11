@@ -1,5 +1,10 @@
-Pour le tools calcule la première fonctionnalite serai la suggestion de lait ? avec les donnee ou pourra calculer la quantité que l'enfant doit consommer rapporter a son poids et les autres informations complementaire 
+Dans le tools diagnostic on a quatre modules à savoir: 
+ - Calcule anthropometrique 
+ - Evaluation clinique 
+ - Bilan Biologique 
+ - Diagnostic Global 
 
-la deuxième serait la fonctionnalite de calcule du dosage du medicament en fonction du poids. On affiche d'abord la liste des médicaments puis on pourra cliquer sur chaque médicamenet et donnee le poids et on pourra obtenir la dose a consommer par l'enfant
-
-Pour le tools diagnostic on pourra proposer la liste de diagnostic a faire mais je ne sais pas si cela pourrai marcher ou bien il serai judicieux de bien penser l'archi 
+Pour le module de calcule anthropometrique on pourra entrer des valeurs des pour chaque mesures anthropometrique et le systeme va determiner les growthIndicatorValues qui sont possibles à calculer avec ces mesures 
+Pour le module Evaluation clinique , nous savons que dans la base de donnée, nous avons pour chaque signe clinique, un essemble de question ou de champs a remplir. et si l'on fournir toutes ces variables la on pourra 
+ - Dans ce module la première étape serai la construction d'un formulaire adapter en extrayant les donnees de reference disponible dans la base de donnee. et la on va pas les organisers en fonction des signes cliniques bien que cela peut le sembler que c'est organiser par signe on aura pas a repeter les memes variables deux fois puisque d'après les données disponibles dans la base de donnée, 
+   il peut exister une meme variable qui est interpretée de deux manières differentes pour confirmer un signe clinique. 
