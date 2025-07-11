@@ -1,11 +1,7 @@
 import { useToast, useUI } from "@/src/context";
 import { downloadAndCacheFile } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-<<<<<<< HEAD
 import React from "react";
-=======
-import React, { useEffect, useMemo } from "react";
->>>>>>> c3547ac (feat: Update version to v0.0.13-beta, enhance PDF viewer with download progress, and implement protocol download functionality)
 import { Center } from "../../ui/center";
 import { Text } from "../../ui/text";
 import { Fab, FabIcon } from "../../ui/fab";
@@ -146,11 +142,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
           trustAllCerts={true}
           source={{ uri }}
           onLoadComplete={(numberOfPages, filePath, size, tableContent) => {
-<<<<<<< HEAD
             console.log("Table content", tableContent);
-=======
-            // console.log("Table content",tableContent)
->>>>>>> c3547ac (feat: Update version to v0.0.13-beta, enhance PDF viewer with download progress, and implement protocol download functionality)
             // console.log(`Number of pages: ${numberOfPages}`);
           }}
           onPageChanged={(page, numberOfPages) => {

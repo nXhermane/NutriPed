@@ -1,19 +1,9 @@
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from 'expo-file-system';
 
 async function waitForFileToExist(
   uri: string,
   timeout = 5000
 ): Promise<boolean> {
-  const start = Date.now();
-  while (Date.now() - start < timeout) {
-    const info = await FileSystem.getInfoAsync(uri);
-    if (info.exists && info.size > 0) return true;
-    await new Promise(resolve => setTimeout(resolve, 100)); // petite pause avant de réessayer
-  }
-  return false;
-}
-
-async function waitForFileToExist(uri: string, timeout = 5000): Promise<boolean> {
   const start = Date.now();
   while (Date.now() - start < timeout) {
     const info = await FileSystem.getInfoAsync(uri);
