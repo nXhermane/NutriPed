@@ -36,7 +36,7 @@ export const HeightField = {
     value: 0,
   },
   defaultUnit: { unit: "cm", convertionFactor: 1, label: "cm" },
-  label: "Taille Debout",
+  label: "Taille",
   name: AnthroSystemCodes.HEIGHT,
   unitOptions: [
     { unit: "cm", convertionFactor: 1, label: "cm" },
@@ -52,7 +52,7 @@ export const LengthField = {
     value: 0,
   },
   defaultUnit: { unit: "cm", convertionFactor: 1, label: "cm" },
-  label: "Taille Couchée",
+  label: "Longueur",
   name: AnthroSystemCodes.LENGTH,
   unitOptions: [
     { unit: "cm", convertionFactor: 1, label: "cm" },

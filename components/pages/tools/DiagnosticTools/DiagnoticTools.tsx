@@ -1,5 +1,5 @@
 import { Text } from "@/components/ui/text";
-import { NavigationIndependentTree } from "@react-navigation/native";
+import { NavigationIndependentTree, useNavigation } from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
@@ -22,6 +22,7 @@ import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
 const Drawer = createDrawerNavigator();
 
 export const DiagnosticTools = ({}) => {
+  const navigation = useNavigation()
   return (
     <VStack className="flex-1">
       <NavigationIndependentTree>

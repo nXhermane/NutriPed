@@ -24,7 +24,7 @@ export const PdfViewerHeader: React.FC<PdfViewerHeaderProps> = ({ name }) => {
         <Icon as={X} className={"h-7 w-7 text-typography-primary"} />
       </Pressable>
       <Box className="w-[80%]">
-        <Heading className="font-h4 text-sm font-medium">{name}</Heading>
+        <Heading className="font-h4 text-sm font-medium" numberOfLines={1}>{name}</Heading>
       </Box>
     </HStack>
   );
