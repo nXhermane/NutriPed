@@ -21,7 +21,7 @@ export function useExportAnthropometicResultToXlsx() {
         }
         const row: string[] = []
         headers.forEach((key) => {
-            row.push(String((rawData as any)[key] ?? "N/A"))
+            row.push(String((rawData as any)[key] ?? ""))
         })
         return row
     }, [])
@@ -45,11 +45,13 @@ export function useExportAnthropometicResultToXlsx() {
                 header: 1,
                 defval: ''
             });
-            const headers = templateData[0]
+            const keys = templateData[0]
+            const headers = templateData[1]
+
 
             const newData = [headers]
             data.forEach(item => {
-                const row = mapDataToRow(item, headers as string[])
+                const row = mapDataToRow(item, keys as string[])
                 newData.push(row)
             })
             const newWorksheet = XLSX.utils.aoa_to_sheet(newData as any)
@@ -60,8 +62,7 @@ export function useExportAnthropometicResultToXlsx() {
                 type: 'base64',
                 bookType: 'xlsx'
             });
-            const fileUri = FileSystem.cacheDirectory + "donnees_anthropometrie.xlsx";
-            console.log(fileUri)
+            const fileUri = FileSystem.cacheDirectory + "donnees_anthropometrie.malnutrix.xlsx";
             await FileSystem.writeAsStringAsync(fileUri, wbout, {
                 encoding: FileSystem.EncodingType.Base64,
             });
