@@ -4,6 +4,7 @@ import { VStack } from "@/components/ui/vstack";
 import { GrowthIndicatorValueDto } from "@/core/diagnostics";
 import { useUI } from "@/src/context";
 import {
+  BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
@@ -71,6 +72,11 @@ export const AnthropometricCalculatorResultModal: React.FC<
             colorMode === "light" ? colors.gray["300"] : colors.gray["500"],
         }}
         handleComponent={props => <BottomSheetDragIndicator {...props} />}
+        backdropComponent={(props) => <BottomSheetBackdrop  {...props} style={{
+          backgroundColor: 'red',
+          width: '100%',
+          height: '100%'
+        }}/>}
         backgroundComponent={props => {
           return (
             <VStack {...props} className="rounded-2xl bg-background-primary" />

@@ -14,6 +14,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { ClinicalNutritionalAnalysisResultDto } from "@/core/diagnostics";
 import {
   useClinicalReference,
   useClinicalSignReferenceFormGenerator,
@@ -24,6 +25,7 @@ import { useRef, useState } from "react";
 import { ScrollView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import colors from "tailwindcss/colors";
+import { ClinicalEvaluationResultModal } from "./ClinicalEvaluationResultModal";
 
 export function ClinicalEvaluationScreen() {
   const { data, onLoading, error } = useClinicalReference();
@@ -37,6 +39,10 @@ export function ClinicalEvaluationScreen() {
   const [onSubmit, setOnSubmit] = useState<boolean>(false);
   const [onError, setOnError] = useState<boolean>(false);
   const [onSucess, setOnSucess] = useState<boolean>(false);
+  const [clinicalEvaluationResult, setClinicalEvaluationResult] = useState<
+    ClinicalNutritionalAnalysisResultDto[] | null
+  >(null);
+  const [showResultModal, setShowResultModal] = useState<boolean>(false);
   const handleSubmitForm = async () => {
     setOnSubmit(true);
     setOnError(false);
@@ -45,8 +51,9 @@ export function ClinicalEvaluationScreen() {
     if (data) {
       const result = await handleClinicalEvaluation(data, variableUsageMap!);
       if (result && "data" in result) {
-        console.log(JSON.stringify(result.data));
+        setClinicalEvaluationResult(result.data);
         setOnSucess(true);
+        setShowResultModal(true);
       } else {
         setOnError(true);
       }
@@ -113,6 +120,11 @@ export function ClinicalEvaluationScreen() {
           </Button>
         </FakeBlur>
       </HStack>
+      <ClinicalEvaluationResultModal
+        isVisible={showResultModal}
+        results={clinicalEvaluationResult!}
+        onClose={() => setShowResultModal(false)}
+      />
     </HStack>
   );
 }
