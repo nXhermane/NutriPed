@@ -10,6 +10,7 @@ import { Icon } from "@/components/ui/icon";
 import { Lightbulb, TriangleAlert, Zap } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
 import { Guard } from "@/core/shared";
+import { FakeBlur } from "@/components/custom";
 
 export interface MedicineDosageResultProps {
   result: MedicineDosageResultDto;
@@ -29,7 +30,7 @@ export const MedicineDosageResult: React.FC<MedicineDosageResultProps> = ({
   return (
     <React.Fragment>
       <VStack className="m-4 overflow-hidden rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-2 py-3">
-        <BlurView intensity={10} className="absolute -left-1 h-[50vh] w-2" />
+        <FakeBlur /* intensity={10} (*/ className="absolute -left-1 h-[50vh] w-2" />
         <HStack className="mb-3 w-full">
           <Heading className="font-h4 text-lg font-medium text-primary-c_light">
             Résultat du dosage

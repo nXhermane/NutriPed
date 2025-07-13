@@ -4,7 +4,7 @@ import {
   AnthropometricCalculatorFormSchema,
   AnthropometricCalculatorFormZodSchema,
 } from "@/src/constants/ui";
-import { FormHandler } from "@/components/custom";
+import { FakeBlur, FormHandler } from "@/components/custom";
 import { usePediatricApp } from "@/adapter";
 import {
   CalculateAllAvailableGrowthIndicatorValueRequest,
@@ -27,6 +27,8 @@ import { AnthropometricCalculatorSavingLabelModal } from "./AnthropometricCalcul
 import { useDispatch } from "react-redux";
 import { addAnthropometricCalculatorResult } from "@/src/store";
 import { usePicker } from "@/src/hooks";
+import { LinearGradient } from "expo-linear-gradient";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export const AnthropometricCalculatorPanel = () => {
   const {
@@ -113,24 +115,28 @@ export const AnthropometricCalculatorPanel = () => {
 
   return (
     <React.Fragment>
-      <ScrollView
+      <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         className="bg-background-primary"
       >
-        <VStack className="pb-16">
+        <VStack className="pb-16 bg-background-primary">
           <AnthropometricCalcualtorForm
             formRef={formRef}
             schema={AnthropometricCalculatorFormSchema}
             zodSchema={AnthropometricCalculatorFormZodSchema}
           />
         </VStack>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       <HStack className="absolute bottom-0 w-full overflow-hidden rounded-xl">
-        <BlurView
+        {/* <BlurView
           experimentalBlurMethod="dimezisBlurView"
           intensity={50}
           tint={colorMode}
+          className="w-full px-8 py-4"
+        > */}
+        <FakeBlur
+            
           className="w-full px-8 py-4"
         >
           <Button
@@ -153,7 +159,8 @@ export const AnthropometricCalculatorPanel = () => {
             )}
             {error && <ButtonIcon as={X} className="text-typography-primary" />}
           </Button>
-        </BlurView>
+        </FakeBlur>
+        {/* </BlurView> */}
       </HStack>
 
       <AnthropometricCalculatorResultModal

@@ -6,11 +6,7 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "android": {
-        "image": "ubuntu-20.04-jdk-11-ndk-r19c",
-        "node": "20.18.1"
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"

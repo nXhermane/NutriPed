@@ -1,5 +1,8 @@
 import { Text } from "@/components/ui/text";
-import { NavigationIndependentTree, useNavigation } from "@react-navigation/native";
+import {
+  NavigationIndependentTree,
+  useNavigation,
+} from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
@@ -18,11 +21,12 @@ import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen
 import { ClinicalEvaluationScreen } from "./ClinicalEvaluationScreen";
 import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen";
 import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
+import { FakeBlur } from "@/components/custom";
 
 const Drawer = createDrawerNavigator();
 
 export const DiagnosticTools = ({}) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <VStack className="flex-1">
       <NavigationIndependentTree>
@@ -80,10 +84,10 @@ export const DiagnosticToolDrawerContent: React.FC<
       </Pressable>
 
       <VStack className="absolute h-full w-full justify-center overflow-hidden rounded-r-2xl">
-        <BlurView
-          experimentalBlurMethod="dimezisBlurView"
-          intensity={90}
-          tint={colorMode}
+        <FakeBlur
+          // experimentalBlurMethod="dimezisBlurView"
+          // intensity={90}
+          // tint={colorMode}
           className="h-full items-center justify-center gap-3 px-4"
         >
           {state.routes.map((route, index) => {
@@ -102,7 +106,7 @@ export const DiagnosticToolDrawerContent: React.FC<
               />
             );
           })}
-        </BlurView>
+        </FakeBlur>
       </VStack>
     </VStack>
   );
@@ -122,10 +126,10 @@ export const DiagnosticDrawerItem: React.FC<DiagnosticDrawerItemProps> = ({
   return (
     <Pressable onPress={onPress}>
       <HStack
-        className={`h-v-10 items-center justify-center rounded-xl border-[1px] px-4 ${isActive ? "border-primary-c_light/10 bg-primary-c_light/5" : "border-primary-border/5 bg-background-secondary"}`}
+        className={`h-v-10 items-center justify-center rounded-xl border-[1px] px-4 ${isActive ? "border-primary-c_light/10 bg-primary-c_light dark:bg-primary-c_light/5" : "border-primary-border/5 bg-background-secondary"}`}
       >
         <Text
-          className={`w-full text-left font-h4 text-sm font-medium ${isActive ? "text-primary-c_light" : "text-typography-primary_light"}`}
+          className={`w-full text-left font-h4 text-sm font-medium ${isActive ? "text-white dark:text-primary-c_light" : "text-typography-primary_light"}`}
         >
           {label}
         </Text>

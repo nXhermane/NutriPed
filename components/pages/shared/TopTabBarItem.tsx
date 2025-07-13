@@ -1,8 +1,10 @@
+import { FakeBlur } from "@/components/custom";
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { useUI } from "@/src/context";
 import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { TabBarItemProps } from "react-native-tab-view";
 
@@ -37,11 +39,12 @@ export function TabBarItem(props: TabBarItemProps<any>) {
         >
           {props.route.title}
         </Text>
-        <BlurView
+        {/* <FakeBlur className="absolute bottom-0 h-v-1 w-full" /> */}
+        {/* <BlurView
           className="absolute bottom-0 h-v-1 w-[100%]"
           experimentalBlurMethod="dimezisBlurView"
           tint={colorMode}
-        />
+        /> */}
       </HStack>
     </Pressable>
   );

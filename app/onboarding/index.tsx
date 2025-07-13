@@ -139,7 +139,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
         )}
         {!hideNextBtn && (
           <Button
-            className={"elevation-md rounded-xl bg-primary-c_light"}
+            className={"rounded-xl bg-primary-c_light"}
             // variant={"solid"}
             onPress={onNextBtnPress}
           >

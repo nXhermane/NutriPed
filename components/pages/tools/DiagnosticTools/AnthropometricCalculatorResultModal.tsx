@@ -8,7 +8,7 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import React from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 import colors from "tailwindcss/colors";
 import { AnthropometricCalculatorResult } from "./AnthropometricCalculatorResult";
@@ -29,7 +29,7 @@ export const AnthropometricCalculatorResultModal: React.FC<
 > = ({ isVisible, results, onClose, onSave, title }) => {
   const { colorMode } = useUI();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   React.useEffect(() => {
     if (isVisible) {
       bottomSheetModalRef.current?.present();
@@ -42,7 +42,7 @@ export const AnthropometricCalculatorResultModal: React.FC<
     <BottomSheetModalProvider>
       <BottomSheetModal
         onDismiss={() => {
-          if (onSave) {
+          if (onSave && !isSaved) {
             Alert.alert(
               "Attention!",
               "Voulez vous sauvegarder le resultat du calcul ? Sinon vous les perdrez.",
@@ -89,7 +89,10 @@ export const AnthropometricCalculatorResultModal: React.FC<
         {onSave && (
           <Button
             className="absolute right-4 top-3 rounded-full bg-primary-c_light p-3"
-            onPress={onSave}
+            onPress={() => {
+              onSave();
+              setIsSaved(true);
+            }}
           >
             <ButtonIcon as={Save} className="text-typography-primary" />
           </Button>

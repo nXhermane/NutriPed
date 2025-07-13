@@ -1,13 +1,50 @@
+import {
+  DynamicFormGenerator,
+  FakeBlur,
+  FormHandler,
+} from "@/components/custom";
+import {
+  Button,
+  ButtonIcon,
+  ButtonSpinner,
+  ButtonText,
+} from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
+import { HStack } from "@/components/ui/hstack";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useClinicalReference } from "@/src/hooks";
+import {
+  useClinicalReference,
+  useClinicalSignReferenceFormGenerator,
+} from "@/src/hooks";
+import { Calculator, Check, Stethoscope, X } from "lucide-react-native";
+import { useRef, useState } from "react";
+import { ScrollView } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import colors from "tailwindcss/colors";
 
 export function ClinicalEvaluationScreen() {
   const { data, onLoading, error } = useClinicalReference();
-  if (onLoading)
+  const { data: formData, onLoading: formOnLoading } =
+    useClinicalSignReferenceFormGenerator(data);
+  const dynamicFormRef = useRef<FormHandler<any>>(null);
+  const [onSubmit, setOnSubmit] = useState<boolean>(false);
+  const [onError, setOnError] = useState<boolean>(false);
+  const [onSucess, setOnSucess] = useState<boolean>(false);
+  const handleSubmitForm = async () => {
+    setOnSubmit(true);
+    setOnError(false);
+    setOnSucess(false);
+    const data = await dynamicFormRef.current?.submit();
+    if (data) {
+      console.log(data);
+    } else {
+      setOnError(true);
+    }
+    setOnSubmit(false);
+  };
+  if (onLoading || formOnLoading || !formData)
     return (
       <Center className="flex-1 bg-background-primary">
         <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
@@ -17,10 +54,50 @@ export function ClinicalEvaluationScreen() {
       </Center>
     );
 
-  console.log(data[0]);
   return (
-    <VStack className="flex-1 items-center justify-between bg-background-primary">
-      <Text>Evaluation clinique</Text>
-    </VStack>
+    <HStack className="flex-1 items-center justify-between bg-background-primary">
+      <VStack className="mx-4 my-4 rounded-xl bg-background-secondary p-3 pb-16">
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+          {formData && (
+            <DynamicFormGenerator
+              ref={dynamicFormRef}
+              schema={formData.schema}
+              zodSchema={formData.zodSchema}
+              className="p-0 px-0"
+            />
+          )}
+        </KeyboardAwareScrollView>
+      </VStack>
+      <HStack className="absolute bottom-0 w-full overflow-hidden rounded-xl">
+        <FakeBlur className="w-full px-8 py-4">
+          <Button
+            className={`h-v-10 w-full rounded-xl ${onError ? "bg-red-500" : "bg-primary-c_light"}`}
+            onPress={handleSubmitForm}
+          >
+            {onSubmit ? (
+              <ButtonSpinner
+                size={"small"}
+                className="data-[active=true]:text-primary-c_light"
+              />
+            ) : (
+              <ButtonIcon
+                as={Stethoscope}
+                className="text-typography-primary"
+              />
+            )}
+            <ButtonText className="font-h4 font-medium text-typography-primary data-[active=true]:text-primary-c_light">
+              Examiner
+            </ButtonText>
+
+            {onSucess && (
+              <ButtonIcon as={Check} className="text-typography-primary" />
+            )}
+            {onError && (
+              <ButtonIcon as={X} className="text-typography-primary" />
+            )}
+          </Button>
+        </FakeBlur>
+      </HStack>
+    </HStack>
   );
 }

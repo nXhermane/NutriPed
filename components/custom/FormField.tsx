@@ -63,9 +63,16 @@ type CommonFieldProps = {
 };
 
 type TextField = CommonFieldProps & {
-  type: "text" | "password" | "number" | "textarea";
+  type: "text" | "password" | "textarea";
   placeholder?: string;
   default: string;
+};
+type NumberField = CommonFieldProps & {
+  type: "number";
+  placeholder?: string;
+  default: number;
+  minValue?: number;
+  maxValue?: number;
 };
 
 type SelectField = CommonFieldProps & {
@@ -108,6 +115,7 @@ type QuantityField = CommonFieldProps & {
 
 export type IField =
   | TextField
+  | NumberField
   | SelectField
   | RadioField
   | CheckBoxField
@@ -173,6 +181,13 @@ export const FormField = <T,>({
       if (field.type === "number") {
         const cleanedValue = validateAndCleanNumberInput(_value as string);
         const numericValue = parseNumberFromString(cleanedValue);
+        if (field.minValue && numericValue < field.minValue) {
+          onChange(field.name, field.minValue as T);
+          return;
+        }
+        if (field.maxValue && field.maxValue > numericValue) {
+          onChange(field.name, field.maxValue as T);
+        }
         onChange(field.name, numericValue as T);
       } else {
         onChange(field.name, _value);
@@ -226,6 +241,7 @@ export const FormField = <T,>({
   // Gestionnaire spécifique pour les champs numériques
   const handleNumberChange = (text: string) => {
     const cleanedText = validateAndCleanNumberInput(text);
+
     handleChange(cleanedText as T);
   };
 
@@ -561,7 +577,7 @@ export const FormField = <T,>({
               value={
                 typeof value === "number"
                   ? formatNumberWithComma(value)
-                  : (value as string) || field.default
+                  : (value as string) || (field.default as any)
               }
               keyboardType="numeric"
               onChangeText={handleNumberChange}

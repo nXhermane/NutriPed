@@ -1,3 +1,4 @@
+import { FakeBlur } from "@/components/custom";
 import { GrowthReferenceChart } from "@/components/pages/chart_detail";
 import { GrowthChartScreenHeader } from "@/components/pages/growth_chart";
 import { Center } from "@/components/ui/center";
@@ -48,11 +49,11 @@ const GrowthChart = () => {
           presentation: "transparentModal",
         }}
       />
-      <BlurView
+      <FakeBlur
         className="flex-1"
-        experimentalBlurMethod="dimezisBlurView"
-        tint={colorMode}
-        intensity={colorMode === "light" ? 50 : 90}
+        // experimentalBlurMethod="dimezisBlurView"
+        // tint={colorMode}
+        // intensity={colorMode === "light" ? 50 : 90}
       >
         <GrowthChartScreenHeader name={growthCharts[0]?.name || ""} />
         <ScrollView
@@ -71,7 +72,7 @@ const GrowthChart = () => {
             }}
           />
         </ScrollView>
-      </BlurView>
+      </FakeBlur>
     </React.Fragment>
   );
 };

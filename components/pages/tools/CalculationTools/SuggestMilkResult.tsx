@@ -11,6 +11,7 @@ import React, { useEffect, useMemo } from "react";
 import colors from "tailwindcss/colors";
 import { Divider } from "@/components/ui/divider";
 import { BlurView } from "expo-blur";
+import { FakeBlur } from "@/components/custom";
 
 export interface SuggestMilkResultProps {
   result: MilkSuggestionResultDto;
@@ -44,9 +45,9 @@ export const SuggestMilkResult: React.FC<SuggestMilkResultProps> = ({
   return (
     <React.Fragment>
       <VStack className="m-4 mb-14 overflow-hidden rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-2 py-3">
-        <BlurView
-          intensity={10}
-          experimentalBlurMethod="dimezisBlurView"
+        <FakeBlur
+          // intensity={10}
+          // experimentalBlurMethod="dimezisBlurView"
           className="absolute -left-1 h-[50vh] w-2"
         />
         <HStack className="mb-3 w-full">
