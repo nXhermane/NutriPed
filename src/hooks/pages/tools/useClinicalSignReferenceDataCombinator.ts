@@ -1,7 +1,7 @@
 import { DynamicFormZodSchemaType, FormSchema } from "@/components/custom";
 import { IField } from "@/components/custom/FormField";
-import { ClinicalData, ClinicalDataType, ClinicalSignDataDto, ClinicalSignReferenceDto } from "@/core/diagnostics";
-import { BirthDateField, BirthDateToTodayZodSchema, ClinicalRefCategoryUiData, ClinicalSignRefDataCategory, dateZodSchema, validateWithSchemaPipeline } from "@/src/constants/ui";
+import { ClinicalDataType, ClinicalSignDataDto, ClinicalSignReferenceDto } from "@/core/diagnostics";
+import { BirthDateField, BirthDateToTodayZodSchema, ClinicalRefCategoryUiData, ClinicalSignRefDataCategory, validateWithSchemaPipeline } from "@/src/constants/ui";
 import { ValueOf } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
 import { ConditionResult } from "smartcal";
@@ -9,13 +9,15 @@ import { z } from "zod";
 
 export function useClinicalSignReferenceFormGenerator(clinicalSignRefs?: ClinicalSignReferenceDto[]) {
     const [clinicalSignRefFormData, setClinicalSignFormData] = useState<{ schema: FormSchema, zodSchema: DynamicFormZodSchemaType } | null>(null)
+    const [variableUsageMap, setVariableUsageMap] = useState<VariableUsageMap | null>(null)
     const [onLoading, setOnLoading] = useState<boolean>(false)
     const generateFormClinicalSignsData = useMemo(() => (data: ClinicalSignReferenceDto[]): { schema: FormSchema, zodSchema: DynamicFormZodSchemaType } => {
         const processor = new ClinicalDataProcessor(data)
         const dynamicForm: FormSchema = []
         const dynamicFromValidationZodSchema: z.ZodTypeAny[] = []
-        const formStructure = processor.generateOptimizedForm().formStructure
-        for (const struture of Object.values(formStructure)) {
+        const form = processor.generateOptimizedForm()
+        setVariableUsageMap(form.variableUsageMap)
+        for (const struture of Object.values(form.formStructure)) {
             const { fields, section, zodSchemas } = processor.generateDynamicFormSection(struture)
             dynamicForm.push({ fields, section })
             dynamicFromValidationZodSchema.push(...zodSchemas)
@@ -42,13 +44,13 @@ export function useClinicalSignReferenceFormGenerator(clinicalSignRefs?: Clinica
         }
     }, [clinicalSignRefs])
 
-    return { data: clinicalSignRefFormData, onLoading }
+    return { data: clinicalSignRefFormData, variableUsageMap, onLoading }
 }
 
 
 
 type UniqueVariables = { [dataCode: string]: (ClinicalSignDataDto & { usedInSigns: string[], category: ClinicalSignRefDataCategory }) }
-type VariableUsageMap = { [dataCode: string]: string[] }
+export type VariableUsageMap = { [dataCode: string]: string[] }
 
 class ClinicalDataProcessor {
     private clinicalSigns: ClinicalSignReferenceDto[]

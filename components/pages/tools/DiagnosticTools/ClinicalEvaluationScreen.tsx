@@ -18,6 +18,7 @@ import {
   useClinicalReference,
   useClinicalSignReferenceFormGenerator,
 } from "@/src/hooks";
+import { useClinicalSignAnalyser } from "@/src/hooks/pages/tools/useClinicalSignAnlyser";
 import { Calculator, Check, Stethoscope, X } from "lucide-react-native";
 import { useRef, useState } from "react";
 import { ScrollView } from "react-native";
@@ -26,8 +27,12 @@ import colors from "tailwindcss/colors";
 
 export function ClinicalEvaluationScreen() {
   const { data, onLoading, error } = useClinicalReference();
-  const { data: formData, onLoading: formOnLoading } =
-    useClinicalSignReferenceFormGenerator(data);
+  const {
+    data: formData,
+    variableUsageMap,
+    onLoading: formOnLoading,
+  } = useClinicalSignReferenceFormGenerator(data);
+  const handleClinicalEvaluation = useClinicalSignAnalyser();
   const dynamicFormRef = useRef<FormHandler<any>>(null);
   const [onSubmit, setOnSubmit] = useState<boolean>(false);
   const [onError, setOnError] = useState<boolean>(false);
@@ -38,7 +43,7 @@ export function ClinicalEvaluationScreen() {
     setOnSucess(false);
     const data = await dynamicFormRef.current?.submit();
     if (data) {
-      console.log(data);
+      handleClinicalEvaluation(data, variableUsageMap!);
     } else {
       setOnError(true);
     }
@@ -64,6 +69,10 @@ export function ClinicalEvaluationScreen() {
               schema={formData.schema}
               zodSchema={formData.zodSchema}
               className="p-0 px-0"
+              onChange={(fieldName, value) => {
+                setOnError(false);
+                setOnSucess(false);
+              }}
             />
           )}
         </KeyboardAwareScrollView>

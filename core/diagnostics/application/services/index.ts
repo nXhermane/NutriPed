@@ -10,3 +10,4 @@ export * from "./ValidatePatientMeasurementsService";
 export * from "./interfaces";
 export * from "./DiagnosticRuleService";
 export * from "./GrowthIndicatorValueService";
+export * from "./ClinicalNutritionalAnalysisService"

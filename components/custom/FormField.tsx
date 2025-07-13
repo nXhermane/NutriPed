@@ -181,14 +181,18 @@ export const FormField = <T,>({
       if (field.type === "number") {
         const cleanedValue = validateAndCleanNumberInput(_value as string);
         const numericValue = parseNumberFromString(cleanedValue);
-        if (field.minValue && numericValue < field.minValue) {
+        if (field.minValue != undefined && numericValue < field.minValue) {
           onChange(field.name, field.minValue as T);
           return;
         }
-        if (field.maxValue && field.maxValue > numericValue) {
+        if (field.maxValue != undefined && field.maxValue < numericValue) {
           onChange(field.name, field.maxValue as T);
+          return;
         }
-        onChange(field.name, numericValue as T);
+        onChange(
+          field.name,
+          isNaN(numericValue) ? (0 as T) : (numericValue as T)
+        );
       } else {
         onChange(field.name, _value);
       }
@@ -444,7 +448,7 @@ export const FormField = <T,>({
         return (
           <RadioGroup
             value={(value as string) || field.default}
-            className={`${isVertical ? "flex flex-col gap-2" : "flex-row gap-5"}`}
+            className={`pt-3 ${isVertical ? "flex flex-col gap-2" : "flex-row gap-5"}`}
             onChange={handleChange}
           >
             {field.radioOptions.map((item, index) => (

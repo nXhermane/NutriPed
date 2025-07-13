@@ -94,6 +94,7 @@ export interface DynamicFormGeneratorProps<T extends FormSchema> {
   schema: T;
   zodSchema?: DynamicFormZodSchemaType | SchemaConstraint<T>;
   className?: string;
+  onChange?: (fieldName: ExtractFieldNames<T>, value: T) => void;
 }
 
 export interface FormHandler<T extends FormSchema> {
@@ -103,7 +104,7 @@ export interface FormHandler<T extends FormSchema> {
 
 export const DynamicFormGenerator = forwardRef(
   <T extends FormSchema>(
-    { schema, zodSchema, className }: DynamicFormGeneratorProps<T>,
+    { schema, zodSchema, className, onChange }: DynamicFormGeneratorProps<T>,
     ref: React.Ref<FormHandler<T>>
   ) => {
     const [formState, dispatchFromState] = useReducer(
@@ -129,6 +130,7 @@ export const DynamicFormGenerator = forwardRef(
         field: fieldName,
         error: undefined,
       });
+      onChange && onChange(fieldName, value);
     };
 
     const submit = useCallback(async (): Promise<z.infer<
