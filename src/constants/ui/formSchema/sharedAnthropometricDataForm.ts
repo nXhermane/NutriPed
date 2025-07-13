@@ -6,6 +6,8 @@ import { IField } from "@/components/custom/FormField";
 import {
   AnthroSystemCodes,
   CLINICAL_SIGNS,
+  DAY_IN_MONTHS,
+  DAY_IN_YEARS,
   MAX_LENHEI,
   MIN_LENHEI,
 } from "@/core/constants";

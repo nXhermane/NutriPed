@@ -9,6 +9,7 @@ const ScreenLayout = () => {
         screenOptions={{
           headerShown: false,
           animation: "none",
+        
         }}
       ></Stack>
     </ProtectedRoute>
