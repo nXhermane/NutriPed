@@ -421,3 +421,8 @@ export const BirthDateToTodayZodSchema = z
       [AnthroSystemCodes.AGE_IN_MONTH]: monthAfterBirthDay,
     };
   })
+export const SexZodSchema = z.object({
+  [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {
+    errorMap: () => ({ message: "Le sexe est requis" }),
+  }),
+})

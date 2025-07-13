@@ -1,7 +1,7 @@
 import { DynamicFormZodSchemaType, FormSchema } from "@/components/custom";
 import { IField } from "@/components/custom/FormField";
 import { ClinicalDataType, ClinicalSignDataDto, ClinicalSignReferenceDto } from "@/core/diagnostics";
-import { BirthDateField, BirthDateToTodayZodSchema, ClinicalRefCategoryUiData, ClinicalSignRefDataCategory, validateWithSchemaPipeline } from "@/src/constants/ui";
+import { BirthDateField, BirthDateToTodayZodSchema, ClinicalRefCategoryUiData, ClinicalSignRefDataCategory, SexField, SexZodSchema, validateWithSchemaPipeline } from "@/src/constants/ui";
 import { ValueOf } from "@/utils";
 import { useEffect, useMemo, useState } from "react";
 import { ConditionResult } from "smartcal";
@@ -25,11 +25,11 @@ export function useClinicalSignReferenceFormGenerator(clinicalSignRefs?: Clinica
         return {
             schema: [{
                 section: ClinicalRefCategoryUiData[ClinicalSignRefDataCategory.DEMOGRAPHIC].uiText,
-                fields: [BirthDateField]
+                fields: [SexField, BirthDateField]
             }, ...dynamicForm],
             zodSchema: {
                 validate(data: any) {
-                    return validateWithSchemaPipeline(data, [BirthDateToTodayZodSchema, ...dynamicFromValidationZodSchema])
+                    return validateWithSchemaPipeline(data, [SexZodSchema, BirthDateToTodayZodSchema, ...dynamicFromValidationZodSchema])
                 }
             }
         }
@@ -86,7 +86,6 @@ class ClinicalDataProcessor {
 
     // Catégorisation automatique des variables
     private categorizeVariable(code: string): ClinicalSignRefDataCategory {
-
         for (const [category, { prefixs }] of Object.entries(ClinicalRefCategoryUiData)) {
             for (const prefix of prefixs) {
                 if (code.startsWith(prefix)) return category as ClinicalSignRefDataCategory
@@ -257,7 +256,7 @@ class ClinicalDataProcessor {
                     isRequire: variable.required
                 }
                 const zodSchema = z.object({
-                    [variable.code]: z.enum([ConditionResult.True.toString(), ConditionResult.False.toString()]).transform(data => { return Number(data) })
+                    [variable.code]: z.enum([ConditionResult.True.toString(), ConditionResult.False.toString()]).transform(data => { return Boolean(Number(data)) })
                 })
                 return {
                     field, zodSchema

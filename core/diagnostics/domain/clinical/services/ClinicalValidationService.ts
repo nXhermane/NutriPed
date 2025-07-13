@@ -30,7 +30,7 @@ import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 export class ClinicalValidationService implements IClinicalValidationService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository
-  ) {}
+  ) { }
 
   async validate(clinicalData: ClinicalData): Promise<Result<ValidateResult>> {
     try {
@@ -91,13 +91,13 @@ export class ClinicalValidationService implements IClinicalValidationService {
           ) as Result<void>;
         }
 
-        const clinicalRefNeedData = clinicalRef.getClinicalSignData();
+        const clinicalRefNeedData = clinicalRef.getRule().variables;
         const clinicalDataProvided = Object.keys(
           clinicalSignData.unpack().data
         );
         if (
           !clinicalRefNeedData.every(clinicalNeeded =>
-            clinicalDataProvided.includes(clinicalNeeded.code.unpack())
+            clinicalDataProvided.includes(clinicalNeeded)
           )
         ) {
           return handleClinicalError(
@@ -131,12 +131,19 @@ export class ClinicalValidationService implements IClinicalValidationService {
     ref: IClinicalSignReference
   ): Result<boolean> {
     try {
+      if (!ref.evaluationRule?.unpack()?.variables?.length) {
+        return Result.ok(true);
+      }
       const signData = sign.unpack().data;
-      const clinicalSignRefData = ref.data;
-      for (const clinicalSignRefDataEntry of clinicalSignRefData) {
-        const dataCode = clinicalSignRefDataEntry.unpack().code.unpack();
-        const dataType = clinicalSignRefDataEntry.unpack().dataType;
-        const dataTypeRange = clinicalSignRefDataEntry.unpack().dataRange;
+      const clinicalSignRefData = new Map(ref.data.map((data) => ([data.unpack().code.unpack(), data])))
+      for (const variable of ref.evaluationRule.unpack().variables) {
+        const clinicalSignRefDataEntry = clinicalSignRefData.get(variable)
+        if (!clinicalSignRefDataEntry) continue
+        const unpackedRefEntry = clinicalSignRefDataEntry.unpack();
+        const dataCode = unpackedRefEntry.code.unpack();
+        const dataType = unpackedRefEntry.dataType;
+        const dataTypeRange = unpackedRefEntry.dataRange;
+        const dataTypeEnum = unpackedRefEntry.enumValue;
         const signDataValue = signData[dataCode]!;
         let validationResult: boolean = false;
 
@@ -159,6 +166,11 @@ export class ClinicalValidationService implements IClinicalValidationService {
               validationResult = isNumber && inRange;
             }
             break;
+          case ClinicalDataType.ENUM: {
+            const value = signDataValue
+            validationResult = !!dataTypeEnum?.includes(value)
+          }
+            break;
           default: {
             throw new Error("This data type is not supported.");
           }
@@ -166,7 +178,7 @@ export class ClinicalValidationService implements IClinicalValidationService {
         if (!validationResult) {
           return handleClinicalError(
             CLINICAL_ERRORS.VALIDATION.INVALID_DATA_TYPE.path,
-            `Type : ${dataType} , Value: ${signDataValue} ${dataTypeRange ?? "Range : " + dataTypeRange}`
+            `Type : ${dataType} , Value: ${signDataValue} ${dataTypeRange && ("Range : " + dataTypeRange)} ${dataTypeEnum && ("Enum : " + dataTypeEnum)}`
           ) as Result<boolean>;
         }
       }
@@ -176,3 +188,16 @@ export class ClinicalValidationService implements IClinicalValidationService {
     }
   }
 }
+
+
+// const validators = {
+//   [ClinicalDataType.BOOL]: (v) => typeof v === "boolean",
+//   [ClinicalDataType.INT]: (v) => typeof v === "number",
+//   [ClinicalDataType.STR]: (v) => typeof v === "string",
+//   [ClinicalDataType.RANGE]: (v, range) =>
+//     typeof v === "number" && v >= range[0] && v <= range[1],
+//   [ClinicalDataType.ENUM]: (v, _, enumValues) =>
+//     enumValues?.includes(v),
+// };
+//const validator = validators[dataType];
+//const valid = validator?.(signDataValue, dataTypeRange, dataTypeEnum) ?? false;

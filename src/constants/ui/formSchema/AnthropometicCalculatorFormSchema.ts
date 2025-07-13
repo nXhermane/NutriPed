@@ -13,6 +13,7 @@ import {
   MUACField,
   MUACZodSchema,
   SexField,
+  SexZodSchema,
   SSFField,
   SSFZodSchema,
   TSFField,
@@ -69,11 +70,7 @@ export const AnthropometricCalculatorFormZodSchema = {
         [AnthroSystemCodes.SSF]: makeOptionalSchema(SSFZodSchema),
       }),
       BirthDateToTodayZodSchema,
-      z.object({
-        [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {
-          errorMap: () => ({ message: "Le sexe est requis" }),
-        }),
-      }),
+      SexZodSchema,
 
       z
         .object({

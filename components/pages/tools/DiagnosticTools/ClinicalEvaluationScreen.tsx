@@ -43,7 +43,13 @@ export function ClinicalEvaluationScreen() {
     setOnSucess(false);
     const data = await dynamicFormRef.current?.submit();
     if (data) {
-      handleClinicalEvaluation(data, variableUsageMap!);
+      const result = await handleClinicalEvaluation(data, variableUsageMap!);
+      if (result && "data" in result) {
+        console.log(JSON.stringify(result.data));
+        setOnSucess(true);
+      } else {
+        setOnError(true);
+      }
     } else {
       setOnError(true);
     }
