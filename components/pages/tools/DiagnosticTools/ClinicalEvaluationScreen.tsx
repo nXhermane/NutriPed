@@ -2,6 +2,7 @@ import {
   DynamicFormGenerator,
   FakeBlur,
   FormHandler,
+  Loading,
 } from "@/components/custom";
 import {
   Button,
@@ -63,14 +64,7 @@ export function ClinicalEvaluationScreen() {
     setOnSubmit(false);
   };
   if (onLoading || formOnLoading || !formData)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-        <Text className="mt-4 font-body text-sm font-normal text-typography-primary_light">
-          {"Chargement..."}
-        </Text>
-      </Center>
-    );
+    return <Loading>Chargement...</Loading>;
 
   return (
     <HStack className="flex-1 items-center justify-between bg-background-primary">

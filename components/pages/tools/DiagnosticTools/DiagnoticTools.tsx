@@ -6,6 +6,7 @@ import {
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
+  DrawerHeaderProps,
   useDrawerStatus,
 } from "@react-navigation/drawer";
 import React from "react";
@@ -15,13 +16,13 @@ import { Icon } from "@/components/ui/icon";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
-import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
 import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen";
 import { ClinicalEvaluationScreen } from "./ClinicalEvaluationScreen";
 import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen";
 import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
 import { FakeBlur } from "@/components/custom";
+import { StackScreenHeader } from "../../shared";
 
 const Drawer = createDrawerNavigator();
 
@@ -32,7 +33,8 @@ export const DiagnosticTools = ({}) => {
       <NavigationIndependentTree>
         <Drawer.Navigator
           screenOptions={{
-            headerShown: false,
+            headerShown: true,
+            header: props => <DiagnosticToolHeader {...props} />,
             drawerStyle: {
               backgroundColor: "transparent",
             },
@@ -59,6 +61,14 @@ export const DiagnosticTools = ({}) => {
       </NavigationIndependentTree>
     </VStack>
   );
+};
+
+export interface DiagnosticToolDrawerHeaderProps extends DrawerHeaderProps {}
+
+export const DiagnosticToolHeader: React.FC<
+  DiagnosticToolDrawerHeaderProps
+> = ({ route }) => {
+  return <StackScreenHeader name={route?.name} />;
 };
 
 export interface DiagnosticToolDrawerContentProps
