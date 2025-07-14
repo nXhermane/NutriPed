@@ -24,6 +24,7 @@ import {
   BiochemicalReferenceMapper,
   BiochemicalReferenceRepository,
   BiochemicalReferenceService,
+  BiologicalAnalysisAppService,
   BiologicalInterpretationService,
   BiologicalValidationService,
   BiologicalVariableGeneratorService,
@@ -150,6 +151,7 @@ import {
   IAnthropometricValidationService,
   IAnthropometricVariableGeneratorService,
   IBiochemicalReferenceService,
+  IBiologicalAnalysisAppService,
   IBiologicalInterpretationService,
   IBiologicalValidationService,
   IBiologicalVariableGeneratorService,
@@ -178,6 +180,9 @@ import {
   IZScoreCalculationService,
   IZScoreInterpretationService,
   LenheiBasedStrategy,
+  MakeBiologicalInterpretationRequest,
+  MakeBiologicalInterpretationResponse,
+  MakeBiologicalInterpretationUseCase,
   MakeClinicalAnalysisRequest,
   MakeClinicalAnalysisResponse,
   MakeClinicalAnalysisUseCase,
@@ -579,6 +584,7 @@ export class DiagnosticContext {
     DeleteBiochemicalReferenceRequest,
     DeleteBiochemicalReferenceResponse
   >;
+  private readonly makeBiologicalInterpretationUC: UseCase<MakeBiologicalInterpretationRequest, MakeBiologicalInterpretationResponse>
 
   private readonly createDiagnosticRuleUC: UseCase<
     CreateDiagnosticRuleRequest,
@@ -641,6 +647,7 @@ export class DiagnosticContext {
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
   private readonly nutritionalRiskFactorAppService: INutritionalRiskFactorService;
   private readonly biochemicalRefAppService: IBiochemicalReferenceService;
+  private readonly biologicalAnalysisAppService: IBiologicalAnalysisAppService
   private readonly nutritionalDiagnosticAppService: INutritionalDiagnosticService;
   private readonly validatePatientMeasurementsAppService: IValidatePatientMeasurementsService;
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
@@ -1050,6 +1057,7 @@ export class DiagnosticContext {
       this.biochemicalRefRepo,
       this.biochemicalRefAppMapper
     );
+    this.makeBiologicalInterpretationUC = new MakeBiologicalInterpretationUseCase(this.biologicalValidationService, this.biologicalInterpretationService)
 
     // Core Diagnostic Use Cases
     // Core Diagnostic Rules
@@ -1184,6 +1192,9 @@ export class DiagnosticContext {
       updateUC: this.updateBiochemicalRefUC,
       deleteUC: this.deleteBiochemicalRefUC,
     });
+    this.biologicalAnalysisAppService = new BiologicalAnalysisAppService({
+      makeInterpretation: this.makeBiologicalInterpretationUC
+    })
     this.diagnosticRuleAppService = new DiagnosticRuleService({
       createUC: this.createDiagnosticRuleUC,
       getUC: this.getDiagnosticRuleUC,
@@ -1247,7 +1258,9 @@ export class DiagnosticContext {
   getBiochemicalReferenceService(): IBiochemicalReferenceService {
     return this.biochemicalRefAppService;
   }
-
+  getBiologicalAnalysisService(): IBiologicalAnalysisAppService {
+    return this.biologicalAnalysisAppService
+  }
   getDiagnosticRuleService(): IDiagnosticRuleService {
     return this.diagnosticRuleAppService;
   }

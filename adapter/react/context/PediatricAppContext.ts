@@ -37,6 +37,7 @@ export interface PediatricAppContextType {
     biochemicalReference: ReturnType<
       typeof DiagnosticContext.prototype.getBiochemicalReferenceService
     >;
+    biologicalAnalysis: ReturnType<typeof DiagnosticContext.prototype.getBiologicalAnalysisService>
     diagnosticRule: ReturnType<
       typeof DiagnosticContext.prototype.getDiagnosticRuleService
     >;

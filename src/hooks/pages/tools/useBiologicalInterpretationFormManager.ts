@@ -31,8 +31,8 @@ export function useBiologicalInterpretationFormManager(availableBioRefs: Biochem
                         default: { unit: findedBiomarker.unit, value: 0 },
                         label: findedBiomarker.name,
                         name: findedBiomarker.code,
-                        defaultUnit: { convertionFactor: 1, label: findedBiomarker.unit.toUpperCase(), unit: findedBiomarker.unit },
-                        unitOptions: [{ convertionFactor: 1, label: findedBiomarker.unit.toUpperCase(), unit: findedBiomarker.unit }],
+                        defaultUnit: { convertionFactor: 1, label: findedBiomarker.unit, unit: findedBiomarker.unit },
+                        unitOptions: [{ convertionFactor: 1, label: findedBiomarker.unit, unit: findedBiomarker.unit }],
 
                     }
                     fields.push(field)

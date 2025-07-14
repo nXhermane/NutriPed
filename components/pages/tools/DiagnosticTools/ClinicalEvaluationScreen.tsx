@@ -10,10 +10,7 @@ import {
   ButtonSpinner,
   ButtonText,
 } from "@/components/ui/button";
-import { Center } from "@/components/ui/center";
 import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { ClinicalNutritionalAnalysisResultDto } from "@/core/diagnostics";
 import {
@@ -21,11 +18,9 @@ import {
   useClinicalSignReferenceFormGenerator,
 } from "@/src/hooks";
 import { useClinicalSignAnalyser } from "@/src/hooks/pages/tools/useClinicalSignAnlyser";
-import { Calculator, Check, Stethoscope, X } from "lucide-react-native";
+import { Check, Stethoscope, X } from "lucide-react-native";
 import { useRef, useState } from "react";
-import { ScrollView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import colors from "tailwindcss/colors";
 import { ClinicalEvaluationResultModal } from "./ClinicalEvaluationResultModal";
 
 export function ClinicalEvaluationScreen() {
