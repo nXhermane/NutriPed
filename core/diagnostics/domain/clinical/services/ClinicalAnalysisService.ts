@@ -32,12 +32,12 @@ import {
   NutritionalRiskFactorRepository,
 } from "../ports";
 import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
-// FIXME: Regler le probleme avec les donnees data du reference avec les varibles . une corrections du cote des donnees de reference pourrai bien ressoudre le probleme lors de l'actualisation de la prochaine version 
+// FIXME: Regler le probleme avec les donnees data du reference avec les varibles . une corrections du cote des donnees de reference pourrai bien ressoudre le probleme lors de l'actualisation de la prochaine version
 export class ClinicalAnalysisService implements IClinicalAnalysisService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository,
     private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository
-  ) { }
+  ) {}
   async analyze(
     data: ClinicalData,
     context: EvaluationContext
@@ -87,7 +87,8 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
       const clinicalSignRef: ClinicalSignReference =
         await this.clinicalSignRepo.getByCode(clinicalSign.unpack().code);
       const clinicalSignRefNeedDataCode = clinicalSignRef
-        .getRule().variables.filter(x => !Object.keys(context).includes(x));
+        .getRule()
+        .variables.filter(x => !Object.keys(context).includes(x));
       if (
         !clinicalSignRefNeedDataCode.every(clinicalRefNeededCode =>
           Object.keys(clinicalSignAssociatedData).includes(
@@ -97,7 +98,7 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
       ) {
         throw new ArgumentInvalidException(
           CLINICAL_ERRORS.ANALYSIS.SIGN_NOT_FOUND.message
-        ); // TODO: Ce n'est pas juste la validation ici 
+        ); // TODO: Ce n'est pas juste la validation ici
       }
 
       const ruleEvaluationVariable = {

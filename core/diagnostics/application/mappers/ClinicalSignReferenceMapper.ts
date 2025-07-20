@@ -3,7 +3,8 @@ import { ClinicalSignReference } from "../../domain";
 import { ClinicalSignReferenceDto } from "../dtos";
 
 export class ClinicalSignReferenceMapper
-  implements ApplicationMapper<ClinicalSignReference, ClinicalSignReferenceDto> {
+  implements ApplicationMapper<ClinicalSignReference, ClinicalSignReferenceDto>
+{
   toResponse(entity: ClinicalSignReference): ClinicalSignReferenceDto {
     return {
       id: entity.id,
@@ -18,7 +19,7 @@ export class ClinicalSignReferenceMapper
         question: clinicalSignData.question,
         dataRange: clinicalSignData.dataRange,
         required: clinicalSignData.required,
-        enumValue: clinicalSignData.enumValue
+        enumValue: clinicalSignData.enumValue,
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

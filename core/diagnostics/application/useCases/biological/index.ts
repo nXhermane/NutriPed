@@ -1,2 +1,2 @@
 export * from "./BiochemicalReference";
-export * from './BiologicalAnalysis'
+export * from "./BiologicalAnalysis";

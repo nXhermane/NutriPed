@@ -72,11 +72,16 @@ export const AnthropometricCalculatorResultModal: React.FC<
             colorMode === "light" ? colors.gray["300"] : colors.gray["500"],
         }}
         handleComponent={props => <BottomSheetDragIndicator {...props} />}
-        backdropComponent={(props) => <BottomSheetBackdrop  {...props} style={{
-          backgroundColor: 'red',
-          width: '100%',
-          height: '100%'
-        }}/>}
+        backdropComponent={props => (
+          <BottomSheetBackdrop
+            {...props}
+            style={{
+              backgroundColor: "red",
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        )}
         backgroundComponent={props => {
           return (
             <VStack {...props} className="rounded-2xl bg-background-primary" />

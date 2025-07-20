@@ -284,6 +284,12 @@ export const FormField = <T,>({
     useEffect(() => {
       if (value === undefined) {
         setCurrentQuantityValue(0);
+      } else {
+        setCurrentQuantityValue(((value as any)?.value as number) || 0);
+        const findedCurrentUnit = field.unitOptions.find(
+          opt => opt.unit === ((value as any)?.unit as string)
+        );
+        if (findedCurrentUnit) setCurrentQuantityUnit(findedCurrentUnit);
       }
     }, [value]);
   }

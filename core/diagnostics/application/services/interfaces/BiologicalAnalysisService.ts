@@ -3,5 +3,9 @@ import { MakeBiologicalInterpretationRequest } from "../../useCases";
 import { BiologicalAnalysisInterpretationDto } from "../../dtos";
 
 export interface IBiologicalAnalysisAppService {
-    makeInterpretation(req: MakeBiologicalInterpretationRequest): Promise<AppServiceResponse<BiologicalAnalysisInterpretationDto[]> | Message>
+  makeInterpretation(
+    req: MakeBiologicalInterpretationRequest
+  ): Promise<
+    AppServiceResponse<BiologicalAnalysisInterpretationDto[]> | Message
+  >;
 }

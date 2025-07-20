@@ -1,1 +1,1 @@
-export * from "./MakeClinicalAnalysis"
+export * from "./MakeClinicalAnalysis";

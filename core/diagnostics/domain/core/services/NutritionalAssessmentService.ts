@@ -17,6 +17,7 @@ import {
   INutritionalAssessmentService,
 } from "../ports";
 import {
+  AnthropometricData,
   AnthropometricVariableObject,
   AnthroSystemCodes,
   GrowthIndicatorValue,
@@ -25,6 +26,7 @@ import {
 } from "../../anthropometry";
 import {
   CLINICAL_SIGNS,
+  ClinicalData,
   ClinicalNutritionalAnalysisResult,
   ClinicalVariableObject,
   IClinicalAnalysisService,
@@ -32,6 +34,7 @@ import {
 } from "../../clinical";
 import {
   BiologicalAnalysisInterpretation,
+  BiologicalTestResult,
   BiologicalVariableObject,
   IBiologicalInterpretationService,
   IBiologicalVariableGeneratorService,
@@ -84,13 +87,25 @@ export class NutritionalAssessmentService
    * @returns Promise containing the result of the nutritional assessment
    */
   async evaluateNutritionalStatus(
-    patientData: PatientDiagnosticData
+    context: EvaluationContext,
+    anthropometric: AnthropometricData,
+    clinical: ClinicalData,
+    biological: BiologicalTestResult[]
   ): Promise<Result<NutritionalAssessmentResult>> {
     try {
-      const anthropEvaluation = await this.getAnthropEvaluation(patientData);
-      const clinicalEvaluation = await this.getClinicalEvaluation(patientData);
-      const biologicalEvaluation =
-        await this.getBiologicalEvaluation(patientData);
+      const anthropEvaluation = await this.getAnthropEvaluation(
+        anthropometric,
+        context
+      );
+      const clinicalEvaluation = await this.getClinicalEvaluation(
+        clinical,
+        context
+      );
+
+      const biologicalEvaluation = await this.getBiologicalEvaluation(
+        biological,
+        context
+      );
       const evaluationResult = Result.combine([
         anthropEvaluation,
         clinicalEvaluation,
@@ -102,7 +117,8 @@ export class NutritionalAssessmentService
         );
 
       const globalDiagnostics = await this.globalEvaluation(
-        patientData,
+        context,
+        anthropometric,
         anthropEvaluation.val,
         clinicalEvaluation.val,
         biologicalEvaluation.val
@@ -125,32 +141,19 @@ export class NutritionalAssessmentService
   }
 
   /**
-   * Generates an evaluation context from patient data
-   * @param patientData Patient diagnostic data
-   * @returns Evaluation context containing age and sex information
-   */
-  private generateContext(
-    patientData: PatientDiagnosticData
-  ): EvaluationContext {
-    return {
-      age_in_day: patientData.age_in_day,
-      age_in_month: patientData.age_in_month,
-      age_in_year: patientData.age_in_year,
-      sex: patientData.getGender().unpack(),
-    };
-  }
-
-  /**
    * Performs anthropometric evaluation based on patient data
    * @param patientData Patient diagnostic data
    * @returns Promise containing growth indicator values
    */
   private async getAnthropEvaluation(
-    patientData: PatientDiagnosticData
+    anthropometricData: AnthropometricData,
+    context: EvaluationContext
   ): Promise<Result<GrowthIndicatorValue[]>> {
     try {
-      const anthropometricDataResult =
-        await this.generateAnthropVariableObject(patientData);
+      const anthropometricDataResult = await this.generateAnthropVariableObject(
+        anthropometricData,
+        context
+      );
       if (anthropometricDataResult.isFailure)
         return Result.fail(
           formatError(
@@ -174,14 +177,11 @@ export class NutritionalAssessmentService
    * @returns Promise containing clinical nutritional analysis results
    */
   private async getClinicalEvaluation(
-    patientData: PatientDiagnosticData
+    clinical: ClinicalData,
+    context: EvaluationContext
   ): Promise<Result<ClinicalNutritionalAnalysisResult[]>> {
     try {
-      const context = this.generateContext(patientData);
-      return this.clinicalService.analyze(
-        patientData.getClinicalSigns(),
-        context
-      );
+      return this.clinicalService.analyze(clinical, context);
     } catch (e: unknown) {
       return handleError(e);
     }
@@ -193,14 +193,11 @@ export class NutritionalAssessmentService
    * @returns Promise containing biological analysis interpretations
    */
   private async getBiologicalEvaluation(
-    patientData: PatientDiagnosticData
+    biological: BiologicalTestResult[],
+    context: EvaluationContext
   ): Promise<Result<BiologicalAnalysisInterpretation[]>> {
     try {
-      const context = this.generateContext(patientData);
-      return this.biologicalService.interpret(
-        patientData.getBiologicalTestResults(),
-        context
-      );
+      return this.biologicalService.interpret(biological, context);
     } catch (e: unknown) {
       return handleError(e);
     }
@@ -215,7 +212,8 @@ export class NutritionalAssessmentService
    * @returns Promise containing global diagnostics
    */
   private async globalEvaluation(
-    patientData: PatientDiagnosticData,
+    context: EvaluationContext,
+    anthropometric: AnthropometricData,
     growthIndicatorValues: GrowthIndicatorValue[],
     clinicalAnalysis: ClinicalNutritionalAnalysisResult[],
     biologicalInterpretation: BiologicalAnalysisInterpretation[]
@@ -223,7 +221,8 @@ export class NutritionalAssessmentService
     try {
       const anthropometricVariableRes =
         await this.generateAnthropVariableObject(
-          patientData,
+          anthropometric,
+          context,
           growthIndicatorValues
         );
       const clinicalVariable =
@@ -282,12 +281,12 @@ export class NutritionalAssessmentService
    * @returns Promise containing anthropometric variable object
    */
   private async generateAnthropVariableObject(
-    patientData: PatientDiagnosticData,
+    anthropometric: AnthropometricData,
+    context: EvaluationContext,
     growthIndicatorValues?: GrowthIndicatorValue[]
   ): Promise<Result<AnthropometricVariableObject>> {
-    const context = this.generateContext(patientData);
     return this.anthropVariableGenerator.generate(
-      patientData.getAnthropometricData(),
+      anthropometric,
       context,
       growthIndicatorValues
     );

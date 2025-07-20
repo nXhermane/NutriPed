@@ -19,11 +19,12 @@ export interface AnthropometricCalculatorFormProps {
   zodSchema?: DynamicFormZodSchemaType;
   formRef: Ref<FormHandler<any>>;
   title?: string;
+  initialState?: Record<string, { value: any; error?: string }>;
 }
 
 export const AnthropometricCalcualtorForm: React.FC<
   AnthropometricCalculatorFormProps
-> = ({ formRef, schema, title, zodSchema }) => {
+> = ({ formRef, schema, title, zodSchema, initialState }) => {
   return (
     <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
       {title && (
@@ -44,6 +45,7 @@ export const AnthropometricCalcualtorForm: React.FC<
             zodSchema={zodSchema}
             ref={formRef}
             className="p-0 px-0"
+            initialState={initialState}
           />
         )}
       </KeyboardAwareScrollView>

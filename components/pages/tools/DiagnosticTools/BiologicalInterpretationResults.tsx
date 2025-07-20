@@ -24,10 +24,10 @@ export const BiologicalInterpretationResults: React.FC<
       <VStack className="pb-v-4">
         <VStack className="px-4 pb-v-4">
           <Heading className="font-h4 text-lg font-medium text-typography-primary">
-            Interpretation
+            Interpretation Biologique
           </Heading>
         </VStack>
-        <VStack className="px-4 pb-v-5 gap-1">
+        <VStack className="gap-1 px-4 pb-v-5">
           {results.map((result, index) => (
             <FadeInCardY key={result.code} delayNumber={2 * index}>
               <BiologicalInterpretationItem data={result} />

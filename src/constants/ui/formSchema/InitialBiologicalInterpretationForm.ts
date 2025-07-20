@@ -1,12 +1,15 @@
-import { BirthDateField, BirthDateToTodayZodSchema, SexField } from "./sharedAnthropometricDataForm";
+import {
+  BirthDateField,
+  BirthDateToTodayZodSchema,
+  SexField,
+} from "./sharedAnthropometricDataForm";
 
 export const InitialBiogicalInterpretationFormFields = [
-    BirthDateField,
-    SexField
-]
-
+  BirthDateField,
+  SexField,
+];
 
 export const InitialBiogicalInterpretationFormZodSchema = [
-    BirthDateToTodayZodSchema,
-    SexField
-]
+  BirthDateToTodayZodSchema,
+  SexField,
+];

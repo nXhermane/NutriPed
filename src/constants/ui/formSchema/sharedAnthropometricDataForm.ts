@@ -404,10 +404,7 @@ export const EdemaZodSchema = z.enum(["yes", "no"]);
 
 export const BirthDateToTodayZodSchema = z
   .object({
-    birthDate: dateZodSchema(
-      "La date de naissance est invalide.",
-      "birthDate"
-    ),
+    birthDate: dateZodSchema("La date de naissance est invalide.", "birthDate"),
   })
   .transform(data => {
     const date1 = new Date(data.birthDate);
@@ -420,9 +417,9 @@ export const BirthDateToTodayZodSchema = z
       [AnthroSystemCodes.AGE_IN_DAY]: dayAfterBirthDay,
       [AnthroSystemCodes.AGE_IN_MONTH]: monthAfterBirthDay,
     };
-  })
+  });
 export const SexZodSchema = z.object({
   [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {
     errorMap: () => ({ message: "Le sexe est requis" }),
   }),
-})
+});

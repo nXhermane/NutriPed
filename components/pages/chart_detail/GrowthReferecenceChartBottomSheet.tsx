@@ -35,7 +35,7 @@ export const GrowthReferenceChartBottomSheet: React.FC<GrowthReferenceChartBotto
             // experimentalBlurMethod="dimezisBlurView"
             // intensity={50}
             // tint={colorMode}
-            className="h-full w-full p-4 rounded-t-2xl overflow-hidden"
+            className="h-full w-full overflow-hidden rounded-t-2xl p-4"
           >
             <BottomSheetTrigger>
               <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl bg-blue-500">

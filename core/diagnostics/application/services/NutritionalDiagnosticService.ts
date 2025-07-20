@@ -13,6 +13,8 @@ import {
   GenerateDiagnosticResultResponse,
   GetNutritionalDiagnosticRequest,
   GetNutritionalDiagnosticResponse,
+  MakeIndependantDiagnosticRequest,
+  MakeIndependantDiagnosticResponse,
   UpdatePatientDiagnosticDataRequest,
   UpdatePatientDiagnosticDataResponse,
 } from "../useCases";
@@ -51,6 +53,10 @@ export interface NutritionalDiagnosticServiceUseCases {
   correctDiagnosticResultUC: UseCase<
     CorrectDiagnosticResultRequest,
     CorrectDiagnosticResultResponse
+  >;
+  makeIndependanteDiagnosticUC: UseCase<
+    MakeIndependantDiagnosticRequest,
+    MakeIndependantDiagnosticResponse
   >;
 }
 
@@ -104,6 +110,13 @@ export class NutritionalDiagnosticService
     req: DeleteNutritionalDiagnosticRequest
   ): Promise<AppServiceResponse<NutritionalDiagnosticDto> | Message> {
     const res = await this.ucs.deleteUC.execute(req);
+    if (res.isRight()) return { data: res.value.val };
+    else return new Message("error", JSON.stringify((res.value as any)?.err));
+  }
+  async makeIndependanteDiagnostic(
+    req: MakeIndependantDiagnosticRequest
+  ): Promise<AppServiceResponse<NutritionalAssessmentResultDto> | Message> {
+    const res = await this.ucs.makeIndependanteDiagnosticUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }

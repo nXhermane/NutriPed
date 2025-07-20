@@ -54,7 +54,7 @@ export const DiagnosticTools = ({}) => {
             component={BiologicalInterpretationScreen}
           />
           <Drawer.Screen
-            name="Diagnostic global"
+            name="Diagnostic Nutritionnel"
             component={GlobalDiagnosticScreen}
           />
         </Drawer.Navigator>

@@ -15,22 +15,6 @@ export function useClinicalSignAnalyser() {
         variableUsageMap: VariableUsageMap
       ) => {
         try {
-          const clinicalSigns: {
-            [signCode: string]: { code: string; data: { [Key: string]: any } };
-          } = {};
-          for (const dataCode in variableUsageMap) {
-            const signCodes = variableUsageMap[dataCode];
-            for (const signCode of signCodes) {
-              if (!clinicalSigns[signCode]) {
-                clinicalSigns[signCode] = {
-                  code: signCode,
-                  data: { [dataCode]: data[dataCode] },
-                };
-              } else {
-                clinicalSigns[signCode].data[dataCode] = data[dataCode];
-              }
-            }
-          }
           const evaluationContext = {
             [AnthroSystemCodes.AGE_IN_DAY]: data[AnthroSystemCodes.AGE_IN_DAY],
             [AnthroSystemCodes.AGE_IN_MONTH]:
@@ -39,7 +23,7 @@ export function useClinicalSignAnalyser() {
           };
           return clinicalNutritionalAnalysis.makeClinicalAnalysis({
             ...evaluationContext,
-            clinicalSigns: Object.values(clinicalSigns),
+            clinicalSigns: remapSignDataToClinicalSign(data, variableUsageMap),
           });
         } catch (e) {
           console.error(e);
@@ -50,4 +34,27 @@ export function useClinicalSignAnalyser() {
   );
 
   return submit;
+}
+
+export function remapSignDataToClinicalSign(
+  data: { [dataCode: string]: any },
+  variableUsageMap: VariableUsageMap
+) {
+  const clinicalSigns: {
+    [signCode: string]: { code: string; data: { [Key: string]: any } };
+  } = {};
+  for (const dataCode in variableUsageMap) {
+    const signCodes = variableUsageMap[dataCode];
+    for (const signCode of signCodes) {
+      if (!clinicalSigns[signCode]) {
+        clinicalSigns[signCode] = {
+          code: signCode,
+          data: { [dataCode]: data[dataCode] },
+        };
+      } else {
+        clinicalSigns[signCode].data[dataCode] = data[dataCode];
+      }
+    }
+  }
+  return Object.values(clinicalSigns);
 }

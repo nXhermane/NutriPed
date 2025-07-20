@@ -69,11 +69,12 @@ function Route() {
       />
       <Stack.Screen
         name={"(screens)"}
-        options={{
-          // animation: "slide_from_right",
-          // animationDuration: 500,
-          
-        }}
+        options={
+          {
+            // animation: "slide_from_right",
+            // animationDuration: 500,
+          }
+        }
       />
     </Stack>
   );

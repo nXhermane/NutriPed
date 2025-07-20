@@ -119,7 +119,7 @@ export const AnthropometricCalculatorPanel = () => {
         showsVerticalScrollIndicator={false}
         className="bg-background-primary"
       >
-        <VStack className="pb-16 bg-background-primary">
+        <VStack className="bg-background-primary pb-16">
           <AnthropometricCalcualtorForm
             formRef={formRef}
             schema={AnthropometricCalculatorFormSchema}
@@ -135,10 +135,7 @@ export const AnthropometricCalculatorPanel = () => {
           tint={colorMode}
           className="w-full px-8 py-4"
         > */}
-        <FakeBlur
-            
-          className="w-full px-8 py-4"
-        >
+        <FakeBlur className="w-full px-8 py-4">
           <Button
             className={`h-v-10 w-full rounded-xl ${error ? "bg-red-500" : "bg-primary-c_light"}`}
             onPress={handleFormSubmit}

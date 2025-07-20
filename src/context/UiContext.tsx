@@ -112,7 +112,7 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
   // État pour savoir si l'utilisateur a déjà changé manuellement le thème
   const [isSystemTheme, setIsSystemTheme] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   // Fonction pour obtenir le thème système actuel
   const getSystemTheme = (): "dark" | "light" => {
     return Appearance.getColorScheme() === "dark" ? "dark" : "light";
@@ -126,7 +126,7 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
     const initializeTheme = async () => {
       try {
         const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-        
+
         if (savedTheme === null) {
           // Aucune préférence sauvegardée, on utilise le thème système
           setColorMode(getSystemTheme());
@@ -168,10 +168,10 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
   const handleColorMode = async (value?: "dark" | "light") => {
     // Dès que l'utilisateur change manuellement le thème, on arrête de suivre le système
     setIsSystemTheme(false);
-    
+
     const newTheme = value || (colorMode === "light" ? "dark" : "light");
     setColorMode(newTheme);
-    
+
     // Sauvegarder la préférence
     try {
       await AsyncStorage.setItem(THEME_STORAGE_KEY, newTheme);
@@ -183,7 +183,7 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
   const resetToSystemTheme = async () => {
     setIsSystemTheme(true);
     setColorMode(getSystemTheme());
-    
+
     // Sauvegarder que l'utilisateur veut suivre le système
     try {
       await AsyncStorage.setItem(THEME_STORAGE_KEY, "system");

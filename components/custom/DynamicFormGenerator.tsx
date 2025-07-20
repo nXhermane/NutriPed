@@ -95,28 +95,38 @@ export interface DynamicFormGeneratorProps<T extends FormSchema> {
   zodSchema?: DynamicFormZodSchemaType | SchemaConstraint<T>;
   className?: string;
   onChange?: (fieldName: ExtractFieldNames<T>, value: T) => void;
+  initialState?: Record<string, { value: any; error?: string }>;
 }
 
 export interface FormHandler<T extends FormSchema> {
   submit: () => Promise<z.infer<SchemaConstraint<T>> | null>;
   reset: () => void;
+  getState: () => Record<string, { value: any; error?: any }>;
 }
 
 export const DynamicFormGenerator = forwardRef(
   <T extends FormSchema>(
-    { schema, zodSchema, className, onChange }: DynamicFormGeneratorProps<T>,
+    {
+      schema,
+      zodSchema,
+      className,
+      onChange,
+      initialState,
+    }: DynamicFormGeneratorProps<T>,
     ref: React.Ref<FormHandler<T>>
   ) => {
     const [formState, dispatchFromState] = useReducer(
       dynamicFromReducer,
-      Object.fromEntries(
-        schema
-          .flatMap(section => section.fields)
-          .map(field => [
-            field.name,
-            { value: field.default, error: undefined },
-          ])
-      )
+      initialState
+        ? { ...initialState }
+        : Object.fromEntries(
+            schema
+              .flatMap(section => section.fields)
+              .map(field => [
+                field.name,
+                { value: field.default, error: undefined },
+              ])
+          )
     );
 
     const handleFieldChange = (fieldName: ExtractFieldNames<T>, value: any) => {
@@ -169,11 +179,17 @@ export const DynamicFormGenerator = forwardRef(
       return formData;
     }, [formState, zodSchema]);
 
-    const reset = () => {
+    const reset = useCallback(() => {
       dispatchFromState({ type: ACTION_TYPE.RESET, payload: {} });
-    };
+    }, []);
+    const getState = useCallback(() => {
+      return formState;
+    }, [formState]);
 
-    useImperativeHandle(ref, () => ({ submit, reset }), [submit]);
+    useImperativeHandle(ref, () => ({ submit, reset, getState }), [
+      submit,
+      getState,
+    ]);
 
     return (
       <VStack

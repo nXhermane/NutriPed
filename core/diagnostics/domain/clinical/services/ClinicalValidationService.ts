@@ -30,7 +30,7 @@ import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 export class ClinicalValidationService implements IClinicalValidationService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository
-  ) { }
+  ) {}
 
   async validate(clinicalData: ClinicalData): Promise<Result<ValidateResult>> {
     try {
@@ -135,10 +135,12 @@ export class ClinicalValidationService implements IClinicalValidationService {
         return Result.ok(true);
       }
       const signData = sign.unpack().data;
-      const clinicalSignRefData = new Map(ref.data.map((data) => ([data.unpack().code.unpack(), data])))
+      const clinicalSignRefData = new Map(
+        ref.data.map(data => [data.unpack().code.unpack(), data])
+      );
       for (const variable of ref.evaluationRule.unpack().variables) {
-        const clinicalSignRefDataEntry = clinicalSignRefData.get(variable)
-        if (!clinicalSignRefDataEntry) continue
+        const clinicalSignRefDataEntry = clinicalSignRefData.get(variable);
+        if (!clinicalSignRefDataEntry) continue;
         const unpackedRefEntry = clinicalSignRefDataEntry.unpack();
         const dataCode = unpackedRefEntry.code.unpack();
         const dataType = unpackedRefEntry.dataType;
@@ -166,10 +168,11 @@ export class ClinicalValidationService implements IClinicalValidationService {
               validationResult = isNumber && inRange;
             }
             break;
-          case ClinicalDataType.ENUM: {
-            const value = signDataValue
-            validationResult = !!dataTypeEnum?.includes(value)
-          }
+          case ClinicalDataType.ENUM:
+            {
+              const value = signDataValue;
+              validationResult = !!dataTypeEnum?.includes(value);
+            }
             break;
           default: {
             throw new Error("This data type is not supported.");
@@ -178,7 +181,7 @@ export class ClinicalValidationService implements IClinicalValidationService {
         if (!validationResult) {
           return handleClinicalError(
             CLINICAL_ERRORS.VALIDATION.INVALID_DATA_TYPE.path,
-            `Type : ${dataType} , Value: ${signDataValue} ${dataTypeRange && ("Range : " + dataTypeRange)} ${dataTypeEnum && ("Enum : " + dataTypeEnum)}`
+            `Type : ${dataType} , Value: ${signDataValue} ${dataTypeRange && "Range : " + dataTypeRange} ${dataTypeEnum && "Enum : " + dataTypeEnum}`
           ) as Result<boolean>;
         }
       }
@@ -188,7 +191,6 @@ export class ClinicalValidationService implements IClinicalValidationService {
     }
   }
 }
-
 
 // const validators = {
 //   [ClinicalDataType.BOOL]: (v) => typeof v === "boolean",

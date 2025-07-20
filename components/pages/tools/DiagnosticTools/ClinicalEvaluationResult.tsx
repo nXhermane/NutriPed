@@ -36,9 +36,13 @@ export const ClinicalEvaluationResult: React.FC<
   return (
     <React.Fragment>
       <VStack className="pb-v-4">
-        <VStack className="px-4 pb-v-4 ">
-          <Heading className="font-h4 font-medium text-lg text-typography-primary">Résultat de l'examen</Heading>
-          <Text className="font-body font-normal text-xs text-typography-primary_light ">Analyse complète des signes cliniques</Text>
+        <VStack className="px-4 pb-v-4">
+          <Heading className="font-h4 text-lg font-medium text-typography-primary">
+            Résultat de l'examen clinique
+          </Heading>
+          <Text className="font-body text-xs font-normal text-typography-primary_light">
+            Analyse complète des signes cliniques
+          </Text>
         </VStack>
         <Accordion className="gap-3 bg-transparent">
           {results.map((result, index) => {

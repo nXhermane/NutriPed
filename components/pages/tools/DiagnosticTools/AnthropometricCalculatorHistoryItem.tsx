@@ -2,7 +2,6 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "react-native";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Eye, Trash2 } from "lucide-react-native";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
@@ -13,7 +12,6 @@ import { AnthropometricCalculatorResultDataType } from "@/src/store";
 
 interface HistoryItemProps {
   item: AnthropometricCalculatorResultDataType;
-
   onDelete: () => void;
   onView: () => void;
 }
