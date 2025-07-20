@@ -1,5 +1,9 @@
 import { usePediatricApp } from "@/adapter";
-import { DynamicFormGenerator, FormHandler } from "@/components/custom";
+import {
+  DynamicFormGenerator,
+  FormHandler,
+  Loading,
+} from "@/components/custom";
 import { FadeInCardY } from "@/components/custom/motion";
 import {
   Actionsheet,
@@ -13,7 +17,6 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { Text } from "@/components/ui/text";
 import { AnthroSystemCodes } from "@/core/constants";
 import { MedicineDosageResultDto, MedicineDto } from "@/core/nutrition_care";
 import {
@@ -24,10 +27,7 @@ import { useToast, useUI } from "@/src/context";
 import { Calculator } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import colors from "tailwindcss/colors";
 import { MedicineDosageResult } from "./MedicineDosageResult";
-import { Center } from "@/components/ui/center";
-import { Spinner } from "@/components/ui/spinner";
 
 export interface MedicineDetailBottomSheetProps {
   isOpen?: boolean;
@@ -97,23 +97,13 @@ export const MedicineDetailBottomSheet: React.FC<
                   className="h-v-10 rounded-xl bg-primary-c_light"
                   onPress={onSubmit}
                 >
-                  <ButtonIcon
-                    as={Calculator}
-                    className="text-typography-primary"
-                  />
-                  <ButtonText className="font-h4 font-medium text-typography-primary">
+                  <ButtonIcon as={Calculator} className="text-white" />
+                  <ButtonText className="font-h4 font-medium text-white">
                     {"Calculer le dosage"}
                   </ButtonText>
                 </Button>
               </VStack>
-              {onComputing && (
-                <Center className="flex-1 gap-4 bg-transparent">
-                  <Spinner size={"large"} color={colors.blue["600"]} />
-                  <Text className="text-center font-light font-light_italic text-sm text-typography-primary_light">
-                    Calcul en cours...
-                  </Text>
-                </Center>
-              )}
+              {onComputing && <Loading>Calcul en cours...</Loading>}
               {medicineDosageResult != null && (
                 <FadeInCardY delayNumber={3}>
                   <MedicineDosageResult

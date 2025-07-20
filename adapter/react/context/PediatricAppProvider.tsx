@@ -71,9 +71,12 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           growthIndicatorValue:
             diagnosticContext.getGrowthIndicatorValueService(),
           clinicalSign: diagnosticContext.getClinicalSignReferenceService(),
+          clinicalNutritionalAnalysis:
+            diagnosticContext.getClinicalNutritionalAnalysisService(),
           nutritionalRisk: diagnosticContext.getNutritionalRiskFactorService(),
           biochemicalReference:
             diagnosticContext.getBiochemicalReferenceService(),
+          biologicalAnalysis: diagnosticContext.getBiologicalAnalysisService(),
           diagnosticRule: diagnosticContext.getDiagnosticRuleService(),
           nutritionalDiagnostic:
             diagnosticContext.getNutritionalDiagnosticService(),

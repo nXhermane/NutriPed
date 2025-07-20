@@ -130,7 +130,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
           >
             <ButtonText
               className={
-                "border-typography-primary_light font-body text-subtitle2 color-typography-primary_light"
+                "border-typography-primary_light font-body text-subtitle2 text-typography-primary_light"
               }
             >
               Passer
@@ -139,7 +139,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
         )}
         {!hideNextBtn && (
           <Button
-            className={"elevation-md rounded-xl bg-primary-c_light"}
+            className={"rounded-xl bg-primary-c_light"}
             // variant={"solid"}
             onPress={onNextBtnPress}
           >

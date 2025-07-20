@@ -30,11 +30,17 @@ export interface PediatricAppContextType {
     clinicalSign: ReturnType<
       typeof DiagnosticContext.prototype.getClinicalSignReferenceService
     >;
+    clinicalNutritionalAnalysis: ReturnType<
+      typeof DiagnosticContext.prototype.getClinicalNutritionalAnalysisService
+    >;
     nutritionalRisk: ReturnType<
       typeof DiagnosticContext.prototype.getNutritionalRiskFactorService
     >;
     biochemicalReference: ReturnType<
       typeof DiagnosticContext.prototype.getBiochemicalReferenceService
+    >;
+    biologicalAnalysis: ReturnType<
+      typeof DiagnosticContext.prototype.getBiologicalAnalysisService
     >;
     diagnosticRule: ReturnType<
       typeof DiagnosticContext.prototype.getDiagnosticRuleService

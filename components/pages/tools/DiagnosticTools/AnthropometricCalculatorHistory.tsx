@@ -17,6 +17,7 @@ import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useExportAnthropometicResultToXlsx } from "@/src/hooks";
+import { FakeBlur } from "@/components/custom";
 
 export const AnthropometricCalculatorHistory = () => {
   const { colorMode } = useUI();
@@ -106,10 +107,10 @@ export const AnthropometricCalculatorHistory = () => {
       </ScrollView>
 
       <HStack className="absolute bottom-0 w-full overflow-hidden rounded-xl">
-        <BlurView
-          experimentalBlurMethod="dimezisBlurView"
-          intensity={50}
-          tint={colorMode}
+        <FakeBlur
+          // experimentalBlurMethod="dimezisBlurView"
+          // intensity={50}
+          // tint={colorMode}
           className="w-full flex-row gap-3 px-4 py-4"
         >
           <Button
@@ -135,7 +136,7 @@ export const AnthropometricCalculatorHistory = () => {
               Exporter tout
             </ButtonText>
           </Button>
-        </BlurView>
+        </FakeBlur>
       </HStack>
       <AnthropometricCalculatorResultModal
         title={currentTitle as string}

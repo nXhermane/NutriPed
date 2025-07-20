@@ -57,7 +57,9 @@ const Tool = () => {
           animationMatchesGesture: true,
         }}
       />
-      <ToolDetailScreenHeader name={tool?.name || "Oops! Tool Not Found"} />
+      {tool?.code != "diagnostic_tools" && (
+        <ToolDetailScreenHeader name={tool?.name || "Oops! Tool Not Found"} />
+      )}
 
       {renderTool(tool?.code)}
     </Box>

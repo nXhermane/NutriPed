@@ -64,7 +64,7 @@ export const SeriesLabelInputModal: React.FC<SeriesLabelInputModalProps> =
               }}
               className={`rounded-xl border-[1px] border-primary-border/5 ${error ? "bg-red-500" : "bg-primary-c_light"}`}
             >
-              <ButtonText className="font-h4 text-sm font-medium text-typography-primary">
+              <ButtonText className="font-h4 text-sm font-medium text-white">
                 Enregistrer
               </ButtonText>
             </Button>

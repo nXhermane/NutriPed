@@ -1,137 +1,209 @@
-import { CORE_CONFIG } from "@/adapter/config/core";
-import React, { useEffect, useRef, useState } from "react";
-import { Dimensions } from "react-native";
-import Pdf from "react-native-pdf";
-import * as FileSystem from "expo-file-system";
-import { useToast, useUI } from "@/src/context";
-import * as Sharing from "expo-sharing";
-import * as IntentLauncher from "expo-intent-launcher";
-import * as Linking from "expo-linking";
-import { Center } from "@/components/ui/center";
-import { Spinner } from "@/components/ui/spinner";
-import colors from "tailwindcss/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
 import { VStack } from "@/components/ui/vstack";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import { ExternalLink, LineChart } from "lucide-react-native";
-import { Box } from "@/components/ui/box";
+import { HStack } from "@/components/ui/hstack";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
+import { View } from "@/components/ui/view";
+import { FlatList, ToastAndroid } from "react-native";
+import { CardPressEffect, FadeInCardY } from "@/components/custom/motion";
+import { Divider } from "@/components/ui/divider";
+import { router } from "expo-router";
 import { downloadAndCacheFile } from "@/utils";
-const ProtocoleCurrentPageStorageKey = "protocole_current_page";
+import { CORE_CONFIG } from "@/adapter/config/core";
+import * as FileSystem from "expo-file-system";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { ArrowDownCircle } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useToast } from "@/src/context";
+import { PdfSourceUrl } from "../pdf_viewer";
+
+const ProtocoleStoreKey = "protocoles_data";
 export interface ProtocoleToolProps {}
 
 export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
-  const [isDownload, setIsDownload] = useState<boolean>(false);
-  const [uri, setUri] = useState<string>("");
-  const { colorMode } = useUI();
-  const [initialPage, setInitialPage] = useState<number>(0);
-  const [readProgress, setReadProgress] = useState<number>(0);
-  const currentPageNumber = useRef(0);
+  const [protocolList, setProtocolList] = useState<
+    {
+      name: string;
+      version: string;
+      edition: string;
+      url: PdfSourceUrl;
+    }[]
+  >([]);
   const toast = useToast();
+  const [newVersionAvailable, setNewVersionAvailable] =
+    useState<boolean>(false);
 
-  useEffect(() => {
-    if (!isDownload) {
-      downloadAndCacheFile(CORE_CONFIG.protocolePdfUrl)
-        .then(async uri => {
-          if (uri) {
-            setUri(uri);
-            const _currentPage = await AsyncStorage.getItem(
-              ProtocoleCurrentPageStorageKey
-            );
-            if (_currentPage) {
-              const $currentPage = JSON.parse(_currentPage);
-              setInitialPage($currentPage.currentPageNumber);
-              currentPageNumber.current = $currentPage.currentPageNumber;
-            }
-            setIsDownload(true);
-          }
-        })
-        .catch(e => {
-          console.error(e);
-          toast.show(
-            "Error",
-            "Erreur de téléchargement",
-            "Une Erreur s'est producte lors du téléchargement. Veillez vous s'assurer que votre connexion internet est activée."
-          );
-        });
-    }
-    const onUnMount = async () => {
-      await AsyncStorage.setItem(
-        ProtocoleCurrentPageStorageKey,
-        JSON.stringify({ currentPageNumber: currentPageNumber.current })
+  const loadFormString = (jsonData: string) => {
+    const data = JSON.parse(jsonData);
+    setProtocolList(data);
+  };
+  const downloadProtocole = async () => {
+    const fileUri = await downloadAndCacheFile(
+      CORE_CONFIG.protocolesUrl,
+      false
+    );
+    if (fileUri) {
+      const readFile = await FileSystem.readAsStringAsync(fileUri, {
+        encoding: "utf8",
+      });
+      await AsyncStorage.setItem(ProtocoleStoreKey, readFile);
+      loadFormString(readFile);
+      setNewVersionAvailable(false);
+    } else {
+      toast.show(
+        "Error",
+        "Erreur lors du téléchargement du protocole.",
+        "Vous devez dans un premier temps télecherager les protocoles avants l'utilisation. "
       );
+    }
+  };
+  useEffect(() => {
+    const checkNewVersionAsync = async (storeData: string) => {
+      const fileUri = await downloadAndCacheFile(
+        CORE_CONFIG.protocolesUrl,
+        true
+      );
+      if (fileUri) {
+        const readFile = await FileSystem.readAsStringAsync(fileUri, {
+          encoding: "utf8",
+        });
+        if (readFile != storeData) {
+          setNewVersionAvailable(true);
+        }
+      }
     };
-    return () => {
-      onUnMount();
+    const loadProtocoleList = async () => {
+      const storeData = await AsyncStorage.getItem(ProtocoleStoreKey);
+      if (storeData) {
+        loadFormString(storeData);
+        await checkNewVersionAsync(storeData);
+      } else {
+        await downloadProtocole();
+      }
     };
+
+    loadProtocoleList();
   }, []);
 
-  if (!isDownload)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
-      </Center>
-    );
-
+  useEffect(() => {
+    if (newVersionAvailable)
+      ToastAndroid.show(
+        "Une nouvelle version du protocole est disponible. Vous pouvez le télécharger en cliquant sur le bouton a droite.",
+        5000
+      );
+  }, [newVersionAvailable]);
   return (
     <React.Fragment>
-      <Fab
-        placement="bottom right"
-        className="h-12 w-12 bg-primary-c_light"
-        onPress={async () => {
-          const contentUri = await FileSystem.getContentUriAsync(uri);
-          await IntentLauncher.startActivityAsync(
-            "android.intent.action.VIEW",
-            {
-              data: contentUri,
-              type: "application/pdf",
-              flags: 1,
-            }
-          );
-        }}
-      >
-        <FabIcon
-          as={ExternalLink}
-          className="h-6 w-6 text-typography-primary"
-        />
-      </Fab>
-      <VStack className="h-full w-full bg-background-primary">
-        <Progress
-          value={readProgress}
-          orientation="horizontal"
-          className="h-v-1 rounded-none bg-background-secondary"
+      <ProtocleToolList data={protocolList} />
+      {newVersionAvailable && (
+        <Fab
+          placement="bottom right"
+          className="h-12 w-12 bg-primary-c_light"
+          onPress={downloadProtocole}
         >
-          <ProgressFilledTrack className="rounded-none bg-primary-c_light" />
-        </Progress>
-
-        <Pdf
-          source={{ uri }}
-          onLoadComplete={(numberOfPages, filePath, size) => {
-            // console.log(`Number of pages: ${numberOfPages}`);
-          }}
-          onPageChanged={(page, numberOfPages) => {
-            currentPageNumber.current = page;
-            setReadProgress((page / numberOfPages) * 100);
-          }}
-          onError={error => {
-            console.error(error);
-            toast.show(
-              "Error",
-              "Erreur technique",
-              "Une erreur s'est producte lors du chargement du protocole de traitement"
-            );
-          }}
-          onPressLink={uri => {
-            Linking.openURL(uri);
-          }}
-          style={{
-            flex: 1,
-            backgroundColor: colorMode === "light" ? "#f9f9f9" : "#121212",
-            height: 200,
-          }}
-          page={initialPage}
-        />
-      </VStack>
+          <View className="absolute right-1 top-1 h-2 w-2 animate-ping rounded-full bg-red-500" />
+          <FabIcon as={ArrowDownCircle} className="h-6 w-6 text-white" />
+        </Fab>
+      )}
     </React.Fragment>
   );
 };
+
+export interface ProtocoleToolListProps {
+  data: { name: string; version: string; edition: string; url: PdfSourceUrl }[];
+}
+export const ProtocleToolList: React.FC<ProtocoleToolListProps> = React.memo(
+  ({ data }) => {
+    return (
+      <VStack className="flex-1 bg-background-primary px-4 pt-4">
+        <HStack className="">
+          <Heading className="font-h3 text-xl font-semibold">
+            Liste des protocoles de traitement
+          </Heading>
+        </HStack>
+        <FlatList
+          contentContainerClassName="gap-4 pt-4"
+          data={data}
+          renderItem={({ item, index }) => (
+            <FadeInCardY key={index} delayNumber={index * 3}>
+              <ProtocoleToolCard data={item} />
+            </FadeInCardY>
+          )}
+        />
+      </VStack>
+    );
+  }
+);
+export interface ProtocoleToolCardProps {
+  data: { name: string; version: string; edition: string; url: PdfSourceUrl };
+}
+export const ProtocoleToolCard: React.FC<ProtocoleToolCardProps> = React.memo(
+  ({ data }) => {
+    return (
+      <CardPressEffect
+        onPress={() => {
+          router.navigate({
+            pathname: "/(screens)/pdf_viewer/[uri_or_url]",
+            params: {
+              uri_or_url: data.url,
+              name: data.name,
+            },
+          });
+        }}
+        onLongPress={() => {
+          router.navigate({
+            pathname: "/(screens)/pdf_viewer/[uri_or_url]",
+            params: {
+              uri_or_url: data.url,
+              name: data.name,
+              forceDownload: "yes",
+            },
+          });
+        }}
+      >
+        <VStack className="rounded-xl bg-background-secondary px-3 py-3">
+          <HStack>
+            <Text className="font-h4 text-sm font-medium text-typography-primary">
+              {data.name}
+            </Text>
+          </HStack>
+          <Divider className="my-2 h-[1px] w-full bg-primary-border/5" />
+          <HStack className="justify-between">
+            <HStack>
+              <Text
+                className={
+                  "font-body text-2xs font-normal text-primary-border/50"
+                }
+              >
+                Édition :
+              </Text>
+              <Text
+                className={
+                  "font-body text-2xs font-normal text-primary-border/50"
+                }
+              >
+                {data.edition}
+              </Text>
+            </HStack>
+            <HStack>
+              <Text
+                className={
+                  "font-body text-2xs font-normal text-primary-border/50"
+                }
+              >
+                Version:{" "}
+              </Text>
+              <Text
+                className={
+                  "font-body text-2xs font-normal text-primary-border/50"
+                }
+              >
+                {data.version}
+              </Text>
+            </HStack>
+          </HStack>
+        </VStack>
+      </CardPressEffect>
+    );
+  }
+);

@@ -1,10 +1,9 @@
+import { Loading } from "@/components/custom";
 import { ChartDetailHeader } from "@/components/pages/chart_detail";
 import {
   GrwothReferenceTable,
   PatientMeasurementPanel,
 } from "@/components/pages/table_detail";
-import { Center } from "@/components/ui/center";
-import { Spinner } from "@/components/ui/spinner";
 import {
   GetGrowthReferenceTableRequest,
   GetIndicatorRequest,
@@ -15,7 +14,6 @@ import { useGrowthIndicators, useGrowthTables } from "@/src/hooks";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo } from "react";
 import { ScrollView } from "react-native";
-import colors from "tailwindcss/colors";
 
 export default function TableDetailScreen() {
   const params = useLocalSearchParams<{
@@ -54,12 +52,7 @@ export default function TableDetailScreen() {
     }
   }, [error, indicatorError]);
 
-  if (onLoading || indicatorLoading)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
-      </Center>
-    );
+  if (onLoading || indicatorLoading) return <Loading />;
 
   return (
     <React.Fragment>

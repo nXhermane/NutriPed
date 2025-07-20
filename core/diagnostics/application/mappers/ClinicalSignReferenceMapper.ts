@@ -18,6 +18,8 @@ export class ClinicalSignReferenceMapper
         name: clinicalSignData.name,
         question: clinicalSignData.question,
         dataRange: clinicalSignData.dataRange,
+        required: clinicalSignData.required,
+        enumValue: clinicalSignData.enumValue,
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

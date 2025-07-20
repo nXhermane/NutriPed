@@ -3,20 +3,18 @@ import {
   FadeInCardX,
   FadeInCardY,
 } from "@/components/custom/motion";
-import { Center } from "@/components/ui/center";
 import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { MedicineCategory, MedicineDto } from "@/core/nutrition_care";
 import { useToast } from "@/src/context";
 import { useMedicines } from "@/src/hooks";
 import React, { useEffect } from "react";
-import colors from "tailwindcss/colors";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Divider } from "@/components/ui/divider";
 import { HumanDateFormatter } from "@/utils";
 import { FlatList } from "react-native";
+import { Loading } from "@/components/custom";
 
 export interface MedicineListProps {
   onMedicineChoosed?: (medicine: MedicineDto) => void;
@@ -36,16 +34,11 @@ export const MedicineList: React.FC<MedicineListProps> = ({
         "Une erreur technique s'est produite veillez reesayer plutard."
       );
   }, [error]);
-  if (onLoading)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
-      </Center>
-    );
+  if (onLoading) return <Loading />;
 
   return (
     <React.Fragment>
-      <VStack className="p-4 bg-background-primary">
+      <VStack className="bg-background-primary p-4">
         <FlatList
           contentContainerClassName="pb-8"
           initialNumToRender={10}

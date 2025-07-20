@@ -31,7 +31,7 @@ export class BiologicalTestResult extends ValueObject<IBiologicalTestResult> {
     createProps: CreateBiologicalTestResult
   ): Result<BiologicalTestResult> {
     try {
-      const unitCode = UnitCode.create(createProps.code);
+      const unitCode = UnitCode.create(createProps.unit);
       const codeRes = SystemCode.create(createProps.code);
       const combinedRes = Result.combine([unitCode, codeRes]);
       if (combinedRes.isFailure)

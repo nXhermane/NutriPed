@@ -5,3 +5,4 @@ export * from "./Delete";
 export * from "./GenerateDiagnosticResult";
 export * from "./Get";
 export * from "./UpdatePatientDiagnosticData";
+export * from "./MakeIndependantDiagnostic";

@@ -62,9 +62,13 @@ export const DiagnosticDataForm: React.FC<DiagnosticDataFormProps> = React.memo(
                 disabled={isSubmitting}
               >
                 {isSubmitting && <ButtonSpinner />}
-                {!isSubmitting && error && <Icon as={X} />}
-                {!isSubmitting && success && <Icon as={Check} />}
-                <ButtonText className="font-body text-xs text-typography-primary">
+                {!isSubmitting && error && (
+                  <Icon as={X} className="text-white" />
+                )}
+                {!isSubmitting && success && (
+                  <Icon as={Check} className="text-white" />
+                )}
+                <ButtonText className="font-body text-xs text-white">
                   Enregistrer
                 </ButtonText>
               </Button>

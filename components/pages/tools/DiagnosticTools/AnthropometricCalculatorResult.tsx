@@ -1,10 +1,10 @@
 import { FadeInCardX } from "@/components/custom/motion";
-import { GrowthIndicatorValueDto ,AnthroSystemCodes} from "@/core/diagnostics";
+import { GrowthIndicatorValueDto } from "@/core/diagnostics";
 import React from "react";
 import { IndicatorCard } from "./IndicatorCard";
 import { VStack } from "@/components/ui/vstack";
-import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 
 export interface AnthropometricCalculatorResultProps {
   title?: string;
@@ -17,11 +17,15 @@ export const AnthropometricCalculatorResult: React.FC<
   return (
     <React.Fragment>
       <VStack className="mx-4 mt-5 gap-4 pb-8">
-        <HStack>
-          <Heading className="text-center font-h4 text-sm font-medium text-typography-primary">
-            {title ?? "Resultat du calcule anthropometrique"}
+        <VStack className="pb-v-4">
+          <Heading className="font-h4 text-lg font-medium text-typography-primary">
+            {title ?? "Indicateurs de Croissance"}
           </Heading>
-        </HStack>
+          <Text className="font-body text-xs font-normal text-typography-primary_light">
+            Évaluation anthropométrique selon les références OMS
+          </Text>
+        </VStack>
+
         {results?.map(indicatorValue => (
           <FadeInCardX key={indicatorValue.code}>
             <IndicatorCard value={indicatorValue} />

@@ -45,6 +45,11 @@ export class ClinicalSignData extends ValueObject<IClinicalSignData> {
         "When data type of ClinicalSignData is Range, the dataRange must be provided. Please provide dataRange and retry."
       );
     }
+    if (props.dataType === ClinicalDataType.ENUM && !props.enumValue) {
+      throw new ArgumentNotProvidedException(
+        "When data type of clinicalSignData is enum the enumValue must be provided. Please  provide enumValue property and retry."
+      );
+    }
   }
   static create(createProps: CreateClinicalSignData): Result<ClinicalSignData> {
     try {

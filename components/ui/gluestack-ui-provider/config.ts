@@ -165,8 +165,8 @@ export const config = {
     /** Custom colors var */
     '--color-background-primary': '249, 249, 249',
     '--color-background-secondary': '255, 255, 255',
-    '--color-c-primary': '76, 175, 80',
-    '--color-c-primary-light': '165, 214, 167',
+    '--color-c-primary':'165, 214, 167',
+    '--color-c-primary-light': '76, 175, 80' ,
     '--color-c-secondary': '33, 150, 243',
     '--color-text-primary': '51, 51, 51',
     '--color-text-primary-light': '102, 102, 102',
