@@ -459,9 +459,7 @@ export const FormField = <T,>({
           >
             {field.radioOptions.map((item, index) => (
               <Radio key={index} value={item.value}>
-                <RadioIndicator
-                  className={"h-4 w-4 border-typography-primary_light"}
-                >
+                <RadioIndicator className={"h-4 w-4 border-[1px]"}>
                   <RadioIcon
                     as={Circle}
                     className="bg-primary-c_light text-primary-c_light"

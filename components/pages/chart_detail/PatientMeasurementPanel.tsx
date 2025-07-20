@@ -1,4 +1,4 @@
-import { FormHandler } from "@/components/custom";
+import { FormHandler, Loading } from "@/components/custom";
 import { VStack } from "@/components/ui/vstack";
 import {
   AnthroSystemCodes,
@@ -17,9 +17,6 @@ import { SeriesLabelInputModal } from "./SeriesLabelInputModal";
 import { PatientMeasurementForm } from "./PatientMeasurementForm";
 import { MeasurementSeriesHeader } from "./MeasurementSeriesHeader";
 import { FadeInCardY } from "@/components/custom/motion";
-import { Center } from "@/components/ui/center";
-import { Spinner } from "@/components/ui/spinner";
-import colors from "tailwindcss/colors";
 import { Sex } from "@/core/shared";
 
 export interface PatientMeasurementPanelProps {
@@ -67,12 +64,7 @@ export const PatientMeasurementPanel: React.FC<
     onSelectedSeriesChange && onSelectedSeriesChange(selectedSeries);
   }, [selectedSeries]);
 
-  if (!growthChartDto)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
-      </Center>
-    );
+  if (!growthChartDto) return <Loading />;
 
   return (
     <React.Fragment>

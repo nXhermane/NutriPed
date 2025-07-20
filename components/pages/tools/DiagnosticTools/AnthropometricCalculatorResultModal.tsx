@@ -105,7 +105,7 @@ export const AnthropometricCalculatorResultModal: React.FC<
               setIsSaved(true);
             }}
           >
-            <ButtonIcon as={Save} className="text-typography-primary" />
+            <ButtonIcon as={Save} className="text-white" />
           </Button>
         )}
       </BottomSheetModal>

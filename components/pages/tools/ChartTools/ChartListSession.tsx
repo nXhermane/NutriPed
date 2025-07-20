@@ -1,4 +1,3 @@
-import { Spinner } from "@/components/ui/spinner";
 import { Guard, Sex } from "@/core/shared";
 import {
   GrowthChartListOrderedByIndicatorType,
@@ -6,7 +5,6 @@ import {
   useGrowthChartsOrderedByIndicator,
 } from "@/src/hooks";
 import React, { useEffect, useMemo } from "react";
-import colors from "tailwindcss/colors";
 import { ChartToolsSession } from "./ChartToolsSession";
 import { SectionList } from "react-native";
 import { ChartCard } from "./ChartCard";
@@ -15,6 +13,7 @@ import { Box } from "@/components/ui/box";
 import { router } from "expo-router";
 import { useToast } from "@/src/context";
 import { FadeInCardY } from "@/components/custom/motion";
+import { Loading } from "@/components/custom";
 
 export interface ChartListSessionProps {
   searchOptions: { searchText: string; filterTag: string };
@@ -71,10 +70,7 @@ export const ChartListSession: React.FC<ChartListSessionProps> = ({
       );
   }, [error]);
 
-  if (!data || isLoading)
-    return (
-      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-    );
+  if (!data || isLoading) return <Loading />;
 
   return (
     <React.Fragment>

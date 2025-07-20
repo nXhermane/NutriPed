@@ -146,15 +146,13 @@ export const AnthropometricCalculatorPanel = () => {
                 className="data-[active=true]:text-primary-c_light"
               />
             ) : (
-              <ButtonIcon as={Calculator} className="text-typography-primary" />
+              <ButtonIcon as={Calculator} className="text-white" />
             )}
-            <ButtonText className="font-h4 font-medium text-typography-primary data-[active=true]:text-primary-c_light">
+            <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
               Calculer
             </ButtonText>
-            {onSucess && (
-              <ButtonIcon as={Check} className="text-typography-primary" />
-            )}
-            {error && <ButtonIcon as={X} className="text-typography-primary" />}
+            {onSucess && <ButtonIcon as={Check} className="text-white" />}
+            {error && <ButtonIcon as={X} className="text-white" />}
           </Button>
         </FakeBlur>
         {/* </BlurView> */}

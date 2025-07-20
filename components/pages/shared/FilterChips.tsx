@@ -58,7 +58,7 @@ export const FilterChipItem: React.FC<FilterChipItemProps> = ({
       }}
     >
       <Text
-        className={`font-body text-sm font-normal ${false ? "text-background-primary" : "text-typography-primary"}`}
+        className={`font-body text-sm font-normal ${state ? "text-white" : "text-typography-primary"}`}
       >
         {title}
       </Text>

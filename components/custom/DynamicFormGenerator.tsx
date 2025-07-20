@@ -209,7 +209,7 @@ export const DynamicFormGenerator = forwardRef(
               {section.section && (
                 <HStack className={"items-center gap-2"}>
                   <Heading
-                    className={"font-h4 text-base font-medium text-primary-c"}
+                    className={"font-h4 text-base font-medium text-primary-c_light"}
                   >
                     {section.section}
                   </Heading>

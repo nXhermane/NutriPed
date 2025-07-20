@@ -3,16 +3,13 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { Center } from "@/components/ui/center";
-import { Spinner } from "@/components/ui/spinner";
 import {
   DynamicFormGenerator,
   DynamicFormZodSchemaType,
   FormHandler,
   FormSchema,
+  Loading,
 } from "@/components/custom";
-import { icons } from "lucide-react-native";
-import colors from "tailwindcss/colors";
 
 export interface AnthropometricCalculatorFormProps {
   schema?: FormSchema;
@@ -36,9 +33,7 @@ export const AnthropometricCalcualtorForm: React.FC<
       )}
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         {!schema ? (
-          <Center className="flex-1 bg-background-primary">
-            <Spinner size={"large"} color={colors.blue["600"]} />
-          </Center>
+          <Loading />
         ) : (
           <DynamicFormGenerator
             schema={schema}

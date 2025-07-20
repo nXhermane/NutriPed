@@ -91,21 +91,14 @@ export function ClinicalEvaluationScreen() {
                 className="data-[active=true]:text-primary-c_light"
               />
             ) : (
-              <ButtonIcon
-                as={Stethoscope}
-                className="text-typography-primary"
-              />
+              <ButtonIcon as={Stethoscope} className="text-white" />
             )}
-            <ButtonText className="font-h4 font-medium text-typography-primary data-[active=true]:text-primary-c_light">
+            <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
               Examiner
             </ButtonText>
 
-            {onSucess && (
-              <ButtonIcon as={Check} className="text-typography-primary" />
-            )}
-            {onError && (
-              <ButtonIcon as={X} className="text-typography-primary" />
-            )}
+            {onSucess && <ButtonIcon as={Check} className="text-white" />}
+            {onError && <ButtonIcon as={X} className="text-white" />}
           </Button>
         </FakeBlur>
       </HStack>

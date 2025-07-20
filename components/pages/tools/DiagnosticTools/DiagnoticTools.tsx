@@ -13,7 +13,7 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
+import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
 import { useUI } from "@/src/context";
@@ -37,7 +37,10 @@ export const DiagnosticTools = ({}) => {
             header: props => <DiagnosticToolHeader {...props} />,
             drawerStyle: {
               backgroundColor: "transparent",
+              width: "100%",
             },
+            drawerStatusBarAnimation: "none",
+            drawerPosition: "right",
           }}
           drawerContent={props => <DiagnosticToolDrawerContent {...props} />}
         >
@@ -67,8 +70,20 @@ export interface DiagnosticToolDrawerHeaderProps extends DrawerHeaderProps {}
 
 export const DiagnosticToolHeader: React.FC<
   DiagnosticToolDrawerHeaderProps
-> = ({ route }) => {
-  return <StackScreenHeader name={route?.name} />;
+> = ({ route, navigation }) => {
+  const drawerStatus = useDrawerStatus();
+  return (
+    <StackScreenHeader
+      name={route?.name}
+      right={
+        <VStack className="h-full items-center justify-center">
+          <Pressable className="" onPress={() => navigation.toggleDrawer()}>
+            <Icon as={Menu} className="h-5 w-5 text-typography-primary" />
+          </Pressable>
+        </VStack>
+      }
+    />
+  );
 };
 
 export interface DiagnosticToolDrawerContentProps
@@ -80,8 +95,8 @@ export const DiagnosticToolDrawerContent: React.FC<
   const drawerStatus = useDrawerStatus();
   const { colorMode } = useUI();
   return (
-    <VStack className="h-[100%] w-full">
-      <Pressable
+    <VStack className="h-[70%] w-full">
+      {/* <Pressable
         className="absolute -right-4 top-[50%] z-0 h-v-10 -translate-y-8 items-center overflow-hidden rounded-r-xl bg-primary-c_light"
         onPress={() => navigation.toggleDrawer()}
       >
@@ -91,15 +106,21 @@ export const DiagnosticToolDrawerContent: React.FC<
             className="h-5 w-5 text-typography-primary"
           />
         </Box>
-      </Pressable>
+      </Pressable> */}
 
-      <VStack className="absolute h-full w-full justify-center overflow-hidden rounded-r-2xl">
+      <VStack className="absolute right-0 h-full w-[80%] justify-center overflow-hidden rounded-r-2xl rounded-bl-full rounded-tl-2xl">
         <FakeBlur
           // experimentalBlurMethod="dimezisBlurView"
           // intensity={90}
           // tint={colorMode}
-          className="h-full items-center justify-center gap-3 px-4"
+          className="h-full items-center gap-3 px-4 pt-[35%]"
         >
+          <Pressable
+            className="rounded-full bg-primary-c_light p-1"
+            onPress={() => navigation.closeDrawer()}
+          >
+            <Icon as={X} className="h-5 w-5 text-white" />
+          </Pressable>
           {state.routes.map((route, index) => {
             const { name, key } = route;
             const isFocused = state.index === index;

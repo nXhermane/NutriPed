@@ -96,10 +96,7 @@ export const BiologicalInterpretationPanel: React.FC<
               className="h-fit rounded-full bg-primary-c_light p-0 px-2 py-2"
               onPress={() => setShowSelectionModal(true)}
             >
-              <ButtonIcon
-                as={Plus}
-                className="h-5 w-5 text-typography-primary"
-              />
+              <ButtonIcon as={Plus} className="h-5 w-5 text-white" />
             </Button>
           </HStack>
           <VStack className="rounded-xl bg-background-secondary p-3">
@@ -137,21 +134,14 @@ export const BiologicalInterpretationPanel: React.FC<
                   className="data-[active=true]:text-primary-c_light"
                 />
               ) : (
-                <ButtonIcon
-                  as={Microscope}
-                  className="text-typography-primary"
-                />
+                <ButtonIcon as={Microscope} className="text-white" />
               )}
-              <ButtonText className="font-h4 font-medium text-typography-primary data-[active=true]:text-primary-c_light">
+              <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
                 Interpreter
               </ButtonText>
 
-              {onSucess && (
-                <ButtonIcon as={Check} className="text-typography-primary" />
-              )}
-              {error && (
-                <ButtonIcon as={X} className="text-typography-primary" />
-              )}
+              {onSucess && <ButtonIcon as={Check} className="text-white" />}
+              {error && <ButtonIcon as={X} className="text-white" />}
             </Button>
           </FakeBlur>
         </HStack>

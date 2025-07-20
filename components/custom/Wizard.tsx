@@ -222,7 +222,7 @@ const Header: React.FC<WizardHeaderProps> = ({
             : 0 || 0
         }
       >
-        <ProgressFilledTrack className="rounded-full bg-blue-600" />
+        <ProgressFilledTrack className="rounded-full bg-primary-c_light" />
       </Progress>
     </VStack>
   );
@@ -297,7 +297,7 @@ const Footer: React.FC<WizardFooterProps> = ({
         className={`flex-1 rounded-xl bg-primary-c_light ${onError ? "bg-red-500" : "bg-primary-c_light"}`}
         onPress={onNext}
       >
-        <ButtonText className="font-h4 font-medium text-typography-primary data-[active=true]:text-primary-c_light">
+        <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
           {nextBtnLabel}
         </ButtonText>
       </Button>

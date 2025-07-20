@@ -1,11 +1,9 @@
 import { useToast, useUI } from "@/src/context";
 import { downloadAndCacheFile } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { Center } from "../../ui/center";
-import { Spinner } from "../../ui/spinner";
 import { Text } from "../../ui/text";
-import colors from "tailwindcss/colors";
 import { Fab, FabIcon } from "../../ui/fab";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
@@ -14,6 +12,7 @@ import { VStack } from "../../ui/vstack";
 import { Progress, ProgressFilledTrack } from "../../ui/progress";
 import Pdf from "react-native-pdf";
 import { Linking } from "react-native";
+import { Loading } from "@/components/custom";
 
 const PdfCurrentPageStorageKey = (uri: string) => `${uri}_current_page`;
 export type PdfSourceUri = `file:///${string}.pdf`;
@@ -93,7 +92,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
   if (!isDownload || !uri)
     return (
       <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
+        <Loading />
         <Text className="mt-4 font-body text-sm font-normal text-typography-primary_light">
           Téléchargement en cours...
         </Text>
@@ -123,10 +122,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
           );
         }}
       >
-        <FabIcon
-          as={ExternalLink}
-          className="h-6 w-6 text-typography-primary"
-        />
+        <FabIcon as={ExternalLink} className="h-6 w-6 text-white" />
       </Fab>
       <VStack className="h-full w-full bg-background-primary">
         <Progress

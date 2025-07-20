@@ -1,17 +1,13 @@
-import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { GetMilkRequest, MilkSuggestionResultDto } from "@/core/nutrition_care";
 import { useToast } from "@/src/context";
 import { useMilks } from "@/src/hooks";
 import React, { useEffect, useMemo } from "react";
-import colors from "tailwindcss/colors";
 import { Divider } from "@/components/ui/divider";
-import { BlurView } from "expo-blur";
-import { FakeBlur } from "@/components/custom";
+import { FakeBlur, Loading } from "@/components/custom";
 
 export interface SuggestMilkResultProps {
   result: MilkSuggestionResultDto;
@@ -36,12 +32,7 @@ export const SuggestMilkResult: React.FC<SuggestMilkResultProps> = ({
       console.error(error);
     }
   }, [error]);
-  if (onLoading)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
-      </Center>
-    );
+  if (onLoading) return <Loading />;
   return (
     <React.Fragment>
       <VStack className="m-4 mb-14 overflow-hidden rounded-xl border-[1px] border-primary-border/5 bg-background-secondary px-2 py-3">

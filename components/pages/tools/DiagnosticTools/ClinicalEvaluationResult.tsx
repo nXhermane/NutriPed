@@ -20,10 +20,9 @@ import {
   ChevronUp,
 } from "lucide-react-native";
 import { useClinicalReference } from "@/src/hooks";
-import { Spinner } from "@/components/ui/spinner";
-import colors from "tailwindcss/colors";
 import { Badge, BadgeIcon, BadgeText } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
+import { Loading } from "@/components/custom";
 
 export interface ClinicalEvaluationResultProps {
   title?: string;
@@ -75,9 +74,7 @@ export const ClinicalEvalutationResultItem: React.FC<
   );
 
   if (onLoading) {
-    return (
-      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-    );
+    return <Loading />;
   }
 
   return (

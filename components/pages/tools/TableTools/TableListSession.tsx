@@ -11,6 +11,7 @@ import { TABLE_UI_DATA } from "@/src/constants/ui";
 import { FadeInCardY } from "@/components/custom/motion";
 import { router } from "expo-router";
 import { useToast } from "@/src/context";
+import { Loading } from "@/components/custom";
 
 export const TableListSession = () => {
   const toast = useToast();
@@ -24,10 +25,7 @@ export const TableListSession = () => {
         "Erreur lors du chargement des courbes de croissance. Veillez reessayer"
       );
   }, [error]);
-  if (onLoading)
-    return (
-      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-    );
+  if (onLoading) return <Loading />;
 
   return (
     <VStack className="px-4 pt-4">

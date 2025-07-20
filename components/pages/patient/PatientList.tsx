@@ -10,11 +10,10 @@ import { AddPatientBottomSheet } from "./AddPatientBottomSheet";
 import { AggregateID, Guard } from "@/core/shared";
 import { PATIENT_QUICK_FILTER_TAG } from "@/src/constants/ui";
 import { DeletePatientBottomSheet } from "./DeletePatientBottomSheet";
-import { Spinner } from "@/components/ui/spinner";
 import { router } from "expo-router";
 import { PatientInfo, useFuseSearch, usePatientList } from "@/src/hooks";
-import colors from "tailwindcss/colors";
 import { FadeInCardY } from "@/components/custom/motion";
+import { Loading } from "@/components/custom";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
@@ -62,10 +61,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
     setShowConfirmDeletionAction(true);
   };
 
-  if (onLoading)
-    return (
-      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-    );
+  if (onLoading) return <Loading />;
 
   return (
     <Box className="h-full max-h-[65%]">
@@ -131,7 +127,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
           className="-mr-2 mb-4 h-11 w-11 bg-primary-c_light"
           onPress={() => setShowPatientForm(true)}
         >
-          <FabIcon as={UserPlus} className="h-6 w-6 text-typography-primary" />
+          <FabIcon as={UserPlus} className="h-6 w-6 text-white" />
         </Fab>
       )}
       <ActionBtnSession

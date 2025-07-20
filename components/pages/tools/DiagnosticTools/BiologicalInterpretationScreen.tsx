@@ -1,10 +1,8 @@
-import { FakeBlur, Loading } from "@/components/custom";
+import { Loading } from "@/components/custom";
 import { VStack } from "@/components/ui/vstack";
 import { useBiochemicalReference } from "@/src/hooks";
 import { BiologicalInterpretationPanel } from "./BiologicalInterpretationPanel";
 import React from "react";
-import { HStack } from "@/components/ui/hstack";
-import { Button, ButtonText } from "@/components/ui/button";
 
 export function BiologicalInterpretationScreen() {
   const { data, error, onLoading } = useBiochemicalReference();

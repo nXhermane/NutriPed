@@ -106,9 +106,7 @@ export const AppetiteTestTool: React.FC<AppetiteTestToolProps> = () => {
             >
               {onSubmit && <ButtonSpinner />}
               {error && <Icon as={X} />}
-              <ButtonText
-                className={"font-h4 font-medium text-typography-primary"}
-              >
+              <ButtonText className={"font-h4 font-medium text-white"}>
                 Caluler le résultat du test
               </ButtonText>
             </Button>

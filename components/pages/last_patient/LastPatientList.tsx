@@ -8,8 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import React from "react";
 import { Box } from "@/components/ui/box";
 import { Guard } from "@/core/shared";
-import { Spinner } from "@/components/ui/spinner";
-import colors from "tailwindcss/colors";
+import { Loading } from "@/components/custom";
 export interface LastPatientListProps {
   searchText?: string;
 }
@@ -33,10 +32,7 @@ export const LastPatientList: React.FC<LastPatientListProps> = ({
       : undefined,
   });
 
-  if (onLoading)
-    return (
-      <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-    );
+  if (onLoading) return <Loading />;
   return (
     <VStack className="flex-1 gap-4 px-4">
       <Heading className="font-h2 text-xl text-typography-primary">

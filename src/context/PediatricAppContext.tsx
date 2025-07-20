@@ -1,26 +1,20 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import React from "react";
-import { View } from "@/components/ui/view";
 import { Text } from "@/components/ui/text";
 import { useEventBus } from "domain-eventrix/react";
 import ReactNativeResart from "react-native-restart";
-import {
-  PediatricAppProvider as AdapterPediatricAppProvider,
-  IndexedDBConnection,
-} from "@/adapter";
+import { PediatricAppProvider as AdapterPediatricAppProvider } from "@/adapter";
 import { openBrowserAsync } from "expo-web-browser";
 import { IEventBus } from "@/core/shared";
 import { Center } from "@/components/ui/center";
 import { useDatabase } from "./DatabaseContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Spinner } from "@/components/ui/spinner";
-import colors from "tailwindcss/colors";
-import { Link, LinkText } from "@/components/ui/link";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { LifeBuoy, Mail, MessageCircle, RotateCcw } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
+import { Loading } from "@/components/custom";
 // BETA:
 const queryClient = new QueryClient();
 
@@ -62,7 +56,7 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
         <Text className="text-center font-body text-sm font-normal">
           {uiMessage}
         </Text>
-        {!isTimeOut && <Spinner size={"large"} color={colors.blue["600"]} />}
+        {!isTimeOut && <Loading />}
         {isTimeOut && (
           <>
             <Button
