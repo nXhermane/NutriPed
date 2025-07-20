@@ -30,7 +30,7 @@ import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 export class ClinicalValidationService implements IClinicalValidationService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository
-  ) { }
+  ) {}
 
   async validate(clinicalData: ClinicalData): Promise<Result<ValidateResult>> {
     try {

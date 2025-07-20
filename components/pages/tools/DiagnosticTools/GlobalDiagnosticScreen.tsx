@@ -29,13 +29,6 @@ export const DIAGNOSTIC_WORKFLOW = {
   },
 };
 export function GlobalDiagnosticScreen() {
-  const steps = [
-    { label: "Anthropometrie", state: Wizard.States.ENABLED },
-    { label: "Clinique", state: Wizard.States.DISABLED },
-    { label: "Biologique", state: Wizard.States.DISABLED },
-    { label: "Résultats", state: Wizard.States.DISABLED },
-  ];
-  console.log(config.theme.colors.primary['c_light'])
   return (
     <VStack className="flex-1 bg-background-primary">
       <Wizard startStep={1}>

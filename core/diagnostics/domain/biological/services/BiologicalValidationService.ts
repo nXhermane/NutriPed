@@ -8,10 +8,11 @@ import {
 import { BIOLOGICAL_SERVICE_ERRORS, handleBiologicalError } from "../errors";
 
 export class BiologicalValidationService
-  implements IBiologicalValidationService {
+  implements IBiologicalValidationService
+{
   constructor(
     private readonly biochemicalRefRepo: BiochemicalReferenceRepository
-  ) { }
+  ) {}
   async validate(
     data: BiologicalTestResult[]
   ): Promise<Result<ValidateResult>> {

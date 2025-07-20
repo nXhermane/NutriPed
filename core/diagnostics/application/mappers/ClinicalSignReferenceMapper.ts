@@ -3,7 +3,8 @@ import { ClinicalSignReference, IClinicalSignData } from "../../domain";
 import { ClinicalSignDataDto, ClinicalSignReferenceDto } from "../dtos";
 
 export class ClinicalSignReferenceMapper
-  implements ApplicationMapper<ClinicalSignReference, ClinicalSignReferenceDto> {
+  implements ApplicationMapper<ClinicalSignReference, ClinicalSignReferenceDto>
+{
   toResponse(entity: ClinicalSignReference): ClinicalSignReferenceDto {
     return {
       id: entity.id,
