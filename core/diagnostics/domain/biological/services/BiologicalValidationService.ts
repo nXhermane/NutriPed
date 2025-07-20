@@ -80,8 +80,13 @@ export class BiologicalValidationService
     reference: BiochemicalReference
   ): Result<void> {
     const resultUnit = biologicalTestResult.unpack().unit.unpack();
-    const availableUnits = reference.getAvailableCode();
+    const availableUnits = reference.getUnits().availableUnits;
     if (availableUnits.includes(resultUnit)) return Result.ok();
+    console.log(
+      biologicalTestResult.unpack().code.unpack(),
+      availableUnits,
+      resultUnit
+    );
     return handleBiologicalError(
       BIOLOGICAL_SERVICE_ERRORS.VALIDATION.INVALID_DATA_UNIT.path,
       `dataUnit: ${resultUnit} availableUnits: ${availableUnits.join(";")}`

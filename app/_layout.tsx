@@ -19,6 +19,7 @@ import { Box } from "@/components/ui/box";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -68,10 +69,12 @@ function Route() {
       />
       <Stack.Screen
         name={"(screens)"}
-        options={{
-          animation: "slide_from_right",
-          animationDuration: 500,
-        }}
+        options={
+          {
+            // animation: "slide_from_right",
+            // animationDuration: 500,
+          }
+        }
       />
     </Stack>
   );

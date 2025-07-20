@@ -130,16 +130,14 @@ export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
               className={`h-v-6 rounded-lg bg-primary-c_light px-4 ${onError ? "bg-red-500" : ""}`}
               onPress={handleSubmit}
             >
-              {onSubmit && <ButtonSpinner />}
-              {onError && <Icon as={X} />}
+              {onSubmit && <ButtonSpinner className="" />}
+              {onError && <Icon as={X} className="text-white" />}
               <ButtonText
-                className={
-                  "font-body text-xs font-normal text-typography-primary"
-                }
+                className={"font-body text-xs font-normal text-white"}
               >
                 Ajouter
               </ButtonText>
-              {onSuccess && <Icon as={Check} />}
+              {onSuccess && <Icon as={Check} className="text-white" />}
             </Button>
           </HStack>
           <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>

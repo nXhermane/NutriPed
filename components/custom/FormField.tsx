@@ -63,9 +63,16 @@ type CommonFieldProps = {
 };
 
 type TextField = CommonFieldProps & {
-  type: "text" | "password" | "number" | "textarea";
+  type: "text" | "password" | "textarea";
   placeholder?: string;
   default: string;
+};
+type NumberField = CommonFieldProps & {
+  type: "number";
+  placeholder?: string;
+  default: number;
+  minValue?: number;
+  maxValue?: number;
 };
 
 type SelectField = CommonFieldProps & {
@@ -108,6 +115,7 @@ type QuantityField = CommonFieldProps & {
 
 export type IField =
   | TextField
+  | NumberField
   | SelectField
   | RadioField
   | CheckBoxField
@@ -173,7 +181,18 @@ export const FormField = <T,>({
       if (field.type === "number") {
         const cleanedValue = validateAndCleanNumberInput(_value as string);
         const numericValue = parseNumberFromString(cleanedValue);
-        onChange(field.name, numericValue as T);
+        if (field.minValue != undefined && numericValue < field.minValue) {
+          onChange(field.name, field.minValue as T);
+          return;
+        }
+        if (field.maxValue != undefined && field.maxValue < numericValue) {
+          onChange(field.name, field.maxValue as T);
+          return;
+        }
+        onChange(
+          field.name,
+          isNaN(numericValue) ? (0 as T) : (numericValue as T)
+        );
       } else {
         onChange(field.name, _value);
       }
@@ -226,6 +245,7 @@ export const FormField = <T,>({
   // Gestionnaire spécifique pour les champs numériques
   const handleNumberChange = (text: string) => {
     const cleanedText = validateAndCleanNumberInput(text);
+
     handleChange(cleanedText as T);
   };
 
@@ -264,6 +284,12 @@ export const FormField = <T,>({
     useEffect(() => {
       if (value === undefined) {
         setCurrentQuantityValue(0);
+      } else {
+        setCurrentQuantityValue(((value as any)?.value as number) || 0);
+        const findedCurrentUnit = field.unitOptions.find(
+          opt => opt.unit === ((value as any)?.unit as string)
+        );
+        if (findedCurrentUnit) setCurrentQuantityUnit(findedCurrentUnit);
       }
     }, [value]);
   }
@@ -428,14 +454,12 @@ export const FormField = <T,>({
         return (
           <RadioGroup
             value={(value as string) || field.default}
-            className={`${isVertical ? "flex flex-col gap-2" : "flex-row gap-5"}`}
+            className={`pt-3 ${isVertical ? "flex flex-col gap-2" : "flex-row gap-5"}`}
             onChange={handleChange}
           >
             {field.radioOptions.map((item, index) => (
               <Radio key={index} value={item.value}>
-                <RadioIndicator
-                  className={"h-4 w-4 border-typography-primary_light"}
-                >
+                <RadioIndicator className={"h-4 w-4 border-[1px]"}>
                   <RadioIcon
                     as={Circle}
                     className="bg-primary-c_light text-primary-c_light"
@@ -561,7 +585,7 @@ export const FormField = <T,>({
               value={
                 typeof value === "number"
                   ? formatNumberWithComma(value)
-                  : (value as string) || field.default
+                  : (value as string) || (field.default as any)
               }
               keyboardType="numeric"
               onChangeText={handleNumberChange}

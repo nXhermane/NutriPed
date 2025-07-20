@@ -9,9 +9,11 @@ import {
 import { GenerateDiagnosticResultRequest } from "./Request";
 import { GenerateDiagnosticResultResponse } from "./Response";
 import {
+  EvaluationContext,
   INutritionalAssessmentService,
   NutritionalAssessmentResult,
   NutritionalDiagnosticRepository,
+  PatientDiagnosticData,
 } from "../../../../../domain";
 import { NutritionalAssessmentResultDto } from "../../../../dtos";
 
@@ -35,9 +37,14 @@ export class GenerateDiagnosticResultUseCase
         await this.nutritionalDiagnosticRepo.getByIdOrPatientId(
           request.nutritionalDiagnosticId
         );
+
+      const patientData = nutritionalDiagnostic.getPatientData();
       const nutritionalAssessmentResult =
         await this.nutritionalAssessmentService.evaluateNutritionalStatus(
-          nutritionalDiagnostic.getPatientData()
+          this.generateContext(patientData),
+          patientData.getAnthropometricData(),
+          patientData.getClinicalSigns(),
+          patientData.getBiologicalTestResults()
         );
       if (nutritionalAssessmentResult.isFailure)
         return left(nutritionalAssessmentResult);
@@ -49,5 +56,15 @@ export class GenerateDiagnosticResultUseCase
     } catch (e: unknown) {
       return left(handleError(e));
     }
+  }
+  private generateContext(
+    patientData: PatientDiagnosticData
+  ): EvaluationContext {
+    return {
+      age_in_day: patientData.age_in_day,
+      age_in_month: patientData.age_in_month,
+      age_in_year: patientData.age_in_year,
+      sex: patientData.getGender().unpack(),
+    };
   }
 }

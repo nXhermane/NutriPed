@@ -1,3 +1,4 @@
+import { FakeBlur } from "@/components/custom";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
@@ -17,11 +18,11 @@ export const GrowthChartScreenHeader: React.FC<
 > = ({ name }) => {
   const { colorMode } = useUI();
   return (
-    <BlurView
+    <FakeBlur
       className={"h-v-24 w-full p-0"}
-      experimentalBlurMethod="dimezisBlurView"
-      tint={colorMode}
-      intensity={100}
+      // experimentalBlurMethod="dimezisBlurView"
+      // tint={colorMode}
+      // intensity={100}
     >
       <HStack
         className={
@@ -38,6 +39,6 @@ export const GrowthChartScreenHeader: React.FC<
           <Heading className="font-h4 text-sm font-medium">{name}</Heading>
         </Box>
       </HStack>
-    </BlurView>
+    </FakeBlur>
   );
 };

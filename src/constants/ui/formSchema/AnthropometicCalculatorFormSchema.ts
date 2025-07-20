@@ -1,6 +1,7 @@
 import { FormSchema } from "@/components/custom";
 import {
   BirthDateField,
+  BirthDateToTodayZodSchema,
   dateZodSchema,
   EdemaField,
   HeadCircumferenceField,
@@ -12,6 +13,7 @@ import {
   MUACField,
   MUACZodSchema,
   SexField,
+  SexZodSchema,
   SSFField,
   SSFZodSchema,
   TSFField,
@@ -67,30 +69,8 @@ export const AnthropometricCalculatorFormZodSchema = {
       z.object({
         [AnthroSystemCodes.SSF]: makeOptionalSchema(SSFZodSchema),
       }),
-      z
-        .object({
-          birthDate: dateZodSchema(
-            "La date de naissance est invalide.",
-            "birthDate"
-          ),
-        })
-        .transform(data => {
-          const date1 = new Date(data.birthDate);
-          const date2 = new Date();
-          const diffInMs = date2.getTime() - date1.getTime();
-          const dayAfterBirthDay = diffInMs / (1000 * 60 * 60 * 24);
-          const monthAfterBirthDay = dayAfterBirthDay / DAY_IN_MONTHS;
-          const yearAfterBirthDay = dayAfterBirthDay / DAY_IN_YEARS;
-          return {
-            [AnthroSystemCodes.AGE_IN_DAY]: dayAfterBirthDay,
-            [AnthroSystemCodes.AGE_IN_MONTH]: monthAfterBirthDay,
-          };
-        }),
-      z.object({
-        [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {
-          errorMap: () => ({ message: "Le sexe est requis" }),
-        }),
-      }),
+      BirthDateToTodayZodSchema,
+      SexZodSchema,
 
       z
         .object({

@@ -5,9 +5,8 @@ import { SessionEmpty } from "./shared/SessionEmpty";
 import { PatientCard, PatientCardProps } from "../commun";
 import { router } from "expo-router";
 import { useLastPatientList } from "@/src/hooks";
-import { Spinner } from "@/components/ui/spinner";
-import colors from "tailwindcss/colors";
 import { FadeInCardY } from "@/components/custom/motion";
+import { Loading } from "@/components/custom";
 
 export interface LastPatientSessionProps {}
 export const LastPatientsSession: React.FC<LastPatientSessionProps> = ({}) => {
@@ -20,9 +19,7 @@ export const LastPatientsSession: React.FC<LastPatientSessionProps> = ({}) => {
         actionName="Voir plus"
         onActionPress={() => router.navigate("/(screens)/last_patient")}
       />
-      {onLoading && (
-        <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-      )}
+      {onLoading && <Loading />}
 
       {!onLoading && (
         <VStack className={"gap-3 pt-4"}>

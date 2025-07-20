@@ -1,31 +1,46 @@
 import { Text } from "@/components/ui/text";
-import { NavigationIndependentTree } from "@react-navigation/native";
+import {
+  NavigationIndependentTree,
+  useNavigation,
+} from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
+  DrawerHeaderProps,
   useDrawerStatus,
 } from "@react-navigation/drawer";
 import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
-import { ChevronLeft, ChevronRight } from "lucide-react-native";
+import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
-import { BlurView } from "expo-blur";
 import { useUI } from "@/src/context";
 import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen";
+import { ClinicalEvaluationScreen } from "./ClinicalEvaluationScreen";
+import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen";
+import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
+import { FakeBlur } from "@/components/custom";
+import { StackScreenHeader } from "../../shared";
+
 const Drawer = createDrawerNavigator();
+
 export const DiagnosticTools = ({}) => {
+  const navigation = useNavigation();
   return (
     <VStack className="flex-1">
       <NavigationIndependentTree>
         <Drawer.Navigator
           screenOptions={{
-            headerShown: false,
+            headerShown: true,
+            header: props => <DiagnosticToolHeader {...props} />,
             drawerStyle: {
               backgroundColor: "transparent",
+              width: "100%",
             },
+            drawerStatusBarAnimation: "none",
+            drawerPosition: "right",
           }}
           drawerContent={props => <DiagnosticToolDrawerContent {...props} />}
         >
@@ -35,24 +50,39 @@ export const DiagnosticTools = ({}) => {
           />
           <Drawer.Screen
             name="Évaluation clinique"
-            component={() => <Text>Welcome to clinical evaluation screen</Text>} //
+            component={ClinicalEvaluationScreen}
           />
           <Drawer.Screen
             name="Bilan biologique"
-            component={() => (
-              <Text>
-                Welcome to biological and laboratory result interpretation
-                screen
-              </Text>
-            )}
+            component={BiologicalInterpretationScreen}
           />
           <Drawer.Screen
-            name="Diagnostic global"
-            component={() => <Text>Welcome to global diagnostic screen</Text>}
+            name="Diagnostic Nutritionnel"
+            component={GlobalDiagnosticScreen}
           />
         </Drawer.Navigator>
       </NavigationIndependentTree>
     </VStack>
+  );
+};
+
+export interface DiagnosticToolDrawerHeaderProps extends DrawerHeaderProps {}
+
+export const DiagnosticToolHeader: React.FC<
+  DiagnosticToolDrawerHeaderProps
+> = ({ route, navigation }) => {
+  const drawerStatus = useDrawerStatus();
+  return (
+    <StackScreenHeader
+      name={route?.name}
+      right={
+        <VStack className="h-full items-center justify-center">
+          <Pressable className="" onPress={() => navigation.toggleDrawer()}>
+            <Icon as={Menu} className="h-5 w-5 text-typography-primary" />
+          </Pressable>
+        </VStack>
+      }
+    />
   );
 };
 
@@ -65,8 +95,8 @@ export const DiagnosticToolDrawerContent: React.FC<
   const drawerStatus = useDrawerStatus();
   const { colorMode } = useUI();
   return (
-    <VStack className="h-[100%] w-full">
-      <Pressable
+    <VStack className="h-[70%] w-full">
+      {/* <Pressable
         className="absolute -right-4 top-[50%] z-0 h-v-10 -translate-y-8 items-center overflow-hidden rounded-r-xl bg-primary-c_light"
         onPress={() => navigation.toggleDrawer()}
       >
@@ -76,15 +106,21 @@ export const DiagnosticToolDrawerContent: React.FC<
             className="h-5 w-5 text-typography-primary"
           />
         </Box>
-      </Pressable>
+      </Pressable> */}
 
-      <VStack className="absolute h-full w-full justify-center overflow-hidden rounded-r-2xl">
-        <BlurView
-          experimentalBlurMethod="dimezisBlurView"
-          intensity={90}
-          tint={colorMode}
-          className="h-full items-center justify-center gap-3 px-4"
+      <VStack className="absolute right-0 h-full w-[80%] justify-center overflow-hidden rounded-r-2xl rounded-bl-full rounded-tl-2xl">
+        <FakeBlur
+          // experimentalBlurMethod="dimezisBlurView"
+          // intensity={90}
+          // tint={colorMode}
+          className="h-full items-center gap-3 px-4 pt-[35%]"
         >
+          <Pressable
+            className="rounded-full bg-primary-c_light p-1"
+            onPress={() => navigation.closeDrawer()}
+          >
+            <Icon as={X} className="h-5 w-5 text-white" />
+          </Pressable>
           {state.routes.map((route, index) => {
             const { name, key } = route;
             const isFocused = state.index === index;
@@ -101,7 +137,7 @@ export const DiagnosticToolDrawerContent: React.FC<
               />
             );
           })}
-        </BlurView>
+        </FakeBlur>
       </VStack>
     </VStack>
   );
@@ -121,10 +157,10 @@ export const DiagnosticDrawerItem: React.FC<DiagnosticDrawerItemProps> = ({
   return (
     <Pressable onPress={onPress}>
       <HStack
-        className={`h-v-10 items-center justify-center rounded-xl border-[1px] px-4 ${isActive ? "border-primary-c_light/10 bg-primary-c_light/5" : "border-primary-border/5 bg-background-secondary"}`}
+        className={`h-v-10 items-center justify-center rounded-xl border-[1px] px-4 ${isActive ? "border-primary-c_light/10 bg-primary-c_light dark:bg-primary-c_light/5" : "border-primary-border/5 bg-background-secondary"}`}
       >
         <Text
-          className={`w-full text-left font-h4 text-sm font-medium ${isActive ? "text-primary-c_light" : "text-typography-primary_light"}`}
+          className={`w-full text-left font-h4 text-sm font-medium ${isActive ? "text-white dark:text-primary-c_light" : "text-typography-primary_light"}`}
         >
           {label}
         </Text>

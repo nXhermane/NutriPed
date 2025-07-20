@@ -24,6 +24,7 @@ import {
   BiochemicalReferenceMapper,
   BiochemicalReferenceRepository,
   BiochemicalReferenceService,
+  BiologicalAnalysisAppService,
   BiologicalInterpretationService,
   BiologicalValidationService,
   BiologicalVariableGeneratorService,
@@ -34,6 +35,7 @@ import {
   CalculateGrowthIndicatorValueResponse,
   CalculateGrowthIndicatorValueUseCase,
   ClinicalAnalysisService,
+  ClinicalNutritionalAnalysisAppService,
   ClinicalSignReference,
   ClinicalSignReferenceDto,
   ClinicalSignReferenceMapper,
@@ -149,10 +151,12 @@ import {
   IAnthropometricValidationService,
   IAnthropometricVariableGeneratorService,
   IBiochemicalReferenceService,
+  IBiologicalAnalysisAppService,
   IBiologicalInterpretationService,
   IBiologicalValidationService,
   IBiologicalVariableGeneratorService,
   IClinicalAnalysisService,
+  IClinicalNutritionalAnalysisAppService,
   IClinicalSignReferenceService,
   IClinicalValidationService,
   IClinicalVariableGeneratorService,
@@ -176,6 +180,15 @@ import {
   IZScoreCalculationService,
   IZScoreInterpretationService,
   LenheiBasedStrategy,
+  MakeBiologicalInterpretationRequest,
+  MakeBiologicalInterpretationResponse,
+  MakeBiologicalInterpretationUseCase,
+  MakeClinicalAnalysisRequest,
+  MakeClinicalAnalysisResponse,
+  MakeClinicalAnalysisUseCase,
+  MakeIndependantDiagnosticRequest,
+  MakeIndependantDiagnosticResponse,
+  MakeIndependantDiagnosticUseCase,
   NutritionalAssessmentResult,
   NutritionalAssessmentResultDto,
   NutritionalAssessmentResultFactory,
@@ -540,6 +553,10 @@ export class DiagnosticContext {
     DeleteClinicalSignReferenceRequest,
     DeleteClinicalSignReferenceResponse
   >;
+  private readonly makeClinicalAnalysisUC: UseCase<
+    MakeClinicalAnalysisRequest,
+    MakeClinicalAnalysisResponse
+  >;
   private readonly createNutritionalRiskFactorUC: UseCase<
     CreateNutritionalRiskFactorRequest,
     CreateNutritionalRiskFactorResponse
@@ -572,6 +589,10 @@ export class DiagnosticContext {
   private readonly deleteBiochemicalRefUC: UseCase<
     DeleteBiochemicalReferenceRequest,
     DeleteBiochemicalReferenceResponse
+  >;
+  private readonly makeBiologicalInterpretationUC: UseCase<
+    MakeBiologicalInterpretationRequest,
+    MakeBiologicalInterpretationResponse
   >;
 
   private readonly createDiagnosticRuleUC: UseCase<
@@ -612,6 +633,10 @@ export class DiagnosticContext {
     UpdatePatientDiagnosticDataRequest,
     UpdatePatientDiagnosticDataResponse
   >;
+  private readonly makeIndependanteDiagnosticUC: UseCase<
+    MakeIndependantDiagnosticRequest,
+    MakeIndependantDiagnosticResponse
+  >;
   private readonly performGlobalVariableUC: UseCase<
     PerformPatientGlobalVariableRequest,
     PerformPatientGlobalVariableResponse
@@ -631,9 +656,11 @@ export class DiagnosticContext {
   private readonly growthChartAppService: IGrowthReferenceChartService;
   private readonly growthTableAppService: IGrowthReferenceTableService;
   private readonly clinicalRefAppService: IClinicalSignReferenceService;
+  private readonly clinicalNutritionalAnalysisAppService: IClinicalNutritionalAnalysisAppService;
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
   private readonly nutritionalRiskFactorAppService: INutritionalRiskFactorService;
   private readonly biochemicalRefAppService: IBiochemicalReferenceService;
+  private readonly biologicalAnalysisAppService: IBiologicalAnalysisAppService;
   private readonly nutritionalDiagnosticAppService: INutritionalDiagnosticService;
   private readonly validatePatientMeasurementsAppService: IValidatePatientMeasurementsService;
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
@@ -1005,6 +1032,10 @@ export class DiagnosticContext {
       this.clinicalRefRepo,
       this.clinicalRefAppMapper
     );
+    this.makeClinicalAnalysisUC = new MakeClinicalAnalysisUseCase(
+      this.clinicalValidationService,
+      this.clinicalAnalysisService
+    );
 
     // Nutritional Risk Factor UseCases
     this.createNutritionalRiskFactorUC = new CreateNutritionalRiskFactorUseCase(
@@ -1042,6 +1073,11 @@ export class DiagnosticContext {
       this.biochemicalRefRepo,
       this.biochemicalRefAppMapper
     );
+    this.makeBiologicalInterpretationUC =
+      new MakeBiologicalInterpretationUseCase(
+        this.biologicalValidationService,
+        this.biologicalInterpretationService
+      );
 
     // Core Diagnostic Use Cases
     // Core Diagnostic Rules
@@ -1085,6 +1121,10 @@ export class DiagnosticContext {
     this.correctDiagnosticUC = new CorrectDiagnosticResultUseCase(
       this.idGenerator,
       this.nutritionalDiagnosticRepo
+    );
+    this.makeIndependanteDiagnosticUC = new MakeIndependantDiagnosticUseCase(
+      this.nutritionalAssessmentService,
+      this.nutritionalAssessmentAppMapper
     );
 
     // System Internal UseCase
@@ -1160,6 +1200,10 @@ export class DiagnosticContext {
       updateUC: this.updateClinicalRefUC,
       deleteUC: this.deleteClinicalRefUC,
     });
+    this.clinicalNutritionalAnalysisAppService =
+      new ClinicalNutritionalAnalysisAppService({
+        makeClinicalAnalysis: this.makeClinicalAnalysisUC,
+      });
 
     this.nutritionalRiskFactorAppService = new NutritionalRiskFactorService({
       createUC: this.createNutritionalRiskFactorUC,
@@ -1172,6 +1216,9 @@ export class DiagnosticContext {
       getUC: this.getBiochemicalRefUC,
       updateUC: this.updateBiochemicalRefUC,
       deleteUC: this.deleteBiochemicalRefUC,
+    });
+    this.biologicalAnalysisAppService = new BiologicalAnalysisAppService({
+      makeInterpretation: this.makeBiologicalInterpretationUC,
     });
     this.diagnosticRuleAppService = new DiagnosticRuleService({
       createUC: this.createDiagnosticRuleUC,
@@ -1186,6 +1233,7 @@ export class DiagnosticContext {
       generateDiagnosticResultUC: this.generateDiagnosticResultUC,
       updatePatientDiagnosticDataUC: this.updatePatientDiagnosticDataUC,
       correctDiagnosticResultUC: this.correctDiagnosticUC,
+      makeIndependanteDiagnosticUC: this.makeIndependanteDiagnosticUC,
     });
     this.validatePatientMeasurementsAppService =
       new ValidatePatientMeasurementsService({
@@ -1225,6 +1273,9 @@ export class DiagnosticContext {
   getClinicalSignReferenceService(): IClinicalSignReferenceService {
     return this.clinicalRefAppService;
   }
+  getClinicalNutritionalAnalysisService(): IClinicalNutritionalAnalysisAppService {
+    return this.clinicalNutritionalAnalysisAppService;
+  }
 
   getNutritionalRiskFactorService(): INutritionalRiskFactorService {
     return this.nutritionalRiskFactorAppService;
@@ -1233,7 +1284,9 @@ export class DiagnosticContext {
   getBiochemicalReferenceService(): IBiochemicalReferenceService {
     return this.biochemicalRefAppService;
   }
-
+  getBiologicalAnalysisService(): IBiologicalAnalysisAppService {
+    return this.biologicalAnalysisAppService;
+  }
   getDiagnosticRuleService(): IDiagnosticRuleService {
     return this.diagnosticRuleAppService;
   }

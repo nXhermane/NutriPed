@@ -1,20 +1,15 @@
+import { FakeBlur, Loading } from "@/components/custom";
 import { GrowthReferenceChart } from "@/components/pages/chart_detail";
 import { GrowthChartScreenHeader } from "@/components/pages/growth_chart";
-import { Center } from "@/components/ui/center";
-import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
 import {
   GetGrowthReferenceChartRequest,
-  GrowthIndicatorValue,
   GrowthIndicatorValueDto,
 } from "@/core/diagnostics";
 import { useUI } from "@/src/context";
 import { useGrowthCharts } from "@/src/hooks";
-import { BlurView } from "expo-blur";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView } from "react-native";
-import colors from "tailwindcss/colors";
 
 const GrowthChart = () => {
   const { info } = useLocalSearchParams();
@@ -34,12 +29,7 @@ const GrowthChart = () => {
     onLoading,
   } = useGrowthCharts(growthChartRequest);
 
-  if (onLoading)
-    return (
-      <Center className="flex-1 bg-background-primary">
-        <Spinner size={"large"} color={colors.blue["600"]} />
-      </Center>
-    );
+  if (onLoading) return <Loading />;
 
   return (
     <React.Fragment>
@@ -50,11 +40,11 @@ const GrowthChart = () => {
           presentation: "transparentModal",
         }}
       />
-      <BlurView
+      <FakeBlur
         className="flex-1"
-        experimentalBlurMethod="dimezisBlurView"
-        tint={colorMode}
-        intensity={colorMode === "light" ? 50 : 90}
+        // experimentalBlurMethod="dimezisBlurView"
+        // tint={colorMode}
+        // intensity={colorMode === "light" ? 50 : 90}
       >
         <GrowthChartScreenHeader name={growthCharts[0]?.name || ""} />
         <ScrollView
@@ -73,7 +63,7 @@ const GrowthChart = () => {
             }}
           />
         </ScrollView>
-      </BlurView>
+      </FakeBlur>
     </React.Fragment>
   );
 };

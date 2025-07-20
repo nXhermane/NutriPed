@@ -6,6 +6,7 @@ import {
   DeleteNutritionalDiagnosticRequest,
   GenerateDiagnosticResultRequest,
   GetNutritionalDiagnosticRequest,
+  MakeIndependantDiagnosticRequest,
   UpdatePatientDiagnosticDataRequest,
 } from "../../useCases";
 import {
@@ -36,4 +37,7 @@ export interface INutritionalDiagnosticService {
   delete(
     req: DeleteNutritionalDiagnosticRequest
   ): Promise<AppServiceResponse<NutritionalDiagnosticDto> | Message>;
+  makeIndependanteDiagnostic(
+    req: MakeIndependantDiagnosticRequest
+  ): Promise<AppServiceResponse<NutritionalAssessmentResultDto> | Message>;
 }

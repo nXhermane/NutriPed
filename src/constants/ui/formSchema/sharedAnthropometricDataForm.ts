@@ -6,6 +6,8 @@ import { IField } from "@/components/custom/FormField";
 import {
   AnthroSystemCodes,
   CLINICAL_SIGNS,
+  DAY_IN_MONTHS,
+  DAY_IN_YEARS,
   MAX_LENHEI,
   MIN_LENHEI,
 } from "@/core/constants";
@@ -36,7 +38,7 @@ export const HeightField = {
     value: 0,
   },
   defaultUnit: { unit: "cm", convertionFactor: 1, label: "cm" },
-  label: "Taille Debout",
+  label: "Taille",
   name: AnthroSystemCodes.HEIGHT,
   unitOptions: [
     { unit: "cm", convertionFactor: 1, label: "cm" },
@@ -52,7 +54,7 @@ export const LengthField = {
     value: 0,
   },
   defaultUnit: { unit: "cm", convertionFactor: 1, label: "cm" },
-  label: "Taille Couchée",
+  label: "Longueur",
   name: AnthroSystemCodes.LENGTH,
   unitOptions: [
     { unit: "cm", convertionFactor: 1, label: "cm" },
@@ -399,3 +401,25 @@ export const dateZodSchema = (message?: string, fieldName?: string) =>
   );
 
 export const EdemaZodSchema = z.enum(["yes", "no"]);
+
+export const BirthDateToTodayZodSchema = z
+  .object({
+    birthDate: dateZodSchema("La date de naissance est invalide.", "birthDate"),
+  })
+  .transform(data => {
+    const date1 = new Date(data.birthDate);
+    const date2 = new Date();
+    const diffInMs = date2.getTime() - date1.getTime();
+    const dayAfterBirthDay = diffInMs / (1000 * 60 * 60 * 24);
+    const monthAfterBirthDay = dayAfterBirthDay / DAY_IN_MONTHS;
+    const yearAfterBirthDay = dayAfterBirthDay / DAY_IN_YEARS;
+    return {
+      [AnthroSystemCodes.AGE_IN_DAY]: dayAfterBirthDay,
+      [AnthroSystemCodes.AGE_IN_MONTH]: monthAfterBirthDay,
+    };
+  });
+export const SexZodSchema = z.object({
+  [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {
+    errorMap: () => ({ message: "Le sexe est requis" }),
+  }),
+});

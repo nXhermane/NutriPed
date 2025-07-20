@@ -20,6 +20,7 @@ import {
   GrowthReferenceChartProps,
 } from "./GrowthReferenceChart";
 import { BlurView } from "expo-blur";
+import { FakeBlur } from "@/components/custom";
 
 export interface GrowthReferenceChartBottomSheetProps
   extends GrowthReferenceChartProps {}
@@ -30,11 +31,11 @@ export const GrowthReferenceChartBottomSheet: React.FC<GrowthReferenceChartBotto
     return (
       <BottomSheet>
         <HStack className="absolute bottom-0">
-          <BlurView
-            experimentalBlurMethod="dimezisBlurView"
-            intensity={50}
-            tint={colorMode}
-            className="h-full w-full p-4"
+          <FakeBlur
+            // experimentalBlurMethod="dimezisBlurView"
+            // intensity={50}
+            // tint={colorMode}
+            className="h-full w-full overflow-hidden rounded-t-2xl p-4"
           >
             <BottomSheetTrigger>
               <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl bg-blue-500">
@@ -51,7 +52,7 @@ export const GrowthReferenceChartBottomSheet: React.FC<GrowthReferenceChartBotto
                 </VStack>
               </HStack>
             </BottomSheetTrigger>
-          </BlurView>
+          </FakeBlur>
         </HStack>
 
         <BottomSheetPortal

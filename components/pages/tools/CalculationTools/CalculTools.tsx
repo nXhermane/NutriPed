@@ -2,7 +2,7 @@ import React from "react";
 import { SuggestMilkPanel } from "./SuggestMilkPanel";
 import { MedicineDosagePanel } from "./MedicineDosagePanel";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { useWindowDimensions } from "react-native";
+import { Dimensions, useWindowDimensions } from "react-native";
 import { TabBarItem } from "../../shared";
 
 const renderScene = SceneMap({
@@ -24,7 +24,9 @@ export const CalculTools: React.FC<CalculToolsProps> = ({}) => {
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
+      lazy={true}
+      lazyPreloadDistance={2}
+      initialLayout={{ width: Dimensions.get("window").width }}
       renderTabBar={tabBarProps => (
         <TabBar
           {...tabBarProps}

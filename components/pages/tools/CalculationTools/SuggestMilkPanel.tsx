@@ -50,7 +50,10 @@ export const SuggestMilkPanel = () => {
     }
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="min-h-full">
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerClassName="min-h-full"
+    >
       <VStack className="h-full w-full bg-background-primary">
         <FadeInCardY delayNumber={2}>
           <SuggestMilkForm

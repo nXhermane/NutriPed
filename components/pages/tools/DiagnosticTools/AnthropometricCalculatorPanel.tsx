@@ -4,7 +4,7 @@ import {
   AnthropometricCalculatorFormSchema,
   AnthropometricCalculatorFormZodSchema,
 } from "@/src/constants/ui";
-import { FormHandler } from "@/components/custom";
+import { FakeBlur, FormHandler } from "@/components/custom";
 import { usePediatricApp } from "@/adapter";
 import {
   CalculateAllAvailableGrowthIndicatorValueRequest,
@@ -27,6 +27,8 @@ import { AnthropometricCalculatorSavingLabelModal } from "./AnthropometricCalcul
 import { useDispatch } from "react-redux";
 import { addAnthropometricCalculatorResult } from "@/src/store";
 import { usePicker } from "@/src/hooks";
+import { LinearGradient } from "expo-linear-gradient";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export const AnthropometricCalculatorPanel = () => {
   const {
@@ -113,26 +115,27 @@ export const AnthropometricCalculatorPanel = () => {
 
   return (
     <React.Fragment>
-      <ScrollView
+      <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         className="bg-background-primary"
       >
-        <VStack className="pb-16">
+        <VStack className="bg-background-primary pb-16">
           <AnthropometricCalcualtorForm
             formRef={formRef}
             schema={AnthropometricCalculatorFormSchema}
             zodSchema={AnthropometricCalculatorFormZodSchema}
           />
         </VStack>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       <HStack className="absolute bottom-0 w-full overflow-hidden rounded-xl">
-        <BlurView
+        {/* <BlurView
           experimentalBlurMethod="dimezisBlurView"
           intensity={50}
           tint={colorMode}
           className="w-full px-8 py-4"
-        >
+        > */}
+        <FakeBlur className="w-full px-8 py-4">
           <Button
             className={`h-v-10 w-full rounded-xl ${error ? "bg-red-500" : "bg-primary-c_light"}`}
             onPress={handleFormSubmit}
@@ -143,17 +146,16 @@ export const AnthropometricCalculatorPanel = () => {
                 className="data-[active=true]:text-primary-c_light"
               />
             ) : (
-              <ButtonIcon as={Calculator} className="text-typography-primary" />
+              <ButtonIcon as={Calculator} className="text-white" />
             )}
-            <ButtonText className="font-h4 font-medium text-typography-primary data-[active=true]:text-primary-c_light">
+            <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
               Calculer
             </ButtonText>
-            {onSucess && (
-              <ButtonIcon as={Check} className="text-typography-primary" />
-            )}
-            {error && <ButtonIcon as={X} className="text-typography-primary" />}
+            {onSucess && <ButtonIcon as={Check} className="text-white" />}
+            {error && <ButtonIcon as={X} className="text-white" />}
           </Button>
-        </BlurView>
+        </FakeBlur>
+        {/* </BlurView> */}
       </HStack>
 
       <AnthropometricCalculatorResultModal

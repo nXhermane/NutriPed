@@ -1,10 +1,10 @@
+import { Loading } from "@/components/custom";
 import { CardPressEffect } from "@/components/custom/motion";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
-import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import {
@@ -16,7 +16,6 @@ import { useGrowthIndicators } from "@/src/hooks";
 import { router } from "expo-router";
 import { BadgeCheck, Lightbulb, MapPin, Target } from "lucide-react-native";
 import React, { useMemo } from "react";
-import colors from "tailwindcss/colors";
 
 export interface IndicatorCardProps {
   value: GrowthIndicatorValueDto;
@@ -35,9 +34,7 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
       getGrowthIndicatorRequest
     );
     if (onLoading) {
-      return (
-        <Spinner size={"large"} className="mt-8" color={colors.blue["600"]} />
-      );
+      return <Loading />;
     }
     return (
       <CardPressEffect>
@@ -91,14 +88,9 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
                   }}
                 >
                   <HStack className="items-center gap-1 rounded-lg bg-primary-c_light px-2 py-[1px] dark:bg-primary-c_light/50">
-                    <Icon
-                      as={MapPin}
-                      className="h-3 w-3 text-typography-primary dark:text-typography-primary_light"
-                    />
+                    <Icon as={MapPin} className="h-3 w-3 text-white" />
                     <Text
-                      className={
-                        "font-body text-xs font-normal text-typography-primary dark:text-typography-primary_light"
-                      }
+                      className={"font-body text-xs font-normal text-white"}
                     >
                       Tracer
                     </Text>

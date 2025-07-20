@@ -5,4 +5,4 @@ export * from "./StackScreenHeader";
 export * from "./ProtectedRoute";
 export * from "./PublicRoute";
 export * from "./FilterChips";
-export * from "./TopTabBarItem"
+export * from "./TopTabBarItem";
