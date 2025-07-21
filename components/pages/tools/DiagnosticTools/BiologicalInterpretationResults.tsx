@@ -7,10 +7,10 @@ import {
   GetBiochemicalReferenceRequest,
 } from "@/core/diagnostics";
 import React, { useMemo } from "react";
-import { FadeInCardY } from "@/components/custom/motion";
+import { FadeInCardY } from "@/components/custom/motion/FadeInCardY";
 import { HStack } from "@/components/ui/hstack";
 import { useBiochemicalReference } from "@/src/hooks";
-import { Loading } from "@/components/custom";
+import { Loading } from "@/components/custom/Loading";
 
 export interface BiologicalInterpretationResultsProps {
   results: BiologicalAnalysisInterpretationDto[];

@@ -14,7 +14,7 @@ import { LifeBuoy, Mail, MessageCircle, RotateCcw } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
-import { Loading } from "@/components/custom";
+import { Loading } from "@/components/custom/Loading";
 // BETA:
 const queryClient = new QueryClient();
 

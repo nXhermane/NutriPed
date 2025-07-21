@@ -1,4 +1,5 @@
 import { useUI } from "@/src/context";
+import { BlurView } from "expo-blur";
 import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import React, { PropsWithChildren } from "react";
 
@@ -12,6 +13,7 @@ export const FakeBlur: React.FC<FakeBlurProps> = React.memo(
   ({ className, colors, ...props }) => {
     const { colorMode } = useUI();
     return (
+      // <BlurView className={className}  {...props} tint={colorMode} experimentalBlurMethod="dimezisBlurView" />
       <LinearGradient
         className={className}
         colors={

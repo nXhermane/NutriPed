@@ -1,8 +1,7 @@
-import { FormHandler, useWizardStep } from "@/components/custom";
-import { Text } from "@/components/ui/text";
+import { FormHandler } from "@/components/custom/DynamicFormGenerator";
+import { useWizardStep } from "@/components/custom/Wizard";
 import { VStack } from "@/components/ui/vstack";
 import React, { useEffect, useRef } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { AnthropometricCalcualtorForm } from "./AnthropometicCalculatorForm";
 import {
   AnthropometricCalculatorFormSchema,

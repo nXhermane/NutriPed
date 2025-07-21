@@ -1,4 +1,5 @@
-import { Loading, useWizard, useWizardStep } from "@/components/custom";
+import {  useWizard, useWizardStep } from "@/components/custom/Wizard";
+import { Loading } from "@/components/custom/Loading";
 import { Text } from "@/components/ui/text";
 import React, { useEffect, useMemo, useState } from "react";
 import { DIAGNOSTIC_WORKFLOW } from "./GlobalDiagnosticScreen";
@@ -12,16 +13,12 @@ import { useToast } from "@/src/context";
 import { VStack } from "@/components/ui/vstack";
 import { AnthropometricCalculatorResult } from "./AnthropometricCalculatorResult";
 import { ClinicalEvaluationResult } from "./ClinicalEvaluationResult";
-import { BiologicalInterpretationResultModal } from "./BiologicalInterpretationResultModal";
 import { BiologicalInterpretationResults } from "./BiologicalInterpretationResults";
 import { ScrollView } from "react-native";
-import { CardPressEffect } from "@/components/custom/motion";
 import { useDiagnosticRules } from "@/src/hooks";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
-import { Icon } from "@/components/ui/icon";
-import { Ruler } from "lucide-react-native";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { GLOBAL_DIAGNOSTIC_UI_INDICATOR } from "@/src/constants/ui";
 import { Divider } from "@/components/ui/divider";
@@ -141,7 +138,7 @@ export const GlobalDiagnosticResultCard: React.FC<
   if (onLoading) return <Loading />;
 
   return (
-    <CardPressEffect>
+    <>
       <VStack className={`rounded-xl bg-background-secondary p-3`}>
         <HStack className="items-center justify-between">
           <VStack>
@@ -180,6 +177,6 @@ export const GlobalDiagnosticResultCard: React.FC<
           </VStack>
         </VStack>
       </VStack>
-    </CardPressEffect>
+    </>
   );
 };

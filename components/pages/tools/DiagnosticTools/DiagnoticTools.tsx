@@ -13,15 +13,14 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
-import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react-native";
+import { Menu, X } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
-import { Box } from "@/components/ui/box";
 import { useUI } from "@/src/context";
 import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen";
 import { ClinicalEvaluationScreen } from "./ClinicalEvaluationScreen";
 import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen";
 import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
-import { FakeBlur } from "@/components/custom";
+import { FakeBlur } from "@/components/custom/FakeBlur";
 import { StackScreenHeader } from "../../shared";
 
 const Drawer = createDrawerNavigator();
