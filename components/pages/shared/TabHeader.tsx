@@ -20,12 +20,12 @@ export const TabHeader: React.FC<TabHeaderProps> = ({
         "p-safe elevation-sm h-v-20 w-full justify-between bg-background-secondary"
       }
     >
-      <VStack className={"ml-4"}>
+      <VStack className={"ml-4 justify-center"}>
         <Heading
           className={"font-h2 text-xl font-semibold text-typography-primary"}
         >
           {name}
-        </Heading>
+        </Heading> 
         {desc && (
           <Text className={"font-body text-sm text-typography-primary_light"}>
             {desc}

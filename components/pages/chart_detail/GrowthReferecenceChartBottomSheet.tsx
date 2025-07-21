@@ -38,17 +38,17 @@ export const GrowthReferenceChartBottomSheet: React.FC<GrowthReferenceChartBotto
             className="h-full w-full overflow-hidden rounded-t-2xl p-4"
           >
             <BottomSheetTrigger>
-              <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl bg-blue-500">
+              <HStack className="h-v-10 items-center justify-center gap-4 rounded-xl border-[0.1px] border-primary-c_light">
                 <VStack className="gap-0">
-                  <Icon as={ChevronUp} className="text-white" />
-                  <Icon as={ChevronUp} className="text-white/70" />
+                  <Icon as={ChevronUp} className="text-primary-c_light" />
+                  <Icon as={ChevronUp} className="text-primary-c_light/70" />
                 </VStack>
-                <Text className="font-h4 font-medium text-white">
+                <Text className="font-h4 font-medium text-primary-c_light">
                   Afficher la courbe
                 </Text>
                 <VStack className="gap-0">
-                  <Icon as={ChevronUp} className="text-white" />
-                  <Icon as={ChevronUp} className="text-white/70" />
+                  <Icon as={ChevronUp} className="text-primary-c_light" />
+                  <Icon as={ChevronUp} className="text-primary-c_light/70" />
                 </VStack>
               </HStack>
             </BottomSheetTrigger>
