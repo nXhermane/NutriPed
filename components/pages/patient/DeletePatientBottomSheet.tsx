@@ -145,10 +145,10 @@ export const DeletePatientBottomSheet: React.FC<
           </ScrollView>
           <HStack className={"justify-between"}>
             <Button
-              className={"w-[40%] rounded-xl bg-green-500"}
+              className={"w-[40%] rounded-xl bg-primary-c_light"}
               onPress={handleOnClose}
             >
-              <ButtonText className={"font-h4 text-sm text-typography-900"}>
+              <ButtonText className={"font-h4 text-sm text-white"}>
                 Annuler
               </ButtonText>
             </Button>

@@ -64,8 +64,9 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
   if (onLoading) return <Loading />;
 
   return (
-    <Box className="h-full max-h-[65%]">
-      <FlatList
+    <React.Fragment>
+
+     <FlatList
         className={"pt-3"}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
@@ -161,6 +162,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
         onClose={() => setShowConfirmDeletionAction(false)}
         onDeleteSucceed={() => setSelectedItem([])}
       />
-    </Box>
+      </React.Fragment>
+      
   );
 };

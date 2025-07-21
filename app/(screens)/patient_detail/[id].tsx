@@ -19,21 +19,19 @@ const PatientDetailScreen = () => {
     if (patientInteraction) {
       setCurrentPatientInteraction(patientInteraction);
     }
+    // return () => {
+    //   dispatch(
+    //     recordInteraction({
+    //       patientId: patientInteraction?.patientId!,
+    //       isFirstVisitToPatientDetail:
+    //         patientInteraction?.isFirstVisitToPatientDetail!,
+    //       date: new Date().toISOString(),
+    //       state: patientInteraction?.state!,
+    //     })
+    //   );
+    // };
   }, [patientInteractionList]);
 
-  useEffect(() => {
-    if (currentPatientInteraction) {
-      dispatch(
-        recordInteraction({
-          patientId: currentPatientInteraction.patientId,
-          isFirstVisitToPatientDetail:
-            currentPatientInteraction.isFirstVisitToPatientDetail,
-          date: new Date().toISOString(),
-          state: currentPatientInteraction.state,
-        })
-      );
-    }
-  }, [currentPatientInteraction]);
   return (
     <React.Fragment>
       <PatientDetail
