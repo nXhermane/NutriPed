@@ -1,4 +1,4 @@
-import { FadeInCardX } from "@/components/custom/motion";
+import { FadeInCardX } from "@/components/custom/motion/FadeInCardX";
 import { GrowthIndicatorValueDto } from "@/core/diagnostics";
 import React from "react";
 import { IndicatorCard } from "./IndicatorCard";

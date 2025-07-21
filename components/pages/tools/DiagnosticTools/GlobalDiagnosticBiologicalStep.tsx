@@ -1,9 +1,9 @@
+import { Loading } from "@/components/custom/Loading";
 import {
-  DynamicFormGenerator,
   FormHandler,
-  Loading,
-  useWizardStep,
-} from "@/components/custom";
+  DynamicFormGenerator,
+} from "@/components/custom/DynamicFormGenerator";
+import { useWizardStep } from "@/components/custom/Wizard";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";

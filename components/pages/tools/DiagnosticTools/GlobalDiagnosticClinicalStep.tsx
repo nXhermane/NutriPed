@@ -1,10 +1,9 @@
+import { Loading } from "@/components/custom/Loading";
 import {
-  DynamicFormGenerator,
   FormHandler,
-  Loading,
-  useWizardStep,
-} from "@/components/custom";
-import { Text } from "@/components/ui/text";
+  DynamicFormGenerator,
+} from "@/components/custom/DynamicFormGenerator";
+import { useWizardStep } from "@/components/custom/Wizard";
 import { VStack } from "@/components/ui/vstack";
 import {
   remapSignDataToClinicalSign,

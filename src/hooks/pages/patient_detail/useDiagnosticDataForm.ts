@@ -1,4 +1,3 @@
-// src/hooks/useDiagnosticDataForm.ts
 import { useState, useEffect } from "react";
 import { usePediatricApp } from "@/adapter";
 import { useDispatch } from "react-redux";
@@ -29,8 +28,8 @@ export function useDiagnosticDataForm(
   const showGenericErrorToast = () => {
     toast.show(
       "Error",
-      "Erreur technique",
-      "Une erreur s'est produite lors de l'enregistrement. Veuillez réessayer dans quelques instants."
+      "Erreur d'enregistrement",
+      "Impossible d'enregistrer les données.  Vérifiez si les données entrées sont correctes et réessayez."
     );
   };
 
@@ -108,7 +107,7 @@ export function useDiagnosticDataForm(
       toast.show(
         "Success",
         "Données enregistrées",
-        "Données initiales enregistrées avec succès, vous pouvez effectuer un diagnostic."
+        "Les données initiales ont été sauvegardées avec succès. Vous pouvez maintenant procéder au diagnostic nutritionnel."
       );
       dispatch(
         recordInteraction({
@@ -131,9 +130,9 @@ export function useDiagnosticDataForm(
   };
 
   return {
-    isSubmitting,
+    onSubmit: isSubmitting,
     error,
-    success,
+    onSucess: success,
     handleSubmit,
     handleResetFlags,
   };

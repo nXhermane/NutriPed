@@ -22,7 +22,7 @@ export const StackScreenHeader: React.FC<StackScreenHeaderProps> = ({
   return (
     <HStack
       className={
-        "p-safe dark:elevation-md w-ful h-v-20 items-center justify-between bg-background-secondary"
+        "p-safe dark:elevation-md w-full h-v-20 items-center justify-between bg-background-secondary"
       }
     >
       <HStack>
