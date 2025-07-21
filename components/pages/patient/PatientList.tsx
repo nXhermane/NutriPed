@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { PatientInfo, useFuseSearch, usePatientList } from "@/src/hooks";
 import { FadeInCardY } from "@/components/custom/motion";
 import { Loading } from "@/components/custom";
+import { VStack } from "@/components/ui/vstack";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
@@ -64,10 +65,10 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
   if (onLoading) return <Loading />;
 
   return (
-    <React.Fragment>
-
-     <FlatList
-        className={"pt-3"}
+    <VStack className="h-full">
+      <FlatList
+        className={"pt-3 "}
+        contentContainerClassName="pb-v-8"
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={5}
@@ -162,7 +163,6 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
         onClose={() => setShowConfirmDeletionAction(false)}
         onDeleteSucceed={() => setSelectedItem([])}
       />
-      </React.Fragment>
-      
+    </VStack>
   );
 };

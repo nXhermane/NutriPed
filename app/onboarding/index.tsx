@@ -130,7 +130,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
           >
             <ButtonText
               className={
-                "border-typography-primary_light font-body text-subtitle2 text-typography-primary_light"
+                "border-typography-primary_light font-h4 text-subtitle2 font-medium text-typography-primary_light"
               }
             >
               Passer
@@ -144,7 +144,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
             onPress={onNextBtnPress}
           >
             <ButtonText
-              className={"font-body text-subtitle2 text-typography-primary"}
+              className={"font-h4 text-subtitle2 font-medium text-white"}
             >
               Suivant
             </ButtonText>
@@ -198,7 +198,9 @@ const OnBoardingLoginScreen = () => {
         alt={"secure_signin_illustration"}
       />
       <VStack className={"w-full items-center gap-v-4"}>
-        <Heading className={"font-h1 text-3xl text-typography-primary"}>
+        <Heading
+          className={"font-h3 text-2xl font-semibold text-typography-primary"}
+        >
           Commencer
         </Heading>
         <Text
@@ -221,18 +223,18 @@ const OnBoardingLoginScreen = () => {
             <ButtonSpinner
               size={"small"}
               className="data-[active=true]:text-primary-c_light"
+              color={"#fff"}
             />
           ) : (
             <Image
-              source={require("./../../assets/images/onboarding/google.png")}
+              source={require("./../../assets/images/onboarding/icons8-google-24.png")}
               className={"w-5"}
               resizeMode={"contain"}
               alt={"Goolge Icon"}
             />
           )}
-
           <ButtonText
-            className={"font-body text-subtitle2 text-typography-primary"}
+            className={"font-h4 text-subtitle2 font-medium text-white"}
           >
             Se Connecter avec Google
           </ButtonText>
@@ -262,7 +264,9 @@ const OnBoardingFirstScreen = () => {
         alt={"pediatric_diagnosis_illustration"}
       />
       <VStack className={"w-full items-center gap-v-4"}>
-        <Heading className={"font-h1 text-3xl text-typography-primary"}>
+        <Heading
+          className={"font-h3 text-2xl font-semibold text-typography-primary"}
+        >
           Diagnostic Précis
         </Heading>
         <Text
@@ -291,7 +295,9 @@ const OnBoardingSecondScreen = () => {
         alt={"pediatric_nutrition_care_f75_illustration"}
       />
       <VStack className={"w-full items-center gap-v-4"}>
-        <Heading className={"font-h1 text-3xl text-typography-primary"}>
+        <Heading
+          className={"font-h3 text-2xl font-semibold text-typography-primary"}
+        >
           Prise en charge
         </Heading>
         <Text
@@ -323,7 +329,9 @@ const OnBoardingThirdScreen = () => {
         alt={"child_growth_monitoring_illustration"}
       />
       <VStack className={"w-full items-center gap-v-4"}>
-        <Heading className={"font-h1 text-3xl text-typography-primary"}>
+        <Heading
+          className={"font-h3 text-2xl font-semibold text-typography-primary"}
+        >
           Suivi Patient
         </Heading>
         <Text
