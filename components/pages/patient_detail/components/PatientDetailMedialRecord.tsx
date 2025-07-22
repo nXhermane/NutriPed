@@ -15,9 +15,7 @@ export const PatientDetailMedicalRecord: React.FC<
     if (isFirstVisitToPatientDetail) return <InitPatient />;
   return (
     <VStack>
-      <Text>
-        This is the medical record screen where we can show the measuremnts{" "}
-      </Text>
+     
     </VStack>
   );
 };
