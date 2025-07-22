@@ -1,4 +1,4 @@
-import { Check, InfoIcon } from "lucide-react-native";
+import { InfoIcon } from "lucide-react-native";
 import { HStack } from "../ui/hstack";
 import { Toast, ToastTitle, ToastDescription } from "../ui/toast";
 import { VStack } from "../ui/vstack";
@@ -25,13 +25,17 @@ export const InfoToast: React.FC<InfoToastProps> = ({ id, title, desc }) => {
         <Icon
           as={InfoIcon}
           className={
-            "h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-white"
+            "h-6 w-6 items-center justify-center rounded-full bg-blue-700 text-white dark:bg-blue-500"
           }
         />
 
         <VStack className="w-[90%]">
           {title && (
-            <ToastTitle className={"text-base font-semibold text-blue-400"}>
+            <ToastTitle
+              className={
+                "text-base font-semibold text-blue-700 dark:text-blue-400"
+              }
+            >
               {title}
             </ToastTitle>
           )}

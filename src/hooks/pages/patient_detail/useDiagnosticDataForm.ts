@@ -25,11 +25,11 @@ export function useDiagnosticDataForm(
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const showGenericErrorToast = () => {
+  const showGenericErrorToast = (e: string) => {
     toast.show(
       "Error",
       "Erreur d'enregistrement",
-      "Impossible d'enregistrer les données.  Vérifiez si les données entrées sont correctes et réessayez."
+      `Impossible d'enregistrer les données.  Vérifiez si les données entrées sont correctes et réessayez.${e}`
     );
   };
 
@@ -62,7 +62,7 @@ export function useDiagnosticDataForm(
 
     try {
       const patientRes = await patientService.get({ id: patientId });
-      if (patientRes instanceof Message) throw new Error();
+      if (patientRes instanceof Message) throw new Error(JSON.parse(patientRes.content))
 
       const patientDto = patientRes.data[0] as PatientDto;
       const nutritionalDiag =
@@ -76,7 +76,7 @@ export function useDiagnosticDataForm(
             biologicalTestResults: [],
           },
         });
-      if (!("data" in nutritionalDiag)) throw new Error();
+      if (nutritionalDiag instanceof Message) throw new Error(JSON.parse(nutritionalDiag.content));
 
       const medicalRes = await medicalRecordService.addData({
         medicalRecordId: patientId,
@@ -101,7 +101,7 @@ export function useDiagnosticDataForm(
           ],
         },
       });
-      if (!("data" in medicalRes)) throw new Error();
+      if (medicalRes instanceof Message) throw new Error(JSON.parse(medicalRes.content));
 
       setSuccess(true);
       toast.show(
@@ -122,9 +122,10 @@ export function useDiagnosticDataForm(
         setIsSubmitting(false);
         onClose();
       }, 2000);
-    } catch {
+    } catch (e: any) {
+      console.error(e)
       setError(true);
-      showGenericErrorToast();
+      showGenericErrorToast(e.message);
       setIsSubmitting(false);
     }
   };

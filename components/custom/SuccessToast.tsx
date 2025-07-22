@@ -29,13 +29,17 @@ export const SuccessToast: React.FC<SuccessToastProps> = ({
         <Icon
           as={Check}
           className={
-            "h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white"
+            "h-6 w-6 items-center justify-center rounded-full bg-green-700 text-white dark:bg-green-500"
           }
         />
 
         <VStack className="w-[90%]">
           {title && (
-            <ToastTitle className={"text-base font-semibold text-green-400"}>
+            <ToastTitle
+              className={
+                "text-base font-semibold text-green-700 dark:text-green-400"
+              }
+            >
               {title}
             </ToastTitle>
           )}
