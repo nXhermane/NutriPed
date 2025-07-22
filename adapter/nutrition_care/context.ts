@@ -128,6 +128,9 @@ import {
   MilkAppService,
   OrientationAppService,
   AfterPatientGlobalVariablePerformedEvent,
+  GetDailyJournalRequest,
+  GetDailyJouranlResponse,
+  GetDailyJournalUseCase,
 } from "@core/nutrition_care";
 
 import { PatientACLImpl } from "@core/sharedAcl";
@@ -344,6 +347,10 @@ export class NutritionCareContext {
   private readonly makeCareSessionReadyUC: UseCase<
     MakePatientCareSessionReadyRequest,
     MakePatientCareSessionReadyResponse
+  >;
+  private readonly getDailyJournalsUC: UseCase<
+    GetDailyJournalRequest,
+    GetDailyJouranlResponse
   >;
 
   // Application Service
@@ -611,6 +618,9 @@ export class NutritionCareContext {
       this.patientDailyJournalGenerator,
       this.patientCareSessionRepo
     );
+    this.getDailyJournalsUC = new GetDailyJournalUseCase(
+      this.getPatientCareSessionUC
+    );
     // Application Service
     this.appetiteTestAppService = new AppetiteTestAppService({
       createUC: this.createAppetiteTestRefUC,
@@ -643,6 +653,7 @@ export class NutritionCareContext {
       evaluatePatientAppetiteUC: this.evaluatePatientAppetiteUC,
       orientPatientUC: this.orientPatientUC,
       makeCareSessionReadyUC: this.makeCareSessionReadyUC,
+      getDailyJournalsUC: this.getDailyJournalsUC,
     });
 
     // Subscribers

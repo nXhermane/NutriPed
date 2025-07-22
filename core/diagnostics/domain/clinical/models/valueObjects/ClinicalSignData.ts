@@ -6,6 +6,7 @@ import {
   handleError,
   Result,
   SystemCode,
+  UnitCode,
   ValueObject,
 } from "@shared";
 import { ClinicalDataType } from "./../constants";
@@ -17,7 +18,8 @@ export interface IClinicalSignData {
   dataType: ClinicalDataType;
   required: boolean;
   dataRange?: [number, number];
-  enumValue?: string[];
+  enumValue?: {label: string, value: string}[];
+  units?: { default: UnitCode; available: UnitCode[] };
 }
 
 export interface CreateClinicalSignData {
@@ -27,7 +29,8 @@ export interface CreateClinicalSignData {
   dataType: ClinicalDataType;
   required: boolean;
   dataRange?: [number, number];
-  enumValue?: string[];
+  enumValue?: {label: string ,value: string}[];
+  units?: { default: string; available: string[] };
 }
 
 export class ClinicalSignData extends ValueObject<IClinicalSignData> {
@@ -50,21 +53,42 @@ export class ClinicalSignData extends ValueObject<IClinicalSignData> {
         "When data type of clinicalSignData is enum the enumValue must be provided. Please  provide enumValue property and retry."
       );
     }
+    if (props.dataType === ClinicalDataType.QUANTITY && !props.units) {
+      throw new ArgumentNotProvidedException(
+        "When data type of clinicalSignData is quantity the units must be provided. Please provide units property and retry."
+      );
+    }
   }
   static create(createProps: CreateClinicalSignData): Result<ClinicalSignData> {
     try {
       const codeRes = SystemCode.create(createProps.code);
       if (codeRes.isFailure)
         return Result.fail(formatError(codeRes, ClinicalSignData.name));
+      let processedProps: IClinicalSignData = {
+        code: codeRes.val,
+        name: createProps.name,
+        question: createProps.question,
+        dataType: createProps.dataType,
+        dataRange: createProps.dataRange,
+        required: createProps.required,
+        enumValue: createProps.enumValue,
+      };
+      if (createProps.units) {
+        const defaultRes = UnitCode.create(createProps.units.default);
+        const availableRes = createProps.units.available.map(unit =>
+          UnitCode.create(unit)
+        );
+        const combinedRes = Result.combine(availableRes.concat(defaultRes));
+        if (combinedRes.isFailure)
+          return Result.fail(formatError(combinedRes, ClinicalSignData.name));
+        processedProps["units"] = {
+          available: availableRes.map(res => res.val),
+          default: defaultRes.val,
+        };
+      }
       return Result.ok(
         new ClinicalSignData({
-          code: codeRes.val,
-          name: createProps.name,
-          question: createProps.question,
-          dataType: createProps.dataType,
-          dataRange: createProps.dataRange,
-          required: createProps.required,
-          enumValue: createProps.enumValue,
+          ...processedProps,
         })
       );
     } catch (e: unknown) {

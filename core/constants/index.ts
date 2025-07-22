@@ -275,6 +275,7 @@ export enum ClinicalDataType {
   STR = "string",
   RANGE = "range",
   ENUM = "enum",
+  QUANTITY = "quantity",
 }
 export const COMPLICATION_CODES = {
   COMPLICATIONS_NUMBER: "complications_number",

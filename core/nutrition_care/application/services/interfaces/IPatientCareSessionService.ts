@@ -8,8 +8,9 @@ import {
   MakePatientCareSessionReadyRequest,
   AppetiteTestResultDto,
   OrientationResultDto,
+  GetDailyJournalRequest,
 } from "../../useCases";
-import { PatientCareSessionDto } from "../../dtos";
+import { DailyCareJournalDto, PatientCareSessionDto } from "../../dtos";
 
 export interface IPatientCareSessionAppService {
   create(
@@ -30,4 +31,11 @@ export interface IPatientCareSessionAppService {
   makeCareSessionReady(
     req: MakePatientCareSessionReadyRequest
   ): Promise<AppServiceResponse<boolean> | Message>;
+  getDailyJournals(req: GetDailyJournalRequest): Promise<
+    | AppServiceResponse<{
+        current?: DailyCareJournalDto;
+        previeous: DailyCareJournalDto[];
+      }>
+    | Message
+  >;
 }

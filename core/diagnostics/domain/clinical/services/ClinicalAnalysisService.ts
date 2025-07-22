@@ -17,11 +17,14 @@ import {
   ArgumentInvalidException,
   ConditionResult,
   evaluateCondition,
+  formatError,
   Result,
+  UnitCode,
 } from "@shared";
 import { EvaluationContext } from "../../common";
 import {
   ClinicalData,
+  ClinicalDataType,
   ClinicalNutritionalAnalysisResult,
   ClinicalSign,
   ClinicalSignReference,
@@ -30,13 +33,15 @@ import {
   ClinicalSignReferenceRepository,
   IClinicalAnalysisService,
   NutritionalRiskFactorRepository,
+  UnitAcl,
 } from "../ports";
 import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 // FIXME: Regler le probleme avec les donnees data du reference avec les varibles . une corrections du cote des donnees de reference pourrai bien ressoudre le probleme lors de l'actualisation de la prochaine version
 export class ClinicalAnalysisService implements IClinicalAnalysisService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository,
-    private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository
+    private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository,
+    private readonly unitAcl: UnitAcl
   ) {}
   async analyze(
     data: ClinicalData,
@@ -90,10 +95,12 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
         .getRule()
         .variables.filter(x => !Object.keys(context).includes(x));
       if (
-        !clinicalSignRefNeedDataCode.every(clinicalRefNeededCode =>
-          Object.keys(clinicalSignAssociatedData).includes(
-            clinicalRefNeededCode
-          )
+        !clinicalSignRefNeedDataCode.every(
+          clinicalRefNeededCode =>
+            clinicalRefNeededCode in clinicalSignAssociatedData
+          // Object.keys(clinicalSignAssociatedData).includes(
+          //   clinicalRefNeededCode
+          // )
         )
       ) {
         throw new ArgumentInvalidException(
@@ -101,10 +108,36 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
         ); // TODO: Ce n'est pas juste la validation ici
       }
 
+      // CHECK: Verifier si on pourrai refactoriser ceci plustart
+      const clinicalSignRefData = clinicalSignRef.getClinicalSignData();
       const ruleEvaluationVariable = {
         ...clinicalSignAssociatedData,
         ...context,
       };
+      for (const signRefData of clinicalSignRefData) {
+        if (signRefData.dataType === ClinicalDataType.QUANTITY) {
+          const signDataValue = clinicalSignAssociatedData[
+            signRefData.code.unpack()
+          ] as { value: number; unit: string };
+          let convertedValue = signDataValue.value;
+          if (signDataValue.unit === signRefData.units?.default.unpack()) {
+            convertedValue = signDataValue.value;
+          } else {
+            const convertedValueRes = await this.unitAcl.convertTo(
+              new UnitCode({ _value: signDataValue.unit }),
+              signRefData.units?.default!,
+              signDataValue.value
+            );
+            if (convertedValueRes.isFailure) {
+              throw new ArgumentInvalidException(
+                formatError(convertedValueRes, ClinicalAnalysisService.name)
+              );
+            }
+            convertedValue = convertedValueRes.val;
+          }
+          ruleEvaluationVariable[signRefData.code.unpack()] = convertedValue;
+        }
+      }
 
       if (
         !clinicalSignRef
