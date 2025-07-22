@@ -19,6 +19,7 @@ import { Box } from "@/components/ui/box";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -72,7 +73,7 @@ function Route() {
         options={
           {
             // animation: "slide_from_right",
-            // animationDuration: 500,
+            // animationDuration: 300,
           }
         }
       />

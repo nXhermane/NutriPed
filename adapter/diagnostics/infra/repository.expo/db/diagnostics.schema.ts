@@ -176,7 +176,8 @@ export const clinical_sign_references = sqliteTable(
           dataType: ClinicalDataType;
           required: boolean;
           dataRange?: [number, number];
-          enumValue?: string[];
+          enumValue?: { label: string; value: string }[];
+          units?: { default: string; available: string[] };
         }[]
       >()
       .notNull(),

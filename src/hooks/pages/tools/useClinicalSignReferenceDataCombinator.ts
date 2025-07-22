@@ -357,13 +357,48 @@ class ClinicalDataProcessor {
           label: variable.name,
           helperText: variable.question,
           isRequire: variable.required,
-          default: variable.enumValue ? variable.enumValue[0] : "",
-          selectOptions: variable.enumValue
-            ? variable.enumValue.map(value => ({ label: value, value }))
-            : [],
+          default: variable.enumValue ? variable.enumValue[0].value : "",
+          selectOptions: variable.enumValue ? variable.enumValue : [],
         };
         const zodSchema = z.object({
-          [variable.code]: z.enum(variable.enumValue || ([] as any)),
+          [variable.code]: z.enum(
+            variable.enumValue?.map(val => val.value) || ([] as any)
+          ),
+        });
+        return {
+          field,
+          zodSchema,
+        };
+      }
+      case ClinicalDataType.QUANTITY: {
+        const field: IField = {
+          type: "quantity",
+          name: variable.code,
+          label: variable.name,
+          helperText: variable.question,
+          isRequire: variable.required,
+          default: { unit: variable.units?.default!, value: 0 },
+          defaultUnit: {
+            unit: variable.units?.default!,
+            convertionFactor: 1,
+            label: variable.units?.default!,
+          },
+          unitOptions:
+            variable.units?.available.map(unit => ({
+              unit: unit,
+              convertionFactor: 1,
+              label: unit,
+            })) || [],
+        };
+        const zodSchema = z.object({
+          value: z
+            .number()
+            .positive("La valeur d'une quantité doit être positive."),
+          unit: z.enum(variable.units?.available as any, {
+            errorMap: (issue, ctx) => ({
+              message: `Unité invalide. Seules les valeurs ${variable.units?.available.join(",")} sont acceptées.`,
+            }),
+          }),
         });
         return {
           field,

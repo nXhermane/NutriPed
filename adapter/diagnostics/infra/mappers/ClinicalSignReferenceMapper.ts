@@ -1,4 +1,8 @@
-import { ClinicalSignReference } from "@core/diagnostics";
+import {
+  ClinicalSignDataDto,
+  ClinicalSignReference,
+  IClinicalSignData,
+} from "@core/diagnostics";
 import {
   formatError,
   InfraMapToDomainError,
@@ -16,19 +20,14 @@ export class ClinicalSignReferenceInfraMapper
   toPersistence(
     entity: ClinicalSignReference
   ): ClinicalSignReferencePersistenceDto {
+    
     return {
       id: entity.id as string,
       code: entity.getCode(),
       name: entity.getName(),
-      data: entity.getClinicalSignData().map(sign => ({
-        name: sign.name,
-        code: sign.code.unpack(),
-        question: sign.question,
-        dataType: sign.dataType,
-        required: sign.required,
-        dataRange: sign.dataRange,
-        enumValue: sign.enumValue,
-      })),
+      data: entity
+        .getClinicalSignData()
+        .map(sign => this.mapClinicalSignData(sign)),
       description: entity.getDesc(),
       evaluationRule: entity.getRule(),
       createdAt: entity.createdAt,
@@ -50,5 +49,28 @@ export class ClinicalSignReferenceInfraMapper
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     });
+  }
+  
+  private mapClinicalSignData(
+    clinicalSignData: IClinicalSignData
+  ): ClinicalSignDataDto {
+    const processedProps: ClinicalSignDataDto = {
+      code: clinicalSignData.code.unpack(),
+      dataType: clinicalSignData.dataType,
+      name: clinicalSignData.name,
+      question: clinicalSignData.question,
+      dataRange: clinicalSignData.dataRange,
+      required: clinicalSignData.required,
+      enumValue: clinicalSignData.enumValue,
+    };
+    if (clinicalSignData.units) {
+      processedProps["units"] = {
+        available: clinicalSignData.units.available.map(unitCode =>
+          unitCode.unpack()
+        ),
+        default: clinicalSignData.units.default.unpack(),
+      };
+    }
+    return processedProps;
   }
 }

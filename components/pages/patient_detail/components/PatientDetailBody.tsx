@@ -29,7 +29,6 @@ export function PatientDetailBody() {
       renderScene={renderScene}
       onIndexChange={setIndex}
       lazy={true}
-      lazyPreloadDistance={2}
       initialLayout={{ width: Dimensions.get("window").width }}
       renderTabBar={tabBarProps => (
         <TabBar

@@ -16,8 +16,10 @@ import {
   MakePatientCareSessionReadyResponse,
   AppetiteTestResultDto,
   OrientationResultDto,
+  GetDailyJournalRequest,
+  GetDailyJouranlResponse,
 } from "../useCases";
-import { PatientCareSessionDto } from "../dtos";
+import { DailyCareJournalDto, PatientCareSessionDto } from "../dtos";
 
 export interface PatientCareSessionServiceUseCases {
   createUC: UseCase<
@@ -38,6 +40,7 @@ export interface PatientCareSessionServiceUseCases {
     MakePatientCareSessionReadyRequest,
     MakePatientCareSessionReadyResponse
   >;
+  getDailyJournalsUC: UseCase<GetDailyJournalRequest, GetDailyJouranlResponse>;
 }
 
 export class PatientCareSessionAppService
@@ -89,6 +92,19 @@ export class PatientCareSessionAppService
     req: MakePatientCareSessionReadyRequest
   ): Promise<AppServiceResponse<boolean> | Message> {
     const res = await this.ucs.makeCareSessionReadyUC.execute(req);
+    if (res.isRight()) return { data: res.value.val };
+    else return new Message("error", JSON.stringify((res.value as any)?.err));
+  }
+  async getDailyJournals(
+    req: GetDailyJournalRequest
+  ): Promise<
+    | AppServiceResponse<{
+        current?: DailyCareJournalDto;
+        previeous: DailyCareJournalDto[];
+      }>
+    | Message
+  > {
+    const res = await this.ucs.getDailyJournalsUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
