@@ -118,19 +118,19 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
     hideSkipBtn = false,
   } = props;
   return (
-    <Box className={"native:h-v-16 pb-safe bottom-0 w-full web:h-20"}>
-      <HStack className={"justify-between px-6"}>
+    <Box className={"native:h-v-16 pb-safe  bottom-0 w-full web:h-20"}>
+      <HStack className={"justify-between px-6 "}>
         {!hideSkipBtn && (
           <Button
             variant={"outline"}
             className={
-              "rounded-xl border-[0.5px] border-primary-border/5 bg-background-primary"
+              "rounded-xl border-[0.5px] border-primary-border/5 bg-primary-c_light/20"
             }
             onPress={onSkipBtnPress}
           >
             <ButtonText
               className={
-                "border-typography-primary_light font-h4 text-subtitle2 font-medium text-typography-primary_light"
+                "border-typography-primary_light font-h4 font-medium text-base text-primary-c_light"
               }
             >
               Passer
@@ -144,7 +144,7 @@ const OnBoardingScreenFooter: React.FC<OnBoardingScreenFooterProps> = props => {
             onPress={onNextBtnPress}
           >
             <ButtonText
-              className={"font-h4 text-subtitle2 font-medium text-white"}
+              className={"font-h4 font-medium text-base text-white data-[active=true]:text-primary-c_light"}
             >
               Suivant
             </ButtonText>
