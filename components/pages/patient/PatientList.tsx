@@ -67,7 +67,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
   return (
     <VStack className="h-full">
       <FlatList
-        className={"pt-3 "}
+        className={"pt-3"}
         contentContainerClassName="pb-v-8"
         initialNumToRender={10}
         maxToRenderPerBatch={10}
@@ -126,7 +126,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
       {!hideFab && selectedItem.length === 0 && (
         <Fab
           placement="bottom right"
-          className="-mr-2 mb-4 h-11 w-11 bg-primary-c_light"
+          className="-mr-4 h-11 w-11 bg-primary-c_light"
           onPress={() => setShowPatientForm(true)}
         >
           <FabIcon as={UserPlus} className="h-6 w-6 text-white" />

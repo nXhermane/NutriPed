@@ -63,7 +63,7 @@ export const ActionBtn: React.FC<ActionBtnProps> = ({
       onPress={onPress}
       className={`items-center justify-center p-1 ${classNameColor} h-10 w-10 rounded-full`}
     >
-      <Icon as={LucideIcon} className={"h-6 w-6 text-white"} />
+      <Icon as={LucideIcon} className={"h-5 w-65 text-white"} />
     </CardPressEffect>
   );
 };

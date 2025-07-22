@@ -53,17 +53,17 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
   if (!dbOpened)
     return (
       <Center className="flex-1 gap-5 bg-background-primary px-4">
-        <Text className="text-center font-body text-sm font-normal">
-          {uiMessage}
-        </Text>
-        {!isTimeOut && <Loading />}
+        {!isTimeOut && <Loading children={uiMessage} />}
         {isTimeOut && (
           <>
+            <Text className="text-center font-body text-sm font-normal">
+              {uiMessage}
+            </Text>
             <Button
               className="rounded-full bg-primary-c_light"
               onPress={() => ReactNativeResart.restart()}
             >
-              <ButtonIcon as={RotateCcw} className="text-typography-primary" />
+              <ButtonIcon as={RotateCcw} className="text-white" />
             </Button>
             <HStack className="gap-4">
               <Pressable
@@ -72,7 +72,7 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
                   console.log("NON IMplementer");
                 }}
               >
-                <Icon as={MessageCircle} className="text-typography-primary" />
+                <Icon as={MessageCircle} className="text-white" />
               </Pressable>
               <Pressable
                 className="rounded-full bg-emerald-600 p-3"
@@ -80,13 +80,13 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderType> = ({
                   console.log("NON IMPlementer");
                 }}
               >
-                <Icon as={Mail} className="p-2 text-typography-primary" />
+                <Icon as={Mail} className="p-2 text-white" />
               </Pressable>
               <Pressable
                 className="rounded-full bg-orange-600 p-3"
                 onPress={() => openBrowserAsync("https://github.com/nXhermane")}
               >
-                <Icon as={LifeBuoy} className="p-2 text-typography-primary" />
+                <Icon as={LifeBuoy} className="p-2 text-white" />
               </Pressable>
             </HStack>
           </>
