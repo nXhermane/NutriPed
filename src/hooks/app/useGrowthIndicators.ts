@@ -23,6 +23,6 @@ export function useGrowthIndicators(request?: GetIndicatorRequest) {
       setOnLoading(false);
     };
     getIndicators();
-  }, [request]);
+  }, [request, indicator]);
   return { error, onLoading, data: indicatorList };
 }

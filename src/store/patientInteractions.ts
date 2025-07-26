@@ -19,13 +19,13 @@ export const patientInteractionsSlice = createSlice({
   reducers: {
     recordInteraction(state, action: PayloadAction<Interaction>) {
       state.interactions = state.interactions.filter(
-        p => p.patientId != action.payload.patientId
+        p => p.patientId !== action.payload.patientId
       );
       state.interactions.unshift(action.payload);
     },
     deleteInteraction(state, action: PayloadAction<AggregateID>) {
       state.interactions = state.interactions.filter(
-        p => p.patientId != action.payload
+        p => p.patientId !== action.payload
       );
     },
   },

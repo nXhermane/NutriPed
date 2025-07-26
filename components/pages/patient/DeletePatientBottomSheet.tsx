@@ -104,7 +104,6 @@ export const DeletePatientBottomSheet: React.FC<
               "gap-1 rounded-xl border-[1px] border-red-600/50 bg-red-500/5 px-4 py-2"
             }
           >
-       
             <Text className={"font-body text-xs text-red-400"}>
               <Text bold className={"font-body text-xs text-red-400"}>
                 Attention !
@@ -114,7 +113,7 @@ export const DeletePatientBottomSheet: React.FC<
             </Text>
           </VStack>
           <ScrollView
-            className={"h-fit "}
+            className={"h-fit"}
             contentContainerClassName={"gap-2 max-h-v-52"}
           >
             {deletedPatients.map((patient, index) => (
@@ -128,11 +127,13 @@ export const DeletePatientBottomSheet: React.FC<
               >
                 <HStack
                   className={
-                    "items-center gap-4 rounded-lg bg-background-primary px-4 py-v-3 border-[0.5px] border-primary-border/5 "
+                    "items-center gap-4 rounded-lg border-[0.5px] border-primary-border/5 bg-background-primary px-4 py-v-3"
                   }
                 >
                   <Avatar className={"h-8 w-8 bg-red-500/5"}>
-                    <AvatarFallbackText className="font-h4 font-medium text-red-600 dark:text-red-500">{patient.name}</AvatarFallbackText>
+                    <AvatarFallbackText className="font-h4 font-medium text-red-600 dark:text-red-500">
+                      {patient.name}
+                    </AvatarFallbackText>
                   </Avatar>
                   <Text className={"font-h4 text-base text-typography-primary"}>
                     {patient.name}

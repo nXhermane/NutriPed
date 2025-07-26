@@ -1,2 +1,2 @@
-export * from "./usePatientDetail"
-export * from "./PatientDetailContext"
+export * from "./usePatientDetail";
+export * from "./PatientDetailContext";

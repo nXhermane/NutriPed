@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { usePediatricApp } from "@/adapter";
 import { useDispatch } from "react-redux";
 import { AppDispatch, recordInteraction } from "@/src/store";
@@ -44,7 +44,7 @@ export function useDiagnosticDataForm(
 
     setIsSubmitting(true);
     const entries = Object.entries(formData).filter(
-      ([, val]) => val != undefined
+      ([, val]) => val !== undefined
     );
     const anthroData = entries
       .filter(([key]) =>
@@ -62,7 +62,8 @@ export function useDiagnosticDataForm(
 
     try {
       const patientRes = await patientService.get({ id: patientId });
-      if (patientRes instanceof Message) throw new Error(JSON.parse(patientRes.content))
+      if (patientRes instanceof Message)
+        throw new Error(JSON.parse(patientRes.content));
 
       const patientDto = patientRes.data[0] as PatientDto;
       const nutritionalDiag =
@@ -76,7 +77,8 @@ export function useDiagnosticDataForm(
             biologicalTestResults: [],
           },
         });
-      if (nutritionalDiag instanceof Message) throw new Error(JSON.parse(nutritionalDiag.content));
+      if (nutritionalDiag instanceof Message)
+        throw new Error(JSON.parse(nutritionalDiag.content));
 
       const medicalRes = await medicalRecordService.addData({
         medicalRecordId: patientId,
@@ -101,7 +103,8 @@ export function useDiagnosticDataForm(
           ],
         },
       });
-      if (medicalRes instanceof Message) throw new Error(JSON.parse(medicalRes.content));
+      if (medicalRes instanceof Message)
+        throw new Error(JSON.parse(medicalRes.content));
 
       setSuccess(true);
       toast.show(
@@ -123,7 +126,7 @@ export function useDiagnosticDataForm(
         onClose();
       }, 2000);
     } catch (e: any) {
-      console.error(e)
+      console.error(e);
       setError(true);
       showGenericErrorToast(e.message);
       setIsSubmitting(false);

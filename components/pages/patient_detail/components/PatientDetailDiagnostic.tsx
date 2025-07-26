@@ -7,14 +7,22 @@ import { InitPatientRootSecure } from "./InitPatientRootSecure";
 
 export interface PatientDetailDiagnosticProps {}
 
-export const PatientDetailDiagnostic: React.FC<
+const PatientDetailDiagnosticComponent: React.FC<
   PatientDetailDiagnosticProps
 > = ({}) => {
   return (
+    <VStack>
+      <Text>This is the patient diagnostic detail screen</Text>
+    </VStack>
+  );
+};
+
+export const PatientDetailDiagnostic: React.FC<
+  PatientDetailDiagnosticProps
+> = props => {
+  return (
     <InitPatientRootSecure>
-      <VStack>
-        <Text>This is the patient diagnostic detail screen</Text>
-      </VStack>
+      <PatientDetailDiagnosticComponent {...props} />
     </InitPatientRootSecure>
   );
 };

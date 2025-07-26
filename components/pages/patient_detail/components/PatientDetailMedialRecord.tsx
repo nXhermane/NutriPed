@@ -9,7 +9,7 @@ import { Loading } from "@/components/custom";
 
 export interface PatientDetailMedicalRecordProps {}
 
-export const PatientDetailMedicalRecord: React.FC<
+const PatientDetailMedicalRecordComponent: React.FC<
   PatientDetailMedicalRecordProps
 > = ({}) => {
   const { data, error, onLoading } = useMedicalRecord();
@@ -23,9 +23,13 @@ export const PatientDetailMedicalRecord: React.FC<
 
   console.log(data, error);
   console.log("\n ", dailyJournals, dailyJournalsError);
+  return <VStack></VStack>;
+};
+
+export const PatientDetailMedicalRecord = () => {
   return (
     <InitPatientRootSecure>
-      <VStack></VStack>
+      <PatientDetailMedicalRecordComponent />
     </InitPatientRootSecure>
   );
 };

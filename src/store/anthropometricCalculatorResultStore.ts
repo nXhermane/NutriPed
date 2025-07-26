@@ -51,7 +51,7 @@ export const anthropometricCalculatorSlice = createSlice({
       const resultIndex = state.histories.findIndex(
         result => result.id === action.payload.id
       );
-      if (resultIndex != -1) state.histories.splice(resultIndex, 1);
+      if (resultIndex !== -1) state.histories.splice(resultIndex, 1);
     },
   },
 });

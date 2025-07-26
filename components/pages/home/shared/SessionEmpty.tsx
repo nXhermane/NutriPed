@@ -18,7 +18,7 @@ export const SessionEmpty: React.FC<SessionEmptyProps> = ({
   return (
     <VStack
       className={
-        "h-fit w-[100%] items-center justify-center gap-4 rounded-xl  px-3 py-4"
+        "h-fit w-[100%] items-center justify-center gap-4 rounded-xl px-3 py-4"
       }
     >
       <Icon

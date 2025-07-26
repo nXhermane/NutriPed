@@ -1,5 +1,5 @@
 import { ChartDetailMenuOtpionData } from "@/src/constants/ui";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { usePicker } from "../../usePicker";
 import {
   addNewSerie,
@@ -13,40 +13,16 @@ import { GrowthRefChartAndTableCodes } from "@/core/constants";
 import {
   addMeasureToSerie,
   ChartMeasurement,
-  recordSelectedSeries,
 } from "@/src/store/chartToolStore";
 import { useToast } from "@/src/context";
 import { Alert } from "react-native";
 import { usePediatricApp } from "@/adapter";
 import { Sex } from "@/core/shared";
-type SeriesAction =
-  | { type: "addMeasure"; payload: AddMeasurePayload }
-  | { type: "new"; payload: NewSeriesPayload }
-  | { type: "delete"; payload: DeleteSeriesPayload }
-  | { type: "deleteSerie"; payload: DeleteSeriePayload }
-  | { type: "choose"; payload: ChooseSeriePayload }
-  | { type: "deleteMeasure"; payload: DeleteMeasurePayload };
 
-// Définis chaque payload selon tes besoins
-type AddMeasurePayload = {
-  /* ... */
-};
-type NewSeriesPayload = void;
-type DeleteSeriesPayload = {
-  /* ... */
-};
-type DeleteSeriePayload = string; // exemple
-type ChooseSeriePayload = { serieId: string };
-type DeleteMeasurePayload = string;
 export type SelectedChartMeasurementSerie = Omit<
   ChartMeasurementSerie,
   "createdAt" | "updatedAt"
 >;
-type HandleSeriesAction = <T extends SeriesAction["type"]>(
-  action: T
-) => (
-  payload: Extract<SeriesAction, { type: T }>["payload"]
-) => Promise<any> | any;
 
 type ActionCodeItemKeyType =
   | (typeof ChartDetailMenuOtpionData)[number]["key"]
@@ -150,7 +126,7 @@ export function useMeasurementSeriesManager(
                 else
                   series = prev.filter(
                     serie =>
-                      serie.id != serieId || serie.id === selectedSerie.serieId
+                      serie.id !== serieId || serie.id === selectedSerie.serieId
                   );
                 return series;
               });
@@ -242,7 +218,8 @@ export function useMeasurementSeriesManager(
               const result = await growthIndicatorValue.calculateIndicator({
                 anthropometricData: {
                   anthropometricMeasures: Object.values(data).filter(
-                    value => typeof value != "number" && value.code != "lenhei"
+                    value =>
+                      typeof value !== "number" && value.code !== "lenhei"
                   ),
                 },
                 age_in_day: (data["age_in_day"] as number) || 0,
@@ -290,7 +267,17 @@ export function useMeasurementSeriesManager(
         }
       }
     },
-    [measurementSeries, chartCode, selectedSerie, sex, indicatorCode]
+    [
+      measurementSeries,
+      chartCode,
+      selectedSerie,
+      sex,
+      indicatorCode,
+      openLabelPicker,
+      growthIndicatorValue,
+      toast,
+      dispatch,
+    ]
   );
 
   return {

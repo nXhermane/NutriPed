@@ -35,7 +35,7 @@ export const ActionBtnSession: React.FC<ActionBtnSessionProps> = ({
         delay: 300,
       }}
       className={
-        "absolute bottom-0 h-v-20 w-full flex-row items-center justify-between px-8 "
+        "absolute bottom-0 h-v-20 w-full flex-row items-center justify-between px-8"
       }
     >
       {actions.map((action, index) => (
@@ -63,7 +63,7 @@ export const ActionBtn: React.FC<ActionBtnProps> = ({
       onPress={onPress}
       className={`items-center justify-center p-1 ${classNameColor} h-10 w-10 rounded-full`}
     >
-      <Icon as={LucideIcon} className={"h-5 w-65 text-white"} />
+      <Icon as={LucideIcon} className={"w-65 h-5 text-white"} />
     </CardPressEffect>
   );
 };

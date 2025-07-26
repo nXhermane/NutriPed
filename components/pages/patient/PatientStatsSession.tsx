@@ -115,7 +115,9 @@ export const PatientStatCard: React.FC<PatientStatCardProps> = ({
         "elevation-sm h-v-16 w-20 items-center justify-center rounded-md border-[0.5px] border-primary-border/10 bg-background-secondary"
       }
     >
-      <Heading className={"font-h2 text-2xl text-primary-c_light"}>{value}</Heading>
+      <Heading className={"font-h2 text-2xl text-primary-c_light"}>
+        {value}
+      </Heading>
       <Text
         className={"font-body text-xs uppercase text-typography-primary_light"}
       >

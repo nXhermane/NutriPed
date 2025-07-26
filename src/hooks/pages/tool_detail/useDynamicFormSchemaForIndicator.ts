@@ -50,7 +50,7 @@ export function useDynamicFormSchemaForIndicator(indicatorDto?: IndicatorDto) {
       );
       setSchema(fieldSchema as any);
     }
-  }, [indicatorDto]);
+  }, [indicatorDto, generateFieldSchema]);
 
   return schema;
 }

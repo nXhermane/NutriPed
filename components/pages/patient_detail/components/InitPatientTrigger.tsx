@@ -1,8 +1,4 @@
-import {
-  Button,
-  ButtonSpinner,
-  ButtonText,
-} from "@/components/ui/button";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import React, { useState } from "react";
@@ -23,7 +19,7 @@ export const InitPatientTrigger: React.FC<InitPatientTriggerProps> = ({
         crânien, etc.).
       </Text>
       <Button
-        className="bg-primary-c_light"
+        className="mx-4 h-v-10 rounded-xl bg-primary-c_light"
         onPress={async () => {
           setOnWaching(true);
           onTrigger && (await onTrigger());

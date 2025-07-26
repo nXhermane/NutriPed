@@ -46,6 +46,6 @@ export function useLastPatientList() {
     };
 
     getPatientList();
-  }, [patientInteractionList]);
+  }, [patientInteractionList, patientService]);
   return { patientList, onLoading };
 }

@@ -27,7 +27,7 @@ export function useMedicalRecord() {
     };
 
     getMedicalRecord();
-  }, [patient]);
+  }, [patient, medicalRecordService]);
 
   return { data: medicalRecord, error, onLoading };
 }

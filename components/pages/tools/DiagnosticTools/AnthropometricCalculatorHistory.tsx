@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { Alert, ScrollView } from "react-native";
+import { Alert, ScrollView, Text } from "react-native";
 import { VStack } from "@/components/ui/vstack";
-import { Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AnthropometricCalculatorResultDataType,
@@ -20,7 +19,7 @@ import { FakeBlur } from "@/components/custom";
 
 export const AnthropometricCalculatorHistory = () => {
   const { colorMode } = useUI();
-  const toast = useToast()
+  const toast = useToast();
   const savedResults = useSelector<
     RootState,
     AnthropometricCalculatorResultDataType[]
@@ -126,14 +125,17 @@ export const AnthropometricCalculatorHistory = () => {
           </Button>
           <Button
             className={`flex-grow rounded-xl bg-primary-c_light`}
-            onPress={async() => {
-             const result = await exportHistoryToXlsx(savedResults);
-             if(result === null) toast.show("Error","Erreur lors de l'exportation", "Veillez verifier si vous êtes connecté à internet et reessayer.")
+            onPress={async () => {
+              const result = await exportHistoryToXlsx(savedResults);
+              if (result === null)
+                toast.show(
+                  "Error",
+                  "Erreur lors de l'exportation",
+                  "Veillez verifier si vous êtes connecté à internet et reessayer."
+                );
             }}
           >
-            <ButtonText
-              className={`font-h4 text-sm font-medium text-white`}
-            >
+            <ButtonText className={`font-h4 text-sm font-medium text-white`}>
               Exporter tout
             </ButtonText>
           </Button>

@@ -1,10 +1,9 @@
 import { usePediatricApp } from "@/adapter";
 import { PatientCardInfo } from "@/components/pages/commun";
 import { Message } from "@/core/shared";
-import { PATIENT_QUICK_FILTER_TAG, PATIENT_STATE } from "@/src/constants/ui";
+import { PATIENT_STATE } from "@/src/constants/ui";
 import { AppDispatch, Interaction } from "@/src/store";
 import { recordUiState } from "@/src/store/uiState";
-import { A } from "@expo/html-elements";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 export type PatientInfo = PatientCardInfo & {
@@ -51,6 +50,6 @@ export function usePatientList() {
       setOnLoading(false);
     };
     getPatientList();
-  }, [updatePatientList]);
+  }, [updatePatientList, dispatch, patientService, patientInteractionList]);
   return { onLoading, patientList };
 }
