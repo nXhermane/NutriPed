@@ -32,7 +32,7 @@ export function useDailyCareJournals() {
       setOnLoading(false);
     };
     getDailyJournals();
-  }, [patient]);
+  }, [patient, patientCareSession]);
 
   return { data: dailyJournals, onLoading, error };
 }

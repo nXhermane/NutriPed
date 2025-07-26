@@ -73,7 +73,7 @@ export function useClinicalSignReferenceFormGenerator(
           },
         };
       },
-    []
+    [withGeneralInfo]
   );
   useEffect(() => {
     if (clinicalSignRefs && clinicalSignRefs.length > 0) {
@@ -82,7 +82,7 @@ export function useClinicalSignReferenceFormGenerator(
       setClinicalSignFormData(schema);
       setOnLoading(false);
     }
-  }, [clinicalSignRefs]);
+  }, [clinicalSignRefs, generateFormClinicalSignsData]);
 
   return { data: clinicalSignRefFormData, variableUsageMap, onLoading };
 }

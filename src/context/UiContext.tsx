@@ -8,11 +8,10 @@ import React, {
   useEffect,
 } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Appearance } from "react-native";
+import { Appearance, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import variables from "@/scaling";
 import { vars } from "nativewind";
-import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export interface UIContextType {

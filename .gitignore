@@ -42,3 +42,4 @@ adapter/config/auth/config.ts
 # React Component Preview
 previewConfig.json
 /ios 
+suggest.ts 

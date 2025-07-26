@@ -35,7 +35,7 @@ export const getBreakPointValue = (
   if (typeof values !== 'object') return values;
 
   let finalBreakPointResolvedValue: unknown;
-  const mediaQueriesBreakpoints: Array<MediaQueriesBreakpoints> = [
+  const mediaQueriesBreakpoints: MediaQueriesBreakpoints[] = [
     {
       key: 'default',
       breakpoint: 0,
@@ -105,12 +105,12 @@ export function isValidBreakpoint(
 }
 
 function getLastValidObject(
-  mediaQueries: Array<{
+  mediaQueries: {
     key: breakpoints;
     breakpoint: number;
     isValid: boolean;
     value?: unknown;
-  }>
+  }[]
 ) {
   for (let i = mediaQueries.length - 1; i >= 0; i--) {
     if (mediaQueries[i].isValid) {

@@ -30,7 +30,7 @@ export function useBiologicalInterpretationFormManager(
         : []),
       { section: "Marqueurs sélectionnées", fields: fieldList },
     ];
-  }, [fieldList]);
+  }, [fieldList, withGeneralInfo]);
   const zodValidation = useMemo<DynamicFormZodSchemaType>(() => {
     return {
       validate(data) {
@@ -40,9 +40,9 @@ export function useBiologicalInterpretationFormManager(
         ]);
       },
     };
-  }, [zodSchemaList]);
+  }, [zodSchemaList, withGeneralInfo]);
   useEffect(() => {
-    if (selectedBioMarker.length != 0) {
+    if (selectedBioMarker.length !== 0) {
       const fields: IField[] = [];
       const zodList: z.ZodTypeAny[] = [];
       for (const biomarkerId of selectedBioMarker) {

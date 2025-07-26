@@ -6,8 +6,7 @@ import {
   AnthropometricVariableObject,
   GrowthIndicatorValueDto,
 } from "@/core/diagnostics";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { nanoid } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 export type ChartMeasurement = {
   data: Partial<
     {
@@ -85,7 +84,7 @@ export const chartToolStore = createSlice({
         const serieIndex = growthChartSeries.findIndex(
           serie => serie.id === serieId
         );
-        if (serieIndex != -1) {
+        if (serieIndex !== -1) {
           growthChartSeries[serieIndex].data.push({
             data: measurement,
             id: nanoid(),
@@ -106,11 +105,11 @@ export const chartToolStore = createSlice({
         const serieIndex = growthChartSeries.findIndex(
           serie => serie.id === serieId
         );
-        if (serieIndex != -1) {
+        if (serieIndex !== -1) {
           const measurementIndex = growthChartSeries[serieIndex].data.findIndex(
             measurement => measurement.id === measurementId
           );
-          if (measurementIndex != -1)
+          if (measurementIndex !== -1)
             growthChartSeries[serieIndex].data.splice(measurementIndex, 1);
           growthChartSeries[serieIndex].updatedAt = new Date().toISOString();
         }
@@ -143,7 +142,7 @@ export const chartToolStore = createSlice({
         const serieIndex = state.growthMeasurements[chartCode].series.findIndex(
           serie => serie.id === serieId
         );
-        if (serieIndex != -1) {
+        if (serieIndex !== -1) {
           state.growthMeasurements[chartCode].series.splice(serieIndex, 1);
           state.growthMeasurements[chartCode].selectedSeries = [];
         }

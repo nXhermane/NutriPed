@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
-import React from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { Text } from "@/components/ui/text";
 import { useEventBus } from "domain-eventrix/react";
 import ReactNativeResart from "react-native-restart";

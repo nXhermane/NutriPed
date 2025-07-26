@@ -1,4 +1,4 @@
-import {  useWizard, useWizardStep } from "@/components/custom/Wizard";
+import { useWizard, useWizardStep } from "@/components/custom/Wizard";
 import { Loading } from "@/components/custom/Loading";
 import { Text } from "@/components/ui/text";
 import React, { useEffect, useMemo, useState } from "react";

@@ -25,7 +25,7 @@ export const TabHeader: React.FC<TabHeaderProps> = ({
           className={"font-h2 text-xl font-semibold text-typography-primary"}
         >
           {name}
-        </Heading> 
+        </Heading>
         {desc && (
           <Text className={"font-body text-sm text-typography-primary_light"}>
             {desc}

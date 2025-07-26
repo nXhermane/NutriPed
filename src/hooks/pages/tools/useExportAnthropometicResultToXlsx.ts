@@ -2,7 +2,7 @@ import { downloadAndCacheFile, loadXlsxTemplate } from "@/utils";
 import { AnthropometricCalculatorResultDataType } from "./../../../store";
 import { useCallback, useMemo } from "react";
 import { CORE_CONFIG } from "@/adapter/config/core";
-import XLSX from "xlsx";
+import { type WorkSheet, utils, write } from "xlsx";
 import { Alert } from "react-native";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -45,7 +45,7 @@ export function useExportAnthropometicResultToXlsx() {
     []
   );
   const applyTemplateStyles = useMemo(
-    () => (newWorksheet: XLSX.WorkSheet, templateWorksheet: XLSX.WorkSheet) => {
+    () => (newWorksheet: WorkSheet, templateWorksheet: WorkSheet) => {
       if (templateWorksheet["!cols"]) {
         newWorksheet["!cols"] = templateWorksheet["!cols"];
       }
@@ -68,7 +68,7 @@ export function useExportAnthropometicResultToXlsx() {
         if (!templateWorkbook) return null;
         const sheetName = templateWorkbook.SheetNames[0];
         const worksheet = templateWorkbook.Sheets[sheetName];
-        const templateData = XLSX.utils.sheet_to_json(worksheet, {
+        const templateData = utils.sheet_to_json(worksheet, {
           header: 1,
           defval: "",
         });
@@ -80,11 +80,11 @@ export function useExportAnthropometicResultToXlsx() {
           const row = mapDataToRow(item, keys as string[]);
           newData.push(row);
         });
-        const newWorksheet = XLSX.utils.aoa_to_sheet(newData as any);
+        const newWorksheet = utils.aoa_to_sheet(newData as any);
         applyTemplateStyles(newWorksheet, worksheet);
-        const newWorkbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
-        const wbout = XLSX.write(newWorkbook, {
+        const newWorkbook = utils.book_new();
+        utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
+        const wbout = write(newWorkbook, {
           type: "base64",
           bookType: "xlsx",
         });
@@ -114,7 +114,7 @@ export function useExportAnthropometicResultToXlsx() {
         return null;
       }
     },
-    []
+    [applyTemplateStyles, mapDataToRow]
   );
   return exportToXlsx;
 }

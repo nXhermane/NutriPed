@@ -9,8 +9,7 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import React, { useState } from "react";
-import { useRef } from "react";
+import React, { useState, useRef } from "react";
 import colors from "tailwindcss/colors";
 import { AnthropometricCalculatorResult } from "./AnthropometricCalculatorResult";
 import { Button, ButtonIcon } from "@/components/ui/button";

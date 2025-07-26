@@ -287,7 +287,7 @@ const Footer: React.FC<WizardFooterProps> = ({
           className={`flex-grow rounded-xl border-[0.5px] border-primary-border/5 bg-primary-c_light/20`}
           onPress={onPrev}
         >
-          <ButtonText className="border-typography-primary_light font-h4 font-medium text-base text-primary-c_light">
+          <ButtonText className="border-typography-primary_light font-h4 text-base font-medium text-primary-c_light">
             {prevBtnLabel}
           </ButtonText>
         </Button>
@@ -296,7 +296,7 @@ const Footer: React.FC<WizardFooterProps> = ({
         className={`flex-grow rounded-xl bg-primary-c_light ${onError ? "bg-red-500" : "bg-primary-c_light"}`}
         onPress={onNext}
       >
-        <ButtonText className="font-h4 font-medium text-base text-white data-[active=true]:text-primary-c_light">
+        <ButtonText className="font-h4 text-base font-medium text-white data-[active=true]:text-primary-c_light">
           {nextBtnLabel}
         </ButtonText>
       </Button>

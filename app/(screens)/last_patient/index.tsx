@@ -5,8 +5,7 @@ import {
 } from "@/components/pages/last_patient";
 import { Box } from "@/components/ui/box";
 import { Stack } from "expo-router";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const LastPatientScreen = () => {
   const [searchText, setSearchText] = useState("");
