@@ -61,11 +61,13 @@ export function useDiagnosticDataForm(
       .map(([, val]) => val);
 
     try {
+      // Recuperer le patient 
       const patientRes = await patientService.get({ id: patientId });
       if (patientRes instanceof Message)
         throw new Error(JSON.parse(patientRes.content));
 
       const patientDto = patientRes.data[0] as PatientDto;
+      // Create a NutritionalDiagnostic Object of patient 
       const nutritionalDiag =
         await diagnosticServices.nutritionalDiagnostic.create({
           patientId,
@@ -79,7 +81,7 @@ export function useDiagnosticDataForm(
         });
       if (nutritionalDiag instanceof Message)
         throw new Error(JSON.parse(nutritionalDiag.content));
-
+      // If succeed, add data to medical record 
       const medicalRes = await medicalRecordService.addData({
         medicalRecordId: patientId,
         data: {
