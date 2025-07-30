@@ -1,29 +1,62 @@
-import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import React, { useState } from "react";
-import { usePatientDetail } from "../context";
-import { InitPatient } from "./InitPatient";
-import { useDailyCareJournals, useMedicalRecord } from "@/src/hooks";
+import React, { useMemo, useState } from "react";
+import { useMedicalRecord } from "@/src/hooks";
 import { InitPatientRootSecure } from "./InitPatientRootSecure";
 import { Loading } from "@/components/custom";
 import { useOrdoredMedicalRecordDataByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
-import { FlatList } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { FadeInCardY } from "@/components/custom/motion";
 import { DailyMedicalRecordDataComponent } from "./DailyMedicalRecord";
 import { Box } from "@/components/ui/box";
 import { FilterChips } from "../../shared";
+import {
+  endOfMonth,
+  endOfWeek,
+  isSameDay,
+  startOfMonth,
+  startOfWeek,
+} from "@/utils";
+import { SessionEmpty } from "../../home/shared/SessionEmpty";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { Plus } from "lucide-react-native";
+import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
+import { AddDataToMedicalRecordModal } from "./AddDataToMedicalRecordModal";
 
 export interface PatientDetailMedicalRecordProps {}
 
 const PatientDetailMedicalRecordComponent: React.FC<
   PatientDetailMedicalRecordProps
 > = ({}) => {
+  const [showAddDataModal, setShowAddDataModal] = useState<boolean>(false);
   const { data, error, onLoading } = useMedicalRecord();
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
   const [filterTag, setFilterTag] = useState<
     "all" | "today" | "thisWeek" | "thisMonth"
   >("all");
+  const filteredList = useMemo(() => {
+    if (ordoredMedicalRecordData.length == 0) return [];
+    if (filterTag === "all") return ordoredMedicalRecordData;
+    return ordoredMedicalRecordData.filter(value => {
+      const now = new Date();
+      switch (filterTag) {
+        case "today":
+          return isSameDay(value.recordDate, now);
+        case "thisWeek":
+          const weekStart = startOfWeek(now);
+          const weekEnd = endOfWeek(now);
+          return value.recordDate >= weekStart && value.recordDate <= weekEnd;
+        case "thisMonth":
+          const monthStart = startOfMonth(now);
+          const monthEnd = endOfMonth(now);
+          return value.recordDate >= monthStart && value.recordDate <= monthEnd;
+        default:
+          console.warn(
+            `This tag (${filterTag}) is not supported to filter the medical record Data`
+          );
+          return true;
+      }
+    });
+  }, [ordoredMedicalRecordData, filterTag]);
   if (onLoading) return <Loading />;
 
   return (
@@ -40,11 +73,10 @@ const PatientDetailMedicalRecordComponent: React.FC<
           onChange={tag => setFilterTag(tag)}
         />
       </VStack>
-
       <FlashList
         removeClippedSubviews
-        contentContainerClassName="p-4"
-        data={ordoredMedicalRecordData}
+        contentContainerClassName=""
+        data={filteredList}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <FadeInCardY delayNumber={index} key={item.recordDate.toDateString()}>
@@ -52,6 +84,26 @@ const PatientDetailMedicalRecordComponent: React.FC<
           </FadeInCardY>
         )}
         ItemSeparatorComponent={() => <Box className="h-v-4 w-full" />}
+        ListEmptyComponent={() => {
+          return (
+            <SessionEmpty
+              iconName="SearchSlash"
+              message="Aucun enregistrement de données médicales trouvés."
+            />
+          );
+        }}
+      />
+      {!showAddDataModal && (
+        <Fab
+          className="bg-primary-c_light"
+          onPress={() => setShowAddDataModal(true)}
+        >
+          <FabIcon as={Plus} className="h-5 w-5 text-white" />
+        </Fab>
+      )}
+      <AddDataToMedicalRecordModal
+        isVisible={showAddDataModal}
+        onClose={() => setShowAddDataModal(false)}
       />
     </VStack>
   );
