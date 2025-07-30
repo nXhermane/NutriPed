@@ -43,6 +43,7 @@ import { Share } from "lucide-react-native";
 import { Image } from "react-native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
+import { generateGrowthInteractiveChartPdf } from "@/data";
 
 const html = `
 <html>
@@ -202,7 +203,12 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
       const skImage = await chartRef.current.canvas.makeImageSnapshotAsync();
       const skImageInBase64 = skImage.encodeToBase64(ImageFormat.PNG, 100);
       setUri(`data:image/png;base64,${skImageInBase64}`);
-      const printedFile = await Print.printToFileAsync({ html });
+      const printedFile = await Print.printToFileAsync({
+        base64: true,
+        html: generateGrowthInteractiveChartPdf({
+          chartImageBase64: uri,
+        }),
+      });
       shareAsync(printedFile.uri, { UTI: ".pdf", mimeType: "application/pdf" });
     } else showErrorMessage();
   }, [chartRef, showErrorMessage]);
@@ -381,12 +387,12 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
             );
           }}
         </CartesianChart>
-        <Pressable
+        {/* <Pressable
           className="absolute -top-3 right-3 rounded-full bg-primary-c_light p-2"
           onPress={printChart}
         >
           <Icon as={Share} className="h-3 w-3 text-white" />
-        </Pressable>
+        </Pressable> */}
       </VStack>
       <HStack className="flex-wrap justify-center gap-2">
         {[
@@ -399,7 +405,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           <LegendItem key={label} color={color} label={label} />
         ))}
       </HStack>
-      <VStack className="w-full">
+      {/*  <VStack className="w-full">
         <Image
           source={{ uri: uri }}
           style={{
@@ -409,7 +415,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           resizeMethod="auto"
           resizeMode="cover"
         />
-      </VStack>
+      </VStack> */}
     </React.Fragment>
   );
 };

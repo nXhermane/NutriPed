@@ -6,12 +6,11 @@ import { IField } from "@/components/custom/FormField";
 import {
   AnthroSystemCodes,
   CLINICAL_SIGNS,
-  DAY_IN_MONTHS,
-  DAY_IN_YEARS,
   MAX_LENHEI,
   MIN_LENHEI,
 } from "@/core/constants";
 import { Sex } from "@/core/shared";
+import { convertBirthDateIntoAgeInMonth } from "@/utils";
 import z from "zod";
 
 export const WeightField = {
@@ -408,15 +407,7 @@ export const BirthDateToTodayZodSchema = z
   })
   .transform(data => {
     const date1 = new Date(data.birthDate);
-    const date2 = new Date();
-    const diffInMs = date2.getTime() - date1.getTime();
-    const dayAfterBirthDay = diffInMs / (1000 * 60 * 60 * 24);
-    const monthAfterBirthDay = dayAfterBirthDay / DAY_IN_MONTHS;
-    const yearAfterBirthDay = dayAfterBirthDay / DAY_IN_YEARS;
-    return {
-      [AnthroSystemCodes.AGE_IN_DAY]: dayAfterBirthDay,
-      [AnthroSystemCodes.AGE_IN_MONTH]: monthAfterBirthDay,
-    };
+    return convertBirthDateIntoAgeInMonth(date1)
   });
 export const SexZodSchema = z.object({
   [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {

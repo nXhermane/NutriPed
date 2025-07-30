@@ -20,7 +20,7 @@ const PatientDetailScreen = () => {
     if (patientInteraction) {
       setCurrentPatientInteraction(patientInteraction);
     }
-  }, [patientInteractionList]);
+  }, [patientId, patientInteractionList]);
   useEffect(() => {
     if (currentPatientInteraction && !isNotify.current) {
       dispatch(
@@ -34,7 +34,7 @@ const PatientDetailScreen = () => {
       );
       isNotify.current = true;
     }
-  }, [currentPatientInteraction]);
+  }, [currentPatientInteraction, dispatch]);
   return (
     <React.Fragment>
       <PatientDetail
