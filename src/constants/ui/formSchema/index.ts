@@ -5,3 +5,4 @@ export * from "./utils";
 export * from "./SuggestMilkFormSchema";
 export * from "./MedicineDosageFormSchema";
 export * from "./AnthropometicCalculatorFormSchema";
+export * from "./AddAnthropometricMeasureToMedicalRecordForm"
