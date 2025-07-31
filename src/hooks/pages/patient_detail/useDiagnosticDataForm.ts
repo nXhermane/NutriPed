@@ -41,7 +41,7 @@ export function useDiagnosticDataForm(
   };
 
   const handleSubmit = async (formData: Record<string, any> | null) => {
-    if (isSubmit.current || isSubmitting) return
+    if (isSubmit.current || isSubmitting) return    
     handleResetFlags()
     if (!formData) return;
 
@@ -100,8 +100,8 @@ export function useDiagnosticDataForm(
             {
               code: CLINICAL_SIGNS.EDEMA,
               data: {
-                [OBSERVATIONS.EDEMA_PRESENCE]: true,
-                [OBSERVATIONS.EDEMA_GODET_COUNT]: 2,
+                [OBSERVATIONS.EDEMA_PRESENCE]: (formData as any)['clinical_edema'] === 'no' ? false : true,
+
               },
               recordedAt: DateManager.formatDate(new Date()),
             },

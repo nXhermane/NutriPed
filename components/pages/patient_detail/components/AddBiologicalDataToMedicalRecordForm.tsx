@@ -13,9 +13,9 @@ import {
 import { HStack } from "@/components/ui/hstack";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Check, X } from "lucide-react-native";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { usePatientDetail } from "../context";
+import { useAddDataToMedicalRecordModal, usePatientDetail } from "../context";
 import { usePediatricApp } from "@/adapter";
 import { DateManager } from "@/core/shared";
 
@@ -26,11 +26,15 @@ export interface AddBiologicalDataToMedicalRecordFormProps {
 export const AddBiologicalDataToMedicalRecordForm: React.FC<
   AddBiologicalDataToMedicalRecordFormProps
 > = ({ schema, zodValidation }) => {
+  const { close } = useAddDataToMedicalRecordModal();
   const { patient } = usePatientDetail();
   const { medicalRecordService } = usePediatricApp();
   const formRef = useRef<FormHandler<any>>(null);
-
+  const [error, setError] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const handleSubmitForm = async () => {
+    setError(null);
+    setIsSuccess(false);
     const data = await formRef.current?.submit();
     if (data) {
       const entries = Object.values(data);
@@ -43,9 +47,20 @@ export const AddBiologicalDataToMedicalRecordForm: React.FC<
           })),
         },
       });
-      console.log(result)
+      if ("data" in result) {
+        setIsSuccess(true);
+      } else {
+        const _errorContent = JSON.parse(result.content);
+        console.error(_errorContent);
+        setError(_errorContent);
+      }
     }
   };
+  useEffect(() => {
+    if (isSuccess) {
+      close();
+    }
+  }, [isSuccess]);
 
   return (
     <BottomSheetScrollView showsVerticalScrollIndicator={false}>
