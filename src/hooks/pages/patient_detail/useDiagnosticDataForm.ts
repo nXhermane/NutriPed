@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePediatricApp } from "@/adapter";
 import { useDispatch } from "react-redux";
 import { AppDispatch, recordInteraction } from "@/src/store";
@@ -16,6 +16,7 @@ export function useDiagnosticDataForm(
   patientId: AggregateID,
   onClose: () => void
 ) {
+  const isSubmit = useRef<boolean>(false)
   const dispatch = useDispatch<AppDispatch>();
   const { diagnosticServices, medicalRecordService, patientService } =
     usePediatricApp();
@@ -40,6 +41,8 @@ export function useDiagnosticDataForm(
   };
 
   const handleSubmit = async (formData: Record<string, any> | null) => {
+    if (isSubmit.current || isSubmitting) return
+    handleResetFlags()
     if (!formData) return;
 
     setIsSubmitting(true);
@@ -107,7 +110,7 @@ export function useDiagnosticDataForm(
       });
       if (medicalRes instanceof Message)
         throw new Error(JSON.parse(medicalRes.content));
-
+      isSubmit.current = true
       setSuccess(true);
       toast.show(
         "Success",
@@ -126,7 +129,7 @@ export function useDiagnosticDataForm(
         setSuccess(false);
         setIsSubmitting(false);
         onClose();
-      }, 2000);
+      }, 0);
     } catch (e: any) {
       console.error(e);
       setError(true);

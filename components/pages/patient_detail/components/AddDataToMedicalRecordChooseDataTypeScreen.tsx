@@ -74,7 +74,7 @@ export const AddDataToMedicalRecordChooseDataTypeScreen: React.FC<
                 iconBgColor={item.iconBgColor}
                 iconColor={item.iconColor}
                 onPress={() => {
-                  navigate("data_type_display", { tag: item.tag });
+                  navigate("data_type_display", { tag: item.tag  } );
                 }}
               />
             </FadeInCardX>
