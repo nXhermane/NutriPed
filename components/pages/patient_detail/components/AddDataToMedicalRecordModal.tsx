@@ -18,6 +18,7 @@ import colors from "tailwindcss/colors";
 import { BottomSheetDragIndicator } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
 import { AddDataToMedicalRecordDataTypeForm } from "./AddDataToMedicalRecordDataTypeForm";
+import { AddDataToMedicalRecordModalContext } from "../context";
 
 const Stack = createStackNavigator();
 
@@ -68,7 +69,13 @@ export const AddDataToMedicalRecordModal: React.FC<
         }}
         enablePanDownToClose={true}
       >
-        <Navigator />
+        <AddDataToMedicalRecordModalContext.Provider
+          value={{
+            close: onClose,
+          }}
+        >
+          <Navigator />
+        </AddDataToMedicalRecordModalContext.Provider>
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );
@@ -106,8 +113,9 @@ export const Navigator = () => {
             options={{}}
             component={AddDataToMedicalRecordDataTypeForm}
           />
+           
         </Stack.Navigator>
-      </NavigationContainer>
+      </NavigationContainer>  
     </NavigationIndependentTree>
   );
 };
