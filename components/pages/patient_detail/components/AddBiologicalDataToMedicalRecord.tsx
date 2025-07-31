@@ -4,13 +4,15 @@ import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import React, { useState } from "react";
 import { Button, ButtonIcon } from "@/components/ui/button";
-import { Plus } from "lucide-react-native";
+import { ArrowLeft, Plus } from "lucide-react-native";
 import { AddBiologicalDataToMedicalRecordBioRefSelectorModal } from "./AddBiologicalDataToMedicalRecordBioRefSelectorModal";
 import {
   useBiochemicalReference,
   useBiologicalInterpretationFormManager,
 } from "@/src/hooks";
 import { AddBiologicalDataToMedicalRecordForm } from "./AddBiologicalDataToMedicalRecordForm";
+import { Pressable } from "@/components/ui/pressable";
+import { Icon } from "@/components/ui/icon";
 
 export interface AddBiologicalDataToMedicalRecordProps {}
 
@@ -58,10 +60,23 @@ export const AddBiologicalDataToMedicalRecord: React.FC<
         />
       )}
       {!showSelectionModal && (
-        <AddBiologicalDataToMedicalRecordForm
-          schema={formSchema}
-          zodValidation={zodValidation}
-        />
+        <VStack className="bg-background-primary">
+          <HStack>
+            <Pressable
+              onPress={() => {
+                setShowSelectionModal(true);
+              }}
+              className={"flex-row"}
+            >
+              <Icon as={ArrowLeft} className="h-5 w-5" />
+              <Text className="text-typography-primary">Retour</Text>
+            </Pressable>
+          </HStack>
+          <AddBiologicalDataToMedicalRecordForm
+            schema={formSchema}
+            zodValidation={zodValidation}
+          />
+        </VStack>
       )}
     </VStack>
   );

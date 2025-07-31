@@ -30,7 +30,7 @@ import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 export class ClinicalValidationService implements IClinicalValidationService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository
-  ) {}
+  ) { }
 
   async validate(clinicalData: ClinicalData): Promise<Result<ValidateResult>> {
     try {
@@ -95,8 +95,10 @@ export class ClinicalValidationService implements IClinicalValidationService {
         const clinicalDataProvided = Object.keys(
           clinicalSignData.unpack().data
         );
+        // TODO: le probleme ici c'est que j'utilisais every mais j'ai changé en some pour correpondre au un bug qui s'affichaire lors des validations de données cliniques concernant la detresse respiratoire. 
+        // FIXME: Dans la version suivante je dois essayer de fixer l'erreur la en passant juste le context en paramètre du clinicalValidationService pour epargner cette erreur . 
         if (
-          !clinicalRefNeedData.every(clinicalNeeded =>
+          !clinicalRefNeedData.some(clinicalNeeded =>
             clinicalDataProvided.includes(clinicalNeeded)
           )
         ) {
