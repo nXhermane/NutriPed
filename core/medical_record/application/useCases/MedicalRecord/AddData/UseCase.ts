@@ -38,6 +38,7 @@ export class AddDataToMedicalRecordUseCase
         medicalRecord,
         request.data
       );
+     
       if (dataAddedRes.isFailure) return left(dataAddedRes);
 
       const validationRes = await this.validateMeasurement(medicalRecord);

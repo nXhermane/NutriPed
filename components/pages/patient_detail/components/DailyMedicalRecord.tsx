@@ -221,8 +221,10 @@ export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
       setInterpretationResult(findedIndex != -1 ? "Présent" : "Absent");
     } else {
       const _errorContent = JSON.parse(result.content);
+
       console.error(_errorContent);
       setOnInterpretation(_errorContent);
+      setInterpretationResult('Absent')
     }
     setOnInterpretation(false);
   };

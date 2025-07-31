@@ -1,0 +1,83 @@
+import {
+  DynamicFormGenerator,
+  DynamicFormZodSchemaType,
+  FormHandler,
+  FormSchema,
+} from "@/components/custom";
+import {
+  Button,
+  ButtonIcon,
+  ButtonSpinner,
+  ButtonText,
+} from "@/components/ui/button";
+import { HStack } from "@/components/ui/hstack";
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { Check, X } from "lucide-react-native";
+import { useRef } from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { usePatientDetail } from "../context";
+import { usePediatricApp } from "@/adapter";
+import { DateManager } from "@/core/shared";
+
+export interface AddBiologicalDataToMedicalRecordFormProps {
+  schema: FormSchema;
+  zodValidation: DynamicFormZodSchemaType;
+}
+export const AddBiologicalDataToMedicalRecordForm: React.FC<
+  AddBiologicalDataToMedicalRecordFormProps
+> = ({ schema, zodValidation }) => {
+  const { patient } = usePatientDetail();
+  const { medicalRecordService } = usePediatricApp();
+  const formRef = useRef<FormHandler<any>>(null);
+
+  const handleSubmitForm = async () => {
+    const data = await formRef.current?.submit();
+    if (data) {
+      const entries = Object.values(data);
+      const result = await medicalRecordService.addData({
+        medicalRecordId: patient.id,
+        data: {
+          biologicalData: entries.map(item => ({
+            ...item,
+            recordedAt: DateManager.formatDate(new Date()),
+          })),
+        },
+      });
+      console.log(result)
+    }
+  };
+
+  return (
+    <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        ScrollViewComponent={BottomSheetScrollView as any}
+        showsVerticalScrollIndicator={false}
+      >
+        <DynamicFormGenerator
+          schema={schema}
+          className="bg-background-primary p-0 px-0"
+          ref={formRef}
+          zodSchema={zodValidation}
+        />
+      </KeyboardAwareScrollView>
+      <HStack className="mb-4 h-fit w-full bg-background-primary px-8 py-4">
+        <Button
+          className={`h-v-10 w-full rounded-xl ${false ? "bg-red-500" : "bg-primary-c_light"}`}
+          onPress={handleSubmitForm}
+        >
+          {false && (
+            <ButtonSpinner
+              size={"small"}
+              className="data-[active=true]:text-primary-c_light"
+            />
+          )}
+          <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
+            Enregistrer
+          </ButtonText>
+          {false && <ButtonIcon as={Check} className="text-white" />}
+          {false && <ButtonIcon as={X} className="text-white" />}
+        </Button>
+      </HStack>
+    </BottomSheetScrollView>
+  );
+};

@@ -19,7 +19,6 @@ import {
 import { SessionEmpty } from "../../home/shared/SessionEmpty";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Plus } from "lucide-react-native";
-import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
 import { AddDataToMedicalRecordModal } from "./AddDataToMedicalRecordModal";
 
 export interface PatientDetailMedicalRecordProps {}
@@ -27,8 +26,9 @@ export interface PatientDetailMedicalRecordProps {}
 const PatientDetailMedicalRecordComponent: React.FC<
   PatientDetailMedicalRecordProps
 > = ({}) => {
+  const [reloadMedicalRecord, setReloadMedicalRecord] = useState<number>(1);
   const [showAddDataModal, setShowAddDataModal] = useState<boolean>(false);
-  const { data, error, onLoading } = useMedicalRecord();
+  const { data, error, onLoading } = useMedicalRecord(reloadMedicalRecord);
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
   const [filterTag, setFilterTag] = useState<
     "all" | "today" | "thisWeek" | "thisMonth"
@@ -75,7 +75,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
       </VStack>
       <FlashList
         removeClippedSubviews
-        contentContainerClassName=""
+        contentContainerClassName="pb-v-4"
         data={filteredList}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
@@ -103,7 +103,10 @@ const PatientDetailMedicalRecordComponent: React.FC<
       )}
       <AddDataToMedicalRecordModal
         isVisible={showAddDataModal}
-        onClose={() => setShowAddDataModal(false)}
+        onClose={() => {
+          setShowAddDataModal(false);
+          setReloadMedicalRecord(prev => prev + 1);
+        }}
       />
     </VStack>
   );

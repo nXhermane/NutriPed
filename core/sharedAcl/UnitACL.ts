@@ -11,7 +11,6 @@ export class UnitACLImpl implements UnitAcl {
     to: UnitCode,
     value: number
   ): Promise<Result<number>> {
-    console.log(from, to)
     try {
       const response = await this.unitService.convert({
         from: from.unpack(),

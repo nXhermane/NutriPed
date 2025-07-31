@@ -1,49 +1,31 @@
 import { usePediatricApp } from "@/adapter";
 import { usePatientDetail } from "@/components/pages/patient_detail/context";
-import { AnthroSystemCodes } from "@/core/constants";
-import { DateManager } from "@/core/shared";
 import { useCallback, useState } from "react";
+import { remapSignDataToClinicalSign, VariableUsageMap } from "../tools";
+import { DateManager } from "@/core/shared";
 
-export function useAddAnthropometricMeasureToMedicalRecord() {
+export function useAddClinicalDataToMedicalRecord() {
     const { patient } = usePatientDetail()
     const { medicalRecordService } = usePediatricApp()
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const submit = useCallback(
-        async (formData: Record<string, any> | null | undefined) => {
+        async (formData: Record<string, any> | null | undefined, variableUsageMap: VariableUsageMap) => {
             if (!formData) return
             setIsSubmitting(true);
             setIsSuccess(false);
             setError(null);
             setIsSubmitting(false)
-            const entries = Object.entries(formData).filter(
-                ([, val]) => val !== undefined
-            );
-            const anthroData = entries
-                .filter(([key]) =>
-                    [
-                        AnthroSystemCodes.WEIGHT,
-                        AnthroSystemCodes.LENGTH,
-                        AnthroSystemCodes.HEIGHT,
-                        AnthroSystemCodes.HEAD_CIRCUMFERENCE,
-                        AnthroSystemCodes.SSF,
-                        AnthroSystemCodes.MUAC,
-                        AnthroSystemCodes.TSF,
-                    ].includes(key as AnthroSystemCodes)
-                )
-                .map(([, val]) => val);
+            const remappedData = remapSignDataToClinicalSign(formData, variableUsageMap)
 
             const result = await medicalRecordService.addData({
                 medicalRecordId: patient.id,
                 data: {
-                    anthropometricData: anthroData.map(value => ({
-                        code: value.code,
-                        context: "follow_up",
-                        unit: value.unit,
-                        value: value.value,
+                    clinicalData: remappedData.map((item => ({
+                        ...item,
                         recordedAt: DateManager.formatDate(new Date()),
-                    })),
+                    })))
                 }
             })
             if ('data' in result) {

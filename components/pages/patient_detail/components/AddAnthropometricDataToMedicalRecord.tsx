@@ -1,6 +1,5 @@
-import { BottomSheetScrollView } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { AddAnthropometricDataToMedicalRecordForm } from "./AddAnthropometricDataToMedicalRecordForm";
 import { HStack } from "@/components/ui/hstack";
 import {
@@ -12,12 +11,14 @@ import {
 import { Check, X } from "lucide-react-native";
 import { FormHandler } from "@/components/custom";
 import { useAddAnthropometricMeasureToMedicalRecord } from "@/src/hooks";
+import { useAddDataToMedicalRecordModal } from "../context";
 
 export interface AddAnthropometricDataToMedicalRecordProps {}
 
 export const AddAnthropometricDataToMedicalRecord: React.FC<
   AddAnthropometricDataToMedicalRecordProps
 > = ({}) => {
+  const { close } = useAddDataToMedicalRecordModal();
   const { error, isSubmitting, isSuccess, submit } =
     useAddAnthropometricMeasureToMedicalRecord();
   const formRef = useRef<FormHandler<any>>(null);
@@ -25,6 +26,11 @@ export const AddAnthropometricDataToMedicalRecord: React.FC<
     const data = await formRef.current?.submit();
     await submit(data);
   };
+  useEffect(() => {
+    if (isSuccess) {
+      close();
+    }
+  }, [isSuccess]);
   return (
     <React.Fragment>
       <VStack className="flex-1 bg-background-primary pt-v-5">
@@ -34,13 +40,11 @@ export const AddAnthropometricDataToMedicalRecord: React.FC<
             className={`h-v-10 w-full rounded-xl ${error ? "bg-red-500" : "bg-primary-c_light"}`}
             onPress={handleFormSubmit}
           >
-            {isSubmitting ? (
+            {isSubmitting && (
               <ButtonSpinner
                 size={"small"}
                 className="data-[active=true]:text-primary-c_light"
               />
-            ) : (
-              <></>
             )}
             <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
               Enregistrer

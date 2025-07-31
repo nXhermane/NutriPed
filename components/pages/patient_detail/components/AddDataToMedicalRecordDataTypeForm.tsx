@@ -2,6 +2,8 @@ import { Text } from "@/components/ui/text";
 import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { AddAnthropometricDataToMedicalRecord } from "./AddAnthropometricDataToMedicalRecord";
+import { AddClinicalDataToMedicalRecord } from "./AddClinicalDataToMedicalRecord";
+import { AddBiologicalDataToMedicalRecord } from "./AddBiologicalDataToMedicalRecord";
 
 export interface AddDataToMedicalRecordDataTypeFormProps {}
 
@@ -20,10 +22,18 @@ export const AddDataToMedicalRecordDataTypeForm: React.FC<
         );
       }
       case "clinical": {
-        return <React.Fragment></React.Fragment>;
+        return (
+          <React.Fragment>
+            <AddClinicalDataToMedicalRecord />
+          </React.Fragment>
+        );
       }
       case "biological": {
-        return <React.Fragment></React.Fragment>;
+        return (
+          <React.Fragment>
+            <AddBiologicalDataToMedicalRecord />
+          </React.Fragment>
+        );
       }
       case "complication": {
         return <React.Fragment></React.Fragment>;
