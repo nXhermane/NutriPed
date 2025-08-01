@@ -1,14 +1,17 @@
-export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconBase64 = "", chartImageBase64 = "", currentDate = "", currentTime = "" }: {
-    isDarkMode?: boolean,
-    appIconBase64?: string,
-    currentDate?: string
-    currentTime?: string,
-    chartImageBase64?: string
+export function generateGrowthInteractiveChartPdf({
+  isDarkMode = false,
+  appIconBase64 = "",
+  chartImageBase64 = "",
+  currentDate = "",
+  currentTime = "",
+}: {
+  isDarkMode?: boolean;
+  appIconBase64?: string;
+  currentDate?: string;
+  currentTime?: string;
+  chartImageBase64?: string;
 }) {
-
-
-
-    return `
+  return `
     
     <!DOCTYPE html>
 <html lang="fr">
@@ -25,8 +28,8 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: ${isDarkMode ? '#1a1a1a' : '#ffffff'};
-            color: ${isDarkMode ? '#ffffff' : '#333333'};
+            background-color: ${isDarkMode ? "#1a1a1a" : "#ffffff"};
+            color: ${isDarkMode ? "#ffffff" : "#333333"};
             padding: 20px;
             line-height: 1.6;
         }
@@ -34,10 +37,10 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: ${isDarkMode ? '#2d2d2d' : '#ffffff'};
+            background-color: ${isDarkMode ? "#2d2d2d" : "#ffffff"};
             border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, ${isDarkMode ? '0.3' : '0.1'});
+            box-shadow: 0 4px 20px rgba(0, 0, 0, ${isDarkMode ? "0.3" : "0.1"});
         }
 
         .header {
@@ -46,7 +49,7 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
             justify-content: space-between;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid ${isDarkMode ? '#444444' : '#e0e0e0'};
+            border-bottom: 2px solid ${isDarkMode ? "#444444" : "#e0e0e0"};
         }
 
         .app-info {
@@ -65,25 +68,25 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
         .app-name {
             font-size: 28px;
             font-weight: bold;
-            color: ${isDarkMode ? '#4ade80' : '#16a34a'};
+            color: ${isDarkMode ? "#4ade80" : "#16a34a"};
         }
 
         .report-info {
             text-align: right;
             font-size: 14px;
-            color: ${isDarkMode ? '#888888' : '#666666'};
+            color: ${isDarkMode ? "#888888" : "#666666"};
         }
 
         .patient-info {
-            background-color: ${isDarkMode ? '#3a3a3a' : '#f8f9fa'};
+            background-color: ${isDarkMode ? "#3a3a3a" : "#f8f9fa"};
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 25px;
-            border-left: 4px solid ${isDarkMode ? '#4ade80' : '#16a34a'};
+            border-left: 4px solid ${isDarkMode ? "#4ade80" : "#16a34a"};
         }
 
         .patient-info h2 {
-            color: ${isDarkMode ? '#4ade80' : '#16a34a'};
+            color: ${isDarkMode ? "#4ade80" : "#16a34a"};
             margin-bottom: 15px;
             font-size: 20px;
         }
@@ -98,16 +101,16 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid ${isDarkMode ? '#555555' : '#e0e0e0'};
+            border-bottom: 1px solid ${isDarkMode ? "#555555" : "#e0e0e0"};
         }
 
         .detail-label {
             font-weight: bold;
-            color: ${isDarkMode ? '#cccccc' : '#555555'};
+            color: ${isDarkMode ? "#cccccc" : "#555555"};
         }
 
         .detail-value {
-            color: ${isDarkMode ? '#ffffff' : '#333333'};
+            color: ${isDarkMode ? "#ffffff" : "#333333"};
         }
 
         .chart-section {
@@ -119,27 +122,27 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 20px;
-            color: ${isDarkMode ? '#4ade80' : '#16a34a'};
+            color: ${isDarkMode ? "#4ade80" : "#16a34a"};
         }
 
         .chart-container {
             text-align: center;
             margin-bottom: 25px;
-            background-color: ${isDarkMode ? '#1a1a1a' : '#ffffff'};
+            background-color: ${isDarkMode ? "#1a1a1a" : "#ffffff"};
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid ${isDarkMode ? '#444444' : '#e0e0e0'};
+            border: 1px solid ${isDarkMode ? "#444444" : "#e0e0e0"};
         }
 
         .chart-image {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, ${isDarkMode ? '0.3' : '0.1'});
+            box-shadow: 0 2px 10px rgba(0, 0, 0, ${isDarkMode ? "0.3" : "0.1"});
         }
 
         .legend {
-            background-color: ${isDarkMode ? '#3a3a3a' : '#f8f9fa'};
+            background-color: ${isDarkMode ? "#3a3a3a" : "#f8f9fa"};
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
@@ -149,7 +152,7 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
-            color: ${isDarkMode ? '#4ade80' : '#16a34a'};
+            color: ${isDarkMode ? "#4ade80" : "#16a34a"};
             text-align: center;
         }
 
@@ -164,9 +167,9 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
             align-items: center;
             gap: 8px;
             padding: 8px;
-            background-color: ${isDarkMode ? '#2d2d2d' : '#ffffff'};
+            background-color: ${isDarkMode ? "#2d2d2d" : "#ffffff"};
             border-radius: 6px;
-            border: 1px solid ${isDarkMode ? '#555555' : '#e0e0e0'};
+            border: 1px solid ${isDarkMode ? "#555555" : "#e0e0e0"};
         }
 
         .legend-color {
@@ -183,13 +186,13 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
         .interpretation {
             margin-top: 30px;
             padding: 20px;
-            background-color: ${isDarkMode ? '#3a3a3a' : '#f0f9ff'};
+            background-color: ${isDarkMode ? "#3a3a3a" : "#f0f9ff"};
             border-radius: 8px;
-            border-left: 4px solid ${isDarkMode ? '#3b82f6' : '#0ea5e9'};
+            border-left: 4px solid ${isDarkMode ? "#3b82f6" : "#0ea5e9"};
         }
 
         .interpretation h3 {
-            color: ${isDarkMode ? '#60a5fa' : '#0ea5e9'};
+            color: ${isDarkMode ? "#60a5fa" : "#0ea5e9"};
             margin-bottom: 15px;
             font-size: 18px;
         }
@@ -202,9 +205,9 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
         .footer {
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 2px solid ${isDarkMode ? '#444444' : '#e0e0e0'};
+            border-top: 2px solid ${isDarkMode ? "#444444" : "#e0e0e0"};
             text-align: center;
-            color: ${isDarkMode ? '#888888' : '#666666'};
+            color: ${isDarkMode ? "#888888" : "#666666"};
             font-size: 12px;
         }
 
@@ -212,24 +215,24 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: ${isDarkMode ? '#2d2d2d' : '#ffffff'};
+            background-color: ${isDarkMode ? "#2d2d2d" : "#ffffff"};
         }
 
         .measurements-table th,
         .measurements-table td {
             padding: 12px;
             text-align: center;
-            border: 1px solid ${isDarkMode ? '#555555' : '#e0e0e0'};
+            border: 1px solid ${isDarkMode ? "#555555" : "#e0e0e0"};
         }
 
         .measurements-table th {
-            background-color: ${isDarkMode ? '#4ade80' : '#16a34a'};
+            background-color: ${isDarkMode ? "#4ade80" : "#16a34a"};
             color: white;
             font-weight: bold;
         }
 
         .measurements-table tr:nth-child(even) {
-            background-color: ${isDarkMode ? '#3a3a3a' : '#f8f9fa'};
+            background-color: ${isDarkMode ? "#3a3a3a" : "#f8f9fa"};
         }
 
         @media print {
@@ -319,5 +322,5 @@ export function generateGrowthInteractiveChartPdf({ isDarkMode = false, appIconB
 </body>
 </html>
     
-    `
+    `;
 }

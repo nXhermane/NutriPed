@@ -20,7 +20,6 @@ export class ClinicalSignReferenceInfraMapper
   toPersistence(
     entity: ClinicalSignReference
   ): ClinicalSignReferencePersistenceDto {
-    
     return {
       id: entity.id as string,
       code: entity.getCode(),
@@ -50,7 +49,7 @@ export class ClinicalSignReferenceInfraMapper
       updatedAt: record.updatedAt,
     });
   }
-  
+
   private mapClinicalSignData(
     clinicalSignData: IClinicalSignData
   ): ClinicalSignDataDto {

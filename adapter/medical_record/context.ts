@@ -93,7 +93,7 @@ export class MedicalRecordContext {
   // ACL
   private readonly patientACL: PatientACL;
   private readonly measurementACl: MeasurementValidationACL;
-  private readonly clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL
+  private readonly clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
   // App services
   private readonly medicalRecordAppService: IMedicalRecordService;
 
@@ -128,25 +128,27 @@ export class MedicalRecordContext {
         this.eventBus
       ).getValidatePatientMeasurementsService()
     );
-    this.clinicalSignDataInterpreterACL = new ClinicalSignDataInterpretationACL(DiagnosticContext.init(
-      dbConnection,
-      expo,
-      this.eventBus
-    ).getMakeClinicalSignDataInterpretationService())
+    this.clinicalSignDataInterpreterACL = new ClinicalSignDataInterpretationACL(
+      DiagnosticContext.init(
+        dbConnection,
+        expo,
+        this.eventBus
+      ).getMakeClinicalSignDataInterpretationService()
+    );
 
     this.infraMapper = new MedicalRecordInfraMapper();
     this.repository = isWebEnv()
       ? new MedicalRecordRepositoryWebImpl(
-        this.dbConnection as IndexedDBConnection,
-        this.infraMapper,
-        this.eventBus
-      )
+          this.dbConnection as IndexedDBConnection,
+          this.infraMapper,
+          this.eventBus
+        )
       : new MedicalRecordRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.infraMapper,
-        medical_records,
-        this.eventBus
-      );
+          this.expo as SQLiteDatabase,
+          this.infraMapper,
+          medical_records,
+          this.eventBus
+        );
     this.idGenerator = new GenerateUUID();
 
     // Application

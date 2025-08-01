@@ -13,7 +13,7 @@ import {
 export interface IClinicalSignData {
   code: SystemCode;
   data: { [key: string]: any };
-  isPresent: boolean
+  isPresent: boolean;
   recordedAt: DomainDate;
 }
 
@@ -22,7 +22,7 @@ export interface CreateClinicalSignData {
   data: {
     [key: string]: any;
   };
-  isPresent: boolean
+  isPresent: boolean;
   recordedAt?: string;
 }
 
@@ -47,7 +47,7 @@ export class ClinicalSignData extends ValueObject<IClinicalSignData> {
           code: codeRes.val,
           data: createProps.data,
           recordedAt: recordedAt.val,
-          isPresent: createProps.isPresent
+          isPresent: createProps.isPresent,
         })
       );
     } catch (e: unknown) {

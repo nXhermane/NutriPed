@@ -113,9 +113,8 @@ export const Navigator = () => {
             options={{}}
             component={AddDataToMedicalRecordDataTypeForm}
           />
-           
         </Stack.Navigator>
-      </NavigationContainer>  
+      </NavigationContainer>
     </NavigationIndependentTree>
   );
 };

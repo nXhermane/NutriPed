@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { AddDataToMedicalRecordModalContext } from "./AddDataToMedicalRecordModalContext";
 
-
 export function useAddDataToMedicalRecordModal() {
   const context = useContext(AddDataToMedicalRecordModalContext);
   if (!context)

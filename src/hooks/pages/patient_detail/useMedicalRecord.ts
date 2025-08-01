@@ -3,7 +3,7 @@ import { usePatientDetail } from "@/components/pages/patient_detail/context";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { useEffect, useState } from "react";
 
-export function useMedicalRecord(trigger:number = 1) {
+export function useMedicalRecord(trigger: number = 1) {
   const { medicalRecordService } = usePediatricApp();
   const [error, setError] = useState<string | null>(null);
   const [onLoading, setOnLoading] = useState<boolean>(false);
@@ -27,7 +27,7 @@ export function useMedicalRecord(trigger:number = 1) {
     };
 
     getMedicalRecord();
-  }, [patient, medicalRecordService,trigger]);
+  }, [patient, medicalRecordService, trigger]);
 
   return { data: medicalRecord, error, onLoading };
 }

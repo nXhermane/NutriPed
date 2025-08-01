@@ -18,7 +18,7 @@ export interface IClinicalSignData {
   dataType: ClinicalDataType;
   required: boolean;
   dataRange?: [number, number];
-  enumValue?: {label: string, value: string}[];
+  enumValue?: { label: string; value: string }[];
   units?: { default: UnitCode; available: UnitCode[] };
 }
 
@@ -29,7 +29,7 @@ export interface CreateClinicalSignData {
   dataType: ClinicalDataType;
   required: boolean;
   dataRange?: [number, number];
-  enumValue?: {label: string ,value: string}[];
+  enumValue?: { label: string; value: string }[];
   units?: { default: string; available: string[] };
 }
 

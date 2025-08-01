@@ -4,7 +4,7 @@ import { handleError, Result, UnitCode } from "@shared";
 import { IUnitService } from "./../units";
 
 export class UnitACLImpl implements UnitAcl {
-  constructor(private readonly unitService: IUnitService) { }
+  constructor(private readonly unitService: IUnitService) {}
 
   async convertTo(
     from: UnitCode,

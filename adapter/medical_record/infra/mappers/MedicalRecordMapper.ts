@@ -15,7 +15,8 @@ import {
 import { MedicalRecordPersistenceDto } from "../dtos";
 
 export class MedicalRecordInfraMapper
-  implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto> {
+  implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto>
+{
   toPersistence(entity: MedicalRecord): MedicalRecordPersistenceDto {
     return {
       id: entity.id as string,

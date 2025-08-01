@@ -17,11 +17,12 @@ import {
 } from "../errors";
 
 export class AnthropometricValidationService
-  implements IAnthropometricValidationService {
+  implements IAnthropometricValidationService
+{
   constructor(
     private readonly anthropMeasureRepo: AnthropometricMeasureRepository,
     private readonly unitAcl: UnitAcl
-  ) { }
+  ) {}
 
   async validate(
     data: AnthropometricData,
@@ -50,10 +51,10 @@ export class AnthropometricValidationService
           anthropEntry.unit.unpack() === anthropMeasure.getUnits().defaultUnit
             ? Result.ok(anthropEntry.value)
             : await this.unitAcl.convertTo(
-              anthropEntry.unit,
-              anthropMeasure.getProps().unit,
-              anthropEntry.value
-            );
+                anthropEntry.unit,
+                anthropMeasure.getProps().unit,
+                anthropEntry.value
+              );
 
         if (anthropEntryValueRes.isFailure) {
           handleAnthropometricError(
