@@ -199,7 +199,7 @@ export const AddComplicationToMedicalRecord: React.FC = () => {
 };
 
 export const ActiveSegment = ({ label }: { label: string }) => (
-  <Text className="font-h4 text-sm font-medium text-typography-primary">
+  <Text className="font-h4 text-sm font-medium text-white">
     {label}
   </Text>
 );
