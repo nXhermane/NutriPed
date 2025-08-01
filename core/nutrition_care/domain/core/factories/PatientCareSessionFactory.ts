@@ -49,7 +49,7 @@ export class PatientCareSessionFactory
       const patientCurrentStateRes = PatientCurrentState.create(
         {
           anthropometricData: {} as never,
-          appetiteTestResult: {},
+          appetiteTestResult: {} as any,
           biologicalData: {} as never,
           clinicalSignData: {} as never,
           complicationData: {},
