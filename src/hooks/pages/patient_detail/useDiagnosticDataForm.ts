@@ -16,7 +16,7 @@ export function useDiagnosticDataForm(
   patientId: AggregateID,
   onClose: () => void
 ) {
-  const isSubmit = useRef<boolean>(false)
+  const isSubmit = useRef<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const { diagnosticServices, medicalRecordService, patientService } =
     usePediatricApp();
@@ -41,8 +41,8 @@ export function useDiagnosticDataForm(
   };
 
   const handleSubmit = async (formData: Record<string, any> | null) => {
-    if (isSubmit.current || isSubmitting) return    
-    handleResetFlags()
+    if (isSubmit.current || isSubmitting) return;
+    handleResetFlags();
     if (!formData) return;
 
     setIsSubmitting(true);
@@ -64,13 +64,13 @@ export function useDiagnosticDataForm(
       .map(([, val]) => val);
 
     try {
-      // Recuperer le patient 
+      // Recuperer le patient
       const patientRes = await patientService.get({ id: patientId });
       if (patientRes instanceof Message)
         throw new Error(JSON.parse(patientRes.content));
 
       const patientDto = patientRes.data[0] as PatientDto;
-      // Create a NutritionalDiagnostic Object of patient 
+      // Create a NutritionalDiagnostic Object of patient
       const nutritionalDiag =
         await diagnosticServices.nutritionalDiagnostic.create({
           patientId,
@@ -84,7 +84,7 @@ export function useDiagnosticDataForm(
         });
       if (nutritionalDiag instanceof Message)
         throw new Error(JSON.parse(nutritionalDiag.content));
-      // If succeed, add data to medical record 
+      // If succeed, add data to medical record
       const medicalRes = await medicalRecordService.addData({
         medicalRecordId: patientId,
         data: {
@@ -100,8 +100,8 @@ export function useDiagnosticDataForm(
             {
               code: CLINICAL_SIGNS.EDEMA,
               data: {
-                [OBSERVATIONS.EDEMA_PRESENCE]: (formData as any)['clinical_edema'] === 'no' ? false : true,
-
+                [OBSERVATIONS.EDEMA_PRESENCE]:
+                  (formData as any)["clinical_edema"] === "no" ? false : true,
               },
               recordedAt: DateManager.formatDate(new Date()),
             },
@@ -110,7 +110,7 @@ export function useDiagnosticDataForm(
       });
       if (medicalRes instanceof Message)
         throw new Error(JSON.parse(medicalRes.content));
-      isSubmit.current = true
+      isSubmit.current = true;
       setSuccess(true);
       toast.show(
         "Success",

@@ -1,2 +1,2 @@
 export * from "./MokedPatientList";
-export * from "./GrowthInteractiveChartPdfContent"
+export * from "./GrowthInteractiveChartPdfContent";

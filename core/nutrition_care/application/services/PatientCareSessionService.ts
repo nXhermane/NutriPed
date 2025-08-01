@@ -95,9 +95,7 @@ export class PatientCareSessionAppService
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
-  async getDailyJournals(
-    req: GetDailyJournalRequest
-  ): Promise<
+  async getDailyJournals(req: GetDailyJournalRequest): Promise<
     | AppServiceResponse<{
         current?: DailyCareJournalDto;
         previeous: DailyCareJournalDto[];

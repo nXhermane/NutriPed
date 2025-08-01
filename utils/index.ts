@@ -3,5 +3,5 @@ export * from "./convertEmptyToUndefined";
 export * from "./types";
 export * from "./downloadAndCatchFile";
 export * from "./loadXlsxTemplate";
-export * from "./convertBirthDateIntoAgeInMonth"
-export * from "./compareDate"
+export * from "./convertBirthDateIntoAgeInMonth";
+export * from "./compareDate";

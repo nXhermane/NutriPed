@@ -3,7 +3,8 @@ import { ApplicationMapper } from "@shared";
 import { MedicalRecordDto } from "../dtos";
 
 export class MedicalRecordMapper
-  implements ApplicationMapper<MedicalRecord, MedicalRecordDto> {
+  implements ApplicationMapper<MedicalRecord, MedicalRecordDto>
+{
   toResponse(entity: MedicalRecord): MedicalRecordDto {
     return {
       id: entity.id,

@@ -37,13 +37,13 @@ import {
 } from "../ports";
 import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
 // FIXME: Regler le probleme avec les donnees data du reference avec les varibles . une corrections du cote des donnees de reference pourrai bien ressoudre le probleme lors de l'actualisation de la prochaine version
-// BUG: Regler le probleme de signe cliniques present: dans le programme actuelle juste les signes cliniques qui on une valeurs d'interpretation === true 
+// BUG: Regler le probleme de signe cliniques present: dans le programme actuelle juste les signes cliniques qui on une valeurs d'interpretation === true
 export class ClinicalAnalysisService implements IClinicalAnalysisService {
   constructor(
     private readonly clinicalSignRepo: ClinicalSignReferenceRepository,
     private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository,
     private readonly unitAcl: UnitAcl
-  ) { }
+  ) {}
   async analyze(
     data: ClinicalData,
     context: EvaluationContext
@@ -61,7 +61,7 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
         presentSigns,
         context
       );
-      // BUG: ici j'ai desactivé cette valiation pour l'intepretation des signes cliniques uniques 
+      // BUG: ici j'ai desactivé cette valiation pour l'intepretation des signes cliniques uniques
       // if (analysisResults.length === 0) {
       //   return handleClinicalError(
       //     CLINICAL_ERRORS.ANALYSIS.INTERPRETATION_FAILED.path,
@@ -95,7 +95,7 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
       const clinicalSignRefNeedDataCode = clinicalSignRef
         .getRule()
         .variables.filter(x => !Object.keys(context).includes(x));
-      const checkIfSignContainAllNeededData = []
+      const checkIfSignContainAllNeededData = [];
       if (
         !clinicalSignRefNeedDataCode.every(
           clinicalRefNeededCode =>
@@ -158,8 +158,6 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
       );
       if (ruleEvaluationResult === ConditionResult.True)
         presentClinicalSigns.push(clinicalSign);
-
-
     }
     return presentClinicalSigns;
   }

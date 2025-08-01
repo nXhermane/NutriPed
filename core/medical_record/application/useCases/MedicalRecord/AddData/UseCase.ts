@@ -22,12 +22,13 @@ import {
 
 export class AddDataToMedicalRecordUseCase
   implements
-  UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse> {
+    UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse>
+{
   constructor(
     private readonly repo: MedicalRecordRepository,
     private readonly measureValidation: MeasurementValidationACL,
     private readonly clinicalAnalysisMaker: IClinicalSignDataInterpretationACL
-  ) { }
+  ) {}
   async execute(
     request: AddDataToMedicalRecordRequest
   ): Promise<AddDataToMedicalRecordResponse> {
@@ -92,18 +93,26 @@ export class AddDataToMedicalRecordUseCase
         biologicalDataRes.map(res => medicalRecord.addBiologicalValue(res.val));
       }
       if (data.clinicalData) {
-        const clinicalAnalysisResult = await this.clinicalAnalysisMaker.analyze(medicalRecord.getPatientId(), data.clinicalData.map((item => ({
-          code: item.code,
-          data: item.data
-        }))))
-        if (clinicalAnalysisResult.isFailure) return Result.fail<boolean>(String(clinicalAnalysisResult.err))
-        const clinicalData = data.clinicalData.map((item => {
+        const clinicalAnalysisResult = await this.clinicalAnalysisMaker.analyze(
+          medicalRecord.getPatientId(),
+          data.clinicalData.map(item => ({
+            code: item.code,
+            data: item.data,
+          }))
+        );
+        if (clinicalAnalysisResult.isFailure)
+          return Result.fail<boolean>(String(clinicalAnalysisResult.err));
+        const clinicalData = data.clinicalData.map(item => {
           return {
             ...item,
-            isPresent: clinicalAnalysisResult.val.find(value => item.code === value.code)?.isPresent || false
-          }
-        }))
-        const clinicalDataRes = clinicalData.map((clinicalSign => ClinicalSignData.create(clinicalSign)))
+            isPresent:
+              clinicalAnalysisResult.val.find(value => item.code === value.code)
+                ?.isPresent || false,
+          };
+        });
+        const clinicalDataRes = clinicalData.map(clinicalSign =>
+          ClinicalSignData.create(clinicalSign)
+        );
         const combinedRes = Result.combine(clinicalDataRes);
         if (combinedRes.isFailure)
           return Result.fail(
