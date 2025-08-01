@@ -4,8 +4,7 @@ import { useMedicalRecord } from "@/src/hooks";
 import { InitPatientRootSecure } from "./InitPatientRootSecure";
 import { Loading } from "@/components/custom";
 import { useOrdoredMedicalRecordDataByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
-import { FlashList } from "@shopify/flash-list";
-import { FadeInCardY } from "@/components/custom/motion";
+import { FadeInCardX } from "@/components/custom/motion";
 import { DailyMedicalRecordDataComponent } from "./DailyMedicalRecord";
 import { Box } from "@/components/ui/box";
 import { FilterChips } from "../../shared";
@@ -20,6 +19,7 @@ import { SessionEmpty } from "../../home/shared/SessionEmpty";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Plus } from "lucide-react-native";
 import { AddDataToMedicalRecordModal } from "./AddDataToMedicalRecordModal";
+import { FlatList } from "react-native";
 
 export interface PatientDetailMedicalRecordProps {}
 
@@ -73,15 +73,15 @@ const PatientDetailMedicalRecordComponent: React.FC<
           onChange={tag => setFilterTag(tag)}
         />
       </VStack>
-      <FlashList
+      <FlatList
         removeClippedSubviews
         contentContainerClassName="pb-v-4"
         data={filteredList}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <FadeInCardY delayNumber={index} key={item.recordDate.toDateString()}>
-            <DailyMedicalRecordDataComponent data={item} />
-          </FadeInCardY>
+          <FadeInCardX delayNumber={index} key={item.recordDate.toDateString()}>
+            <DailyMedicalRecordDataComponent data={item} key={index} />
+          </FadeInCardX>
         )}
         ItemSeparatorComponent={() => <Box className="h-v-4 w-full" />}
         ListEmptyComponent={() => {

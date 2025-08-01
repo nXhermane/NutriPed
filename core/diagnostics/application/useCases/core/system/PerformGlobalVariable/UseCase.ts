@@ -11,6 +11,9 @@ import {
 import { PerformPatientGlobalVariableRequest } from "./Request";
 import { PerformPatientGlobalVariableResponse } from "./Response";
 import {
+  AnthropometricData,
+  BiologicalTestResult,
+  ClinicalData,
   ClinicalNutritionalAnalysisResult,
   EvaluationContext,
   GrowthIndicatorValue,
@@ -29,17 +32,16 @@ import {
 
 export class PerformPatientGlobalVariableUseCase
   implements
-    UseCase<
-      PerformPatientGlobalVariableRequest,
-      PerformPatientGlobalVariableResponse
-    >
-{
+  UseCase<
+    PerformPatientGlobalVariableRequest,
+    PerformPatientGlobalVariableResponse
+  > {
   constructor(
     private readonly diagnosticRepo: NutritionalDiagnosticRepository,
     private readonly nutritionalAssessmentService: INutritionalAssessmentService,
     private readonly anthropometricGenerator: IAnthropometricVariableGeneratorService,
     private readonly clinicalGenerator: IClinicalVariableGeneratorService
-  ) {}
+  ) { }
 
   async execute(
     request: PerformPatientGlobalVariableRequest
@@ -49,12 +51,6 @@ export class PerformPatientGlobalVariableUseCase
       const diagnostic = await this._retrieveDiagnostic(request.patientId);
       const patientData = diagnostic.getPatientData();
 
-      // S'assurer qu'un résultat diagnostic existe
-      const diagnosticResult = await this._ensureDiagnosticResult(
-        diagnostic,
-        patientData
-      );
-
       // Préparer le contexte d'évaluation
       const evaluationContext = {
         age_in_day: patientData.age_in_day,
@@ -62,6 +58,13 @@ export class PerformPatientGlobalVariableUseCase
         age_in_year: patientData.age_in_year,
         sex: patientData.sex,
       };
+
+      // S'assurer qu'un résultat diagnostic existe
+      const diagnosticResult = await this._ensureDiagnosticResult(
+        diagnostic,
+        evaluationContext, patientData.getAnthropometricData(), patientData.getClinicalSigns(), patientData.getBiologicalTestResults()
+      );
+
 
       // Générer les variables anthropométriques
       const anthroResult = await this._generateAnthropometricVariables(
@@ -108,19 +111,19 @@ export class PerformPatientGlobalVariableUseCase
 
   private async _ensureDiagnosticResult(
     diagnostic: NutritionalDiagnostic,
-    patientData: PatientDiagnosticData
+    evaluationContext: EvaluationContext, anthropometricData: AnthropometricData, clinicalData: ClinicalData, biologicalTestResult: BiologicalTestResult[]
   ) {
     let diagnosticResult = diagnostic.getDiagnosticResult();
     if (!diagnosticResult) {
       const diagResultResponse =
         await this.nutritionalAssessmentService.evaluateNutritionalStatus(
-          patientData
+          evaluationContext, anthropometricData, clinicalData, biologicalTestResult
         );
       if (diagResultResponse.isFailure) {
-        // Lancer une erreur pour être gérée par le catch
+        // Lancer une erreur qui sera gérée par le catch
         throw new Error(
           `L'évaluation du diagnostic a échoué` +
-            formatError(diagResultResponse)
+          formatError(diagResultResponse)
         );
       }
       diagnosticResult = diagResultResponse.val;
