@@ -3,8 +3,7 @@ import { ApplicationMapper } from "@shared";
 import { MedicalRecordDto } from "../dtos";
 
 export class MedicalRecordMapper
-  implements ApplicationMapper<MedicalRecord, MedicalRecordDto>
-{
+  implements ApplicationMapper<MedicalRecord, MedicalRecordDto> {
   toResponse(entity: MedicalRecord): MedicalRecordDto {
     return {
       id: entity.id,
@@ -25,6 +24,7 @@ export class MedicalRecordMapper
       clinicalData: entity.getClinicalData().map(valObj => ({
         code: valObj.code.unpack(),
         data: valObj.data,
+        isPresent: valObj.isPresent,
         recordedAt: valObj.recordedAt.unpack(),
       })),
       complicationData: entity.getComplicationData().map(valObj => ({

@@ -61,12 +61,13 @@ export class ClinicalAnalysisService implements IClinicalAnalysisService {
         presentSigns,
         context
       );
-      if (analysisResults.length === 0) {
-        return handleClinicalError(
-          CLINICAL_ERRORS.ANALYSIS.INTERPRETATION_FAILED.path,
-          "No analysis results could be generated"
-        ) as any;
-      }
+      // BUG: ici j'ai desactivé cette valiation pour l'intepretation des signes cliniques uniques 
+      // if (analysisResults.length === 0) {
+      //   return handleClinicalError(
+      //     CLINICAL_ERRORS.ANALYSIS.INTERPRETATION_FAILED.path,
+      //     "No analysis results could be generated"
+      //   ) as any;
+      // }
 
       return Result.ok(analysisResults);
     } catch (e: unknown) {

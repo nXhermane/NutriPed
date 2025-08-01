@@ -21,6 +21,7 @@ import {
   GetMedicalRecordRequest,
   GetMedicalRecordResponse,
   GetMedicalRecordUseCase,
+  IClinicalSignDataInterpretationACL,
   IMedicalRecordService,
   MeasurementValidationACL,
   MeasurementValidationACLImpl,
@@ -47,6 +48,7 @@ import {
 } from "./infra";
 import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
 import { SQLiteDatabase } from "expo-sqlite";
+import { ClinicalSignDataInterpretationACL } from "@/core/medical_record/adapter/acl/ClinicalSignDataInterpretationACl";
 
 export class MedicalRecordContext {
   private static instance: MedicalRecordContext | null = null;
@@ -91,6 +93,7 @@ export class MedicalRecordContext {
   // ACL
   private readonly patientACL: PatientACL;
   private readonly measurementACl: MeasurementValidationACL;
+  private readonly clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL
   // App services
   private readonly medicalRecordAppService: IMedicalRecordService;
 
@@ -125,20 +128,25 @@ export class MedicalRecordContext {
         this.eventBus
       ).getValidatePatientMeasurementsService()
     );
+    this.clinicalSignDataInterpreterACL = new ClinicalSignDataInterpretationACL(DiagnosticContext.init(
+      dbConnection,
+      expo,
+      this.eventBus
+    ).getMakeClinicalSignDataInterpretationService())
 
     this.infraMapper = new MedicalRecordInfraMapper();
     this.repository = isWebEnv()
       ? new MedicalRecordRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.infraMapper,
-          this.eventBus
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.infraMapper,
+        this.eventBus
+      )
       : new MedicalRecordRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.infraMapper,
-          medical_records,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.infraMapper,
+        medical_records,
+        this.eventBus
+      );
     this.idGenerator = new GenerateUUID();
 
     // Application
@@ -158,7 +166,8 @@ export class MedicalRecordContext {
     );
     this.addDataToMedicalRecordUC = new AddDataToMedicalRecordUseCase(
       this.repository,
-      this.measurementACl
+      this.measurementACl,
+      this.clinicalSignDataInterpreterACL
     );
     this.deleteMedicalRecordUC = new DeleteMedicalRecordUseCase(
       this.repository
