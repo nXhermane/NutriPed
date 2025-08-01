@@ -9,3 +9,4 @@ export * from "./useBiochemicalReference";
 export * from "./useDiagnosticRules";
 export * from "./usePatients";
 export * from "./useAnthropometicMeasure"
+export * from "./useComplicationRefs"

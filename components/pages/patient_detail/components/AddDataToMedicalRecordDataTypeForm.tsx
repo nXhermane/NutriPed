@@ -4,6 +4,7 @@ import React from "react";
 import { AddAnthropometricDataToMedicalRecord } from "./AddAnthropometricDataToMedicalRecord";
 import { AddClinicalDataToMedicalRecord } from "./AddClinicalDataToMedicalRecord";
 import { AddBiologicalDataToMedicalRecord } from "./AddBiologicalDataToMedicalRecord";
+import { AddComplicationToMedicalRecord } from "./AddComplicationToMedicalRecord";
 
 export interface AddDataToMedicalRecordDataTypeFormProps {}
 
@@ -36,7 +37,11 @@ export const AddDataToMedicalRecordDataTypeForm: React.FC<
         );
       }
       case "complication": {
-        return <React.Fragment></React.Fragment>;
+        return (
+          <React.Fragment>
+            <AddComplicationToMedicalRecord />
+          </React.Fragment>
+        );
       }
       default: {
         return (
