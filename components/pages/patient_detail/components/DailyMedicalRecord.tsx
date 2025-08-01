@@ -209,13 +209,7 @@ export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
   const {
     diagnosticServices: { clinicalNutritionalAnalysis },
   } = usePediatricApp();
-  const [onInterpretation, setOnInterpretation] = useState<boolean>(false);
-  const [errorOnInterpretation, setErrorOnInterpretation] = useState<
-    string | null
-  >(null);
-  const [interpretationResult, setInterpretationResult] = useState<
-    "Présent" | "Absent" | null
-  >(null);
+
   const getClinicalRefReq = useMemo<GetClinicalSignReferenceRequest>(
     () => ({
       code: data.code,
@@ -227,33 +221,7 @@ export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
     error,
     onLoading,
   } = useClinicalReference(getClinicalRefReq);
-  const { patient } = usePatientDetail();
-  const interpretateClinicalSign = async () => {
-    setErrorOnInterpretation(null);
-    setOnInterpretation(true);
-    setInterpretationResult(null);
-    const result = await clinicalNutritionalAnalysis.makeClinicalAnalysis({
-      clinicalSigns: [data],
-      sex: patient.gender as Sex,
-      ...convertBirthDateIntoAgeInMonth(new Date(patient.birthday)),
-    });
-    if ("data" in result) {
-      const findedIndex = result.data.findIndex(
-        clinicalDto => clinicalDto.clinicalSign === data.code
-      );
-      setInterpretationResult(findedIndex != -1 ? "Présent" : "Absent");
-    } else {
-      const _errorContent = JSON.parse(result.content);
 
-      console.error(_errorContent);
-      setOnInterpretation(_errorContent);
-      setInterpretationResult("Absent");
-    }
-    setOnInterpretation(false);
-  };
-  useEffect(() => {
-    interpretateClinicalSign();
-  }, [data]);
   if (onLoading) return <Loading />;
 
   return (
@@ -262,15 +230,9 @@ export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
         {clinicalRefData[0]?.name ?? data.code}
       </Text>
       <HStack>
-        {onInterpretation ? (
-          <Loading />
-        ) : errorOnInterpretation != null ? (
-          <Icon as={X} className="h-4 w-4 text-red-500" />
-        ) : (
-          <Text className="font-h4 text-sm font-medium text-typography-primary">
-            {interpretationResult}
-          </Text>
-        )}
+        <Text className="font-h4 text-sm font-medium text-typography-primary">
+          {data.isPresent ? "Présent" : "Absent"}
+        </Text>
       </HStack>
     </HStack>
   );

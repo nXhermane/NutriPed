@@ -14,6 +14,7 @@ import {
   ClinicalSignData,
   ComplicationData,
   DataFieldResponse,
+  IClinicalSignDataInterpretationACL,
   MeasurementValidationACL,
   MedicalRecord,
   MedicalRecordRepository,
@@ -21,12 +22,12 @@ import {
 
 export class AddDataToMedicalRecordUseCase
   implements
-    UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse>
-{
+  UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse> {
   constructor(
     private readonly repo: MedicalRecordRepository,
-    private measureValidation: MeasurementValidationACL
-  ) {}
+    private readonly measureValidation: MeasurementValidationACL,
+    private readonly clinicalAnalysisMaker: IClinicalSignDataInterpretationACL
+  ) { }
   async execute(
     request: AddDataToMedicalRecordRequest
   ): Promise<AddDataToMedicalRecordResponse> {
@@ -34,11 +35,11 @@ export class AddDataToMedicalRecordUseCase
       const medicalRecord = await this.repo.getByPatientIdOrID(
         request.medicalRecordId
       );
-      const dataAddedRes = this.addDataToMedicalRecord(
+      const dataAddedRes = await this.addDataToMedicalRecord(
         medicalRecord,
         request.data
       );
-     
+
       if (dataAddedRes.isFailure) return left(dataAddedRes);
 
       const validationRes = await this.validateMeasurement(medicalRecord);
@@ -61,10 +62,10 @@ export class AddDataToMedicalRecordUseCase
       biologicalData,
     });
   }
-  private addDataToMedicalRecord(
+  private async addDataToMedicalRecord(
     medicalRecord: MedicalRecord,
     data: AddDataToMedicalRecordRequest["data"]
-  ): Result<boolean> {
+  ): Promise<Result<boolean>> {
     try {
       if (data.anthropometricData) {
         const anthropometricDataRes = data.anthropometricData.map(
@@ -91,7 +92,18 @@ export class AddDataToMedicalRecordUseCase
         biologicalDataRes.map(res => medicalRecord.addBiologicalValue(res.val));
       }
       if (data.clinicalData) {
-        const clinicalDataRes = data.clinicalData.map(ClinicalSignData.create);
+        const clinicalAnalysisResult = await this.clinicalAnalysisMaker.analyze(medicalRecord.getPatientId(), data.clinicalData.map((item => ({
+          code: item.code,
+          data: item.data
+        }))))
+        if (clinicalAnalysisResult.isFailure) return Result.fail<boolean>(String(clinicalAnalysisResult.err))
+        const clinicalData = data.clinicalData.map((item => {
+          return {
+            ...item,
+            isPresent: clinicalAnalysisResult.val.find(value => item.code === value.code)?.isPresent || false
+          }
+        }))
+        const clinicalDataRes = clinicalData.map((clinicalSign => ClinicalSignData.create(clinicalSign)))
         const combinedRes = Result.combine(clinicalDataRes);
         if (combinedRes.isFailure)
           return Result.fail(
