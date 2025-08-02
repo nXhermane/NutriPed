@@ -61,7 +61,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
 
   return (
     <VStack className="flex-1 bg-background-primary">
-      <VStack className="overflow-visible py-3 pl-4">
+      <VStack className="overflow-visible py-3">
         <FilterChips<typeof filterTag>
           data={[
             { label: "Toutes", value: "all" },

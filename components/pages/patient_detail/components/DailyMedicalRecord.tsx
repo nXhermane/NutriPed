@@ -2,8 +2,8 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { MedicalRecordDataOrdoredByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
-import { useEffect, useMemo, useState } from "react";
-import { convertBirthDateIntoAgeInMonth } from "@/utils";
+import { useMemo } from "react";
+import { HumanDateFormatter } from "@/utils";
 import {
   GetAnthropometricMeasureRequest,
   GetBiochemicalReferenceRequest,
@@ -19,19 +19,28 @@ import {
 import { Loading } from "@/components/custom";
 import { Icon } from "@/components/ui/icon";
 import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  Edit,
   FlaskConical,
   PillBottle,
   Ruler,
   Stethoscope,
-  X,
 } from "lucide-react-native";
 import { Center } from "@/components/ui/center";
-import { usePatientDetail } from "../context";
 import { usePediatricApp } from "@/adapter";
-import { Sex } from "@/core/shared";
+import { DateManager } from "@/core/shared";
 import React from "react";
 import { Box } from "@/components/ui/box";
-import { GetComplicationRequest } from "@/core/nutrition_care";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionHeader,
+  AccordionIcon,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Pressable } from "@/components/ui/pressable";
 
 interface DailyMedicalRecordDataProps {
   data: MedicalRecordDataOrdoredByDay[number];
@@ -49,17 +58,251 @@ export const DailyMedicalRecordDataComponent: React.FC<
   );
   return (
     <React.Fragment>
-      <VStack className="mx-2 gap-3 rounded-2xl bg-background-secondary px-3 py-v-3">
+      <VStack className="mx-2 gap-3 overflow-hidden rounded-2xl border-[0.5px] border-primary-border/5 bg-background-secondary pt-v-3">
         <Box className="absolute -left-3 top-2 h-2 w-2 rounded-full bg-primary-c_light"></Box>
-        <HStack className="justify-between">
-          <Text className="font-body text-sm font-normal text-typography-primary_light">
-            {data.recordDate.toLocaleDateString("fr-FR", dateFormatOptions) ===
-            new Date().toLocaleDateString("fr-FR", dateFormatOptions)
-              ? "Aujourd'hui"
-              : data.recordDate.toLocaleDateString("fr-FR", dateFormatOptions)}
-          </Text>
-        </HStack>
-        {data.anthrop.length != 0 && (
+        <VStack className="px-4">
+          <HStack className="justify-between">
+            <Text className="font-body text-sm font-normal text-typography-primary_light">
+              {HumanDateFormatter.toRelativeDate(
+                DateManager.formatDate(data.recordDate),
+                false
+              )}
+              {" - "}
+              {data.recordDate.toLocaleDateString("fr-FR", dateFormatOptions)}
+            </Text>
+            <Pressable onPress={() => {}}>
+              <Icon as={Edit} className="h-4 w-4" />
+            </Pressable>
+          </HStack>
+          <HStack></HStack>
+        </VStack>
+        <Accordion>
+          {data.anthrop.length != 0 && (
+            <AccordionItem
+              value="anthrop"
+              className="border-b-[0.5px] border-primary-border/5"
+            >
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }: { isExpanded: boolean }) => {
+                    return (
+                      <>
+                        <HStack className="w-full items-center justify-between">
+                          <HStack className="items-center gap-2">
+                            <Center className="rounded-full bg-blue-500/20 p-1">
+                              <Icon
+                                as={Ruler}
+                                className="h-4 w-4 text-blue-500"
+                              />
+                            </Center>
+                            <Text className="font-h4 text-base font-medium text-typography-primary">
+                              Anthropométriques
+                            </Text>
+                          </HStack>
+                          <HStack className="gap-2">
+                            <Center className="rounded-full bg-blue-500/20 px-1">
+                              <Text className="rounded-full font-body text-xs font-normal text-blue-500">
+                                {data.anthrop.length}
+                              </Text>
+                            </Center>
+                            {isExpanded ? (
+                              <AccordionIcon
+                                as={ChevronUpIcon}
+                                className="h-4 w-4"
+                              />
+                            ) : (
+                              <AccordionIcon
+                                as={ChevronDownIcon}
+                                className="h-4 w-4"
+                              />
+                            )}
+                          </HStack>
+                        </HStack>
+                      </>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent>
+                <VStack className="gap-2 pl-5 pt-2">
+                  {data.anthrop.map((item, index) => (
+                    <AnthropometricItemComponent key={index} data={item} />
+                  ))}
+                </VStack>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+          {data.biological.length != 0 && (
+            <AccordionItem
+              value="biological"
+              className="border-b-[0.5px] border-primary-border/5"
+            >
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }: { isExpanded: boolean }) => {
+                    return (
+                      <>
+                        <HStack className="w-full items-center justify-between">
+                          <HStack className="gap-2">
+                            <Center className="rounded-full bg-indigo-500/20 p-1">
+                              <Icon
+                                as={FlaskConical}
+                                className="h-4 w-4 text-indigo-500"
+                              />
+                            </Center>
+                            <Text className="font-h4 text-base font-medium text-typography-primary">
+                              Biologiques
+                            </Text>
+                          </HStack>
+
+                          <HStack className="gap-2">
+                            <Center className="rounded-full bg-indigo-500/20 px-1">
+                              <Text className="rounded-full font-body text-xs font-normal text-indigo-500">
+                                {data.biological.length}
+                              </Text>
+                            </Center>
+                            {isExpanded ? (
+                              <AccordionIcon
+                                as={ChevronUpIcon}
+                                className="h-4 w-4"
+                              />
+                            ) : (
+                              <AccordionIcon
+                                as={ChevronDownIcon}
+                                className="h-4 w-4"
+                              />
+                            )}
+                          </HStack>
+                        </HStack>
+                      </>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent>
+                <VStack className="gap-2 pl-5 pt-2">
+                  {data.biological.map((item, index) => (
+                    <BiologicalItemComponent key={index} data={item} />
+                  ))}
+                </VStack>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+          {data.clinical.length != 0 && (
+            <AccordionItem
+              value="clinical"
+              className="border-b-[0.5px] border-primary-border/5"
+            >
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }: { isExpanded: boolean }) => {
+                    return (
+                      <>
+                        <HStack className="w-full items-center justify-between">
+                          <HStack className="items-center gap-2">
+                            <Center className="rounded-full bg-purple-500/20 p-1">
+                              <Icon
+                                as={Stethoscope}
+                                className="h-4 w-4 text-purple-500"
+                              />
+                            </Center>
+                            <Text className="font-h4 text-base font-medium text-typography-primary">
+                              Signes Cliniques
+                            </Text>
+                          </HStack>
+
+                          <HStack className="gap-2">
+                            <Center className="rounded-full bg-purple-500/20 px-1">
+                              <Text className="rounded-full font-body text-xs font-normal text-purple-500">
+                                {data.clinical.length}
+                              </Text>
+                            </Center>
+
+                            {isExpanded ? (
+                              <AccordionIcon
+                                as={ChevronUpIcon}
+                                className="h-4 w-4"
+                              />
+                            ) : (
+                              <AccordionIcon
+                                as={ChevronDownIcon}
+                                className="h-4 w-4"
+                              />
+                            )}
+                          </HStack>
+                        </HStack>
+                      </>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent>
+                <VStack className="gap-2 pl-5 pt-2">
+                  {data.clinical.map((item, index) => (
+                    <ClinicalItemComponent key={index} data={item} />
+                  ))}
+                </VStack>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+          {data.complication.length != 0 && (
+            <AccordionItem
+              value="complication"
+              className="border-b-[0.5px] border-primary-border/5"
+            >
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }: { isExpanded: boolean }) => {
+                    return (
+                      <>
+                        <HStack className="w-full items-center justify-between">
+                          <HStack className="items-center gap-2">
+                            <Center className="rounded-full bg-orange-500/20 p-1">
+                              <Icon
+                                as={PillBottle}
+                                className="h-4 w-4 text-orange-500"
+                              />
+                            </Center>
+                            <Text className="font-h4 text-base font-medium text-typography-primary">
+                              Complications
+                            </Text>
+                          </HStack>
+                          <HStack className="gap-2">
+                            <Center className="rounded-full bg-orange-500/20 px-1">
+                              <Text className="rounded-full font-body text-xs font-normal text-orange-500">
+                                {data.complication.length}
+                              </Text>
+                            </Center>
+
+                            {isExpanded ? (
+                              <AccordionIcon
+                                as={ChevronUpIcon}
+                                className="h-4 w-4"
+                              />
+                            ) : (
+                              <AccordionIcon
+                                as={ChevronDownIcon}
+                                className="h-4 w-4"
+                              />
+                            )}
+                          </HStack>
+                        </HStack>
+                      </>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent>
+                <VStack className="gap-2 pl-5 pt-2">
+                  {data.complication.map((item, index) => (
+                    <ComplicationItemComponent key={index} data={item} />
+                  ))}
+                </VStack>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+        </Accordion>
+        {/* {data.anthrop.length != 0 && (
           <VStack>
             <HStack className="items-center gap-2">
               <Center className="rounded-full bg-blue-500/20 p-1">
@@ -75,15 +318,13 @@ export const DailyMedicalRecordDataComponent: React.FC<
               ))}
             </VStack>
           </VStack>
-        )}
-        {data.biological.length != 0 && (
+        )} */}
+
+        {/* {data.biological.length != 0 && (
           <VStack>
             <HStack className="gap-2">
-              <Center className="">
-                <Icon
-                  as={FlaskConical}
-                  className="h-4 w-4 text-typography-primary"
-                />
+              <Center className="rounded-full bg-indigo-500/20 p-1">
+                <Icon as={FlaskConical} className="h-4 w-4 text-indigo-500" />
               </Center>
               <Text className="font-h4 text-base font-medium text-typography-primary">
                 Biologiques
@@ -95,8 +336,8 @@ export const DailyMedicalRecordDataComponent: React.FC<
               ))}
             </VStack>
           </VStack>
-        )}
-        {data.clinical.length != 0 && (
+        )} */}
+        {/* {data.clinical.length != 0 && (
           <VStack>
             <HStack className="items-center gap-2">
               <Center className="rounded-full bg-purple-500/20 p-1">
@@ -112,8 +353,8 @@ export const DailyMedicalRecordDataComponent: React.FC<
               ))}
             </VStack>
           </VStack>
-        )}
-        {data.complication.length != 0 && (
+        )} */}
+        {/* {data.complication.length != 0 && (
           <VStack>
             <HStack className="items-center gap-2">
               <Center className="rounded-full bg-orange-500/20 p-1">
@@ -129,7 +370,7 @@ export const DailyMedicalRecordDataComponent: React.FC<
               ))}
             </VStack>
           </VStack>
-        )}
+        )} */}
       </VStack>
     </React.Fragment>
   );
@@ -155,7 +396,7 @@ export function AnthropometricItemComponent({
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl bg-background-primary px-3 py-3">
+    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
       <Text className="font-body text-sm font-normal text-typography-primary_light">
         {anthropMeasureData[0]?.name ?? data.code}
       </Text>
@@ -188,7 +429,7 @@ export function BiologicalItemComponent({
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl bg-background-primary px-3 py-3">
+    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
       <Text className="font-body text-sm font-normal text-typography-primary_light">
         {biologicalRefData[0]?.name ?? data.code}
       </Text>
@@ -225,12 +466,14 @@ export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl bg-background-primary px-3 py-3">
+    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
       <Text className="font-body text-sm font-normal text-typography-primary_light">
         {clinicalRefData[0]?.name ?? data.code}
       </Text>
       <HStack>
-        <Text className="font-h4 text-sm font-medium text-typography-primary">
+        <Text
+          className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
+        >
           {data.isPresent ? "Présent" : "Absent"}
         </Text>
       </HStack>
@@ -249,13 +492,15 @@ export const ComplicationItemComponent: React.FC<
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl bg-background-primary px-3 py-3">
+    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
       <Text className="font-body text-sm font-normal text-typography-primary_light">
         {complicationRefs.find(compl => data.code === compl.code)?.name ??
           data.code}
       </Text>
       <HStack>
-        <Text className="font-h4 text-sm font-medium text-typography-primary">
+        <Text
+          className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
+        >
           {data.isPresent ? "Présente" : "Absente"}
         </Text>
       </HStack>

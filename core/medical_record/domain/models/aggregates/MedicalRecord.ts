@@ -1,36 +1,38 @@
 import {
   AggregateID,
   AggregateRoot,
+  BaseEntityProps,
   EntityPropsBaseType,
   handleError,
   Result,
+  SystemCode,
+  UnitCode,
 } from "@shared";
+import { DataFieldResponse, IDataFieldResponse } from "../valueObjects";
 import {
-  AnthropometricData,
-  BiologicalValue,
-  ClinicalSignData,
-  ComplicationData,
-  DataFieldResponse,
-  IAnthropometricData,
-  IBiologicalValue,
-  IClinicalSignData,
-  IComplicationData,
-  IDataFieldResponse,
-} from "../valueObjects";
-import {
-  AnthropometricDataAddedEvent,
-  BiologicalValueAddedEvent,
-  ClinicalSignDataAddedEvent,
-  ComplicationDataAddedEvent,
+  LastAnthropometricDataChangedEvent,
+  LastBiologicalValueChangedEvent,
+  LastClinicalSignDataChangedEvent,
+  LastComplicationDataChangedEvent,
   DataFieldResponseAddedEvent,
 } from "../../events";
+import {
+  AnthropometricRecord,
+  BiologicalValueRecord,
+  ClinicalSingDataRecord,
+  ComplicationDataRecord,
+  IAnthropometricRecord,
+  IBiologicalValueRecord,
+  IClinicalSignDataRecord,
+  IComplicationDataRecord,
+} from "../entities";
 
 export interface IMedicalRecord extends EntityPropsBaseType {
   patientId: AggregateID;
-  anthropometricData: AnthropometricData[];
-  clinicalData: ClinicalSignData[];
-  biologicalData: BiologicalValue[];
-  complicationData: ComplicationData[];
+  anthropometricData: AnthropometricRecord[];
+  clinicalData: ClinicalSingDataRecord[];
+  biologicalData: BiologicalValueRecord[];
+  complicationData: ComplicationDataRecord[];
   dataFieldsResponse: DataFieldResponse[];
 }
 
@@ -38,72 +40,70 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
   getPatientId(): AggregateID {
     return this.props.patientId;
   }
-  getAnthropometricData(): IAnthropometricData[] {
-    return this.props.anthropometricData.map(valObj => valObj.unpack());
+  getAnthropometricData(): (IAnthropometricRecord & BaseEntityProps)[] {
+    return this.props.anthropometricData.map(valObj => valObj.getProps());
   }
-  getClinicalData(): IClinicalSignData[] {
-    return this.props.clinicalData.map(valObj => valObj.unpack());
+  getClinicalData(): (IClinicalSignDataRecord & BaseEntityProps)[] {
+    return this.props.clinicalData.map(valObj => valObj.getProps());
   }
-  getBiologicalData(): IBiologicalValue[] {
-    return this.props.biologicalData.map(valObj => valObj.unpack());
+  getBiologicalData(): (IBiologicalValueRecord & BaseEntityProps)[] {
+    return this.props.biologicalData.map(valObj => valObj.getProps());
   }
-  getComplicationData(): IComplicationData[] {
-    return this.props.complicationData.map(valObj => valObj.unpack());
+  getComplicationData(): (IComplicationDataRecord & BaseEntityProps)[] {
+    return this.props.complicationData.map(valObj => valObj.getProps());
   }
   getDataFields(): IDataFieldResponse[] {
     return this.props.dataFieldsResponse.map(valObj => valObj.unpack());
   }
-  addAnthropometricData(anthropometricData: AnthropometricData) {
-    this.props.anthropometricData.push(anthropometricData);
-    const { code, context, unit, value } = anthropometricData.unpack();
+  addAnthropometricData(anthropometricRecord: AnthropometricRecord) {
+    this.props.anthropometricData.push(anthropometricRecord);
+
     this.addDomainEvent(
-      new AnthropometricDataAddedEvent({
+      new LastAnthropometricDataChangedEvent({
         patientId: this.getPatientId(),
         data: {
-          code: code.unpack(),
-          context,
-          unit: unit.unpack(),
-          value,
+          code: anthropometricRecord.getCode(),
+          context: anthropometricRecord.getContext(),
+          ...anthropometricRecord.getMeasurement(),
         },
       })
     );
   }
-  addClinicalSignData(clinicalSignData: ClinicalSignData) {
-    this.props.clinicalData.push(clinicalSignData);
-    const { code, data } = clinicalSignData.unpack();
+  addClinicalSignData(clinicalSignDataRecord: ClinicalSingDataRecord) {
+    this.props.clinicalData.push(clinicalSignDataRecord);
+
     this.addDomainEvent(
-      new ClinicalSignDataAddedEvent({
+      new LastClinicalSignDataChangedEvent({
         patientId: this.getPatientId(),
         data: {
-          code: code.unpack(),
-          data,
+          code: clinicalSignDataRecord.getCode(),
+          data: clinicalSignDataRecord.getData(),
         },
       })
     );
   }
-  addBiologicalValue(biologicalValue: BiologicalValue) {
-    this.props.biologicalData.push(biologicalValue);
-    const { code, unit, value } = biologicalValue.unpack();
+  addBiologicalValue(biologicalValueRecord: BiologicalValueRecord) {
+    this.props.biologicalData.push(biologicalValueRecord);
+
     this.addDomainEvent(
-      new BiologicalValueAddedEvent({
+      new LastBiologicalValueChangedEvent({
         patientId: this.getPatientId(),
         data: {
-          code: code.unpack(),
-          unit: unit.unpack(),
-          value,
+          code: biologicalValueRecord.getCode(),
+          ...biologicalValueRecord.getMeasurement(),
         },
       })
     );
   }
-  addComplicationData(complicationData: ComplicationData) {
-    this.props.complicationData.push(complicationData);
-    const { code, isPresent } = complicationData.unpack();
+  addComplicationData(complicationDataRecord: ComplicationDataRecord) {
+    this.props.complicationData.push(complicationDataRecord);
+
     this.addDomainEvent(
-      new ComplicationDataAddedEvent({
+      new LastComplicationDataChangedEvent({
         patientId: this.getPatientId(),
         data: {
-          code: code.unpack(),
-          isPresent,
+          code: complicationDataRecord.getCode(),
+          isPresent: complicationDataRecord.getIsPresent(),
         },
       })
     );
@@ -123,22 +123,194 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       })
     );
   }
-  changeAnthropometricData(anthropometricData: AnthropometricData[]) {
-    this.props.anthropometricData = anthropometricData;
+  changeAnthropometricRecord(
+    id: AggregateID,
+    measurement: { unit: UnitCode; value: number }
+  ) {
+    const findedIndex = this.props.anthropometricData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      this.props.anthropometricData[findedIndex].changeMeasurement(measurement);
+      this.puslishAnthropometricDataChange(
+        this.props.anthropometricData[findedIndex].getProps().code
+      );
+    }
   }
-  changeClinicalData(clinicalData: ClinicalSignData[]) {
-    this.props.clinicalData = clinicalData;
+  changeClinicalDataRecord(
+    id: AggregateID,
+    data: Partial<{ clinicalSignData: object; isPresent: boolean }>
+  ) {
+    const findedIndex = this.props.clinicalData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      if (data.clinicalSignData)
+        this.props.clinicalData[findedIndex].changeData(data.clinicalSignData);
+      if (data.isPresent)
+        this.props.clinicalData[findedIndex].changeIsPresent(data.isPresent);
+      this.puslishClinicalDataChange(
+        this.props.clinicalData[findedIndex].getProps().code
+      );
+    }
   }
-  changeBiologicalData(biologicalValues: BiologicalValue[]) {
-    this.props.biologicalData = biologicalValues;
+
+  changeBiologicalDataRecord(
+    id: AggregateID,
+    measurement: { unit: UnitCode; value: number }
+  ) {
+    const findedIndex = this.props.biologicalData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      this.props.biologicalData[findedIndex].changeMeasurement(measurement);
+      this.puslishBiologicalDataChange(
+        this.props.biologicalData[findedIndex].getProps().code
+      );
+    }
   }
-  changeComplicationData(complicationData: ComplicationData[]) {
-    this.props.complicationData = complicationData;
+  changeComplicationDataRecord(
+    id: AggregateID,
+    data: Partial<{ isPresent: boolean }>
+  ) {
+    const findedIndex = this.props.complicationData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      if (data.isPresent)
+        this.props.complicationData[findedIndex].changeIsPresent(
+          data.isPresent
+        );
+
+      this.puslishComplicationDataChange(
+        this.props.complicationData[findedIndex].getProps().code
+      );
+    }
   }
   changeDataFields(dataFields: DataFieldResponse[]) {
     this.props.dataFieldsResponse = dataFields;
   }
-
+  deleteAnthropometricRecord(id: AggregateID) {
+    const findedIndex = this.props.anthropometricData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      const deletedData = this.props.anthropometricData.splice(findedIndex, 1);
+      this.puslishAnthropometricDataChange(deletedData[0].getProps().code);
+    }
+  }
+  deleteClinicalSignRecord(id: AggregateID) {
+    const findedIndex = this.props.clinicalData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      const deletedData = this.props.clinicalData.splice(findedIndex, 1);
+      this.puslishClinicalDataChange(deletedData[0].getProps().code);
+    }
+  }
+  deleteBiologicalRecord(id: AggregateID) {
+    const findedIndex = this.props.biologicalData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      const deletedData = this.props.biologicalData.splice(findedIndex, 1);
+      this.puslishBiologicalDataChange(deletedData[0].getProps().code);
+    }
+  }
+  deleteComplicationRecord(id: AggregateID) {
+    const findedIndex = this.props.complicationData.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      const deletedData = this.props.complicationData.splice(findedIndex, 1);
+      this.puslishComplicationDataChange(deletedData[0].getProps().code);
+    }
+  }
+  private puslishAnthropometricDataChange(code: SystemCode) {
+    const filteredAnthropometricData = this.props.anthropometricData.filter(
+      anthrop => anthrop.getCode() == code.unpack()
+    );
+    if (filteredAnthropometricData.length == 0) return;
+    const sortedAnthropometricData = filteredAnthropometricData.sort(
+      (a, b) =>
+        new Date(b.getRecordDate()).getTime() -
+        new Date(a.getRecordDate()).getTime()
+    );
+    const lastAnthropometricData = sortedAnthropometricData[0];
+    this.addDomainEvent(
+      new LastAnthropometricDataChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          code: lastAnthropometricData.getCode(),
+          context: lastAnthropometricData.getContext(),
+          ...lastAnthropometricData.getMeasurement(),
+        },
+      })
+    );
+  }
+  private puslishClinicalDataChange(code: SystemCode) {
+    const filteredData = this.props.clinicalData.filter(
+      anthrop => anthrop.getCode() == code.unpack()
+    );
+    if (filteredData.length == 0) return;
+    const sortedData = filteredData.sort(
+      (a, b) =>
+        new Date(b.getRecordAt()).getTime() -
+        new Date(a.getRecordAt()).getTime()
+    );
+    const lastValue = sortedData[0];
+    this.addDomainEvent(
+      new LastClinicalSignDataChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          code: lastValue.getCode(),
+          data: lastValue.getData(),
+        },
+      })
+    );
+  }
+  private puslishBiologicalDataChange(code: SystemCode) {
+    const filteredData = this.props.biologicalData.filter(
+      anthrop => anthrop.getCode() == code.unpack()
+    );
+    if (filteredData.length == 0) return;
+    const sortedData = filteredData.sort(
+      (a, b) =>
+        new Date(b.getRecordAt()).getTime() -
+        new Date(a.getRecordAt()).getTime()
+    );
+    const lastValue = sortedData[0];
+    this.addDomainEvent(
+      new LastBiologicalValueChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          code: lastValue.getCode(),
+          ...lastValue.getMeasurement(),
+        },
+      })
+    );
+  }
+  private puslishComplicationDataChange(code: SystemCode) {
+    const filteredData = this.props.complicationData.filter(
+      anthrop => anthrop.getCode() == code.unpack()
+    );
+    if (filteredData.length == 0) return;
+    const sortedData = filteredData.sort(
+      (a, b) =>
+        new Date(b.getRecordAt()).getTime() -
+        new Date(a.getRecordAt()).getTime()
+    );
+    const lastValue = sortedData[0];
+    this.addDomainEvent(
+      new LastComplicationDataChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          code: lastValue.getCode(),
+          isPresent: lastValue.getIsPresent(),
+        },
+      })
+    );
+  }
   public validate(): void {
     this._isValid = false;
     // BETA: Validation code here if needed

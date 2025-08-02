@@ -12,6 +12,8 @@ import {
   DeleteMedicalRecordResponse,
   AddDataToMedicalRecordRequest,
   AddDataToMedicalRecordResponse,
+  DeleteDataFromMedicalRecordRequest,
+  DeleteDataFromMedicalRecordResponse,
 } from "../useCases";
 import { MedicalRecordDto } from "../dtos";
 
@@ -23,6 +25,10 @@ export interface MedicalRecordServiceUseCases {
   addDataUC: UseCase<
     AddDataToMedicalRecordRequest,
     AddDataToMedicalRecordResponse
+  >;
+  deleteDataUC: UseCase<
+    DeleteDataFromMedicalRecordRequest,
+    DeleteDataFromMedicalRecordResponse
   >;
 }
 
@@ -65,6 +71,13 @@ export class MedicalRecordService implements IMedicalRecordService {
     req: AddDataToMedicalRecordRequest
   ): Promise<AppServiceResponse<void> | Message> {
     const res = await this.ucs.addDataUC.execute(req);
+    if (res.isRight()) return { data: void 0 };
+    else return new Message("error", JSON.stringify((res.value as any)?.err));
+  }
+  async deleteData(
+    req: DeleteDataFromMedicalRecordRequest
+  ): Promise<AppServiceResponse<void> | Message> {
+    const res = await this.ucs.deleteDataUC.execute(req);
     if (res.isRight()) return { data: void 0 };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }

@@ -1,20 +1,32 @@
-import {
-  CreateAnthropometricData,
-  CreateBiologicalValue,
-  CreateClinicalSignData,
-  CreateComplicationData,
-  CreateDataFieldResponse,
-} from "./../../domain";
 import { AggregateID } from "@shared";
+import {
+  CreateAnthropometricRecord,
+  CreateBiologicalValueRecord,
+  CreateClinicalSignDataRecord,
+  CreateComplicationDataRecord,
+} from "../../domain/models/entities";
+import { CreateDataFieldResponse } from "../../domain";
 
 export interface MedicalRecordDto {
   id: AggregateID;
   patientId: AggregateID;
-  anthropometricData: (CreateAnthropometricData & { recordedAt: string })[];
-  biologicalData: (CreateBiologicalValue & { recordedAt: string })[];
-  clinicalData: (CreateClinicalSignData & { recordedAt: string })[];
+  anthropometricData: (CreateAnthropometricRecord & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
+  biologicalData: (CreateBiologicalValueRecord & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
+  clinicalData: (CreateClinicalSignDataRecord & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
   dataFieldResponse: (CreateDataFieldResponse & { recordedAt: string })[];
-  complicationData: (CreateComplicationData & { recordedAt: string })[];
+  complicationData: (CreateComplicationDataRecord & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
   updatedAt: string;
   createdAt: string;
 }

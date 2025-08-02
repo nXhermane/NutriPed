@@ -23,27 +23,22 @@ export class MeasurementValidationACLImpl implements MeasurementValidationACL {
         patientId,
         anthropometricData: {
           data: measurements.anthropometricData.map(measure => {
-            const { code, unit, value } = measure.unpack();
             return {
-              code: code.unpack(),
-              value: value,
-              unit: unit.unpack(),
+              code: measure.getCode(),
+              ...measure.getMeasurement(),
             };
           }),
         },
         clinicalData: measurements.clinicalData.map(sign => {
-          const { code, data } = sign.unpack();
           return {
-            code: code.unpack(),
-            data,
+            code: sign.getCode(),
+            data: sign.getData(),
           };
         }),
         biologicalTestResults: measurements.biologicalData.map(test => {
-          const { code, unit, value } = test.unpack();
           return {
-            code: code.unpack(),
-            unit: unit.unpack(),
-            value,
+            code: test.getCode(),
+            ...test.getMeasurement(),
           };
         }),
       };

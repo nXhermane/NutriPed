@@ -1,8 +1,8 @@
 import {
-  AnthropometricData,
-  BiologicalValue,
-  ClinicalSignData,
-  ComplicationData,
+  AnthropometricRecord,
+  BiologicalValueRecord,
+  ClinicalSingDataRecord,
+  ComplicationDataRecord,
   DataFieldResponse,
   MedicalRecord,
 } from "@core/medical_record";
@@ -11,6 +11,7 @@ import {
   Result,
   InfraMapToDomainError,
   formatError,
+  AggregateID,
 } from "@shared";
 import { MedicalRecordPersistenceDto } from "../dtos";
 
@@ -18,39 +19,47 @@ export class MedicalRecordInfraMapper
   implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto>
 {
   toPersistence(entity: MedicalRecord): MedicalRecordPersistenceDto {
+    const {
+      anthropometricData,
+      biologicalData,
+      clinicalData,
+      complicationData,
+    } = entity.getProps();
     return {
       id: entity.id as string,
-      patientId: entity.getPatientId() as string,
-      anthropometricData: entity.getAnthropometricData().map(data => ({
-        code: data.code.unpack(),
-        context: data.context,
-        recordedAt: data.recordedAt.unpack(),
-        unit: data.unit.unpack(),
-        value: data.value,
+      patientId: entity.getPatientId(),
+      anthropometricData: anthropometricData.map(anthrop => ({
+        code: anthrop.getCode(),
+        id: anthrop.id,
+        context: anthrop.getContext(),
+        recordedAt: anthrop.getRecordDate(),
+        ...anthrop.getMeasurement(),
       })),
-      biologicalData: entity.getBiologicalData().map(data => ({
-        code: data.code.unpack(),
-        recordedAt: data.recordedAt.unpack(),
-        unit: data.unit.unpack(),
-        value: data.value,
+      biologicalData: biologicalData.map(test => ({
+        code: test.getCode(),
+        id: test.id,
+        recordedAt: test.getRecordAt(),
+        ...test.getMeasurement(),
       })),
-      clinicalData: entity.getClinicalData().map(data => ({
-        code: data.code.unpack(),
-        data: data.data,
-        isPresent: data.isPresent,
-        recordedAt: data.recordedAt.unpack(),
+      clinicalData: clinicalData.map(sign => ({
+        code: sign.getCode(),
+        id: sign.id,
+        data: sign.getData(),
+        isPresent: sign.getIsPresent(),
+        recordedAt: sign.getRecordAt(),
       })),
-      complications: entity.getComplicationData().map(comp => ({
-        code: comp.code.unpack(),
-        recordedAt: comp.recordedAt.unpack(),
-        isPresent: comp.isPresent,
+      complications: complicationData.map(complication => ({
+        code: complication.getCode(),
+        id: complication.id,
+        isPresent: complication.getIsPresent(),
+        recordedAt: complication.getRecordAt(),
       })),
-      dataFieldsResponse: entity.getDataFields().map(data => ({
-        code: data.code.unpack(),
-        recordedAt: data.recodedAt.unpack(),
-        type: data.type,
-        value: data.value,
-        unit: data.unit?.unpack(),
+      dataFieldsResponse: entity.getDataFields().map(valObj => ({
+        code: valObj.code.unpack(),
+        recordedAt: valObj.recodedAt.unpack(),
+        type: valObj.type,
+        value: valObj.value,
+        unit: valObj.unit?.unpack(),
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -59,23 +68,23 @@ export class MedicalRecordInfraMapper
 
   toDomain(record: MedicalRecordPersistenceDto): MedicalRecord {
     // Convert anthropometric data
-    const anthropometricDataResults = record.anthropometricData.map(
-      AnthropometricData.create
+    const anthropometricDataResults = record.anthropometricData.map(anthrop =>
+      AnthropometricRecord.create({ ...anthrop }, anthrop.id)
     );
 
     // Convert biological data
-    const biologicalDataResults = record.biologicalData.map(
-      BiologicalValue.create
+    const biologicalDataResults = record.biologicalData.map(test =>
+      BiologicalValueRecord.create({ ...test }, test.id)
     );
 
     // Convert clinical data
-    const clinicalDataResults = record.clinicalData.map(
-      ClinicalSignData.create
+    const clinicalDataResults = record.clinicalData.map(sign =>
+      ClinicalSingDataRecord.create({ ...sign }, sign.id)
     );
 
     // Convert complications
-    const complicationResults = record.complications.map(
-      ComplicationData.create
+    const complicationResults = record.complications.map(complication =>
+      ComplicationDataRecord.create({ ...complication }, complication.id)
     );
 
     // Convert dataFields

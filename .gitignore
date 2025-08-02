@@ -43,3 +43,6 @@ adapter/config/auth/config.ts
 previewConfig.json
 /ios 
 suggest.ts 
+DOCUMENTATION_TECHNIQUE.md
+medical_record_prototype.html
+note.txt

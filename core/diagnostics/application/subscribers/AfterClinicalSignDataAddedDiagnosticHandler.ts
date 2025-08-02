@@ -1,6 +1,6 @@
 import {
-  ClinicalSignDataAddedEvent,
-  ClinicalSignDataAddedEventData,
+  LastClinicalSignDataChangedEvent,
+  LastClinicalSignDataChangedEventData,
 } from "./../../../medical_record";
 import {
   bindEventHandler,
@@ -20,8 +20,8 @@ import {
   true
 )
 export class AfterClinicalSignDataAddedDiagnosticHandler extends EventHandler<
-  ClinicalSignDataAddedEventData,
-  ClinicalSignDataAddedEvent
+  LastClinicalSignDataChangedEventData,
+  LastClinicalSignDataChangedEvent
 > {
   constructor(
     private readonly updatePatientDiagnosticData: UseCase<
@@ -33,11 +33,11 @@ export class AfterClinicalSignDataAddedDiagnosticHandler extends EventHandler<
     super(priority);
   }
 
-  async execute(event: ClinicalSignDataAddedEvent): Promise<void> {
+  async execute(event: LastClinicalSignDataChangedEvent): Promise<void> {
     await this.onClinicalSignAdded(event.data);
   }
   private async onClinicalSignAdded(
-    eventData: ClinicalSignDataAddedEventData
+    eventData: LastClinicalSignDataChangedEventData
   ): Promise<void> {
     const result = await this.updatePatientDiagnosticData.execute({
       patientOrNutritionalDiagnosticId: eventData.patientId,
@@ -62,5 +62,5 @@ export class AfterClinicalSignDataAddedDiagnosticHandler extends EventHandler<
 
 bindEventHandler(
   AfterClinicalSignDataAddedDiagnosticHandler,
-  ClinicalSignDataAddedEvent
+  LastClinicalSignDataChangedEvent
 );

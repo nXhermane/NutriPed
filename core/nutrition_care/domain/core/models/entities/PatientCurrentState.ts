@@ -110,7 +110,11 @@ export class PatientCurrentState extends Entity<IPatientCurrentState> {
     value: APPETITE_TEST_RESULT_CODES,
     date: DomainDate
   ) {
-    this.props.appetiteTestResult[code as 'appetite_test_result'] = { code, value, date };
+    this.props.appetiteTestResult[code as "appetite_test_result"] = {
+      code,
+      value,
+      date,
+    };
   }
   addComplication(code: string, value: number, date: DomainDate) {
     this.props.complicationData[code] = { code, value, date };
@@ -227,7 +231,12 @@ export class PatientCurrentState extends Entity<IPatientCurrentState> {
       const appetiteTestData = Object.fromEntries(
         Object.keys(createProps.appetiteTestResult).map(key => [
           key,
-          { value: createProps.appetiteTestResult[key as 'appetite_test_result'], code: key, date },
+          {
+            value:
+              createProps.appetiteTestResult[key as "appetite_test_result"],
+            code: key,
+            date,
+          },
         ])
       );
       const complicationData = Object.fromEntries(

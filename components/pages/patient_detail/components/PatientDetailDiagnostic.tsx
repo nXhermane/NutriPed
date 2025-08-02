@@ -10,11 +10,7 @@ export interface PatientDetailDiagnosticProps {}
 const PatientDetailDiagnosticComponent: React.FC<
   PatientDetailDiagnosticProps
 > = ({}) => {
-  return (
-    <VStack>
-      <Text>This is the patient diagnostic detail screen</Text>
-    </VStack>
-  );
+  return <VStack></VStack>;
 };
 
 export const PatientDetailDiagnostic: React.FC<

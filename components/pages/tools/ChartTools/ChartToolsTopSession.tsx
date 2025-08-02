@@ -15,15 +15,17 @@ export const ChartToolsTopSession: React.FC<ChartToolsTopSessionProps> = ({
   }, [selectedTag, searchText]);
   return (
     <VStack
-      className={"mb-4 gap-3 border-t-[1px] border-primary-border/5 px-4 pt-4"}
+      className={"mb-4 gap-3 border-t-[1px] border-primary-border/5 pt-4"}
     >
-      <SearchBar
-        fieldProps={{
-          placeholder: "Rechercher une courbe...",
-          onChangeText: (text: string) => setSearchText(text),
-          value: searchText,
-        }}
-      />
+      <VStack className="px-4">
+        <SearchBar
+          fieldProps={{
+            placeholder: "Rechercher une courbe...",
+            onChangeText: (text: string) => setSearchText(text),
+            value: searchText,
+          }}
+        />
+      </VStack>
       <FilterChips
         data={[
           { label: "Tous", value: "all" },

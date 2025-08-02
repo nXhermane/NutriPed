@@ -20,7 +20,7 @@ export class DiagnosticModification extends ValueObject<IDiagnosticModification>
   protected validate(props: Readonly<IDiagnosticModification>): void {
     if (
       !props.prevResult.equals(props.nextResult) ||
-      JSON.stringify(props.prevResult.getProps()) ===
+      JSON.stringify(props.prevResult.getProps()) ==
         JSON.stringify(props.nextResult.getProps())
     ) {
       throw new ArgumentInvalidException(
