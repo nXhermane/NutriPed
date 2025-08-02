@@ -1,14 +1,14 @@
 import { AggregateID, Result } from "@shared";
 import {
-  AnthropometricData,
-  BiologicalValue,
-  ClinicalSignData,
-} from "../../../models";
+  AnthropometricRecord,
+  BiologicalValueRecord,
+  ClinicalSingDataRecord,
+} from "../../../models/entities";
 
 export interface MeasurementData {
-  anthropometricData: AnthropometricData[];
-  clinicalData: ClinicalSignData[];
-  biologicalData: BiologicalValue[];
+  anthropometricData: AnthropometricRecord[];
+  clinicalData: ClinicalSingDataRecord[];
+  biologicalData: BiologicalValueRecord[];
 }
 export interface MeasurementValidationACL {
   validate(

@@ -1,7 +1,19 @@
-import { MedicalRecordDto } from "./../../../dtos";
+import { CreateDataFieldResponse } from "./../../../../domain";
 import { AggregateID } from "@shared";
 
 export type UpdateMedicalRecordRequest = {
   medicalRecordId: AggregateID;
-  data: Partial<Omit<MedicalRecordDto, "id" | "patientId">>;
+  data: Partial<{
+    anthropometricData: {
+      id: AggregateID;
+      measurement: { unit: string; value: number };
+    }[];
+    clinicalData: { id: AggregateID; code: string; data: object }[];
+    biologicalData: {
+      id: AggregateID;
+      measurement: { value: number; unit: string };
+    }[];
+    complicationData: { id: AggregateID; isPresent: boolean }[];
+    dataFieldResponses: CreateDataFieldResponse[];
+  }>;
 };

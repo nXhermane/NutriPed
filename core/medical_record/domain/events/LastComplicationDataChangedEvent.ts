@@ -1,6 +1,6 @@
 import { AggregateID, DomainEvent, DomainEventMessage } from "@shared";
 
-export interface ComplicationDataAddedEventData {
+export interface LastComplicationDataChangedEventData {
   patientId: AggregateID;
   data: {
     code: string;
@@ -9,4 +9,4 @@ export interface ComplicationDataAddedEventData {
 }
 
 @DomainEventMessage("The complication data added to medical record.", true)
-export class ComplicationDataAddedEvent extends DomainEvent<ComplicationDataAddedEventData> {}
+export class LastComplicationDataChangedEvent extends DomainEvent<LastComplicationDataChangedEventData> {}

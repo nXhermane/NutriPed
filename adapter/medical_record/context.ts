@@ -15,6 +15,9 @@ import {
   CreateMedicalRecordRequest,
   CreateMedicalRecordResponse,
   CreateMedicalRecordUseCase,
+  DeleteDataFromMedicalRecordRequest,
+  DeleteDataFromMedicalRecordResponse,
+  DeleteDataFromMedicalRecordUseCase,
   DeleteMedicalRecordRequest,
   DeleteMedicalRecordResponse,
   DeleteMedicalRecordUseCase,
@@ -90,6 +93,10 @@ export class MedicalRecordContext {
     AddDataToMedicalRecordRequest,
     AddDataToMedicalRecordResponse
   >;
+  private readonly deleteDataFromMedicalRecordUC: UseCase<
+    DeleteDataFromMedicalRecordRequest,
+    DeleteDataFromMedicalRecordResponse
+  >;
   // ACL
   private readonly patientACL: PatientACL;
   private readonly measurementACl: MeasurementValidationACL;
@@ -164,12 +171,17 @@ export class MedicalRecordContext {
     );
     this.updateMedicalRecordUC = new UpdateMedicalRecordUseCase(
       this.repository,
-      this.measurementACl
+      this.measurementACl,
+      this.clinicalSignDataInterpreterACL
     );
     this.addDataToMedicalRecordUC = new AddDataToMedicalRecordUseCase(
+      this.idGenerator,
       this.repository,
       this.measurementACl,
       this.clinicalSignDataInterpreterACL
+    );
+    this.deleteDataFromMedicalRecordUC = new DeleteDataFromMedicalRecordUseCase(
+      this.repository
     );
     this.deleteMedicalRecordUC = new DeleteMedicalRecordUseCase(
       this.repository
@@ -188,6 +200,7 @@ export class MedicalRecordContext {
       deleteUC: this.deleteMedicalRecordUC,
       getUC: this.getMedicalRecordUC,
       updateUC: this.updateMedicalRecordUC,
+      deleteDataUC: this.deleteDataFromMedicalRecordUC,
     });
   }
   static init(

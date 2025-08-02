@@ -1,6 +1,6 @@
 import {
-  AnthropometricDataAddedEvent,
-  AnthropometricDataAddedEventData,
+  LastAnthropometricDataChangedEvent,
+  LastAnthropometricDataChangedEventData,
 } from "./../../../medical_record";
 import {
   bindEventHandler,
@@ -20,8 +20,8 @@ import {
   true
 )
 export class AfterAnthropometricDataAddedDiagnosticHandler extends EventHandler<
-  AnthropometricDataAddedEventData,
-  AnthropometricDataAddedEvent
+  LastAnthropometricDataChangedEventData,
+  LastAnthropometricDataChangedEvent
 > {
   constructor(
     private readonly updatePatientDiagnosticData: UseCase<
@@ -33,12 +33,12 @@ export class AfterAnthropometricDataAddedDiagnosticHandler extends EventHandler<
     super(priority);
   }
 
-  async execute(event: AnthropometricDataAddedEvent): Promise<void> {
+  async execute(event: LastAnthropometricDataChangedEvent): Promise<void> {
     await this.onAnthropometricDataAdded(event.data);
   }
 
   private async onAnthropometricDataAdded(
-    eventData: AnthropometricDataAddedEventData
+    eventData: LastAnthropometricDataChangedEventData
   ): Promise<void> {
     const result = await this.updatePatientDiagnosticData.execute({
       patientOrNutritionalDiagnosticId: eventData.patientId,
@@ -68,5 +68,5 @@ export class AfterAnthropometricDataAddedDiagnosticHandler extends EventHandler<
 
 bindEventHandler(
   AfterAnthropometricDataAddedDiagnosticHandler,
-  AnthropometricDataAddedEvent
+  LastAnthropometricDataChangedEvent
 );

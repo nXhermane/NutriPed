@@ -5,6 +5,7 @@ import {
   UpdateMedicalRecordRequest,
   DeleteMedicalRecordRequest,
   AddDataToMedicalRecordRequest,
+  DeleteDataFromMedicalRecordRequest,
 } from "../../useCases";
 import { MedicalRecordDto } from "../../dtos";
 
@@ -23,5 +24,8 @@ export interface IMedicalRecordService {
   ): Promise<AppServiceResponse<void> | Message>;
   addData(
     req: AddDataToMedicalRecordRequest
+  ): Promise<AppServiceResponse<void> | Message>;
+  deleteData(
+    req: DeleteDataFromMedicalRecordRequest
   ): Promise<AppServiceResponse<void> | Message>;
 }

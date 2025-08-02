@@ -5,9 +5,7 @@ import {
   PatientStatSession,
   QuickFilterSession,
 } from "@/components/pages/patient";
-import { PageBody, TabHeader } from "@/components/pages/shared";
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
+import { TabHeader } from "@/components/pages/shared";
 import { VStack } from "@/components/ui/vstack";
 import { PATIENT_QUICK_FILTER_TAG } from "@/src/constants/ui";
 import React, { useState } from "react";
@@ -32,12 +30,12 @@ export default function Patients() {
           </FadeInCardY>
         </VStack>
 
-        <VStack className="w-full pl-4">
+        <VStack className="w-full">
           <FadeInCardY delayNumber={2}>
             <PatientStatSession />
           </FadeInCardY>
         </VStack>
-        <VStack className="pl-4">
+        <VStack className="">
           <FadeInCardY delayNumber={3}>
             <QuickFilterSession onChange={setFilterTag} />
           </FadeInCardY>

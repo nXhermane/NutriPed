@@ -93,7 +93,13 @@ export const PatientStatSession: React.FC<PatientStatSessionProps> = ({
       >
         {patientStats.map((item, index) => (
           <FadeInCardX key={index} delayNumber={index + 3}>
-            <PatientStatCard key={index} value={item.value} desc={item.tag} />
+            <PatientStatCard
+              key={index}
+              value={item.value}
+              desc={item.tag}
+              isFirst={index == 0}
+              isLast={patientStats.length - 1 == index}
+            />
           </FadeInCardX>
         ))}
       </ScrollView>
@@ -104,16 +110,18 @@ export const PatientStatSession: React.FC<PatientStatSessionProps> = ({
 export interface PatientStatCardProps {
   value: number;
   desc: string;
+  isFirst: boolean;
+  isLast: boolean;
 }
 export const PatientStatCard: React.FC<PatientStatCardProps> = ({
   value,
   desc,
+  isFirst,
+  isLast,
 }) => {
   return (
     <VStack
-      className={
-        "elevation-sm h-v-16 w-20 items-center justify-center rounded-md border-[0.5px] border-primary-border/10 bg-background-secondary"
-      }
+      className={`${isFirst ? "ml-4" : isLast ? "mr-4" : ""} elevation-sm h-v-16 w-20 items-center justify-center rounded-md border-[0.5px] border-primary-border/10 bg-background-secondary`}
     >
       <Heading className={"font-h2 text-2xl text-primary-c_light"}>
         {value}

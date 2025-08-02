@@ -1,5 +1,6 @@
 import {
   formatError,
+  GenerateUniqueId,
   handleError,
   left,
   Result,
@@ -9,10 +10,10 @@ import {
 import { AddDataToMedicalRecordRequest } from "./Request";
 import { AddDataToMedicalRecordResponse } from "./Response";
 import {
-  AnthropometricData,
-  BiologicalValue,
-  ClinicalSignData,
-  ComplicationData,
+  AnthropometricRecord,
+  BiologicalValueRecord,
+  ClinicalSingDataRecord,
+  ComplicationDataRecord,
   DataFieldResponse,
   IClinicalSignDataInterpretationACL,
   MeasurementValidationACL,
@@ -25,6 +26,7 @@ export class AddDataToMedicalRecordUseCase
     UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse>
 {
   constructor(
+    private readonly idGenerator: GenerateUniqueId,
     private readonly repo: MedicalRecordRepository,
     private readonly measureValidation: MeasurementValidationACL,
     private readonly clinicalAnalysisMaker: IClinicalSignDataInterpretationACL
@@ -69,8 +71,11 @@ export class AddDataToMedicalRecordUseCase
   ): Promise<Result<boolean>> {
     try {
       if (data.anthropometricData) {
-        const anthropometricDataRes = data.anthropometricData.map(
-          AnthropometricData.create
+        const anthropometricDataRes = data.anthropometricData.map(props =>
+          AnthropometricRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(anthropometricDataRes);
         if (combinedRes.isFailure)
@@ -82,8 +87,11 @@ export class AddDataToMedicalRecordUseCase
         );
       }
       if (data.biologicalData) {
-        const biologicalDataRes = data.biologicalData.map(
-          BiologicalValue.create
+        const biologicalDataRes = data.biologicalData.map(props =>
+          BiologicalValueRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(biologicalDataRes);
         if (combinedRes.isFailure)
@@ -111,7 +119,10 @@ export class AddDataToMedicalRecordUseCase
           };
         });
         const clinicalDataRes = clinicalData.map(clinicalSign =>
-          ClinicalSignData.create(clinicalSign)
+          ClinicalSingDataRecord.create(
+            clinicalSign,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(clinicalDataRes);
         if (combinedRes.isFailure)
@@ -123,8 +134,11 @@ export class AddDataToMedicalRecordUseCase
         );
       }
       if (data.complicationData) {
-        const complicationDataRes = data.complicationData.map(
-          ComplicationData.create
+        const complicationDataRes = data.complicationData.map(props =>
+          ComplicationDataRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(complicationDataRes);
         if (combinedRes.isFailure)
@@ -135,9 +149,9 @@ export class AddDataToMedicalRecordUseCase
           medicalRecord.addComplicationData(res.val)
         );
       }
-      if (data.dataFieldResponse) {
-        const dataFieldRes = data.dataFieldResponse.map(
-          DataFieldResponse.create
+      if (data.dataFieldResponses) {
+        const dataFieldRes = data.dataFieldResponses.map(props =>
+          DataFieldResponse.create(props)
         );
         const combinedRes = Result.combine(dataFieldRes);
         if (combinedRes.isFailure)

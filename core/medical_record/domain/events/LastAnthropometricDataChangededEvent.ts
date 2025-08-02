@@ -1,7 +1,7 @@
 import { AggregateID, DomainEvent, DomainEventMessage } from "@shared";
-import { AnthropometricDataContext } from "../models/valueObjects/AnthropometricData";
+import { AnthropometricDataContext } from "../models";
 
-export interface AnthropometricDataAddedEventData {
+export interface LastAnthropometricDataChangedEventData {
   patientId: AggregateID;
   data: {
     code: string;
@@ -12,4 +12,4 @@ export interface AnthropometricDataAddedEventData {
 }
 
 @DomainEventMessage("Anthropometric measure added.", true)
-export class AnthropometricDataAddedEvent extends DomainEvent<AnthropometricDataAddedEventData> {}
+export class LastAnthropometricDataChangedEvent extends DomainEvent<LastAnthropometricDataChangedEventData> {}
