@@ -2,7 +2,7 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { MedicalRecordDataOrdoredByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { HumanDateFormatter } from "@/utils";
 import {
   GetAnthropometricMeasureRequest,
@@ -41,6 +41,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Pressable } from "@/components/ui/pressable";
+import {
+  DailyMedicalRecordDataActionBottomSheet,
+  MedicalRecordDataType,
+} from "./DailyMedicalRecordDataActionBottomSheet";
 
 interface DailyMedicalRecordDataProps {
   data: MedicalRecordDataOrdoredByDay[number];
@@ -48,6 +52,12 @@ interface DailyMedicalRecordDataProps {
 export const DailyMedicalRecordDataComponent: React.FC<
   DailyMedicalRecordDataProps
 > = ({ data }) => {
+  const [
+    showMedicalRecordDataActionModal,
+    setShowMedicalRecordDataActionModal,
+  ] = useState<boolean>(false);
+  const [currentMedicalRecordData, setCurrentMedicalRecordData] =
+    useState<MedicalRecordDataType | null>(null);
   const dateFormatOptions: Intl.DateTimeFormatOptions = useMemo(
     () => ({
       year: "numeric",
@@ -126,7 +136,17 @@ export const DailyMedicalRecordDataComponent: React.FC<
               <AccordionContent>
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.anthrop.map((item, index) => (
-                    <AnthropometricItemComponent key={index} data={item} />
+                    <AnthropometricItemComponent
+                      key={index}
+                      data={item}
+                      onPress={() => {
+                        setShowMedicalRecordDataActionModal(true);
+                        setCurrentMedicalRecordData({
+                          tag: "anthropometric",
+                          data: item,
+                        });
+                      }}
+                    />
                   ))}
                 </VStack>
               </AccordionContent>
@@ -302,84 +322,27 @@ export const DailyMedicalRecordDataComponent: React.FC<
             </AccordionItem>
           )}
         </Accordion>
-        {/* {data.anthrop.length != 0 && (
-          <VStack>
-            <HStack className="items-center gap-2">
-              <Center className="rounded-full bg-blue-500/20 p-1">
-                <Icon as={Ruler} className="h-4 w-4 text-blue-500" />
-              </Center>
-              <Text className="font-h4 text-base font-medium text-typography-primary">
-                Anthropométriques
-              </Text>
-            </HStack>
-            <VStack className="gap-2 pl-5 pt-2">
-              {data.anthrop.map((item, index) => (
-                <AnthropometricItemComponent key={index} data={item} />
-              ))}
-            </VStack>
-          </VStack>
-        )} */}
-
-        {/* {data.biological.length != 0 && (
-          <VStack>
-            <HStack className="gap-2">
-              <Center className="rounded-full bg-indigo-500/20 p-1">
-                <Icon as={FlaskConical} className="h-4 w-4 text-indigo-500" />
-              </Center>
-              <Text className="font-h4 text-base font-medium text-typography-primary">
-                Biologiques
-              </Text>
-            </HStack>
-            <VStack className="gap-2 pl-5 pt-2">
-              {data.biological.map((item, index) => (
-                <BiologicalItemComponent key={index} data={item} />
-              ))}
-            </VStack>
-          </VStack>
-        )} */}
-        {/* {data.clinical.length != 0 && (
-          <VStack>
-            <HStack className="items-center gap-2">
-              <Center className="rounded-full bg-purple-500/20 p-1">
-                <Icon as={Stethoscope} className="h-4 w-4 text-purple-500" />
-              </Center>
-              <Text className="font-h4 text-base font-medium text-typography-primary">
-                Signes Cliniques
-              </Text>
-            </HStack>
-            <VStack className="gap-2 pl-5 pt-2">
-              {data.clinical.map((item, index) => (
-                <ClinicalItemComponent key={index} data={item} />
-              ))}
-            </VStack>
-          </VStack>
-        )} */}
-        {/* {data.complication.length != 0 && (
-          <VStack>
-            <HStack className="items-center gap-2">
-              <Center className="rounded-full bg-orange-500/20 p-1">
-                <Icon as={PillBottle} className="h-4 w-4 text-orange-500" />
-              </Center>
-              <Text className="font-h4 text-base font-medium text-typography-primary">
-                Complications
-              </Text>
-            </HStack>
-            <VStack className="gap-2 pl-5 pt-2">
-              {data.complication.map((item, index) => (
-                <ComplicationItemComponent key={index} data={item} />
-              ))}
-            </VStack>
-          </VStack>
-        )} */}
       </VStack>
+      {currentMedicalRecordData && (
+        <DailyMedicalRecordDataActionBottomSheet
+          data={currentMedicalRecordData}
+          isVisible={showMedicalRecordDataActionModal}
+          onClose={() => {
+            setShowMedicalRecordDataActionModal(true);
+            setCurrentMedicalRecordData(null);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
 export interface AnthropometricItemComponentProps {
   data: MedicalRecordDto["anthropometricData"][number];
+  onPress?: () => void;
 }
 export function AnthropometricItemComponent({
   data,
+  onPress = () => void 0,
 }: AnthropometricItemComponentProps) {
   const getAnthropometricMeasureDataReq =
     useMemo<GetAnthropometricMeasureRequest>(() => {
@@ -396,16 +359,18 @@ export function AnthropometricItemComponent({
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
-      <Text className="font-body text-sm font-normal text-typography-primary_light">
-        {anthropMeasureData[0]?.name ?? data.code}
-      </Text>
-      <HStack>
-        <Text className="font-h4 text-sm font-medium text-typography-primary">
-          {data.value} {data.unit}
+    <Pressable onPress={onPress}>
+      <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
+        <Text className="font-body text-sm font-normal text-typography-primary_light">
+          {anthropMeasureData[0]?.name ?? data.code}
         </Text>
+        <HStack>
+          <Text className="font-h4 text-sm font-medium text-typography-primary">
+            {data.value} {data.unit}
+          </Text>
+        </HStack>
       </HStack>
-    </HStack>
+    </Pressable>
   );
 }
 

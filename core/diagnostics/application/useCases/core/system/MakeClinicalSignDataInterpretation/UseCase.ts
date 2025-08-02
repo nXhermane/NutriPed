@@ -43,7 +43,6 @@ export class MakeClinicalSignDataInterpretationUseCase
           sex: evaluationContext.sex,
           clinicalSigns: request.signs,
         });
-      console.log(makeClinicalAnalysisResult);
       if (makeClinicalAnalysisResult.isRight()) {
         const clinicalSignDataInterpretation: {
           code: string;

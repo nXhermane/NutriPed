@@ -11,7 +11,6 @@ import {
   Result,
   InfraMapToDomainError,
   formatError,
-  AggregateID,
 } from "@shared";
 import { MedicalRecordPersistenceDto } from "../dtos";
 
@@ -71,6 +70,7 @@ export class MedicalRecordInfraMapper
     const anthropometricDataResults = record.anthropometricData.map(anthrop =>
       AnthropometricRecord.create({ ...anthrop }, anthrop.id)
     );
+    
 
     // Convert biological data
     const biologicalDataResults = record.biologicalData.map(test =>

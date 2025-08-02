@@ -41,43 +41,41 @@ export const AddDataToMedicalRecordModal: React.FC<
     }
   }, [isVisible]);
   return (
-    <BottomSheetModalProvider>
-      <BottomSheetModal
-        onDismiss={() => {
-          onClose();
-        }}
-        snapPoints={["60%"]}
-        ref={bottomSheetModalRef}
-        handleIndicatorStyle={{
-          backgroundColor:
-            colorMode === "light" ? colors.gray["300"] : colors.gray["500"],
-        }}
-        handleComponent={props => <BottomSheetDragIndicator {...props} />}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            {...props}
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        )}
-        backgroundComponent={props => {
-          return (
-            <VStack {...props} className="rounded-2xl bg-background-primary" />
-          );
-        }}
-        enablePanDownToClose={true}
-      >
-        <AddDataToMedicalRecordModalContext.Provider
-          value={{
-            close: onClose,
+    <BottomSheetModal
+      onDismiss={() => {
+        onClose();
+      }}
+      snapPoints={["60%"]}
+      ref={bottomSheetModalRef}
+      handleIndicatorStyle={{
+        backgroundColor:
+          colorMode === "light" ? colors.gray["300"] : colors.gray["500"],
+      }}
+      handleComponent={props => <BottomSheetDragIndicator {...props} />}
+      backdropComponent={props => (
+        <BottomSheetBackdrop
+          {...props}
+          style={{
+            width: "100%",
+            height: "100%",
           }}
-        >
-          <Navigator />
-        </AddDataToMedicalRecordModalContext.Provider>
-      </BottomSheetModal>
-    </BottomSheetModalProvider>
+        />
+      )}
+      backgroundComponent={props => {
+        return (
+          <VStack {...props} className="rounded-2xl bg-background-primary" />
+        );
+      }}
+      enablePanDownToClose={true}
+    >
+      <AddDataToMedicalRecordModalContext.Provider
+        value={{
+          close: onClose,
+        }}
+      >
+        <Navigator />
+      </AddDataToMedicalRecordModalContext.Provider>
+    </BottomSheetModal>
   );
 };
 

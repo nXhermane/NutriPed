@@ -93,7 +93,6 @@ export function useDiagnosticDataForm(
             context: "admission",
             unit: value.unit,
             value: value.value,
-            recordedAt: DateManager.formatDate(new Date()),
           })),
           biologicalData: [],
           clinicalData: [
@@ -103,7 +102,7 @@ export function useDiagnosticDataForm(
                 [OBSERVATIONS.EDEMA_PRESENCE]:
                   (formData as any)["clinical_edema"] === "no" ? false : true,
               },
-              recordedAt: DateManager.formatDate(new Date()),
+
             },
           ],
         },

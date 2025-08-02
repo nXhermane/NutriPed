@@ -30,7 +30,6 @@ export function useAddClinicalDataToMedicalRecord() {
         data: {
           clinicalData: remappedData.map(item => ({
             ...item,
-            recordedAt: DateManager.formatDate(new Date()),
           })),
         },
       });

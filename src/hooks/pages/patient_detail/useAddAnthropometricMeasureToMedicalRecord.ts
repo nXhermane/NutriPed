@@ -42,7 +42,6 @@ export function useAddAnthropometricMeasureToMedicalRecord() {
             context: "follow_up",
             unit: value.unit,
             value: value.value,
-            recordedAt: DateManager.formatDate(new Date()),
           })),
         },
       });
