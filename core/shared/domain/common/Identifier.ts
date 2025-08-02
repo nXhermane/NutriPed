@@ -1,5 +1,11 @@
+import { Guard } from "../../core";
+import { ArgumentInvalidException } from "../../exceptions";
+
 export class Identifier<T> {
   constructor(private value: T) {
+    if (Guard.isEmpty(value).succeeded) {
+      throw new ArgumentInvalidException("Please enter the valid identifier")
+    }
     this.value = value;
   }
 

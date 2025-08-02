@@ -56,7 +56,7 @@ export const InitPatientBottomSheet: React.FC<InitPatientBottomSheetProps> = ({
   }, [isVisible]);
 
   return (
-    <BottomSheetModalProvider>
+  
       <BottomSheetModal
         onDismiss={() => onClose && onClose()}
         snapPoints={["60%"]}
@@ -109,6 +109,6 @@ export const InitPatientBottomSheet: React.FC<InitPatientBottomSheetProps> = ({
           </HStack>
         </VStack>
       </BottomSheetModal>
-    </BottomSheetModalProvider>
+ 
   );
 };

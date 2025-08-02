@@ -8,6 +8,7 @@ import { PatientDetailBody } from "./components/PatientDetailBody";
 import { PatientDetailContext } from "./context";
 import { useToast } from "@/src/context";
 import { router } from "expo-router";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export interface PatientDetailProps {
   id: string;
@@ -36,10 +37,12 @@ export function PatientDetail({ id, patientInteraction }: PatientDetailProps) {
         interaction: patientInteraction,
       }}
     >
-      <VStack className="flex-1 bg-background-primary">
-        <PatientDetailHeader />
-        <PatientDetailBody />
-      </VStack>
+      <BottomSheetModalProvider>
+        <VStack className="flex-1 bg-background-primary">
+          <PatientDetailHeader />
+          <PatientDetailBody />
+        </VStack>
+      </BottomSheetModalProvider>
     </PatientDetailContext.Provider>
   );
 }
