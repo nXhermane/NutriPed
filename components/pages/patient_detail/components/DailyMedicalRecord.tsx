@@ -42,16 +42,17 @@ import {
 } from "@/components/ui/accordion";
 import { Pressable } from "@/components/ui/pressable";
 import {
-  DailyMedicalRecordDataActionBottomSheet,
+  DailyMedicalRecordDataActionModal,
   MedicalRecordDataType,
 } from "./DailyMedicalRecordDataActionBottomSheet";
 
 interface DailyMedicalRecordDataProps {
   data: MedicalRecordDataOrdoredByDay[number];
+  onUpdate?: () => void;
 }
 export const DailyMedicalRecordDataComponent: React.FC<
   DailyMedicalRecordDataProps
-> = ({ data }) => {
+> = ({ data, onUpdate = () => void 0 }) => {
   const [
     showMedicalRecordDataActionModal,
     setShowMedicalRecordDataActionModal,
@@ -80,9 +81,6 @@ export const DailyMedicalRecordDataComponent: React.FC<
               {" - "}
               {data.recordDate.toLocaleDateString("fr-FR", dateFormatOptions)}
             </Text>
-            <Pressable onPress={() => {}}>
-              <Icon as={Edit} className="h-4 w-4" />
-            </Pressable>
           </HStack>
           <HStack></HStack>
         </VStack>
@@ -137,7 +135,7 @@ export const DailyMedicalRecordDataComponent: React.FC<
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.anthrop.map((item, index) => (
                     <AnthropometricItemComponent
-                      key={index}
+                      key={item.id}
                       data={item}
                       onPress={() => {
                         setShowMedicalRecordDataActionModal(true);
@@ -202,7 +200,17 @@ export const DailyMedicalRecordDataComponent: React.FC<
               <AccordionContent>
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.biological.map((item, index) => (
-                    <BiologicalItemComponent key={index} data={item} />
+                    <BiologicalItemComponent
+                      key={item.id}
+                      data={item}
+                      onPress={() => {
+                        setShowMedicalRecordDataActionModal(true);
+                        setCurrentMedicalRecordData({
+                          tag: "biological",
+                          data: item,
+                        });
+                      }}
+                    />
                   ))}
                 </VStack>
               </AccordionContent>
@@ -259,7 +267,7 @@ export const DailyMedicalRecordDataComponent: React.FC<
               <AccordionContent>
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.clinical.map((item, index) => (
-                    <ClinicalItemComponent key={index} data={item} />
+                    <ClinicalItemComponent key={item.id} data={item} />
                   ))}
                 </VStack>
               </AccordionContent>
@@ -315,7 +323,7 @@ export const DailyMedicalRecordDataComponent: React.FC<
               <AccordionContent>
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.complication.map((item, index) => (
-                    <ComplicationItemComponent key={index} data={item} />
+                    <ComplicationItemComponent key={item.id} data={item} />
                   ))}
                 </VStack>
               </AccordionContent>
@@ -324,12 +332,13 @@ export const DailyMedicalRecordDataComponent: React.FC<
         </Accordion>
       </VStack>
       {currentMedicalRecordData && (
-        <DailyMedicalRecordDataActionBottomSheet
+        <DailyMedicalRecordDataActionModal
           data={currentMedicalRecordData}
           isVisible={showMedicalRecordDataActionModal}
           onClose={() => {
             setShowMedicalRecordDataActionModal(true);
             setCurrentMedicalRecordData(null);
+            onUpdate();
           }}
         />
       )}
@@ -376,9 +385,11 @@ export function AnthropometricItemComponent({
 
 export interface BiologicalItemComponentProps {
   data: MedicalRecordDto["biologicalData"][number];
+  onPress?: () => void;
 }
 export function BiologicalItemComponent({
   data,
+  onPress = () => void 0,
 }: BiologicalItemComponentProps) {
   const getBiologicalRefReq = useMemo<GetBiochemicalReferenceRequest>(
     () => ({
@@ -394,16 +405,18 @@ export function BiologicalItemComponent({
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
-      <Text className="font-body text-sm font-normal text-typography-primary_light">
-        {biologicalRefData[0]?.name ?? data.code}
-      </Text>
-      <HStack>
-        <Text className="font-h4 text-sm font-medium text-typography-primary">
-          {data.value} {data.unit}
+    <Pressable onPress={onPress}>
+      <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
+        <Text className="font-body text-sm font-normal text-typography-primary_light">
+          {biologicalRefData[0]?.name ?? data.code}
         </Text>
+        <HStack>
+          <Text className="font-h4 text-sm font-medium text-typography-primary">
+            {data.value} {data.unit}
+          </Text>
+        </HStack>
       </HStack>
-    </HStack>
+    </Pressable>
   );
 }
 

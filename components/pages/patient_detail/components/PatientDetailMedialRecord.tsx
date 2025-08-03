@@ -80,7 +80,13 @@ const PatientDetailMedicalRecordComponent: React.FC<
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <FadeInCardX delayNumber={index} key={item.recordDate.toDateString()}>
-            <DailyMedicalRecordDataComponent data={item} key={index} />
+            <DailyMedicalRecordDataComponent
+              onUpdate={() => {
+                setReloadMedicalRecord(prev => prev + 1);
+              }}
+              data={item}
+              key={index}
+            />
           </FadeInCardX>
         )}
         ItemSeparatorComponent={() => <Box className="h-v-4 w-full" />}
