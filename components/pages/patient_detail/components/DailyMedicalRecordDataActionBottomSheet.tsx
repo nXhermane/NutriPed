@@ -6,6 +6,7 @@ import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React from "react";
 import colors from "tailwindcss/colors";
 import { DailyMedicalRecordDataAction } from "./DailyMedicalRecordDataAction";
+import { DailyMedicalRecordDataActionModalContext } from "../context";
 export type MedicalRecordDataType =
   | {
       tag: "anthropometric";
@@ -23,14 +24,14 @@ export type MedicalRecordDataType =
       tag: "complication";
       data: MedicalRecordDto["complicationData"][number];
     };
-export interface DailyMedicalRecordDataActionBottomSheetProps {
+export interface DailyMedicalRecordDataActionModalProps {
   onClose?: () => void;
   isVisible?: boolean;
   data: MedicalRecordDataType;
 }
 
-export const DailyMedicalRecordDataActionBottomSheet: React.FC<
-  DailyMedicalRecordDataActionBottomSheetProps
+export const DailyMedicalRecordDataActionModal: React.FC<
+  DailyMedicalRecordDataActionModalProps
 > = ({ isVisible = false, onClose = () => {}, data }) => {
   const { colorMode } = useUI();
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
@@ -58,7 +59,11 @@ export const DailyMedicalRecordDataActionBottomSheet: React.FC<
       }}
       enablePanDownToClose={true}
     >
-      <DailyMedicalRecordDataAction data={data} />
+      <DailyMedicalRecordDataActionModalContext.Provider
+        value={{ close: onClose }}
+      >
+        <DailyMedicalRecordDataAction data={data} />
+      </DailyMedicalRecordDataActionModalContext.Provider>
     </BottomSheetModal>
   );
 };

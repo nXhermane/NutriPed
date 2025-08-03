@@ -96,6 +96,7 @@ export interface DynamicFormGeneratorProps<T extends FormSchema> {
   className?: string;
   onChange?: (fieldName: ExtractFieldNames<T>, value: T) => void;
   initialState?: Record<string, { value: any; error?: string }>;
+  disableSessionShown?: boolean;
 }
 
 export interface FormHandler<T extends FormSchema> {
@@ -112,6 +113,7 @@ export const DynamicFormGenerator = forwardRef(
       className,
       onChange,
       initialState,
+      disableSessionShown = false,
     }: DynamicFormGeneratorProps<T>,
     ref: React.Ref<FormHandler<T>>
   ) => {
@@ -194,8 +196,8 @@ export const DynamicFormGenerator = forwardRef(
     return (
       <VStack
         className={
-          "w-full flex-1 gap-y-4 bg-background-secondary px-4 py-v-4" +
-          className
+      `w-full flex-1 gap-y-4 bg-background-secondary px-4 py-v-4 ${className}`
+          
         }
       >
         {schema.map((section, sectionIndex) => {
@@ -206,7 +208,7 @@ export const DynamicFormGenerator = forwardRef(
                 "w-full gap-v-2 rounded-xl bg-background-primary px-3 py-v-3"
               }
             >
-              {section.section && (
+              {section.section && !disableSessionShown && (
                 <HStack className={"items-center gap-2"}>
                   <Heading
                     className={

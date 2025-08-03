@@ -70,12 +70,12 @@ export const AddBiologicalDataToMedicalRecordForm: React.FC<
       >
         <DynamicFormGenerator
           schema={schema}
-          className="bg-background-primary p-0 px-0"
+          className="bg-background-primary py-v-3 p-0 px-4"
           ref={formRef}
           zodSchema={zodValidation}
         />
       </KeyboardAwareScrollView>
-      <HStack className="mb-4 h-fit w-full bg-background-primary px-8 py-4">
+      <HStack className="mb-4 h-fit w-full bg-background-primary px-4 py-4">
         <Button
           className={`h-v-10 w-full rounded-xl ${false ? "bg-red-500" : "bg-primary-c_light"}`}
           onPress={handleSubmitForm}
