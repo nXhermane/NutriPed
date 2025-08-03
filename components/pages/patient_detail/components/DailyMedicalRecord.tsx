@@ -267,7 +267,17 @@ export const DailyMedicalRecordDataComponent: React.FC<
               <AccordionContent>
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.clinical.map((item, index) => (
-                    <ClinicalItemComponent key={item.id} data={item} />
+                    <ClinicalItemComponent
+                      key={item.id}
+                      data={item}
+                      onPress={() => {
+                        setShowMedicalRecordDataActionModal(true);
+                        setCurrentMedicalRecordData({
+                          tag: "clinical",
+                          data: item,
+                        });
+                      }}
+                    />
                   ))}
                 </VStack>
               </AccordionContent>
@@ -323,7 +333,17 @@ export const DailyMedicalRecordDataComponent: React.FC<
               <AccordionContent>
                 <VStack className="gap-2 pl-5 pt-2">
                   {data.complication.map((item, index) => (
-                    <ComplicationItemComponent key={item.id} data={item} />
+                    <ComplicationItemComponent
+                      key={item.id}
+                      data={item}
+                      onPress={() => {
+                        setShowMedicalRecordDataActionModal(true);
+                        setCurrentMedicalRecordData({
+                          tag: "complication",
+                          data: item,
+                        });
+                      }}
+                    />
                   ))}
                 </VStack>
               </AccordionContent>
@@ -422,9 +442,13 @@ export function BiologicalItemComponent({
 
 export interface ClinicalItemComponentProps {
   data: MedicalRecordDto["clinicalData"][number];
+  onPress?: () => void;
 }
 
-export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
+export function ClinicalItemComponent({
+  data,
+  onPress = () => void 0,
+}: ClinicalItemComponentProps) {
   const {
     diagnosticServices: { clinicalNutritionalAnalysis },
   } = usePediatricApp();
@@ -444,44 +468,49 @@ export function ClinicalItemComponent({ data }: ClinicalItemComponentProps) {
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
-      <Text className="font-body text-sm font-normal text-typography-primary_light">
-        {clinicalRefData[0]?.name ?? data.code}
-      </Text>
-      <HStack>
-        <Text
-          className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
-        >
-          {data.isPresent ? "Présent" : "Absent"}
+    <Pressable onPress={onPress}>
+      <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
+        <Text className="font-body text-sm font-normal text-typography-primary_light">
+          {clinicalRefData[0]?.name ?? data.code}
         </Text>
+        <HStack>
+          <Text
+            className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
+          >
+            {data.isPresent ? "Présent" : "Absent"}
+          </Text>
+        </HStack>
       </HStack>
-    </HStack>
+    </Pressable>
   );
 }
 
 export interface ComplicationItemComponentProps {
   data: MedicalRecordDto["complicationData"][number];
+  onPress?: () => void;
 }
 
 export const ComplicationItemComponent: React.FC<
   ComplicationItemComponentProps
-> = ({ data }) => {
+> = ({ data, onPress = () => void 0 }) => {
   const { data: complicationRefs, error, onLoading } = useComplicationRefs();
   if (onLoading) return <Loading />;
 
   return (
-    <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
-      <Text className="font-body text-sm font-normal text-typography-primary_light">
-        {complicationRefs.find(compl => data.code === compl.code)?.name ??
-          data.code}
-      </Text>
-      <HStack>
-        <Text
-          className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
-        >
-          {data.isPresent ? "Présente" : "Absente"}
+    <Pressable onPress={onPress}>
+      <HStack className="justify-between rounded-xl border-b-[0.5px] border-primary-border/5 bg-background-primary px-1 py-2">
+        <Text className="font-body text-sm font-normal text-typography-primary_light">
+          {complicationRefs.find(compl => data.code === compl.code)?.name ??
+            data.code}
         </Text>
+        <HStack>
+          <Text
+            className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
+          >
+            {data.isPresent ? "Présente" : "Absente"}
+          </Text>
+        </HStack>
       </HStack>
-    </HStack>
+    </Pressable>
   );
 };

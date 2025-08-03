@@ -4,12 +4,13 @@ import { Text } from "@/components/ui/text";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { GetBiochemicalReferenceRequest } from "@/core/diagnostics";
-import {
-  useBiochemicalReference,
-  useBiologicalInterpretationFormManager,
-} from "@/src/hooks";
 import { HStack } from "@/components/ui/hstack";
+import { GetClinicalSignReferenceRequest } from "@/core/diagnostics";
+import {
+  remapSignDataToClinicalSign,
+  useClinicalReference,
+  useClinicalSignReferenceFormGenerator,
+} from "@/src/hooks";
 import {
   DynamicFormGenerator,
   FormHandler,
@@ -17,12 +18,10 @@ import {
 } from "@/components/custom";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { usePediatricApp } from "@/adapter";
-
 import {
   usePatientDetail,
   useDailyMedicalRecordDataActionModal,
 } from "../context";
-
 import {
   Button,
   ButtonGroup,
@@ -33,31 +32,32 @@ import {
 import { Check, X } from "lucide-react-native";
 import { Alert } from "react-native";
 
-export interface MedicalRecordBiologicalDataActionProps {
-  data: MedicalRecordDto["biologicalData"][number];
+export interface MedicalRecordClinicalSignDataActionProps {
+  data: MedicalRecordDto["clinicalData"][number];
 }
 
-export const MedicalRecordBiologicalDataAction: React.FC<
-  MedicalRecordBiologicalDataActionProps
+export const MedicalRecordClinicalSignDataAction: React.FC<
+  MedicalRecordClinicalSignDataActionProps
 > = ({ data }) => {
   const { patient } = usePatientDetail();
   const { medicalRecordService } = usePediatricApp();
   const { close } = useDailyMedicalRecordDataActionModal();
   const formRef = useRef<FormHandler<any>>(null);
-  const getBiologicalRefsReq = useMemo<GetBiochemicalReferenceRequest>(
-    () => ({
+  const getClinialSignRefsReq = useMemo<GetClinicalSignReferenceRequest>(() => {
+    return {
       code: data.code,
-    }),
-    [data.code]
-  );
-
+    };
+  }, [data.code]);
   const {
-    data: biochemicalRefs,
+    data: clinicalRefs,
     error,
     onLoading,
-  } = useBiochemicalReference(getBiologicalRefsReq);
-  const { formSchema, selectedBioMarker, setSelectedBioMarker, zodValidation } =
-    useBiologicalInterpretationFormManager(biochemicalRefs, false);
+  } = useClinicalReference(getClinialSignRefsReq);
+  const {
+    data: formData,
+    onLoading: formOnLoading,
+    variableUsageMap,
+  } = useClinicalSignReferenceFormGenerator(clinicalRefs, false);
   const [errorOnUpdateSubmit, setErrorOnUpdateSubmit] = useState<string | null>(
     null
   );
@@ -73,18 +73,19 @@ export const MedicalRecordBiologicalDataAction: React.FC<
     setIsSuccessOnUpdateForm(false);
     setIsSubmittingUpdateForm(true);
     const formData = await formRef.current?.submit();
-    if (formData) {
-      const bioloical = formData[data.code];
+    if (formData && variableUsageMap) {
+      const remappedData = remapSignDataToClinicalSign(
+        formData,
+        variableUsageMap
+      );
       const result = await medicalRecordService.update({
         medicalRecordId: patient.id,
         data: {
-          biologicalData: [
+          clinicalData: [
             {
+              code: remappedData[0].code,
+              data: remappedData[0].data,
               id: data.id,
-              measurement: {
-                unit: bioloical.unit,
-                value: bioloical.value,
-              },
             },
           ],
         },
@@ -112,7 +113,7 @@ export const MedicalRecordBiologicalDataAction: React.FC<
           async onPress() {
             const result = await medicalRecordService.deleteData({
               medicalRecordId: patient.id,
-              data: { biologicalData: [data.id] },
+              data: { clinicalData: [data.id] },
             });
             if ("data" in result) setIsSuccessDelete(true);
             else {
@@ -135,42 +136,35 @@ export const MedicalRecordBiologicalDataAction: React.FC<
     );
     setIsSubmittingDelete(false);
   };
-
   useEffect(() => {
     if (isSuccessDelete || isSuccessOnUpdateForm) {
       close();
     }
   }, [isSuccessDelete, isSuccessOnUpdateForm]);
-  useEffect(() => {
-    if (biochemicalRefs.length != 0) {
-      setSelectedBioMarker([biochemicalRefs[0].id as string]);
-    }
-  }, [biochemicalRefs]);
-
-  if (onLoading) return <Loading />;
+  if (onLoading || formOnLoading || !formData) return <Loading />;
   return (
     <React.Fragment>
       <BottomSheetScrollView>
         <VStack className="items-center border-b-[0.5px] border-primary-border/10 py-v-2">
           <Heading className="font-h3 text-lg font-semibold text-typography-primary">
-            Gestion de la mesure
+            Gestion du signe clinique
           </Heading>
           <Text className="font-body text-sm font-normal text-typography-primary_light">
-            Modifier ou supprimer cette mesure
+            Modifier ou supprimer le signe clinique
           </Text>
         </VStack>
         <VStack>
           <VStack className="mx-4 my-v-2 rounded-xl bg-primary-c_light/10 px-4 py-v-2">
             <Text className="font-h4 text-base font-medium text-typography-primary">
-              Mesure actuelle
+              Valeur actuelle
             </Text>
-            <HStack className="flex-wrap gap-1">
+            <HStack className="w-full flex-wrap gap-1">
               <Text className="font-body text-sm font-normal text-typography-primary_light">
-                {biochemicalRefs[0]?.name}
+                {clinicalRefs[0]?.name}
               </Text>
               <Text>•</Text>
               <Text className="font-h4 text-sm font-medium text-typography-primary">
-                {data.value} {data.unit}
+                {data.isPresent ? "Présent" : "Absent"}
               </Text>
               <Text>•</Text>
               <Text className="font-body text-sm font-normal text-typography-primary_light">
@@ -185,17 +179,8 @@ export const MedicalRecordBiologicalDataAction: React.FC<
               <DynamicFormGenerator
                 ref={formRef}
                 disableSessionShown
-                schema={formSchema}
-                initialState={{
-                  [data.code]: {
-                    value: {
-                      unit: data.unit,
-                      value: data.value,
-                      code: data.code,
-                    },
-                  },
-                }}
-                zodSchema={zodValidation}
+                schema={formData?.schema}
+                zodSchema={formData.zodSchema}
               />
             </KeyboardAwareScrollView>
           </VStack>

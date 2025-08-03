@@ -1,9 +1,10 @@
 import React from "react";
 import { MedicalRecordDataType } from "./DailyMedicalRecordDataActionBottomSheet";
 import { VStack } from "@/components/ui/vstack";
-import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { MedicalRecordAnthropometricDataAction } from "./MedicalRecordAnthropometricDataAction";
 import { MedicalRecordBiologicalDataAction } from "./MedicalRecordBiologicalDataAction";
+import { MedicalRecordClinicalSignDataAction } from "./MedicalRecordClinicalSignDataAction";
+import { MedicalRecordComplicationDataAction } from "./MedicalRecordComplicationDataAction";
 
 export interface DailyMedicalRecordDataActionProps {
   data: MedicalRecordDataType;
@@ -18,6 +19,10 @@ export const DailyMedicalRecordDataAction: React.FC<
         return <MedicalRecordAnthropometricDataAction data={data.data} />;
       case "biological":
         return <MedicalRecordBiologicalDataAction data={data.data} />;
+      case "clinical":
+        return <MedicalRecordClinicalSignDataAction data={data.data} />;
+      case "complication":
+        return <MedicalRecordComplicationDataAction data={data.data} />;
       default:
         return <VStack className="h-v-96 bg-red-500"></VStack>;
     }

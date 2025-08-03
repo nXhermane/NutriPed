@@ -1,30 +1,13 @@
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import {
-  useClinicalReference,
-  useClinicalSignReferenceFormGenerator,
-} from "@/src/hooks";
+import { useClinicalReference } from "@/src/hooks";
 import React, { useState } from "react";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
-import {
-  Button,
-  ButtonIcon,
-  ButtonSpinner,
-  ButtonText,
-} from "@/components/ui/button";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  ChevronRight,
-  Plus,
-  X,
-} from "lucide-react-native";
+import { Button, ButtonIcon } from "@/components/ui/button";
+import { ArrowLeft, Plus } from "lucide-react-native";
 import { AddClinicalDataToMedicalRecordClinicalSignSelectorModal } from "./AddClinicalDataToMedicalRecordClinicalSignSelectorModal";
 import { ClinicalSignReferenceDto } from "@/core/diagnostics";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { DynamicFormGenerator } from "@/components/custom";
 import { AddClinicalDataToMedicalRecordForm } from "./AddClinicalDataToMedicalRecordForm";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
@@ -55,7 +38,8 @@ export const AddClinicalDataToMedicalRecord: React.FC<
               </Text>
             </VStack>
             <Button
-              className="h-fit rounded-full bg-primary-c_light p-0 px-2 py-2"
+              isDisabled={selectedClinicalSigns.length == 0}
+              className={` h-fit rounded-full bg-primary-c_light p-0 px-2 py-2`}
               onPress={() => {
                 setShowSelectionModal(false);
               }}

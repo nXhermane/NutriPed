@@ -38,7 +38,7 @@ export const AddBiologicalDataToMedicalRecord: React.FC<
             </Text>
           </VStack>
           <Button
-            disabled={selectedBioMarker.length === 0}
+            isDisabled={selectedBioMarker.length === 0}
             className="h-fit rounded-full bg-primary-c_light p-0 px-2 py-2"
             onPress={() => setShowSelectionModal(false)}
           >

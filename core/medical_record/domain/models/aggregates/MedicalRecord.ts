@@ -147,7 +147,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     if (findedIndex != -1) {
       if (data.clinicalSignData)
         this.props.clinicalData[findedIndex].changeData(data.clinicalSignData);
-      if (data.isPresent)
+      if (data.isPresent != undefined)
         this.props.clinicalData[findedIndex].changeIsPresent(data.isPresent);
       this.puslishClinicalDataChange(
         this.props.clinicalData[findedIndex].getProps().code
@@ -177,7 +177,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       record => record.id == id
     );
     if (findedIndex != -1) {
-      if (data.isPresent)
+      if (data.isPresent != undefined)
         this.props.complicationData[findedIndex].changeIsPresent(
           data.isPresent
         );
