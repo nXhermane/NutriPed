@@ -7,7 +7,6 @@ import { icons } from "lucide-react-native";
 import { CardPressEffect, FadeInCardX } from "@/components/custom/motion";
 import { Center } from "@/components/ui/center";
 import { Icon } from "@/components/ui/icon";
-import colors from "tailwindcss/colors";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 
@@ -74,7 +73,10 @@ export const AddDataToMedicalRecordChooseDataTypeScreen: React.FC<
                 iconBgColor={item.iconBgColor}
                 iconColor={item.iconColor}
                 onPress={() => {
-                  navigate("data_type_display", { tag: item.tag });
+                  navigate({
+                    name: "data_type_display",
+                    params: { tag: item.tag },
+                  } as never);
                 }}
               />
             </FadeInCardX>

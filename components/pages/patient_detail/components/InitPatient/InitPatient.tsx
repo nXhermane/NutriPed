@@ -1,7 +1,7 @@
 import { Center } from "@/components/ui/center";
 import React, { useState } from "react";
-import { InitPatientTrigger } from "./InitPatientTrigger";
 import { InitPatientBottomSheet } from "./InitPatientBottomSheet";
+import { InitPatientTrigger } from "./InitPatientTrigger";
 
 export interface InitPatientProps {}
 

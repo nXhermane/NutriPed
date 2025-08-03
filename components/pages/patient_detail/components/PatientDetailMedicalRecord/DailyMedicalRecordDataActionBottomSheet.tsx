@@ -2,11 +2,11 @@ import { BottomSheetDragIndicator } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { useUI } from "@/src/context";
-import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React from "react";
 import colors from "tailwindcss/colors";
 import { DailyMedicalRecordDataAction } from "./DailyMedicalRecordDataAction";
-import { DailyMedicalRecordDataActionModalContext } from "../context";
+import { DailyMedicalRecordDataActionModalContext } from "../../context";
 export type MedicalRecordDataType =
   | {
       tag: "anthropometric";

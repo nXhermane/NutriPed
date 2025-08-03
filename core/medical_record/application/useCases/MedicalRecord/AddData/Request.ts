@@ -13,7 +13,7 @@ export type AddDataToMedicalRecordRequest = {
   medicalRecordId: AggregateID;
   data: Partial<{
     anthropometricData: CreateAnthropometricRecord[];
-    clinicalData: Omit<CreateClinicalSignDataRecord, 'isPresent'>[];
+    clinicalData: Omit<CreateClinicalSignDataRecord, "isPresent">[];
     biologicalData: CreateBiologicalValueRecord[];
     complicationData: CreateComplicationDataRecord[];
     dataFieldResponses: CreateDataFieldResponse[];

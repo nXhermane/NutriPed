@@ -19,8 +19,11 @@ import { Check } from "lucide-react-native";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { remapProps } from "react-native-css-interop";
 import { SegmentedControl } from "segmented-control-rn";
-import { useAddDataToMedicalRecordModal, usePatientDetail } from "../context";
 import { DateManager } from "@/core/shared";
+import {
+  useAddDataToMedicalRecordModal,
+  usePatientDetail,
+} from "../../context";
 
 const SegmentedControlRM = remapProps(SegmentedControl, {
   className: "style",

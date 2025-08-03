@@ -1,7 +1,6 @@
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { MedicalRecordDataOrdoredByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
 import { useMemo, useState } from "react";
 import { HumanDateFormatter } from "@/utils";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/core/diagnostics";
 import { MedicalRecordDto } from "@/core/medical_record";
 import {
+  MedicalRecordDataOrdoredByDay,
   useAnthropometricMeasure,
   useBiochemicalReference,
   useClinicalReference,

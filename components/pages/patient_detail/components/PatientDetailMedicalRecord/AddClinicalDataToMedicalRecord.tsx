@@ -6,11 +6,11 @@ import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react-native";
-import { AddClinicalDataToMedicalRecordClinicalSignSelectorModal } from "./AddClinicalDataToMedicalRecordClinicalSignSelectorModal";
 import { ClinicalSignReferenceDto } from "@/core/diagnostics";
-import { AddClinicalDataToMedicalRecordForm } from "./AddClinicalDataToMedicalRecordForm";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
+import { AddClinicalDataToMedicalRecordClinicalSignSelectorModal } from "./AddClinicalDataToMedicalRecordClinicalSignSelectorModal";
+import { AddClinicalDataToMedicalRecordForm } from "./AddClinicalDataToMedicalRecordForm";
 
 export interface AddClinicalDataToMedicalRecordProps {}
 
@@ -39,7 +39,7 @@ export const AddClinicalDataToMedicalRecord: React.FC<
             </VStack>
             <Button
               isDisabled={selectedClinicalSigns.length == 0}
-              className={` h-fit rounded-full bg-primary-c_light p-0 px-2 py-2`}
+              className={`h-fit rounded-full bg-primary-c_light p-0 px-2 py-2`}
               onPress={() => {
                 setShowSelectionModal(false);
               }}

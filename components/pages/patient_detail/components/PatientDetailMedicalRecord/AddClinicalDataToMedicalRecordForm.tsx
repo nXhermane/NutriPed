@@ -1,4 +1,8 @@
-import { DynamicFormGenerator, FormHandler, Loading } from "@/components/custom";
+import {
+  DynamicFormGenerator,
+  FormHandler,
+  Loading,
+} from "@/components/custom";
 import {
   Button,
   ButtonIcon,
@@ -6,10 +10,8 @@ import {
   ButtonText,
 } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
-import { VStack } from "@/components/ui/vstack";
 import { ClinicalSignReferenceDto } from "@/core/diagnostics";
 import {
-  remapSignDataToClinicalSign,
   useAddClinicalDataToMedicalRecord,
   useClinicalSignReferenceFormGenerator,
 } from "@/src/hooks";
@@ -17,7 +19,7 @@ import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Check, X } from "lucide-react-native";
 import { useEffect, useRef } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { useAddDataToMedicalRecordModal } from "../context";
+import { useAddDataToMedicalRecordModal } from "../../context";
 
 export interface AddClinicalDataToMedicalRecordFormProps {
   data: ClinicalSignReferenceDto[];
@@ -42,7 +44,7 @@ export const AddClinicalDataToMedicalRecordForm: React.FC<
   useEffect(() => {
     if (isSuccess) close();
   }, [isSuccess]);
-  if(formOnLoading) return <Loading/>
+  if (formOnLoading) return <Loading />;
   return (
     <BottomSheetScrollView showsVerticalScrollIndicator={false}>
       {formData && (
@@ -52,7 +54,7 @@ export const AddClinicalDataToMedicalRecordForm: React.FC<
         >
           <DynamicFormGenerator
             schema={formData?.schema}
-            className="bg-background-primary py-v-3 p-0 px-2"
+            className="bg-background-primary p-0 px-2 py-v-3"
             ref={formRef}
             zodSchema={formData.zodSchema}
           />
