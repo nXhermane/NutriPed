@@ -11,10 +11,10 @@ export interface AddDataToMedicalRecordDataTypeFormProps {}
 export const AddDataToMedicalRecordDataTypeForm: React.FC<
   AddDataToMedicalRecordDataTypeFormProps
 > = ({}) => {
-  const router = useRoute();
+  const router = useRoute<any>();
   console.log(router.params);
   const render = () => {
-    switch (router.params["tag"]) {
+    switch (router.params["tag" as never]) {
       case "anthropometric": {
         return (
           <React.Fragment>

@@ -195,10 +195,7 @@ export const DynamicFormGenerator = forwardRef(
 
     return (
       <VStack
-        className={
-      `w-full flex-1 gap-y-4 bg-background-secondary px-4 py-v-4 ${className}`
-          
-        }
+        className={`w-full flex-1 gap-y-4 bg-background-secondary px-4 py-v-4 ${className}`}
       >
         {schema.map((section, sectionIndex) => {
           return (

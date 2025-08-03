@@ -1,6 +1,6 @@
 import { VStack } from "@/components/ui/vstack";
 import React from "react";
-import { InitPatientRootSecure } from "./InitPatientRootSecure";
+import { InitPatientRootSecure } from "./InitPatient";
 
 export interface PatientDetailOverviewsProps {}
 

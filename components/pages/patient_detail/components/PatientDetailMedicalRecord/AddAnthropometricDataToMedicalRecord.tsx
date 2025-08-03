@@ -1,6 +1,5 @@
 import { VStack } from "@/components/ui/vstack";
 import React, { useEffect, useRef } from "react";
-import { AddAnthropometricDataToMedicalRecordForm } from "./AddAnthropometricDataToMedicalRecordForm";
 import { HStack } from "@/components/ui/hstack";
 import {
   Button,
@@ -11,7 +10,8 @@ import {
 import { Check, X } from "lucide-react-native";
 import { FormHandler } from "@/components/custom";
 import { useAddAnthropometricMeasureToMedicalRecord } from "@/src/hooks";
-import { useAddDataToMedicalRecordModal } from "../context";
+import { useAddDataToMedicalRecordModal } from "../../context";
+import { AddAnthropometricDataToMedicalRecordForm } from "./AddAnthropometricDataToMedicalRecordForm";
 
 export interface AddAnthropometricDataToMedicalRecordProps {}
 

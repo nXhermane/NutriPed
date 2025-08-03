@@ -1,11 +1,9 @@
 import { VStack } from "@/components/ui/vstack";
 import React, { useMemo, useState } from "react";
 import { useMedicalRecord } from "@/src/hooks";
-import { InitPatientRootSecure } from "./InitPatientRootSecure";
 import { Loading } from "@/components/custom";
 import { useOrdoredMedicalRecordDataByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
 import { FadeInCardX } from "@/components/custom/motion";
-import { DailyMedicalRecordDataComponent } from "./DailyMedicalRecord";
 import { Box } from "@/components/ui/box";
 import { FilterChips } from "../../shared";
 import {
@@ -18,8 +16,12 @@ import {
 import { SessionEmpty } from "../../home/shared/SessionEmpty";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Plus } from "lucide-react-native";
-import { AddDataToMedicalRecordModal } from "./AddDataToMedicalRecordModal";
 import { FlatList } from "react-native";
+import { InitPatientRootSecure } from "./InitPatient";
+import {
+  DailyMedicalRecordDataComponent,
+  AddDataToMedicalRecordModal,
+} from "./PatientDetailMedicalRecord";
 
 export interface PatientDetailMedicalRecordProps {}
 

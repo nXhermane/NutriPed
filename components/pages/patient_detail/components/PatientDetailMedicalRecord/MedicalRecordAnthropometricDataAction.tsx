@@ -2,7 +2,7 @@ import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { MedicalRecordDto } from "@/core/medical_record";
-import { BottomSheetScrollView, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { HStack } from "@/components/ui/hstack";
 import {
@@ -15,15 +15,9 @@ import {
   FormHandler,
   Loading,
 } from "@/components/custom";
-import { HumanDateFormatter } from "@/utils";
-import { DateManager } from "@/core/shared";
 import { getAnthropDataFormSchemaWithCode } from "@/src/constants/ui";
-import { ZodAny } from "zod";
 import { IField } from "@/components/custom/FormField";
-import {
-  KeyboardAvoidingView,
-  KeyboardAwareScrollView,
-} from "react-native-keyboard-controller";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import {
   Button,
   ButtonGroup,
@@ -33,11 +27,12 @@ import {
 } from "@/components/ui/button";
 import { Check, X } from "lucide-react-native";
 import { usePediatricApp } from "@/adapter";
-import {
-  useDailyMedicalRecordDataActionModal,
-  usePatientDetail,
-} from "../context";
+
 import { Alert } from "react-native";
+import {
+  usePatientDetail,
+  useDailyMedicalRecordDataActionModal,
+} from "../../context";
 
 export interface MedicalRecordAnthropometricDataActionProps {
   data: MedicalRecordDto["anthropometricData"][number];

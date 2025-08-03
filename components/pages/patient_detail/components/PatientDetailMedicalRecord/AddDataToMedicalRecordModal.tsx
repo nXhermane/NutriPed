@@ -1,5 +1,4 @@
 import React, { ComponentProps, useMemo, useRef, useState } from "react";
-import { AddDataToMedicalRecordChooseDataTypeScreen } from "./AddDataToMedicalRecordChooseDataTypeScreen";
 import { useUI } from "@/src/context";
 import {
   NavigationContainer,
@@ -9,16 +8,13 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from "@react-navigation/stack";
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import colors from "tailwindcss/colors";
 import { BottomSheetDragIndicator } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
+import { AddDataToMedicalRecordModalContext } from "../../context";
+import { AddDataToMedicalRecordChooseDataTypeScreen } from "./AddDataToMedicalRecordChooseDataTypeScreen";
 import { AddDataToMedicalRecordDataTypeForm } from "./AddDataToMedicalRecordDataTypeForm";
-import { AddDataToMedicalRecordModalContext } from "../context";
 
 const Stack = createStackNavigator();
 

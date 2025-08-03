@@ -15,9 +15,12 @@ import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Check, X } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { useAddDataToMedicalRecordModal, usePatientDetail } from "../context";
 import { usePediatricApp } from "@/adapter";
 import { DateManager } from "@/core/shared";
+import {
+  useAddDataToMedicalRecordModal,
+  usePatientDetail,
+} from "../../context";
 
 export interface AddBiologicalDataToMedicalRecordFormProps {
   schema: FormSchema;
@@ -70,7 +73,7 @@ export const AddBiologicalDataToMedicalRecordForm: React.FC<
       >
         <DynamicFormGenerator
           schema={schema}
-          className="bg-background-primary py-v-3 p-0 px-2"
+          className="bg-background-primary p-0 px-2 py-v-3"
           ref={formRef}
           zodSchema={zodValidation}
         />
