@@ -23,7 +23,7 @@ import {
 import { HStack } from "@/components/ui/hstack";
 import { Check, X } from "lucide-react-native";
 import { useDiagnosticDataForm } from "@/src/hooks";
-import { usePatientDetail } from "../context";
+import { usePatientDetail } from "../../context";
 export interface InitPatientBottomSheetProps {
   onClose?: () => void;
   isVisible?: boolean;

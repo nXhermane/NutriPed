@@ -1,6 +1,6 @@
 import { ChartDetailMenuOtpionData } from "@/src/constants/ui";
 import { useCallback, useState } from "react";
-import { usePicker } from "../../usePicker";
+import { usePicker } from "../../utils/usePicker";
 import {
   addNewSerie,
   AppDispatch,

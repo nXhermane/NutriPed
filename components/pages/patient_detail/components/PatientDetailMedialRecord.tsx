@@ -16,11 +16,12 @@ import {
 import { SessionEmpty } from "../../home/shared/SessionEmpty";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Plus } from "lucide-react-native";
-import { FlatList } from "react-native";
+import { FlatList, ScrollView } from "react-native";
 import { InitPatientRootSecure } from "./InitPatient";
 import {
   DailyMedicalRecordDataComponent,
   AddDataToMedicalRecordModal,
+  AnthropometricMeasurementTrendsChart,
 } from "./PatientDetailMedicalRecord";
 
 export interface PatientDetailMedicalRecordProps {}
@@ -60,9 +61,20 @@ const PatientDetailMedicalRecordComponent: React.FC<
     });
   }, [ordoredMedicalRecordData, filterTag]);
   if (onLoading) return <Loading />;
-
+  console.log(ordoredMedicalRecordData.map(date => date.recordDate));
   return (
     <VStack className="flex-1 bg-background-primary">
+      {ordoredMedicalRecordData.length != 0 && (
+        <AnthropometricMeasurementTrendsChart
+          range={{
+            start:
+              ordoredMedicalRecordData[ordoredMedicalRecordData.length - 1]
+                ?.recordDate,
+            end: ordoredMedicalRecordData[0]?.recordDate,
+          }}
+          gap={0}
+        />
+      )}
       <VStack className="overflow-visible py-3">
         <FilterChips<typeof filterTag>
           data={[
@@ -81,7 +93,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
         data={filteredList}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <FadeInCardX delayNumber={index} key={item.recordDate.toDateString()}>
+          <FadeInCardX delayNumber={index} key={index}>
             <DailyMedicalRecordDataComponent
               onUpdate={() => {
                 setReloadMedicalRecord(prev => prev + 1);

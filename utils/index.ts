@@ -5,3 +5,4 @@ export * from "./downloadAndCatchFile";
 export * from "./loadXlsxTemplate";
 export * from "./convertBirthDateIntoAgeInMonth";
 export * from "./compareDate";
+export * from "./DateAxis"

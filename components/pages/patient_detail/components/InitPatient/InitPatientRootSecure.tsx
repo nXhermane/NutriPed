@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
-import { usePatientDetail } from "../context";
 import { InitPatient } from "./InitPatient";
+import { usePatientDetail } from "../../context";
 
 export const InitPatientRootSecure: React.FC<PropsWithChildren> = ({
   children,
