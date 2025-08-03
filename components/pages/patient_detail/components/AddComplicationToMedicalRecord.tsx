@@ -27,7 +27,7 @@ const SegmentedControlRM = remapProps(SegmentedControl, {
   activeClassName: "activeSegmentStyle",
 });
 
-type ComplicationState = "present" | "none" | "absent";
+export type ComplicationState = "present" | "none" | "absent";
 type ComplicationChange = {
   code: string;
   previousState: ComplicationState;

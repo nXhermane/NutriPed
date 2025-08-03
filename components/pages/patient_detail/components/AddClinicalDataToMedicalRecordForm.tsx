@@ -1,4 +1,4 @@
-import { DynamicFormGenerator, FormHandler } from "@/components/custom";
+import { DynamicFormGenerator, FormHandler, Loading } from "@/components/custom";
 import {
   Button,
   ButtonIcon,
@@ -42,6 +42,7 @@ export const AddClinicalDataToMedicalRecordForm: React.FC<
   useEffect(() => {
     if (isSuccess) close();
   }, [isSuccess]);
+  if(formOnLoading) return <Loading/>
   return (
     <BottomSheetScrollView showsVerticalScrollIndicator={false}>
       {formData && (
@@ -51,13 +52,13 @@ export const AddClinicalDataToMedicalRecordForm: React.FC<
         >
           <DynamicFormGenerator
             schema={formData?.schema}
-            className="bg-background-primary p-0 px-0"
+            className="bg-background-primary py-v-3 p-0 px-2"
             ref={formRef}
             zodSchema={formData.zodSchema}
           />
         </KeyboardAwareScrollView>
       )}
-      <HStack className="mb-4 h-fit w-full bg-background-primary px-8 py-4">
+      <HStack className="mb-4 h-fit w-full bg-background-primary px-4 py-4">
         <Button
           className={`h-v-10 w-full rounded-xl ${error ? "bg-red-500" : "bg-primary-c_light"}`}
           onPress={handleSubmitForm}

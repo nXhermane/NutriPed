@@ -70,7 +70,7 @@ export const AddBiologicalDataToMedicalRecordForm: React.FC<
       >
         <DynamicFormGenerator
           schema={schema}
-          className="bg-background-primary py-v-3 p-0 px-4"
+          className="bg-background-primary py-v-3 p-0 px-2"
           ref={formRef}
           zodSchema={zodValidation}
         />
