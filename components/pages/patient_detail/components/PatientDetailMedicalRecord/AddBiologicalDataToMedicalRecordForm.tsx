@@ -20,7 +20,7 @@ import { DateManager } from "@/core/shared";
 import {
   useAddDataToMedicalRecordModal,
   usePatientDetail,
-} from "../../context";
+} from "@/src/context/pages";
 
 export interface AddBiologicalDataToMedicalRecordFormProps {
   schema: FormSchema;

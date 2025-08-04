@@ -1,5 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import { usePatientDetail } from "@/components/pages/patient_detail/context";
+import { usePatientDetail } from "@/src/context/pages/patient";
 import { AnthroSystemCodes } from "@/core/constants";
 import { DateManager } from "@/core/shared";
 import { useCallback, useState } from "react";

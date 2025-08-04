@@ -1,5 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import { usePatientDetail } from "@/components/pages/patient_detail/context";
+import { usePatientDetail } from "@/src/context/pages/patient";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { useEffect, useState } from "react";
 

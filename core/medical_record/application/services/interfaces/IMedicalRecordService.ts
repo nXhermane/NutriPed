@@ -6,8 +6,10 @@ import {
   DeleteMedicalRecordRequest,
   AddDataToMedicalRecordRequest,
   DeleteDataFromMedicalRecordRequest,
+  GetNormalizedAnthropometricDataRequest,
 } from "../../useCases";
 import { MedicalRecordDto } from "../../dtos";
+import { CreateAnthropometricRecord } from "./../../../domain";
 
 export interface IMedicalRecordService {
   create(
@@ -28,4 +30,15 @@ export interface IMedicalRecordService {
   deleteData(
     req: DeleteDataFromMedicalRecordRequest
   ): Promise<AppServiceResponse<void> | Message>;
+  getNormalizeAnthropometricData(
+    req: GetNormalizedAnthropometricDataRequest
+  ): Promise<
+    | AppServiceResponse<
+        (CreateAnthropometricRecord & {
+          recordedAt: string;
+          id: AggregateID;
+        })[]
+      >
+    | Message
+  >;
 }

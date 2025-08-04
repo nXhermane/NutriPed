@@ -30,9 +30,9 @@ import { usePediatricApp } from "@/adapter";
 
 import { Alert } from "react-native";
 import {
-  usePatientDetail,
   useDailyMedicalRecordDataActionModal,
-} from "../../context";
+  usePatientDetail,
+} from "@/src/context/pages";
 
 export interface MedicalRecordAnthropometricDataActionProps {
   data: MedicalRecordDto["anthropometricData"][number];

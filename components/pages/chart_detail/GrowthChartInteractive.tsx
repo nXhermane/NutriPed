@@ -36,7 +36,7 @@ import {
   Scatter,
   useChartPressState,
   useChartTransformState,
-} from "nxhermane_victory-native";
+} from "victory-native";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
 import { Share } from "lucide-react-native";

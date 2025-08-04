@@ -1,5 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import { usePatientDetail } from "@/components/pages/patient_detail/context";
+import { usePatientDetail } from "@/src/context/pages/patient";
 import { useCallback, useState } from "react";
 import { remapSignDataToClinicalSign, VariableUsageMap } from "../tools";
 import { DateManager } from "@/core/shared";

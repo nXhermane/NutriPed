@@ -24,8 +24,12 @@ import {
   GetMedicalRecordRequest,
   GetMedicalRecordResponse,
   GetMedicalRecordUseCase,
+  GetNormalizedAnthropometricDataRequest,
+  GetNormalizedAnthropometricDataResponse,
+  GetNormalizedAnthropometricDataUseCase,
   IClinicalSignDataInterpretationACL,
   IMedicalRecordService,
+  INormalizeAnthropometricDataACL,
   MeasurementValidationACL,
   MeasurementValidationACLImpl,
   MedicalRecord,
@@ -33,6 +37,7 @@ import {
   MedicalRecordMapper,
   MedicalRecordRepository,
   MedicalRecordService,
+  NormalizeAnthropomericDataACL,
   PatientACL,
   UpdateMedicalRecordRequest,
   UpdateMedicalRecordResponse,
@@ -97,10 +102,15 @@ export class MedicalRecordContext {
     DeleteDataFromMedicalRecordRequest,
     DeleteDataFromMedicalRecordResponse
   >;
+  private readonly getNormalizeAnthropometricDataUC: UseCase<
+    GetNormalizedAnthropometricDataRequest,
+    GetNormalizedAnthropometricDataResponse
+  >;
   // ACL
   private readonly patientACL: PatientACL;
   private readonly measurementACl: MeasurementValidationACL;
   private readonly clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
+  private readonly normalizeAnthropometricDataACL: INormalizeAnthropometricDataACL;
   // App services
   private readonly medicalRecordAppService: IMedicalRecordService;
 
@@ -141,6 +151,13 @@ export class MedicalRecordContext {
         expo,
         this.eventBus
       ).getMakeClinicalSignDataInterpretationService()
+    );
+    this.normalizeAnthropometricDataACL = new NormalizeAnthropomericDataACL(
+      DiagnosticContext.init(
+        dbConnection,
+        expo,
+        this.eventBus
+      ).getNormalizeAnthropomtricDataService()
     );
 
     this.infraMapper = new MedicalRecordInfraMapper();
@@ -186,6 +203,11 @@ export class MedicalRecordContext {
     this.deleteMedicalRecordUC = new DeleteMedicalRecordUseCase(
       this.repository
     );
+    this.getNormalizeAnthropometricDataUC =
+      new GetNormalizedAnthropometricDataUseCase(
+        this.repository,
+        this.normalizeAnthropometricDataACL
+      );
     // Subscribers
     this.afterPatientCreatedHandler = new AfterPatientCreatedMedicalHandler(
       this.createMedicalRecordUC
@@ -201,6 +223,7 @@ export class MedicalRecordContext {
       getUC: this.getMedicalRecordUC,
       updateUC: this.updateMedicalRecordUC,
       deleteDataUC: this.deleteDataFromMedicalRecordUC,
+      getNormalizeAnthropDataUC: this.getNormalizeAnthropometricDataUC,
     });
   }
   static init(

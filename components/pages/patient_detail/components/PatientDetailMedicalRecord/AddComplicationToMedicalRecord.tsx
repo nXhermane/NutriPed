@@ -12,7 +12,6 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { ComplicationDto } from "@/core/nutrition_care";
-import { useUI } from "@/src/context";
 import { useComplicationRefs, useMedicalRecord } from "@/src/hooks";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Check } from "lucide-react-native";
@@ -23,7 +22,7 @@ import { DateManager } from "@/core/shared";
 import {
   useAddDataToMedicalRecordModal,
   usePatientDetail,
-} from "../../context";
+} from "@/src/context/pages";
 
 const SegmentedControlRM = remapProps(SegmentedControl, {
   className: "style",

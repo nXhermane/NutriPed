@@ -172,6 +172,8 @@ import {
   IndicatorMapper,
   IndicatorRepository,
   IndicatorService,
+  INormalizeAnthropometricDataAppService,
+  INormalizeAnthropometricDataService,
   INutritionalAssessmentService,
   INutritionalDiagnosticService,
   INutritionalRiskFactorService,
@@ -194,6 +196,11 @@ import {
   MakeIndependantDiagnosticRequest,
   MakeIndependantDiagnosticResponse,
   MakeIndependantDiagnosticUseCase,
+  NormalizeAnthropometricDataAppService,
+  NormalizeAnthropometricDataRequest,
+  NormalizeAnthropometricDataResponse,
+  NormalizeAnthropometricDataService,
+  NormalizeAnthropometricDataUseCase,
   NutritionalAssessmentResult,
   NutritionalAssessmentResultDto,
   NutritionalAssessmentResultFactory,
@@ -400,6 +407,7 @@ export class DiagnosticContext {
   private readonly anthroValidationService: IAnthropometricValidationService;
   private readonly growthIndicatorService: IGrowthIndicatorService;
   private readonly growthRefSelectionService: IReferenceSelectionService;
+  private readonly normalizeAnthropometricDataService: INormalizeAnthropometricDataService;
   private readonly biologicalInterpretationService: IBiologicalInterpretationService;
   private readonly biologicalValidationService: IBiologicalValidationService;
   private readonly biologicalVariableGeneratorService: IBiologicalVariableGeneratorService;
@@ -542,6 +550,10 @@ export class DiagnosticContext {
     CalculateAllAvailableGrowthIndicatorValueRequest,
     CalculateAllAvailableGrowthIndicatorValueResponse
   >;
+  private readonly normalizeAnthropometricDataUC: UseCase<
+    NormalizeAnthropometricDataRequest,
+    NormalizeAnthropometricDataResponse
+  >;
   private readonly createClinicalRefUC: UseCase<
     CreateClinicalSignReferenceRequest,
     CreateClinicalSignReferenceResponse
@@ -664,6 +676,7 @@ export class DiagnosticContext {
   private readonly indicatorAppService: IIndicatorService;
   private readonly growthChartAppService: IGrowthReferenceChartService;
   private readonly growthTableAppService: IGrowthReferenceTableService;
+  private readonly normalizeAnthropometricDataAppService: INormalizeAnthropometricDataAppService;
   private readonly clinicalRefAppService: IClinicalSignReferenceService;
   private readonly clinicalNutritionalAnalysisAppService: IClinicalNutritionalAnalysisAppService;
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
@@ -874,6 +887,11 @@ export class DiagnosticContext {
       this.zScoreCalculationService,
       this.zScoreInterpretationService
     );
+    this.normalizeAnthropometricDataService =
+      new NormalizeAnthropometricDataService(
+        this.anthroMeasureRepo,
+        this.unitAcl
+      );
     this.biologicalInterpretationService = new BiologicalInterpretationService(
       this.biochemicalRefRepo,
       this.unitAcl
@@ -1026,6 +1044,10 @@ export class DiagnosticContext {
         this.anthroVariableGenerator,
         this.growthIndicatorService
       );
+
+    this.normalizeAnthropometricDataUC = new NormalizeAnthropometricDataUseCase(
+      this.normalizeAnthropometricDataService
+    );
     // Clinical Reference Use Cases
     this.createClinicalRefUC = new CreateClinicalSignReferenceUseCase(
       this.idGenerator,
@@ -1210,6 +1232,10 @@ export class DiagnosticContext {
       calculateAllAvailableIndicator:
         this.calculateAllAvailableGrowthIndicatorValueUC,
     });
+    this.normalizeAnthropometricDataAppService =
+      new NormalizeAnthropometricDataAppService({
+        normalizeUC: this.normalizeAnthropometricDataUC,
+      });
     this.clinicalRefAppService = new ClinicalSignReferenceService({
       createUC: this.createClinicalRefUC,
       getUC: this.getClinicalRefUC,
@@ -1321,7 +1347,9 @@ export class DiagnosticContext {
   getMakeClinicalSignDataInterpretationService(): IMakeClinicalSignDataInterpretationService {
     return this.makeClinicalSignInterpretationAppService;
   }
-
+  getNormalizeAnthropomtricDataService(): INormalizeAnthropometricDataAppService {
+    return this.normalizeAnthropometricDataAppService;
+  }
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {
     this.eventBus.unsubscribe(this.afterPatientCareSessionCreated);

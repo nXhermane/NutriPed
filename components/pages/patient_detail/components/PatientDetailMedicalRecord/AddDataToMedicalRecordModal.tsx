@@ -12,9 +12,9 @@ import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import colors from "tailwindcss/colors";
 import { BottomSheetDragIndicator } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
-import { AddDataToMedicalRecordModalContext } from "../../context";
 import { AddDataToMedicalRecordChooseDataTypeScreen } from "./AddDataToMedicalRecordChooseDataTypeScreen";
 import { AddDataToMedicalRecordDataTypeForm } from "./AddDataToMedicalRecordDataTypeForm";
+import { AddDataToMedicalRecordModalContext } from "@/src/context/pages";
 
 const Stack = createStackNavigator();
 

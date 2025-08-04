@@ -17,7 +17,7 @@ import {
   Line,
   Scatter,
   useChartTransformState,
-} from "nxhermane_victory-native";
+} from "victory-native";
 import React, { useMemo } from "react";
 
 export interface AnthropometricMeasurementTrendsChartProps {
@@ -42,23 +42,26 @@ export const AnthropometricMeasurementTrendsChart: React.FC<
     ajutedRange,
     gap
   );
-  const { data: medicalRecord, error, onLoading } = useMedicalRecord();
-  const { plottedData } = useAnthropometricTrendsChartPointGenerator(
-    dateToX,
-    medicalRecord
-  );
+  const { plottedData, error, onLoading, yPlottedDomain } =
+    useAnthropometricTrendsChartPointGenerator(dateToX);
 
-  if (onLoading) return <Loading />;
-  console.log(plottedData, data);
+  if (onLoading)
+    return (
+      <VStack className="h-v-56 px-4 py-v-1">
+        <Loading />
+      </VStack>
+    );
 
   return (
-    <VStack className="h-v-56 px-4 py-v-1">
+    <VStack className="h-v-64 px-4 py-v-1">
       <VStack className="flex-1 rounded-lg">
         <TemporalTrendsInterativeChart
           data={data}
           plottedSeriesData={[
             { label: "Weight", color: "blue", data: plottedData },
           ]}
+          xToDate={xToDate}
+          domain={yPlottedDomain}
         />
       </VStack>
     </VStack>
@@ -73,11 +76,18 @@ export interface TemporalTrendsInterativeChartProps {
     color: string;
     data: AnthropometricPlottedPointData[];
   }[];
+  xToDate?: (x: number) => Date;
+  domain: [minYValue: number, maxYValue: number];
 }
 
 export const TemporalTrendsInterativeChart: React.FC<
   TemporalTrendsInterativeChartProps
-> = ({ data, plottedSeriesData }) => {
+> = ({
+  data,
+  plottedSeriesData,
+  xToDate = (x: number) => new Date(),
+  domain,
+}) => {
   const font = useFont(Poppins_500Medium, 8);
   const transformState = useChartTransformState({
     scaleX: 1,
@@ -87,10 +97,23 @@ export const TemporalTrendsInterativeChart: React.FC<
     <CartesianChart
       data={data}
       xKey={"x"}
-      xAxis={{ font }}
+      xAxis={{
+        font,
+        formatXLabel(label) {
+          const date = xToDate(label);
+
+          return date.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "short",
+            // dateStyle: 'short'
+          });
+        },
+      }}
       yAxis={[
         {
           font,
+          domain: [domain[0], domain[1] + 1],
+          tickCount: domain[1] - domain[0],
         },
       ]}
       yKeys={["y"]}

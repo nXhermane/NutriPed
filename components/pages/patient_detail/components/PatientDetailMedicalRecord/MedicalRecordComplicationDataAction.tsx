@@ -5,10 +5,7 @@ import { Text } from "@/components/ui/text";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  usePatientDetail,
-  useDailyMedicalRecordDataActionModal,
-} from "../../context";
+
 import { Heading } from "@/components/ui/heading";
 import { ComplicationDto } from "@/core/nutrition_care";
 import { useComplicationRefs } from "@/src/hooks";
@@ -26,6 +23,10 @@ import {
   ButtonText,
 } from "@/components/ui/button";
 import { Check, X } from "lucide-react-native";
+import {
+  useDailyMedicalRecordDataActionModal,
+  usePatientDetail,
+} from "@/src/context/pages";
 
 export interface MedicalRecordComplicationDataActionProps {
   data: MedicalRecordDto["complicationData"][number];

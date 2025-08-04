@@ -28,9 +28,9 @@ import {
 import { Check, X } from "lucide-react-native";
 import { Alert } from "react-native";
 import {
-  usePatientDetail,
   useDailyMedicalRecordDataActionModal,
-} from "../../context";
+  usePatientDetail,
+} from "@/src/context/pages";
 
 export interface MedicalRecordBiologicalDataActionProps {
   data: MedicalRecordDto["biologicalData"][number];

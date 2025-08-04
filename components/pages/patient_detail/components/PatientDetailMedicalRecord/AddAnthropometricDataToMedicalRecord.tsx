@@ -10,8 +10,8 @@ import {
 import { Check, X } from "lucide-react-native";
 import { FormHandler } from "@/components/custom";
 import { useAddAnthropometricMeasureToMedicalRecord } from "@/src/hooks";
-import { useAddDataToMedicalRecordModal } from "../../context";
 import { AddAnthropometricDataToMedicalRecordForm } from "./AddAnthropometricDataToMedicalRecordForm";
+import { useAddDataToMedicalRecordModal } from "@/src/context/pages";
 
 export interface AddAnthropometricDataToMedicalRecordProps {}
 

@@ -1,118 +1,109 @@
 import { VStack } from "@/components/ui/vstack";
-import React, { useMemo, useState } from "react";
-import { useMedicalRecord } from "@/src/hooks";
-import { Loading } from "@/components/custom";
-import { useOrdoredMedicalRecordDataByDay } from "@/src/hooks/pages/patient_detail/useOrdoredMedicalRecordDataByDay";
-import { FadeInCardX } from "@/components/custom/motion";
-import { Box } from "@/components/ui/box";
-import { FilterChips } from "../../shared";
+import React, { useCallback, useState } from "react";
 import {
-  endOfMonth,
-  endOfWeek,
-  isSameDay,
-  startOfMonth,
-  startOfWeek,
-} from "@/utils";
-import { SessionEmpty } from "../../home/shared/SessionEmpty";
+  MedicalRecordDataOrdoredByDay,
+  useMedicalRecord,
+  useOrdoredMedicalRecordDataByDay,
+} from "@/src/hooks";
+import { Loading } from "@/components/custom";
+import { FadeInCardX } from "@/components/custom/motion";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Plus } from "lucide-react-native";
-import { FlatList, ScrollView } from "react-native";
 import { InitPatientRootSecure } from "./InitPatient";
 import {
   DailyMedicalRecordDataComponent,
   AddDataToMedicalRecordModal,
   AnthropometricMeasurementTrendsChart,
 } from "./PatientDetailMedicalRecord";
+import { PatientDetailMedicalRecordSession } from "./PatientDetailMedicalRecord";
+import { ScrollView } from "react-native";
+import { SessionEmpty } from "../../home/shared/SessionEmpty";
+import { router } from "expo-router";
+import { usePatientDetail } from "@/src/context/pages";
 
 export interface PatientDetailMedicalRecordProps {}
 
 const PatientDetailMedicalRecordComponent: React.FC<
   PatientDetailMedicalRecordProps
 > = ({}) => {
+  const { patient } = usePatientDetail();
   const [reloadMedicalRecord, setReloadMedicalRecord] = useState<number>(1);
   const [showAddDataModal, setShowAddDataModal] = useState<boolean>(false);
   const { data, error, onLoading } = useMedicalRecord(reloadMedicalRecord);
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
-  const [filterTag, setFilterTag] = useState<
-    "all" | "today" | "thisWeek" | "thisMonth"
-  >("all");
-  const filteredList = useMemo(() => {
-    if (ordoredMedicalRecordData.length == 0) return [];
-    if (filterTag === "all") return ordoredMedicalRecordData;
-    return ordoredMedicalRecordData.filter(value => {
-      const now = new Date();
-      switch (filterTag) {
-        case "today":
-          return isSameDay(value.recordDate, now);
-        case "thisWeek":
-          const weekStart = startOfWeek(now);
-          const weekEnd = endOfWeek(now);
-          return value.recordDate >= weekStart && value.recordDate <= weekEnd;
-        case "thisMonth":
-          const monthStart = startOfMonth(now);
-          const monthEnd = endOfMonth(now);
-          return value.recordDate >= monthStart && value.recordDate <= monthEnd;
-        default:
-          console.warn(
-            `This tag (${filterTag}) is not supported to filter the medical record Data`
-          );
-          return true;
-      }
-    });
-  }, [ordoredMedicalRecordData, filterTag]);
-  if (onLoading) return <Loading />;
-  console.log(ordoredMedicalRecordData.map(date => date.recordDate));
-  return (
-    <VStack className="flex-1 bg-background-primary">
-      {ordoredMedicalRecordData.length != 0 && (
-        <AnthropometricMeasurementTrendsChart
-          range={{
-            start:
-              ordoredMedicalRecordData[ordoredMedicalRecordData.length - 1]
-                ?.recordDate,
-            end: ordoredMedicalRecordData[0]?.recordDate,
+  const renderItem = useCallback(
+    ({
+      item,
+      index,
+    }: {
+      item: MedicalRecordDataOrdoredByDay[number];
+      index: number;
+    }) => (
+      <FadeInCardX delayNumber={index} key={index}>
+        <DailyMedicalRecordDataComponent
+          onUpdate={() => {
+            setReloadMedicalRecord(prev => prev + 1);
           }}
-          gap={0}
+          data={item}
+          key={index}
         />
-      )}
-      <VStack className="overflow-visible py-3">
-        <FilterChips<typeof filterTag>
-          data={[
-            { label: "Toutes", value: "all" },
-            { label: "Aujourd'hui", value: "today" },
-            { label: "Cette semaine", value: "thisWeek" },
-            { label: "Ce mois", value: "thisMonth" },
-          ]}
-          value={filterTag}
-          onChange={tag => setFilterTag(tag)}
-        />
-      </VStack>
-      <FlatList
-        removeClippedSubviews
-        contentContainerClassName="pb-v-4"
-        data={filteredList}
+      </FadeInCardX>
+    ),
+    []
+  );
+  if (onLoading) return <Loading />;
+
+  return (
+    <React.Fragment>
+      <ScrollView
         showsVerticalScrollIndicator={false}
-        renderItem={({ item, index }) => (
-          <FadeInCardX delayNumber={index} key={index}>
-            <DailyMedicalRecordDataComponent
-              onUpdate={() => {
-                setReloadMedicalRecord(prev => prev + 1);
-              }}
-              data={item}
-              key={index}
-            />
-          </FadeInCardX>
-        )}
-        ItemSeparatorComponent={() => <Box className="h-v-4 w-full" />}
-        ListEmptyComponent={() => {
-          return (
-            <SessionEmpty
-              iconName="SearchSlash"
-              message="Aucun enregistrement de données médicales trouvés."
-            />
-          );
-        }}
-      />
+        contentContainerClassName="pb-v-16"
+      >
+        <VStack className="flex-1 bg-background-primary">
+          <PatientDetailMedicalRecordSession title="Graphique d'évolution du poids">
+            {ordoredMedicalRecordData.length != 0 && (
+              <AnthropometricMeasurementTrendsChart
+                range={{
+                  start:
+                    ordoredMedicalRecordData[
+                      ordoredMedicalRecordData.length - 1
+                    ]?.recordDate,
+                  end: ordoredMedicalRecordData[0]?.recordDate,
+                }}
+                gap={0}
+              />
+            )}
+          </PatientDetailMedicalRecordSession>
+          <PatientDetailMedicalRecordSession
+            title="Mesures récentes"
+            actionName="voir plus"
+            onActionPress={() => {
+              router.navigate(`/(screens)/${patient.id}/monitoring`);
+            }}
+          >
+            <VStack className="gap-3">
+              {ordoredMedicalRecordData.length === 0 ? (
+                <SessionEmpty
+                  iconName="SearchSlash"
+                  message="Aucun enregistrement de données médicales trouvés."
+                />
+              ) : (
+                ordoredMedicalRecordData
+                  .slice(0, 3)
+                  .map((item, index) => renderItem({ item, index }))
+              )}
+            </VStack>
+          </PatientDetailMedicalRecordSession>
+
+          <AddDataToMedicalRecordModal
+            isVisible={showAddDataModal}
+            onClose={() => {
+              setShowAddDataModal(false);
+              setReloadMedicalRecord(prev => prev + 1);
+            }}
+          />
+        </VStack>
+      </ScrollView>
       {!showAddDataModal && (
         <Fab
           className="bg-primary-c_light"
@@ -121,14 +112,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
           <FabIcon as={Plus} className="h-5 w-5 text-white" />
         </Fab>
       )}
-      <AddDataToMedicalRecordModal
-        isVisible={showAddDataModal}
-        onClose={() => {
-          setShowAddDataModal(false);
-          setReloadMedicalRecord(prev => prev + 1);
-        }}
-      />
-    </VStack>
+    </React.Fragment>
   );
 };
 

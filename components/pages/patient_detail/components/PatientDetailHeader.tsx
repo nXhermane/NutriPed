@@ -5,10 +5,10 @@ import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { PATIENT_STATE } from "@/src/constants/ui";
+import { usePatientDetail } from "@/src/context/pages";
 import { router } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import React from "react";
-import { usePatientDetail } from "../context";
 
 export function PatientDetailHeader() {
   const {

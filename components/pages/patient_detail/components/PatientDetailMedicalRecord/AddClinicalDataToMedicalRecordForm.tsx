@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { ClinicalSignReferenceDto } from "@/core/diagnostics";
+import { useAddDataToMedicalRecordModal } from "@/src/context/pages";
 import {
   useAddClinicalDataToMedicalRecord,
   useClinicalSignReferenceFormGenerator,
@@ -19,7 +20,6 @@ import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Check, X } from "lucide-react-native";
 import { useEffect, useRef } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { useAddDataToMedicalRecordModal } from "../../context";
 
 export interface AddClinicalDataToMedicalRecordFormProps {
   data: ClinicalSignReferenceDto[];
