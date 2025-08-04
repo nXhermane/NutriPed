@@ -33,6 +33,7 @@ import {
   useDailyMedicalRecordDataActionModal,
   usePatientDetail,
 } from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface MedicalRecordAnthropometricDataActionProps {
   data: MedicalRecordDto["anthropometricData"][number];
@@ -93,6 +94,7 @@ export const MedicalRecordAnthropometricDataAction: React.FC<
       });
       if ("data" in result) {
         setIsSuccessOnUpdateForm(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

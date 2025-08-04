@@ -31,7 +31,7 @@ import colors from "tailwindcss/colors";
 import {
   CartesianActionsHandle,
   CartesianChart,
-  CartesianChartRef,
+  // CartesianChartRef,
   Line,
   Scatter,
   useChartPressState,
@@ -164,7 +164,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
     scaleX: 1,
     scaleY: 1.0,
   });
-  const chartRef = useRef<CartesianChartRef<any>>(null);
+  // const chartRef = useRef<CartesianChartRef<any>>(null);
   const { state, isActive } = useChartPressState({
     x: 0,
     y: {
@@ -196,22 +196,22 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
       "Une erreur technique s'est produite lors de l'exportation de la courbe de croissance en pdf."
     );
   }, [toast]);
-  const printChart = useCallback(async () => {
-    if (chartRef.current?.canvas) {
-      setUri(undefined);
-      // Get skia image of the chart
-      const skImage = await chartRef.current.canvas.makeImageSnapshotAsync();
-      const skImageInBase64 = skImage.encodeToBase64(ImageFormat.PNG, 100);
-      setUri(`data:image/png;base64,${skImageInBase64}`);
-      const printedFile = await Print.printToFileAsync({
-        base64: true,
-        html: generateGrowthInteractiveChartPdf({
-          chartImageBase64: uri,
-        }),
-      });
-      shareAsync(printedFile.uri, { UTI: ".pdf", mimeType: "application/pdf" });
-    } else showErrorMessage();
-  }, [chartRef, showErrorMessage]);
+  // const printChart = useCallback(async () => {
+  //   if (chartRef.current?.canvas) {
+  //     setUri(undefined);
+  //     // Get skia image of the chart
+  //     const skImage = await chartRef.current.canvas.makeImageSnapshotAsync();
+  //     const skImageInBase64 = skImage.encodeToBase64(ImageFormat.PNG, 100);
+  //     setUri(`data:image/png;base64,${skImageInBase64}`);
+  //     const printedFile = await Print.printToFileAsync({
+  //       base64: true,
+  //       html: generateGrowthInteractiveChartPdf({
+  //         chartImageBase64: uri,
+  //       }),
+  //     });
+  //     shareAsync(printedFile.uri, { UTI: ".pdf", mimeType: "application/pdf" });
+  //   } else showErrorMessage();
+  // }, [chartRef, showErrorMessage]);
   useEffect(() => {
     setPointIsPLottedOnChart(plottedSeriesData.length != 0);
   }, [plottedSeriesData]);
@@ -224,7 +224,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
       </Box>
       <VStack className="m-1 h-v-96 rounded-xl border-[1px] border-primary-border/10 bg-background-primary dark:border-0">
         <CartesianChart
-          ref={chartRef}
+          // ref={chartRef}
           data={data as any[]}
           xKey={xKey}
           yKeys={yKeys}

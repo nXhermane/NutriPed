@@ -23,6 +23,7 @@ import {
   useAddDataToMedicalRecordModal,
   usePatientDetail,
 } from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 const SegmentedControlRM = remapProps(SegmentedControl, {
   className: "style",
@@ -140,6 +141,7 @@ export const AddComplicationToMedicalRecord: React.FC = () => {
     });
     if ("data" in result) {
       setIsSuccess(true);
+      uiBus.emit("medical:update");
     } else {
       const _errorContext = JSON.parse(result.content);
       console.error(_errorContext);

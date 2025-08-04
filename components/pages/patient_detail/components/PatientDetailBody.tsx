@@ -15,7 +15,7 @@ const renderScene = SceneMap({
 });
 const routes = [
   { key: "overviews", title: "Vue d'ensemble" },
-  { key: "medical_record", title: "Dossier Medical" },
+  { key: "medical_record", title: "Suivi" },
   { key: "diagnostic", title: "Diagnostic" },
   { key: "treatment", title: "Traitement" },
 ];

@@ -21,7 +21,6 @@ import { Icon } from "@/components/ui/icon";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  Edit,
   FlaskConical,
   PillBottle,
   Ruler,
@@ -358,7 +357,6 @@ export const DailyMedicalRecordDataComponent: React.FC<
           onClose={() => {
             setShowMedicalRecordDataActionModal(true);
             setCurrentMedicalRecordData(null);
-            onUpdate();
           }}
         />
       )}

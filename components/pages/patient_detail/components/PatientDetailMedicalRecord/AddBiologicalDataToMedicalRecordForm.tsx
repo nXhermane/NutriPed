@@ -21,6 +21,7 @@ import {
   useAddDataToMedicalRecordModal,
   usePatientDetail,
 } from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface AddBiologicalDataToMedicalRecordFormProps {
   schema: FormSchema;
@@ -52,6 +53,7 @@ export const AddBiologicalDataToMedicalRecordForm: React.FC<
       });
       if ("data" in result) {
         setIsSuccess(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

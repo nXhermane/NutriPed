@@ -31,6 +31,7 @@ import {
   useDailyMedicalRecordDataActionModal,
   usePatientDetail,
 } from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface MedicalRecordBiologicalDataActionProps {
   data: MedicalRecordDto["biologicalData"][number];
@@ -90,6 +91,7 @@ export const MedicalRecordBiologicalDataAction: React.FC<
       });
       if ("data" in result) {
         setIsSuccessOnUpdateForm(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

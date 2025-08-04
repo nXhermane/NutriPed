@@ -27,6 +27,7 @@ import {
   useDailyMedicalRecordDataActionModal,
   usePatientDetail,
 } from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface MedicalRecordComplicationDataActionProps {
   data: MedicalRecordDto["complicationData"][number];
@@ -73,6 +74,7 @@ export const MedicalRecordComplicationDataAction: React.FC<
       });
       if ("data" in result) {
         setIsSuccessOnUpdateForm(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

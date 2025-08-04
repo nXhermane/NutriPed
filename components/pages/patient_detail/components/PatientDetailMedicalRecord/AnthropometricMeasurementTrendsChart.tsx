@@ -19,6 +19,8 @@ import {
   useChartTransformState,
 } from "victory-native";
 import React, { useMemo } from "react";
+import { useUI } from "@/src/context";
+import colors from "tailwindcss/colors";
 
 export interface AnthropometricMeasurementTrendsChartProps {
   range: { start: Date; end?: Date };
@@ -28,11 +30,12 @@ export interface AnthropometricMeasurementTrendsChartProps {
 export const AnthropometricMeasurementTrendsChart: React.FC<
   AnthropometricMeasurementTrendsChartProps
 > = ({ gap, range }) => {
+  const { colorMode } = useUI();
   const ajutedRange = useMemo(
     () => ({
-      start: new Date(range.start.getTime() - 1000 * 60 * 60 * 24),
+      start: new Date(range.start?.getTime() - 1000 * 60 * 60 * 24),
       end: new Date(
-        (range.end ? range.end.getTime() : new Date().getTime()) +
+        (range.end ? range.end?.getTime() : new Date().getTime()) +
           1000 * 60 * 60 * 24
       ),
     }),
@@ -54,11 +57,16 @@ export const AnthropometricMeasurementTrendsChart: React.FC<
 
   return (
     <VStack className="h-v-64 px-4 py-v-1">
-      <VStack className="flex-1 rounded-lg">
+      <VStack className="flex-1 rounded-xl bg-background-secondary">
         <TemporalTrendsInterativeChart
           data={data}
           plottedSeriesData={[
-            { label: "Weight", color: "blue", data: plottedData },
+            {
+              label: "Weight",
+              color:
+                colorMode === "light" ? colors.blue["700"] : colors.blue["300"],
+              data: plottedData,
+            },
           ]}
           xToDate={xToDate}
           domain={yPlottedDomain}
@@ -88,40 +96,68 @@ export const TemporalTrendsInterativeChart: React.FC<
   xToDate = (x: number) => new Date(),
   domain,
 }) => {
+  const { colorMode } = useUI();
   const font = useFont(Poppins_500Medium, 8);
   const transformState = useChartTransformState({
     scaleX: 1,
     scaleY: 1.0,
   });
+  const xAxisConfig = useMemo(
+    () => ({
+      font,
+      lineColor:
+        colorMode === "light"
+          ? `${colors.gray["300"]}BF`
+          : `${colors.gray["700"]}99`,
+      labelColor:
+        colorMode === "light"
+          ? `${colors.gray["600"]}`
+          : `${colors.gray["300"]}`,
+      enableRescaling: true,
+      formatXLabel(label: number) {
+        const date = xToDate(label);
+
+        return date.toLocaleDateString("fr-FR", {
+          day: "2-digit",
+          month: "short",
+          // dateStyle: 'short'
+        });
+      },
+    }),
+    [colorMode, font, xToDate]
+  );
+
+  const yAxisConfig = useMemo(
+    () => ({
+      font,
+      lineColor:
+        colorMode === "light"
+          ? `${colors.gray["300"]}BF`
+          : `${colors.gray["700"]}99`,
+      labelColor:
+        colorMode === "light"
+          ? `${colors.gray["600"]}`
+          : `${colors.gray["300"]}`,
+      enableRescaling: true,
+      labelRotate: 45,
+      domain: [domain[0], domain[1] + 1] as [number, number],
+      tickCount: domain[1] - domain[0],
+      formatYLabel: (label: number) => label.toString() + "kg",
+    }),
+    [colorMode, font, domain]
+  );
   return (
     <CartesianChart
       data={data}
       xKey={"x"}
-      xAxis={{
-        font,
-        formatXLabel(label) {
-          const date = xToDate(label);
-
-          return date.toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "short",
-            // dateStyle: 'short'
-          });
-        },
-      }}
-      yAxis={[
-        {
-          font,
-          domain: [domain[0], domain[1] + 1],
-          tickCount: domain[1] - domain[0],
-        },
-      ]}
+      xAxis={xAxisConfig}
+      yAxis={[yAxisConfig]}
       yKeys={["y"]}
       domainPadding={{ right: 10 }}
       padding={{
         left: 10,
         right: 10,
-        bottom: 20,
+        bottom: 10,
       }}
       transformState={transformState.state}
     >

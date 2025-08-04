@@ -29,7 +29,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
   const { patient } = usePatientDetail();
   const [reloadMedicalRecord, setReloadMedicalRecord] = useState<number>(1);
   const [showAddDataModal, setShowAddDataModal] = useState<boolean>(false);
-  const { data, error, onLoading } = useMedicalRecord(reloadMedicalRecord);
+  const { data, error, onLoading } = useMedicalRecord();
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
   const renderItem = useCallback(
     ({
@@ -61,18 +61,15 @@ const PatientDetailMedicalRecordComponent: React.FC<
       >
         <VStack className="flex-1 bg-background-primary">
           <PatientDetailMedicalRecordSession title="Graphique d'évolution du poids">
-            {ordoredMedicalRecordData.length != 0 && (
-              <AnthropometricMeasurementTrendsChart
-                range={{
-                  start:
-                    ordoredMedicalRecordData[
-                      ordoredMedicalRecordData.length - 1
-                    ]?.recordDate,
-                  end: ordoredMedicalRecordData[0]?.recordDate,
-                }}
-                gap={0}
-              />
-            )}
+            <AnthropometricMeasurementTrendsChart
+              range={{
+                start:
+                  ordoredMedicalRecordData[ordoredMedicalRecordData.length - 1]
+                    ?.recordDate,
+                end: ordoredMedicalRecordData[0]?.recordDate,
+              }}
+              gap={0}
+            />
           </PatientDetailMedicalRecordSession>
           <PatientDetailMedicalRecordSession
             title="Mesures récentes"
