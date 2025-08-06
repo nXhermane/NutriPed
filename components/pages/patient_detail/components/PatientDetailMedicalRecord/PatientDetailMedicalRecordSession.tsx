@@ -2,7 +2,6 @@ import {
   SessionHeader,
   SessionHeaderProps,
 } from "@/components/pages/home/shared/SessionHeader";
-import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import React, { PropsWithChildren } from "react";

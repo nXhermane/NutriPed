@@ -117,8 +117,10 @@ export const MedicalRecordClinicalSignDataAction: React.FC<
               medicalRecordId: patient.id,
               data: { clinicalData: [data.id] },
             });
-            if ("data" in result) setIsSuccessDelete(true);
-            else {
+            if ("data" in result) {
+              setIsSuccessDelete(true);
+              uiBus.emit("medical:update");
+            } else {
               const _errorContent = JSON.parse(result.content);
               console.error(_errorContent);
               setErrorOnDelete(_errorContent);

@@ -3,9 +3,11 @@ import {
   AggregateRoot,
   ArgumentNotProvidedException,
   ArgumentOutOfRangeException,
+  Birthday,
   DomainDate,
   EmptyStringError,
   EntityPropsBaseType,
+  Gender,
   Guard,
   InvalidResultError,
 } from "@shared";
@@ -47,6 +49,14 @@ export class NutritionalDiagnostic extends AggregateRoot<INutritionalDiagnostic>
   addNotes(...notes: string[]) {
     this.props.notes.push(...notes);
     this.validate();
+  }
+  changeGender(gender: Gender): void {
+    this.props.patientData.changeGender(gender)
+    this.validate()
+  }
+  changeBirthDay(birthday: Birthday): void {
+    this.props.patientData.changeBirthDay(birthday)
+    this.validate()
   }
   changeAnthropometricData(anthropData: AnthropometricData) {
     this.props.patientData.changeAnthropometricData(anthropData);

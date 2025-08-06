@@ -27,7 +27,6 @@ const PatientDetailMedicalRecordComponent: React.FC<
   PatientDetailMedicalRecordProps
 > = ({}) => {
   const { patient } = usePatientDetail();
-  const [reloadMedicalRecord, setReloadMedicalRecord] = useState<number>(1);
   const [showAddDataModal, setShowAddDataModal] = useState<boolean>(false);
   const { data, error, onLoading } = useMedicalRecord();
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
@@ -41,9 +40,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
     }) => (
       <FadeInCardX delayNumber={index} key={index}>
         <DailyMedicalRecordDataComponent
-          onUpdate={() => {
-            setReloadMedicalRecord(prev => prev + 1);
-          }}
+        
           data={item}
           key={index}
         />
@@ -96,7 +93,6 @@ const PatientDetailMedicalRecordComponent: React.FC<
             isVisible={showAddDataModal}
             onClose={() => {
               setShowAddDataModal(false);
-              setReloadMedicalRecord(prev => prev + 1);
             }}
           />
         </VStack>
