@@ -2,5 +2,5 @@ import { AggregateID } from "@shared";
 
 export type AddNoteToNutritionalDiagnosticRequest = {
   nutritionalDiagnosticId: AggregateID;
-  notes: string[];
+  notes: { date: string, content: string }[];
 };

@@ -95,7 +95,6 @@ export class GenerateDiagnosticResultUseCase
 
     const medicalDataResult = this.createMedicalDataObjects(medicalRecordDataRes.val);
     if (medicalDataResult.isFailure) return Result.fail(formatError(medicalDataResult));
-
     const { anthropometric, clinical, biological } = medicalDataResult.val;
 
     nutritionalDiagnostic.changeAnthropometricData(anthropometric);

@@ -35,7 +35,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
           </Text>
         </Pressable>
       )}
-      {rightNode && <Box className="bg-yellow-500">{rightNode()}</Box>}
+      {rightNode && <Box className="">{rightNode()}</Box>}
     </HStack>
   );
 };

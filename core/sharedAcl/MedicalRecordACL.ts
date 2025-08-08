@@ -29,7 +29,8 @@ export class MedicalRecordACLImpl implements MedicalRecordACL {
     private getLastValues<T extends { code: string, recordedAt: string }>(array: T[]): T[] {
         return Object.values(array.reduce((acc: { [code: string]: T }, current) => {
             const key = current.code
-            if (!acc[key] || new Date(acc[key].recordedAt).getTime() < new Date(current.recordedAt).getTime()) acc[current.code] = current
+            // FIXME: voir si on pourrai améliorer les recordat pour prendre en compte le time afin de connaitre directement la derniere valeur au lieu d'introduit  <= au lieu de <  
+            if (!acc[key] || new Date(acc[key].recordedAt).getTime() <= new Date(current.recordedAt).getTime()) acc[current.code] = current
             return acc
         }, {}))
     }

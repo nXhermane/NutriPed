@@ -22,8 +22,7 @@ import { useMemo, useState } from "react";
 import { FlatList } from "react-native";
 
 const Monitoring = () => {
-  const [reloadMedicalRecord, setReloadMedicalRecord] = useState<number>(1);
-  const { data, error, onLoading } = useMedicalRecord(reloadMedicalRecord);
+  const { data, error, onLoading } = useMedicalRecord();
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
   const [filterTag, setFilterTag] = useState<
     "all" | "today" | "thisWeek" | "thisMonth"
@@ -55,7 +54,7 @@ const Monitoring = () => {
   if (onLoading) return <Loading />;
 
   return (
-    <VStack className="flex-1">
+    <VStack className="flex-1 bg-background-primary">
       <VStack className="overflow-visible py-3">
         <FilterChips<typeof filterTag>
           data={[
@@ -76,9 +75,7 @@ const Monitoring = () => {
         renderItem={({ item, index }) => (
           <FadeInCardX delayNumber={index} key={index}>
             <DailyMedicalRecordDataComponent
-              onUpdate={() => {
-                setReloadMedicalRecord(prev => prev + 1);
-              }}
+             
               data={item}
               key={index}
             />
