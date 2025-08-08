@@ -1,24 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import {
-  Poppins_400Regular,
-  Poppins_100Thin,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_500Medium,
-  Poppins_700Bold,
-  Poppins_600SemiBold,
-  Poppins_300Light_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
-import {
   Roboto_100Thin,
   Roboto_200ExtraLight,
-  Roboto_200ExtraLight_Italic,
   Roboto_300Light,
   Roboto_300Light_Italic,
   Roboto_400Regular,
@@ -52,7 +37,11 @@ export const useAppInitialization = () => {
       await SplashScreen.hideAsync();
     }
   }, [isLoaded]);
-
+  useEffect(() => {
+    if (error) {
+      console.error(error.message);
+    }
+  }, [error]);
   return {
     appIsReady: isLoaded,
     onLayoutRootView,

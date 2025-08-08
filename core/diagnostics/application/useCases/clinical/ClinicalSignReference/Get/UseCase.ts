@@ -40,7 +40,11 @@ export class GetClinicalSignReferenceUseCase
       } else {
         clinicalSignRefs.push(...(await this.repo.getAll()));
       }
-      return right(Result.ok(clinicalSignRefs.map(this.mapper.toResponse)));
+      return right(
+        Result.ok(
+          clinicalSignRefs.map(signRef => this.mapper.toResponse(signRef))
+        )
+      );
     } catch (e: unknown) {
       return left(handleError(e));
     }

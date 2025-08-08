@@ -12,8 +12,13 @@ import {
   DeleteMedicalRecordResponse,
   AddDataToMedicalRecordRequest,
   AddDataToMedicalRecordResponse,
+  DeleteDataFromMedicalRecordRequest,
+  DeleteDataFromMedicalRecordResponse,
+  GetNormalizedAnthropometricDataRequest,
+  GetNormalizedAnthropometricDataResponse,
 } from "../useCases";
 import { MedicalRecordDto } from "../dtos";
+import { CreateAnthropometricRecord } from "../../domain";
 
 export interface MedicalRecordServiceUseCases {
   createUC: UseCase<CreateMedicalRecordRequest, CreateMedicalRecordResponse>;
@@ -23,6 +28,14 @@ export interface MedicalRecordServiceUseCases {
   addDataUC: UseCase<
     AddDataToMedicalRecordRequest,
     AddDataToMedicalRecordResponse
+  >;
+  deleteDataUC: UseCase<
+    DeleteDataFromMedicalRecordRequest,
+    DeleteDataFromMedicalRecordResponse
+  >;
+  getNormalizeAnthropDataUC: UseCase<
+    GetNormalizedAnthropometricDataRequest,
+    GetNormalizedAnthropometricDataResponse
   >;
 }
 
@@ -66,6 +79,25 @@ export class MedicalRecordService implements IMedicalRecordService {
   ): Promise<AppServiceResponse<void> | Message> {
     const res = await this.ucs.addDataUC.execute(req);
     if (res.isRight()) return { data: void 0 };
+    else return new Message("error", JSON.stringify((res.value as any)?.err));
+  }
+  async deleteData(
+    req: DeleteDataFromMedicalRecordRequest
+  ): Promise<AppServiceResponse<void> | Message> {
+    const res = await this.ucs.deleteDataUC.execute(req);
+    if (res.isRight()) return { data: void 0 };
+    else return new Message("error", JSON.stringify((res.value as any)?.err));
+  }
+  async getNormalizeAnthropometricData(
+    req: GetNormalizedAnthropometricDataRequest
+  ): Promise<
+    | AppServiceResponse<
+        (CreateAnthropometricRecord & { recordedAt: string; id: AggregateID })[]
+      >
+    | Message
+  > {
+    const res = await this.ucs.getNormalizeAnthropDataUC.execute(req);
+    if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 }

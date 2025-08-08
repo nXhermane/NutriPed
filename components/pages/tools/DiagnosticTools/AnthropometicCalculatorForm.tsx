@@ -8,8 +8,8 @@ import {
   DynamicFormZodSchemaType,
   FormHandler,
   FormSchema,
-  Loading,
-} from "@/components/custom";
+} from "@/components/custom/DynamicFormGenerator";
+import { Loading } from "@/components/custom/Loading";
 
 export interface AnthropometricCalculatorFormProps {
   schema?: FormSchema;

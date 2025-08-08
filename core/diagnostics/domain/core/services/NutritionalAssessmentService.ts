@@ -389,7 +389,7 @@ export class NutritionalAssessmentService
     clinicalVariable: ClinicalVariableObject,
     biologicalVariable: BiologicalVariableObject
   ): GlobalDiagnosticVariable {
-    // Ici je dois faire une compromis pour la version beta
+    // Ici je dois faire un compromis pour la version beta
     // BETA: on doit prendre en charge l'élimination des indicateurs en cas d'œdeme
     const edemaIsPresent =
       clinicalVariable[CLINICAL_SIGNS.EDEMA] === ConditionResult.True;

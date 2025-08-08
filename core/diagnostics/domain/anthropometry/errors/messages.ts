@@ -45,6 +45,12 @@ export const ANTHROPOMETRIC_MEASURE_ERROR = {
       message:
         "L'unité utilisé pour la mesure anthropometric n'est pas valide.",
     },
+    UNIT_CONVERTION_SERVICE_ERROR: {
+      path: "VALIDATION.UNIT_CONVERTION_SERVICE_ERROR",
+      code: "AM004",
+      message:
+        "Le service de convertion d'unité a declenché une erreur lors de la convertion des valeurs anthropometriques dans leurs default unit.",
+    },
     INVALID_VALUE: {
       path: "VALIDATION.INVALID_VALUE",
       code: "AM002",

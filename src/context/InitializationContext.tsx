@@ -1,7 +1,6 @@
 import React, {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -19,7 +18,6 @@ import {
   allowedExtensions,
 } from "@services/ZipProcessor";
 import { CORE_CONFIG } from "@config/core";
-import { useGoogleAuth } from "./GoogleAuthContext";
 
 const INIT_STATUS_KEY = "app_initialization_status";
 

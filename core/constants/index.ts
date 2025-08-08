@@ -275,6 +275,12 @@ export enum ClinicalDataType {
   STR = "string",
   RANGE = "range",
   ENUM = "enum",
+  QUANTITY = "quantity",
+}
+export enum DATA_TYPE_COUNTER {
+  ANTHROPOMETRIC = 'anthropometric_counter',
+  CLINICAL = 'clinical_sign_counter',
+  BIOLOGICAL = 'biological_test_counter'
 }
 export const COMPLICATION_CODES = {
   COMPLICATIONS_NUMBER: "complications_number",

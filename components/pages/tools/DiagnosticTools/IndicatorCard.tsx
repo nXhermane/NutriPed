@@ -16,6 +16,7 @@ import { useGrowthIndicators } from "@/src/hooks";
 import { router } from "expo-router";
 import { BadgeCheck, Lightbulb, MapPin, Target } from "lucide-react-native";
 import React, { useMemo } from "react";
+import { Alert } from "react-native";
 
 export interface IndicatorCardProps {
   value: GrowthIndicatorValueDto;
@@ -37,8 +38,18 @@ export const IndicatorCard: React.FC<IndicatorCardProps> = React.memo(
       return <Loading />;
     }
     return (
-      <CardPressEffect>
-        <VStack className="rounded-xl bg-background-secondary px-3 py-3">
+      <CardPressEffect
+        onPress={() => {
+          if (!growthIndicatorValue.isValid)
+            Alert.alert(
+              "Indicateur de croissance",
+              "Cet indicateur n'est pas valide. Donc il est désactivé. Cela peut être due à la présence d'œdèmes bilatéraux."
+            );
+        }}
+      >
+        <VStack
+          className={`rounded-xl bg-background-secondary px-3 py-3 ${growthIndicatorValue.isValid ? "opacity-100" : "border-[0.5px] border-gray-500 opacity-50"}`}
+        >
           <HStack className="items-center justify-between">
             <VStack className="max-w-[50%] pr-2">
               <Text className="text-left font-h4 text-sm font-medium text-typography-primary">

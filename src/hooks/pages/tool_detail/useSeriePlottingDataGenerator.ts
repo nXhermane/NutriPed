@@ -1,7 +1,4 @@
-import {
-  GrowthIndicatorRange,
-  GrowthRefChartAndTableCodes,
-} from "@/core/constants";
+import { GrowthIndicatorRange } from "@/core/constants";
 import { getSerieColor } from "@/src/constants/ui";
 import { useUI } from "@/src/context";
 import { useMemo } from "react";

@@ -13,8 +13,8 @@ export class UnitACLImpl implements UnitAcl {
   ): Promise<Result<number>> {
     try {
       const response = await this.unitService.convert({
-        from: from.toString(),
-        to: to.toString(),
+        from: from.unpack(),
+        to: to.unpack(),
         value: value,
       });
 

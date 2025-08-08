@@ -7,7 +7,7 @@ export const initialState: UI_STATE = {
   refreshPatientList: false,
 };
 
-export interface UI_STATE_ACTION<T = any> {
+export interface UI_STATE_ACTION {
   type: "PATIENT_ADDED" | "PATIENT_REFRESHED" | "PATIENT_DELETED";
 }
 export const uiSlice = createSlice({

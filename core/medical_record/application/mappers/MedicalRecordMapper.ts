@@ -1,36 +1,45 @@
 import { MedicalRecord } from "../../domain";
-import { ApplicationMapper } from "@shared";
+import { AggregateID, ApplicationMapper } from "@shared";
 import { MedicalRecordDto } from "../dtos";
 
 export class MedicalRecordMapper
   implements ApplicationMapper<MedicalRecord, MedicalRecordDto>
 {
   toResponse(entity: MedicalRecord): MedicalRecordDto {
+    const {
+      anthropometricData,
+      biologicalData,
+      clinicalData,
+      complicationData,
+    } = entity.getProps();
     return {
       id: entity.id,
       patientId: entity.getPatientId(),
-      anthropometricData: entity.getAnthropometricData().map(valObj => ({
-        code: valObj.code.unpack(),
-        context: valObj.context,
-        recordedAt: valObj.recordedAt.unpack(),
-        unit: valObj.unit.unpack(),
-        value: valObj.value,
+      anthropometricData: anthropometricData.map(anthrop => ({
+        code: anthrop.getCode(),
+        id: anthrop.id,
+        context: anthrop.getContext(),
+        recordedAt: anthrop.getRecordDate(),
+        ...anthrop.getMeasurement(),
       })),
-      biologicalData: entity.getBiologicalData().map(valObj => ({
-        code: valObj.code.unpack(),
-        recordedAt: valObj.recordedAt.unpack(),
-        unit: valObj.unit.unpack(),
-        value: valObj.value,
+      biologicalData: biologicalData.map(test => ({
+        code: test.getCode(),
+        id: test.id,
+        recordedAt: test.getRecordAt(),
+        ...test.getMeasurement(),
       })),
-      clinicalData: entity.getClinicalData().map(valObj => ({
-        code: valObj.code.unpack(),
-        data: valObj.data,
-        recordedAt: valObj.recordedAt.unpack(),
+      clinicalData: clinicalData.map(sign => ({
+        code: sign.getCode(),
+        id: sign.id,
+        data: sign.getData(),
+        isPresent: sign.getIsPresent(),
+        recordedAt: sign.getRecordAt(),
       })),
-      complicationData: entity.getComplicationData().map(valObj => ({
-        code: valObj.code.unpack(),
-        isPresent: valObj.isPresent,
-        recordedAt: valObj.recordedAt.unpack(),
+      complicationData: complicationData.map(complication => ({
+        code: complication.getCode(),
+        id: complication.id,
+        isPresent: complication.getIsPresent(),
+        recordedAt: complication.getRecordAt(),
       })),
       dataFieldResponse: entity.getDataFields().map(valObj => ({
         code: valObj.code.unpack(),

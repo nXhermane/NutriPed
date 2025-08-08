@@ -89,7 +89,7 @@ export const DeletePatientBottomSheet: React.FC<
           <VStack className={"gap-2"}>
             <HStack className={"gap-3"}>
               <Icon as={AlertTriangle} className={"h-7 w-7 text-warning-500"} />
-              <Heading className={"font-h3 text-xl text-red-500"}>
+              <Heading className={"font-h4 text-2xl text-red-500"}>
                 Confirmer la suppression
               </Heading>
             </HStack>
@@ -101,16 +101,13 @@ export const DeletePatientBottomSheet: React.FC<
           </VStack>
           <VStack
             className={
-              "gap-4 rounded-lg border-[1px] border-red-600/50 bg-red-600/10 p-4"
+              "gap-1 rounded-xl border-[1px] border-red-600/50 bg-red-500/5 px-4 py-2"
             }
           >
-            <Center className={"h-9 w-9 rounded-full bg-red-500"}>
-              <Icon as={AlertTriangle} className={"h-6 w-6 text-warning-500"} />
-            </Center>
             <Text className={"font-body text-xs text-red-400"}>
               <Text bold className={"font-body text-xs text-red-400"}>
                 Attention !
-              </Text>{" "}
+              </Text>
               Cette action est irréversible. Toutes les données associées aux
               patients selectionnés seront définitivement supprimées.
             </Text>
@@ -130,11 +127,13 @@ export const DeletePatientBottomSheet: React.FC<
               >
                 <HStack
                   className={
-                    "items-center gap-4 rounded-lg bg-background-primary px-4 py-v-3"
+                    "items-center gap-4 rounded-lg border-[0.5px] border-primary-border/5 bg-background-primary px-4 py-v-3"
                   }
                 >
-                  <Avatar className={"h-10 w-10 bg-green-300"}>
-                    <AvatarFallbackText>{patient.name}</AvatarFallbackText>
+                  <Avatar className={"h-8 w-8 bg-red-500/5"}>
+                    <AvatarFallbackText className="font-h4 font-medium text-red-600 dark:text-red-500">
+                      {patient.name}
+                    </AvatarFallbackText>
                   </Avatar>
                   <Text className={"font-h4 text-base text-typography-primary"}>
                     {patient.name}
@@ -143,17 +142,17 @@ export const DeletePatientBottomSheet: React.FC<
               </CardPressEffect>
             ))}
           </ScrollView>
-          <HStack className={"justify-between"}>
+          <HStack className={"justify-between gap-4"}>
             <Button
-              className={"w-[40%] rounded-xl bg-green-500"}
+              className={"flex-1 rounded-xl bg-primary-c_light"}
               onPress={handleOnClose}
             >
-              <ButtonText className={"font-h4 text-sm text-typography-900"}>
+              <ButtonText className={"font-h4 text-sm text-white"}>
                 Annuler
               </ButtonText>
             </Button>
             <Button
-              className={"w-[40%] rounded-xl border-red-500 bg-red-600/10"}
+              className={"flex-1 rounded-xl border-red-500"}
               onPress={handleOnDelete}
               variant={"outline"}
             >

@@ -1,5 +1,6 @@
 import {
   formatError,
+  GenerateUniqueId,
   handleError,
   left,
   Result,
@@ -9,11 +10,12 @@ import {
 import { AddDataToMedicalRecordRequest } from "./Request";
 import { AddDataToMedicalRecordResponse } from "./Response";
 import {
-  AnthropometricData,
-  BiologicalValue,
-  ClinicalSignData,
-  ComplicationData,
+  AnthropometricRecord,
+  BiologicalValueRecord,
+  ClinicalSingDataRecord,
+  ComplicationDataRecord,
   DataFieldResponse,
+  IClinicalSignDataInterpretationACL,
   MeasurementValidationACL,
   MedicalRecord,
   MedicalRecordRepository,
@@ -24,8 +26,10 @@ export class AddDataToMedicalRecordUseCase
     UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse>
 {
   constructor(
+    private readonly idGenerator: GenerateUniqueId,
     private readonly repo: MedicalRecordRepository,
-    private measureValidation: MeasurementValidationACL
+    private readonly measureValidation: MeasurementValidationACL,
+    private readonly clinicalAnalysisMaker: IClinicalSignDataInterpretationACL
   ) {}
   async execute(
     request: AddDataToMedicalRecordRequest
@@ -34,10 +38,11 @@ export class AddDataToMedicalRecordUseCase
       const medicalRecord = await this.repo.getByPatientIdOrID(
         request.medicalRecordId
       );
-      const dataAddedRes = this.addDataToMedicalRecord(
+      const dataAddedRes = await this.addDataToMedicalRecord(
         medicalRecord,
         request.data
       );
+
       if (dataAddedRes.isFailure) return left(dataAddedRes);
 
       const validationRes = await this.validateMeasurement(medicalRecord);
@@ -60,14 +65,17 @@ export class AddDataToMedicalRecordUseCase
       biologicalData,
     });
   }
-  private addDataToMedicalRecord(
+  private async addDataToMedicalRecord(
     medicalRecord: MedicalRecord,
     data: AddDataToMedicalRecordRequest["data"]
-  ): Result<boolean> {
+  ): Promise<Result<boolean>> {
     try {
       if (data.anthropometricData) {
-        const anthropometricDataRes = data.anthropometricData.map(
-          AnthropometricData.create
+        const anthropometricDataRes = data.anthropometricData.map(props =>
+          AnthropometricRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(anthropometricDataRes);
         if (combinedRes.isFailure)
@@ -79,8 +87,11 @@ export class AddDataToMedicalRecordUseCase
         );
       }
       if (data.biologicalData) {
-        const biologicalDataRes = data.biologicalData.map(
-          BiologicalValue.create
+        const biologicalDataRes = data.biologicalData.map(props =>
+          BiologicalValueRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(biologicalDataRes);
         if (combinedRes.isFailure)
@@ -90,7 +101,29 @@ export class AddDataToMedicalRecordUseCase
         biologicalDataRes.map(res => medicalRecord.addBiologicalValue(res.val));
       }
       if (data.clinicalData) {
-        const clinicalDataRes = data.clinicalData.map(ClinicalSignData.create);
+        const clinicalAnalysisResult = await this.clinicalAnalysisMaker.analyze(
+          medicalRecord.getPatientId(),
+          data.clinicalData.map(item => ({
+            code: item.code,
+            data: item.data,
+          }))
+        );
+        if (clinicalAnalysisResult.isFailure)
+          return Result.fail<boolean>(String(clinicalAnalysisResult.err));
+        const clinicalData = data.clinicalData.map(item => {
+          return {
+            ...item,
+            isPresent:
+              clinicalAnalysisResult.val.find(value => item.code === value.code)
+                ?.isPresent || false,
+          };
+        });
+        const clinicalDataRes = clinicalData.map(clinicalSign =>
+          ClinicalSingDataRecord.create(
+            clinicalSign,
+            this.idGenerator.generate().toValue()
+          )
+        );
         const combinedRes = Result.combine(clinicalDataRes);
         if (combinedRes.isFailure)
           return Result.fail(
@@ -101,8 +134,11 @@ export class AddDataToMedicalRecordUseCase
         );
       }
       if (data.complicationData) {
-        const complicationDataRes = data.complicationData.map(
-          ComplicationData.create
+        const complicationDataRes = data.complicationData.map(props =>
+          ComplicationDataRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
         );
         const combinedRes = Result.combine(complicationDataRes);
         if (combinedRes.isFailure)
@@ -113,9 +149,9 @@ export class AddDataToMedicalRecordUseCase
           medicalRecord.addComplicationData(res.val)
         );
       }
-      if (data.dataFieldResponse) {
-        const dataFieldRes = data.dataFieldResponse.map(
-          DataFieldResponse.create
+      if (data.dataFieldResponses) {
+        const dataFieldRes = data.dataFieldResponses.map(props =>
+          DataFieldResponse.create(props)
         );
         const combinedRes = Result.combine(dataFieldRes);
         if (combinedRes.isFailure)

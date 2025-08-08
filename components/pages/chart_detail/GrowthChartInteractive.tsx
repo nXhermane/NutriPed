@@ -11,26 +11,55 @@ import {
   DisplayMode,
   LengthHeightMode,
 } from "@/src/constants/ui";
-import { useUI } from "@/src/context";
+import { useToast, useUI } from "@/src/context";
 import {
   ChartDataPoint,
   PlottedPointData,
   PlottedSerieData,
 } from "@/src/hooks";
 import { Poppins_500Medium } from "@expo-google-fonts/poppins";
-import { Circle, useFont } from "@shopify/react-native-skia";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Circle, ImageFormat, useFont } from "@shopify/react-native-skia";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { SharedValue } from "react-native-reanimated";
 import colors from "tailwindcss/colors";
 import {
   CartesianActionsHandle,
   CartesianChart,
+  // CartesianChartRef,
   Line,
   Scatter,
   useChartPressState,
   useChartTransformState,
 } from "victory-native";
 import { Pressable } from "@/components/ui/pressable";
+import { Icon } from "@/components/ui/icon";
+import { Share } from "lucide-react-native";
+import { Image } from "react-native";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
+import { generateGrowthInteractiveChartPdf } from "@/data";
+
+const html = `
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  </head>
+  <body style="text-align: center;">
+    <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
+      Hello Expo!
+    </h1>
+    <img
+      src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
+      style="width: 90vw;" />
+  </body>
+</html>
+`;
 
 export interface GrowthInteractiveChartProps {
   data: ChartDataPoint[];
@@ -51,9 +80,11 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   singlePlotteData,
 }) => {
   const font = useFont(Poppins_500Medium, 8);
+  const toast = useToast();
   const [pointIsPlottedOnChart, setPointIsPLottedOnChart] =
     useState<boolean>(false);
   const [showLegend, setShowLegend] = useState<boolean>(false);
+
   const { colorMode } = useUI();
   const xKey = useMemo(() => {
     if (
@@ -133,6 +164,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
     scaleX: 1,
     scaleY: 1.0,
   });
+  // const chartRef = useRef<CartesianChartRef<any>>(null);
   const { state, isActive } = useChartPressState({
     x: 0,
     y: {
@@ -156,7 +188,30 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
   //   actionsRef.current?.handleTouch(state, e.x, e.y);
   // });
   // const composed = Gesture.Race(tapGesture);
-
+  const [uri, setUri] = useState<string>();
+  const showErrorMessage = useCallback(() => {
+    toast.show(
+      "Error",
+      "Erreur technique",
+      "Une erreur technique s'est produite lors de l'exportation de la courbe de croissance en pdf."
+    );
+  }, [toast]);
+  // const printChart = useCallback(async () => {
+  //   if (chartRef.current?.canvas) {
+  //     setUri(undefined);
+  //     // Get skia image of the chart
+  //     const skImage = await chartRef.current.canvas.makeImageSnapshotAsync();
+  //     const skImageInBase64 = skImage.encodeToBase64(ImageFormat.PNG, 100);
+  //     setUri(`data:image/png;base64,${skImageInBase64}`);
+  //     const printedFile = await Print.printToFileAsync({
+  //       base64: true,
+  //       html: generateGrowthInteractiveChartPdf({
+  //         chartImageBase64: uri,
+  //       }),
+  //     });
+  //     shareAsync(printedFile.uri, { UTI: ".pdf", mimeType: "application/pdf" });
+  //   } else showErrorMessage();
+  // }, [chartRef, showErrorMessage]);
   useEffect(() => {
     setPointIsPLottedOnChart(plottedSeriesData.length != 0);
   }, [plottedSeriesData]);
@@ -169,6 +224,7 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
       </Box>
       <VStack className="m-1 h-v-96 rounded-xl border-[1px] border-primary-border/10 bg-background-primary dark:border-0">
         <CartesianChart
+          // ref={chartRef}
           data={data as any[]}
           xKey={xKey}
           yKeys={yKeys}
@@ -331,6 +387,12 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
             );
           }}
         </CartesianChart>
+        {/* <Pressable
+          className="absolute -top-3 right-3 rounded-full bg-primary-c_light p-2"
+          onPress={printChart}
+        >
+          <Icon as={Share} className="h-3 w-3 text-white" />
+        </Pressable> */}
       </VStack>
       <HStack className="flex-wrap justify-center gap-2">
         {[
@@ -343,6 +405,17 @@ export const GrowthInteractiveChart: React.FC<GrowthInteractiveChartProps> = ({
           <LegendItem key={label} color={color} label={label} />
         ))}
       </HStack>
+      {/*  <VStack className="w-full">
+        <Image
+          source={{ uri: uri }}
+          style={{
+            width: "100%",
+            height: 500,
+          }}
+          resizeMethod="auto"
+          resizeMode="cover"
+        />
+      </VStack> */}
     </React.Fragment>
   );
 };

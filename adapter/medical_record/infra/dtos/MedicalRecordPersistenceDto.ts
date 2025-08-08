@@ -3,16 +3,19 @@ import {
   DataFieldResponseType,
 } from "@core/medical_record";
 import { EntityPersistenceDto } from "../../../shared";
+import { AggregateID } from "@/core/shared";
 
 export interface AnthropometricDataPersistenceDto {
+  id: AggregateID;
   code: string;
-  context: AnthropometricDataContext;
+  context: `${AnthropometricDataContext}`;
   recordedAt: string;
   unit: string;
   value: number;
 }
 
 export interface BiologicalDataPersistenceDto {
+  id: AggregateID;
   code: string;
   recordedAt: string;
   unit: string;
@@ -20,13 +23,16 @@ export interface BiologicalDataPersistenceDto {
 }
 
 export interface ClinicalDataPersistenceDto {
+  id: AggregateID;
   code: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>;
+  isPresent: boolean;
   recordedAt: string;
 }
 
 export interface ComplicationDataPersistenceDto {
+  id: AggregateID;
   code: string;
   recordedAt: string;
   isPresent: boolean;
@@ -39,7 +45,7 @@ export interface DataFieldResponsePersistenceDto {
   type: DataFieldResponseType;
 }
 export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
-  patientId: string;
+  patientId: AggregateID;
   anthropometricData: AnthropometricDataPersistenceDto[];
   biologicalData: BiologicalDataPersistenceDto[];
   clinicalData: ClinicalDataPersistenceDto[];

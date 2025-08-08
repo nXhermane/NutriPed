@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { PatientInfo, useFuseSearch, usePatientList } from "@/src/hooks";
 import { FadeInCardY } from "@/components/custom/motion";
 import { Loading } from "@/components/custom";
+import { VStack } from "@/components/ui/vstack";
 type SelectedPatient = {
   name: string;
   id: AggregateID;
@@ -64,9 +65,10 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
   if (onLoading) return <Loading />;
 
   return (
-    <Box className="h-full max-h-[65%]">
+    <VStack className="h-full">
       <FlatList
         className={"pt-3"}
+        contentContainerClassName="pb-v-8"
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={5}
@@ -104,8 +106,8 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
               onPress={() => {
                 item.id &&
                   router.push({
-                    pathname: "/(screens)/patient_detail/[id]",
-                    params: { id: item.id as string },
+                    pathname: "/(screens)/[patientId]",
+                    params: { patientId: item.id as string },
                   });
               }}
             />
@@ -124,7 +126,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
       {!hideFab && selectedItem.length === 0 && (
         <Fab
           placement="bottom right"
-          className="-mr-2 mb-4 h-11 w-11 bg-primary-c_light"
+          className="-mr-4 mb-4 h-11 w-11 bg-primary-c_light"
           onPress={() => setShowPatientForm(true)}
         >
           <FabIcon as={UserPlus} className="h-6 w-6 text-white" />
@@ -161,6 +163,6 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
         onClose={() => setShowConfirmDeletionAction(false)}
         onDeleteSucceed={() => setSelectedItem([])}
       />
-    </Box>
+    </VStack>
   );
 };

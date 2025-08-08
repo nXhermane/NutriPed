@@ -5,8 +5,8 @@ import {
   PatientStatSession,
   QuickFilterSession,
 } from "@/components/pages/patient";
-import { PageBody, TabHeader } from "@/components/pages/shared";
-import { Box } from "@/components/ui/box";
+import { TabHeader } from "@/components/pages/shared";
+import { VStack } from "@/components/ui/vstack";
 import { PATIENT_QUICK_FILTER_TAG } from "@/src/constants/ui";
 import React, { useState } from "react";
 
@@ -16,28 +16,36 @@ export default function Patients() {
     PATIENT_QUICK_FILTER_TAG.ALL
   );
   return (
-    <Box className={"flex-1 bg-background-primary"}>
-      <TabHeader name={"Mes Patients"} desc={"Gestion et suivi nutritionnel"} />
-      <PageBody>
-        <FadeInCardY delayNumber={1}>
-          <PatientSeachBar
-            fieldProps={{
-              value: searchText,
-              onChangeText: setSearchText,
-            }}
-          />
-        </FadeInCardY>
+    <VStack className={"flex-1 bg-background-primary"}>
+      <TabHeader name={"Mes Patients"} />
+      <VStack className="gap-v-4 pt-4">
+        <VStack className="px-4">
+          <FadeInCardY delayNumber={1}>
+            <PatientSeachBar
+              fieldProps={{
+                value: searchText,
+                onChangeText: setSearchText,
+              }}
+            />
+          </FadeInCardY>
+        </VStack>
 
-        <FadeInCardY delayNumber={2}>
-          <PatientStatSession />
-        </FadeInCardY>
-        <FadeInCardY delayNumber={4}>
-          <QuickFilterSession onChange={setFilterTag} />
-        </FadeInCardY>
-        <FadeInCardY delayNumber={5}>
-          <PatientListSession searchText={searchText} filterTag={filterTag} />
-        </FadeInCardY>
-      </PageBody>
-    </Box>
+        <VStack className="w-full">
+          <FadeInCardY delayNumber={2}>
+            <PatientStatSession />
+          </FadeInCardY>
+        </VStack>
+        <VStack className="">
+          <FadeInCardY delayNumber={3}>
+            <QuickFilterSession onChange={setFilterTag} />
+          </FadeInCardY>
+        </VStack>
+        <VStack className="max-h-[67%] flex-grow px-4">
+          <FadeInCardY delayNumber={4}>
+            <PatientListSession searchText={searchText} filterTag={filterTag} />
+          </FadeInCardY>
+        </VStack>
+      </VStack>
+    </VStack>
   );
 }

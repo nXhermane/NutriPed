@@ -18,41 +18,38 @@ export function useGrowthChartsOrderedByIndicator() {
     diagnosticServices: { growthChart },
   } = usePediatricApp();
 
-  const orderedByIndicator = useCallback(
-    (data: GrowthReferenceChartDto[]) => {
-      const growthChartsOrderdByIndicator: {
-        [key: string]: {
-          indicator: IndicatorUIType;
-          data: { chart: GrowthReferenceChartDto; uiData: ChartUiDataType }[];
-        };
-      } = {};
-      const indicatorUiData = Object.entries(GROWTH_INDICATORS);
-      for (const indicator of indicatorUiData) {
-        const indicatorCharts = indicator[1].charts;
-        for (const [chartCode, uiData] of Object.entries(indicatorCharts)) {
-          const chart = data.find(value => value.code === chartCode);
-          if (chart) {
-            const chartWithUIData = {
-              chart,
-              uiData: uiData as ChartUiDataType,
+  const orderedByIndicator = useCallback((data: GrowthReferenceChartDto[]) => {
+    const growthChartsOrderdByIndicator: {
+      [key: string]: {
+        indicator: IndicatorUIType;
+        data: { chart: GrowthReferenceChartDto; uiData: ChartUiDataType }[];
+      };
+    } = {};
+    const indicatorUiData = Object.entries(GROWTH_INDICATORS);
+    for (const indicator of indicatorUiData) {
+      const indicatorCharts = indicator[1].charts;
+      for (const [chartCode, uiData] of Object.entries(indicatorCharts)) {
+        const chart = data.find(value => value.code === chartCode);
+        if (chart) {
+          const chartWithUIData = {
+            chart,
+            uiData: uiData as ChartUiDataType,
+          };
+          if (growthChartsOrderdByIndicator[indicator[0]]) {
+            growthChartsOrderdByIndicator[indicator[0]].data.push(
+              chartWithUIData
+            );
+          } else {
+            growthChartsOrderdByIndicator[indicator[0]] = {
+              indicator: indicator[1] as IndicatorUIType,
+              data: [chartWithUIData],
             };
-            if (growthChartsOrderdByIndicator[indicator[0]]) {
-              growthChartsOrderdByIndicator[indicator[0]].data.push(
-                chartWithUIData
-              );
-            } else {
-              growthChartsOrderdByIndicator[indicator[0]] = {
-                indicator: indicator[1] as IndicatorUIType,
-                data: [chartWithUIData],
-              };
-            }
           }
         }
       }
-      return Object.values(growthChartsOrderdByIndicator);
-    },
-    [GROWTH_INDICATORS]
-  );
+    }
+    return Object.values(growthChartsOrderdByIndicator);
+  }, []);
 
   const fetchGrowthChartAndOrderedByIndicator = async () => {
     const result = await growthChart.get({});

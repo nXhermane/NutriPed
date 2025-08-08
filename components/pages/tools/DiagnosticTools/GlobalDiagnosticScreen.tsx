@@ -3,7 +3,7 @@ import { GlobalDiagnosticAnthropometricStep } from "./GlobalDiagnosticAnthropome
 import { GlobalDiagnosticClinicalStep } from "./GlobalDiagnosticClinicalStep";
 import { GlobalDiagnosticBiologicalStep } from "./GlobalDiagnosticBiologicalStep";
 import { GlobalDiagnosticResult } from "./GlobalDiagnosticResult";
-import { Wizard } from "@/components/custom";
+import { Wizard } from "@/components/custom/Wizard";
 
 export const DIAGNOSTIC_WORKFLOW = {
   step1: {

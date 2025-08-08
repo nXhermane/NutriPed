@@ -37,8 +37,8 @@ export const GrowthChartInteractiveOptions: React.FC<
 }) => {
   return (
     <VStack className="mt-4 gap-4 p-1">
-      <VStack className="gap-3 rounded-xl border-[1px] border-primary-border/10 bg-background-primary px-3 py-3 dark:border-0">
-        <Text className="font-h4 text-base font-medium text-typography-primary">
+      <VStack className="gap-3 rounded-xl border-[1px] border-primary-border/10 bg-background-primary py-3 dark:border-0">
+        <Text className="px-3 font-h4 text-base font-medium text-typography-primary">
           Période à visualiser
         </Text>
         <ChartDisplayRange
@@ -47,8 +47,8 @@ export const GrowthChartInteractiveOptions: React.FC<
           value={displayRange}
         />
       </VStack>
-      <VStack className="gap-3 rounded-xl border-[1px] border-primary-border/10 bg-background-primary px-3 py-3 dark:border-0">
-        <Text className="font-h4 text-base font-medium text-typography-primary">
+      <VStack className="gap-3 rounded-xl border-[1px] border-primary-border/10 bg-background-primary py-3 dark:border-0">
+        <Text className="px-3 font-h4 text-base font-medium text-typography-primary">
           Mode d'affichage
         </Text>
         <ChartDisplayMode

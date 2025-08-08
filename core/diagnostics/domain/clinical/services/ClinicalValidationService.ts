@@ -95,8 +95,10 @@ export class ClinicalValidationService implements IClinicalValidationService {
         const clinicalDataProvided = Object.keys(
           clinicalSignData.unpack().data
         );
+        // TODO: le probleme ici c'est que j'utilisais every mais j'ai changé en some pour correpondre au un bug qui s'affichaire lors des validations de données cliniques concernant la detresse respiratoire.
+        // FIXME: Dans la version suivante je dois essayer de fixer l'erreur la en passant juste le context en paramètre du clinicalValidationService pour epargner cette erreur .
         if (
-          !clinicalRefNeedData.every(clinicalNeeded =>
+          !clinicalRefNeedData.some(clinicalNeeded =>
             clinicalDataProvided.includes(clinicalNeeded)
           )
         ) {
@@ -146,6 +148,7 @@ export class ClinicalValidationService implements IClinicalValidationService {
         const dataType = unpackedRefEntry.dataType;
         const dataTypeRange = unpackedRefEntry.dataRange;
         const dataTypeEnum = unpackedRefEntry.enumValue;
+        const dataTypeQuantity = unpackedRefEntry.units;
         const signDataValue = signData[dataCode]!;
         let validationResult: boolean = false;
 
@@ -171,9 +174,21 @@ export class ClinicalValidationService implements IClinicalValidationService {
           case ClinicalDataType.ENUM:
             {
               const value = signDataValue;
-              validationResult = !!dataTypeEnum?.includes(value);
+              validationResult = !!dataTypeEnum
+                ?.map(val => val.value)
+                .includes(value);
             }
             break;
+          case ClinicalDataType.QUANTITY: {
+            const isQuantityValue =
+              typeof signDataValue === "object" &&
+              "value" in signDataValue &&
+              "unit" in signDataValue;
+            const haveValidUnit = dataTypeQuantity?.available
+              .map(unit => unit.unpack())
+              .includes(signDataValue?.unit);
+            validationResult = isQuantityValue && !!haveValidUnit;
+          }
           default: {
             throw new Error("This data type is not supported.");
           }

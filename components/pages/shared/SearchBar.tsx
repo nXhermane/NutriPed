@@ -24,7 +24,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <Box>
       <Input
-        className={`rounded-xl border-[0.5px] border-primary-border/10 bg-background-secondary data-[focus=true]:border-primary-c ${className}`}
+        className={`h-v-10 rounded-xl border-[0.5px] border-primary-border/10 bg-background-secondary data-[focus=true]:border-primary-c ${className}`}
         {...props}
       >
         <InputSlot className={"pl-3"}>

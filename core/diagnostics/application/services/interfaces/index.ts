@@ -11,3 +11,5 @@ export * from "./DiagnosticRuleService";
 export * from "./GrowthIndicatorValueService";
 export * from "./ClinicalNutritionalAnalysisService";
 export * from "./BiologicalAnalysisService";
+export * from "./MakeClinicalSignDataInterpretation";
+export * from "./NormalizeAnthropometricDataService";

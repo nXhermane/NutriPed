@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { Alert, ScrollView } from "react-native";
+import { Alert, ScrollView, Text } from "react-native";
 import { VStack } from "@/components/ui/vstack";
-import { Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AnthropometricCalculatorResultDataType,
@@ -13,14 +12,14 @@ import { GrowthIndicatorValueDto } from "@/core/diagnostics";
 import { AnthropometricCalculatorResultModal } from "./AnthropometricCalculatorResultModal";
 import { FadeInCardX } from "@/components/custom/motion";
 import { HStack } from "@/components/ui/hstack";
-import { BlurView } from "expo-blur";
-import { useUI } from "@/src/context";
+import { useToast, useUI } from "@/src/context";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useExportAnthropometicResultToXlsx } from "@/src/hooks";
 import { FakeBlur } from "@/components/custom";
 
 export const AnthropometricCalculatorHistory = () => {
   const { colorMode } = useUI();
+  const toast = useToast();
   const savedResults = useSelector<
     RootState,
     AnthropometricCalculatorResultDataType[]
@@ -114,7 +113,7 @@ export const AnthropometricCalculatorHistory = () => {
           className="w-full flex-row gap-3 px-4 py-4"
         >
           <Button
-            className={`rounded-xl border-red-500`}
+            className={`flex-grow rounded-xl border-red-500`}
             variant="outline"
             onPress={() => {
               deleteAllHandler(savedResults);
@@ -125,14 +124,18 @@ export const AnthropometricCalculatorHistory = () => {
             </ButtonText>
           </Button>
           <Button
-            className={`w-1/2 rounded-xl bg-primary-c_light`}
-            onPress={() => {
-              exportHistoryToXlsx(savedResults);
+            className={`flex-grow rounded-xl bg-primary-c_light`}
+            onPress={async () => {
+              const result = await exportHistoryToXlsx(savedResults);
+              if (result === null)
+                toast.show(
+                  "Error",
+                  "Erreur lors de l'exportation",
+                  "Veillez verifier si vous êtes connecté à internet et reessayer."
+                );
             }}
           >
-            <ButtonText
-              className={`font-h4 text-sm font-medium text-typography-primary`}
-            >
+            <ButtonText className={`font-h4 text-sm font-medium text-white`}>
               Exporter tout
             </ButtonText>
           </Button>

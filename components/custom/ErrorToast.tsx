@@ -3,7 +3,6 @@ import { HStack } from "../ui/hstack";
 import { Toast, ToastTitle, ToastDescription } from "../ui/toast";
 import { VStack } from "../ui/vstack";
 import { Icon } from "../ui/icon";
-import { Text } from "../ui/text";
 export interface ErrorToastProps {
   id: string;
   title?: string;
@@ -25,13 +24,17 @@ export const ErrorToast: React.FC<ErrorToastProps> = ({ id, title, desc }) => {
         <Icon
           as={X}
           className={
-            "h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white"
+            "h-6 w-6 items-center justify-center rounded-full bg-red-700 text-white dark:bg-red-500"
           }
         />
 
         <VStack className="w-[90%]">
           {title && (
-            <ToastTitle className={"text-base font-semibold text-red-400"}>
+            <ToastTitle
+              className={
+                "text-base font-semibold text-red-700 dark:text-red-400"
+              }
+            >
               {title}
             </ToastTitle>
           )}

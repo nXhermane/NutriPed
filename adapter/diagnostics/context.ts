@@ -166,11 +166,14 @@ import {
   IGrowthReferenceChartService,
   IGrowthReferenceTableService,
   IIndicatorService,
+  IMakeClinicalSignDataInterpretationService,
   Indicator,
   IndicatorDto,
   IndicatorMapper,
   IndicatorRepository,
   IndicatorService,
+  INormalizeAnthropometricDataAppService,
+  INormalizeAnthropometricDataService,
   INutritionalAssessmentService,
   INutritionalDiagnosticService,
   INutritionalRiskFactorService,
@@ -186,9 +189,19 @@ import {
   MakeClinicalAnalysisRequest,
   MakeClinicalAnalysisResponse,
   MakeClinicalAnalysisUseCase,
+  MakeClinicalSignDataInterpretationRequest,
+  MakeClinicalSignDataInterpretationResponse,
+  MakeClinicalSignDataInterpretationService,
+  MakeClinicalSignDataInterpretationUseCase,
   MakeIndependantDiagnosticRequest,
   MakeIndependantDiagnosticResponse,
   MakeIndependantDiagnosticUseCase,
+  MedicalRecordACL,
+  NormalizeAnthropometricDataAppService,
+  NormalizeAnthropometricDataRequest,
+  NormalizeAnthropometricDataResponse,
+  NormalizeAnthropometricDataService,
+  NormalizeAnthropometricDataUseCase,
   NutritionalAssessmentResult,
   NutritionalAssessmentResultDto,
   NutritionalAssessmentResultFactory,
@@ -287,7 +300,7 @@ import {
   GrowthReferenceTableRepositoryWebImpl,
   NutritionalRiskFactorRepoWebImpl,
 } from "./infra/repository.web";
-import { PatientACLImpl, UnitACLImpl } from "@core/sharedAcl";
+import { MedicalRecordACLImpl, PatientACLImpl, UnitACLImpl } from "@core/sharedAcl";
 import { UnitContext } from "../units/context";
 
 import { PatientContext } from "../patient/context";
@@ -323,6 +336,7 @@ import {
   patient_diagnostic_data,
   PatientDiagnosticDataRepositoryExpoImpl,
 } from "./infra";
+import { MedicalRecordContext } from "../medical_record";
 
 export class DiagnosticContext {
   private static instance: DiagnosticContext | null = null;
@@ -395,6 +409,7 @@ export class DiagnosticContext {
   private readonly anthroValidationService: IAnthropometricValidationService;
   private readonly growthIndicatorService: IGrowthIndicatorService;
   private readonly growthRefSelectionService: IReferenceSelectionService;
+  private readonly normalizeAnthropometricDataService: INormalizeAnthropometricDataService;
   private readonly biologicalInterpretationService: IBiologicalInterpretationService;
   private readonly biologicalValidationService: IBiologicalValidationService;
   private readonly biologicalVariableGeneratorService: IBiologicalVariableGeneratorService;
@@ -537,6 +552,10 @@ export class DiagnosticContext {
     CalculateAllAvailableGrowthIndicatorValueRequest,
     CalculateAllAvailableGrowthIndicatorValueResponse
   >;
+  private readonly normalizeAnthropometricDataUC: UseCase<
+    NormalizeAnthropometricDataRequest,
+    NormalizeAnthropometricDataResponse
+  >;
   private readonly createClinicalRefUC: UseCase<
     CreateClinicalSignReferenceRequest,
     CreateClinicalSignReferenceResponse
@@ -645,6 +664,10 @@ export class DiagnosticContext {
     ValidateMeasurementsRequest,
     ValidateMeasurementsResponse
   >;
+  private readonly makeClinicalSignInterpretationUC: UseCase<
+    MakeClinicalSignDataInterpretationRequest,
+    MakeClinicalSignDataInterpretationResponse
+  >;
   // Subscribers
   private readonly afterPatientCareSessionCreated: AfterPatientCareSessionCreatedHandler;
   private readonly afterAnthropometricDataAdded: AfterAnthropometricDataAddedDiagnosticHandler;
@@ -655,6 +678,7 @@ export class DiagnosticContext {
   private readonly indicatorAppService: IIndicatorService;
   private readonly growthChartAppService: IGrowthReferenceChartService;
   private readonly growthTableAppService: IGrowthReferenceTableService;
+  private readonly normalizeAnthropometricDataAppService: INormalizeAnthropometricDataAppService;
   private readonly clinicalRefAppService: IClinicalSignReferenceService;
   private readonly clinicalNutritionalAnalysisAppService: IClinicalNutritionalAnalysisAppService;
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
@@ -664,11 +688,13 @@ export class DiagnosticContext {
   private readonly nutritionalDiagnosticAppService: INutritionalDiagnosticService;
   private readonly validatePatientMeasurementsAppService: IValidatePatientMeasurementsService;
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
+  private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
 
   // ACL
 
   private readonly unitAcl: UnitAcl;
   private readonly patientAcl: PatientACL;
+  private readonly medicalRecordAcl: MedicalRecordACL
   private constructor(
     dbConnection: IndexedDBConnection | null,
     expo: SQLiteDatabase | null,
@@ -693,6 +719,9 @@ export class DiagnosticContext {
     this.patientAcl = new PatientACLImpl(
       PatientContext.init(dbConnection, expo, this.eventBus).getService()
     );
+
+    this.medicalRecordAcl = new MedicalRecordACLImpl(MedicalRecordContext.init(dbConnection, expo, this.eventBus).getMedicalRecordService())
+
     // Initialiser les mappers d'infrastructure
     this.patientDiagnosticDataInfraMapper =
       new PatientDiagnosticDataInfraMapper();
@@ -716,123 +745,123 @@ export class DiagnosticContext {
     // Initialiser les repositories
     this.nutritionalDiagnosticRepo = isWebEnv()
       ? new NutritionalDiagnosticRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.nutritionalDiagnosticInfraMapper,
-          this.eventBus
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.nutritionalDiagnosticInfraMapper,
+        this.eventBus
+      )
       : new NutritionalDiagnosticRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.nutritionalDiagnosticInfraMapper,
-          nutritional_diagnostics,
-          this.eventBus,
-          {
-            diagnosticData: new PatientDiagnosticDataRepositoryExpoImpl(
-              this.expo as SQLiteDatabase,
-              this.patientDiagnosticDataInfraMapper,
-              patient_diagnostic_data,
-              this.eventBus
-            ),
-            result: new NutritionalAssessmentResultRepositoryExpoImpl(
-              this.expo as SQLiteDatabase,
-              this.nutritionalAssessmentResultInfraMapper,
-              nutritional_assessment_results,
-              this.eventBus
-            ),
-          },
-          {
-            diagnosticData: this.patientDiagnosticDataInfraMapper,
-            result: this.nutritionalAssessmentResultInfraMapper,
-          }
-        );
+        this.expo as SQLiteDatabase,
+        this.nutritionalDiagnosticInfraMapper,
+        nutritional_diagnostics,
+        this.eventBus,
+        {
+          diagnosticData: new PatientDiagnosticDataRepositoryExpoImpl(
+            this.expo as SQLiteDatabase,
+            this.patientDiagnosticDataInfraMapper,
+            patient_diagnostic_data,
+            this.eventBus
+          ),
+          result: new NutritionalAssessmentResultRepositoryExpoImpl(
+            this.expo as SQLiteDatabase,
+            this.nutritionalAssessmentResultInfraMapper,
+            nutritional_assessment_results,
+            this.eventBus
+          ),
+        },
+        {
+          diagnosticData: this.patientDiagnosticDataInfraMapper,
+          result: this.nutritionalAssessmentResultInfraMapper,
+        }
+      );
 
     this.anthroMeasureRepo = isWebEnv()
       ? new AnthropometricMeasureRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.anthroMeasureInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.anthroMeasureInfraMapper
+      )
       : new AnthropometricMeasureRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.anthroMeasureInfraMapper,
-          anthropometric_measures,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.anthroMeasureInfraMapper,
+        anthropometric_measures,
+        this.eventBus
+      );
     this.indicatorRepo = isWebEnv()
       ? new IndicatorRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.indicatorInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.indicatorInfraMapper
+      )
       : new IndicatorRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.indicatorInfraMapper,
-          indicators,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.indicatorInfraMapper,
+        indicators,
+        this.eventBus
+      );
     this.growthRefTableRepo = isWebEnv()
       ? new GrowthReferenceTableRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.growthRefTableInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.growthRefTableInfraMapper
+      )
       : new GrowthReferenceTableRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.growthRefTableInfraMapper,
-          growth_reference_tables,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.growthRefTableInfraMapper,
+        growth_reference_tables,
+        this.eventBus
+      );
     this.growthRefChartRepo = isWebEnv()
       ? new GrowthReferenceChartRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.growthRefChartInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.growthRefChartInfraMapper
+      )
       : new GrowthReferenceChartRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.growthRefChartInfraMapper,
-          growth_reference_charts,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.growthRefChartInfraMapper,
+        growth_reference_charts,
+        this.eventBus
+      );
     this.clinicalRefRepo = isWebEnv()
       ? new ClinicalSignReferenceRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.clinicalRefInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.clinicalRefInfraMapper
+      )
       : new ClinicalSignReferenceRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.clinicalRefInfraMapper,
-          clinical_sign_references,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.clinicalRefInfraMapper,
+        clinical_sign_references,
+        this.eventBus
+      );
     this.biochemicalRefRepo = isWebEnv()
       ? new BiochemicalReferenceRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.biochemicalRefInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.biochemicalRefInfraMapper
+      )
       : new BiochemicalReferenceRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.biochemicalRefInfraMapper,
-          biochemical_references,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.biochemicalRefInfraMapper,
+        biochemical_references,
+        this.eventBus
+      );
     this.diagnosticRuleRepo = isWebEnv()
       ? new DiagnosticRuleRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.diagnosticRuleInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.diagnosticRuleInfraMapper
+      )
       : new DiagnosticRuleRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.diagnosticRuleInfraMapper,
-          diagnostic_rules,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.diagnosticRuleInfraMapper,
+        diagnostic_rules,
+        this.eventBus
+      );
     this.nutritionalRiskFactorRepo = isWebEnv()
       ? new NutritionalRiskFactorRepoWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.nutritionalRiskFactorInfraMapper
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.nutritionalRiskFactorInfraMapper
+      )
       : new NutritionalRiskFactorRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.nutritionalRiskFactorInfraMapper,
-          nutritional_risk_factors,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.nutritionalRiskFactorInfraMapper,
+        nutritional_risk_factors,
+        this.eventBus
+      );
 
     // Initialiser les services de domaine
     const anthroComputingHelper = new AnthroComputingHelper();
@@ -864,6 +893,11 @@ export class DiagnosticContext {
       this.zScoreCalculationService,
       this.zScoreInterpretationService
     );
+    this.normalizeAnthropometricDataService =
+      new NormalizeAnthropometricDataService(
+        this.anthroMeasureRepo,
+        this.unitAcl
+      );
     this.biologicalInterpretationService = new BiologicalInterpretationService(
       this.biochemicalRefRepo,
       this.unitAcl
@@ -875,7 +909,8 @@ export class DiagnosticContext {
       new BiologicalVariableGeneratorService(this.biochemicalRefRepo);
     this.clinicalAnalysisService = new ClinicalAnalysisService(
       this.clinicalRefRepo,
-      this.nutritionalRiskFactorRepo
+      this.nutritionalRiskFactorRepo,
+      this.unitAcl
     );
     this.clinicalValidationService = new ClinicalValidationService(
       this.clinicalRefRepo
@@ -1015,6 +1050,10 @@ export class DiagnosticContext {
         this.anthroVariableGenerator,
         this.growthIndicatorService
       );
+
+    this.normalizeAnthropometricDataUC = new NormalizeAnthropometricDataUseCase(
+      this.normalizeAnthropometricDataService
+    );
     // Clinical Reference Use Cases
     this.createClinicalRefUC = new CreateClinicalSignReferenceUseCase(
       this.idGenerator,
@@ -1108,6 +1147,8 @@ export class DiagnosticContext {
     this.generateDiagnosticResultUC = new GenerateDiagnosticResultUseCase(
       this.nutritionalDiagnosticRepo,
       this.nutritionalAssessmentService,
+      this.medicalRecordAcl,
+      this.patientAcl,
       this.nutritionalAssessmentAppMapper
     );
     this.addNotesUC = new AddNoteToNutritionalDiagnosticUseCase(
@@ -1138,6 +1179,11 @@ export class DiagnosticContext {
       this.nutritionalDiagnosticRepo,
       this.patientDataValidationService
     );
+    this.makeClinicalSignInterpretationUC =
+      new MakeClinicalSignDataInterpretationUseCase(
+        this.nutritionalDiagnosticRepo,
+        this.makeClinicalAnalysisUC
+      );
     // Subscribers
     this.afterPatientCareSessionCreated =
       new AfterPatientCareSessionCreatedHandler(
@@ -1194,6 +1240,10 @@ export class DiagnosticContext {
       calculateAllAvailableIndicator:
         this.calculateAllAvailableGrowthIndicatorValueUC,
     });
+    this.normalizeAnthropometricDataAppService =
+      new NormalizeAnthropometricDataAppService({
+        normalizeUC: this.normalizeAnthropometricDataUC,
+      });
     this.clinicalRefAppService = new ClinicalSignReferenceService({
       createUC: this.createClinicalRefUC,
       getUC: this.getClinicalRefUC,
@@ -1238,6 +1288,10 @@ export class DiagnosticContext {
     this.validatePatientMeasurementsAppService =
       new ValidatePatientMeasurementsService({
         validateUC: this.validateMeasurementDataUC,
+      });
+    this.makeClinicalSignInterpretationAppService =
+      new MakeClinicalSignDataInterpretationService({
+        interpretUC: this.makeClinicalSignInterpretationUC,
       });
   }
 
@@ -1298,7 +1352,12 @@ export class DiagnosticContext {
   getValidatePatientMeasurementsService(): IValidatePatientMeasurementsService {
     return this.validatePatientMeasurementsAppService;
   }
-
+  getMakeClinicalSignDataInterpretationService(): IMakeClinicalSignDataInterpretationService {
+    return this.makeClinicalSignInterpretationAppService;
+  }
+  getNormalizeAnthropomtricDataService(): INormalizeAnthropometricDataAppService {
+    return this.normalizeAnthropometricDataAppService;
+  }
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {
     this.eventBus.unsubscribe(this.afterPatientCareSessionCreated);

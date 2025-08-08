@@ -1,6 +1,7 @@
 import { ClinicalDataType } from "@core/constants";
 import { ICondition } from "@shared";
 import { EntityPersistenceDto } from "../../../../shared";
+import { ClinicalSignDataDto } from "@/core/diagnostics";
 
 export interface ClinicalSignReferencePersistenceDto
   extends EntityPersistenceDto {
@@ -8,13 +9,5 @@ export interface ClinicalSignReferencePersistenceDto
   code: string;
   description: string;
   evaluationRule: ICondition;
-  data: {
-    name: string;
-    code: string;
-    question: string;
-    dataType: ClinicalDataType;
-    required: boolean;
-    dataRange?: [number, number];
-    enumValue?: string[];
-  }[];
+  data: ClinicalSignDataDto[];
 }

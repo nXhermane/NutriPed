@@ -1,0 +1,56 @@
+import { Text } from "@/components/ui/text";
+import { useRoute } from "@react-navigation/native";
+import React from "react";
+import { AddAnthropometricDataToMedicalRecord } from "./AddAnthropometricDataToMedicalRecord";
+import { AddClinicalDataToMedicalRecord } from "./AddClinicalDataToMedicalRecord";
+import { AddBiologicalDataToMedicalRecord } from "./AddBiologicalDataToMedicalRecord";
+import { AddComplicationToMedicalRecord } from "./AddComplicationToMedicalRecord";
+
+export interface AddDataToMedicalRecordDataTypeFormProps {}
+
+export const AddDataToMedicalRecordDataTypeForm: React.FC<
+  AddDataToMedicalRecordDataTypeFormProps
+> = ({}) => {
+  const router = useRoute<any>();
+  console.log(router.params);
+  const render = () => {
+    switch (router.params["tag" as never]) {
+      case "anthropometric": {
+        return (
+          <React.Fragment>
+            <AddAnthropometricDataToMedicalRecord />
+          </React.Fragment>
+        );
+      }
+      case "clinical": {
+        return (
+          <React.Fragment>
+            <AddClinicalDataToMedicalRecord />
+          </React.Fragment>
+        );
+      }
+      case "biological": {
+        return (
+          <React.Fragment>
+            <AddBiologicalDataToMedicalRecord />
+          </React.Fragment>
+        );
+      }
+      case "complication": {
+        return (
+          <React.Fragment>
+            <AddComplicationToMedicalRecord />
+          </React.Fragment>
+        );
+      }
+      default: {
+        return (
+          <React.Fragment>
+            <Text>This data type is not supported</Text>
+          </React.Fragment>
+        );
+      }
+    }
+  };
+  return <React.Fragment>{render()}</React.Fragment>;
+};

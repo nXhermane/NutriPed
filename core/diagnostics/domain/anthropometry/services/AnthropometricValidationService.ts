@@ -47,18 +47,26 @@ export class AnthropometricValidationService
         }
         // Check Validation Rules
         // Convert the value of anthropEntry a the right measure
-        const anthropEntryValue =
+        const anthropEntryValueRes =
           anthropEntry.unit.unpack() === anthropMeasure.getUnits().defaultUnit
-            ? anthropEntry.value
+            ? Result.ok(anthropEntry.value)
             : await this.unitAcl.convertTo(
                 anthropEntry.unit,
                 anthropMeasure.getProps().unit,
                 anthropEntry.value
               );
+
+        if (anthropEntryValueRes.isFailure) {
+          handleAnthropometricError(
+            ANTHROPOMETRIC_MEASURE_ERROR.VALIDATION.INVALID_UNIT.path,
+            `AnthroFromUnit: ${anthropEntry.unit.unpack()}, AnthroToUnit: ${anthropMeasure.getProps().unit.unpack()}, AnthroValue: ${anthropEntry.value}, ConvertionServiceError: ${anthropEntryValueRes.err} .`
+          );
+        }
+
         const validationRules = anthropMeasure.getValidationRules();
         // Build the condition and rule variables Object
         const validationDataObject = {
-          [anthropMeasure.getCode()]: anthropEntryValue,
+          [anthropMeasure.getCode()]: anthropEntryValueRes.val,
           ...context,
           sex: context.sex.toString(),
         };

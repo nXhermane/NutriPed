@@ -14,7 +14,7 @@ export function useGrowthIndicatorValueGeneratorForTable(
       const result = await growthIndicatorValue.calculateIndicator({
         anthropometricData: {
           anthropometricMeasures: Object.values(data).filter(
-            value => typeof value != "number" && value.code != "lenhei"
+            value => typeof value !== "number" && value.code != "lenhei"
           ),
         },
         age_in_day: (data["age_in_day"] as number) || 0,
@@ -29,7 +29,7 @@ export function useGrowthIndicatorValueGeneratorForTable(
         return null;
       }
     },
-    [indicatorCode]
+    [indicatorCode, growthIndicatorValue]
   );
 
   return { submit };

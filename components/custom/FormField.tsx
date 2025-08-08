@@ -235,8 +235,8 @@ export const FormField = <T,>({
         onChange &&
           onChange(field.name, {
             code: field.name,
-            value: defaultUnitValue,
-            unit: field.defaultUnit.unit,
+            value: currentUnitValue,
+            unit: currentQuantityUnit.unit,
           } as T);
       }
     }

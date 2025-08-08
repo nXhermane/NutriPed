@@ -31,6 +31,8 @@ export const FilterChips = <T,>({
             title={item.label}
             state={JSON.stringify(item.value) === JSON.stringify(value)}
             onChange={state => state && onChange && onChange(item.value)}
+            isFirst={index == 0}
+            isLast={index == data.length - 1}
           />
         </FadeInCardX>
       ))}
@@ -42,15 +44,19 @@ export interface FilterChipItemProps {
   state?: boolean;
   onChange?: (state: boolean) => void;
   title: string;
+  isFirst: boolean;
+  isLast: boolean;
 }
 export const FilterChipItem: React.FC<FilterChipItemProps> = ({
   state,
   onChange,
   title,
+  isFirst,
+  isLast,
 }) => {
   return (
     <Pressable
-      className={`${state ? "bg-primary-c_light" : "bg-background-secondary"} rounded-full border-[0.5px] border-primary-border/10 px-4 py-v-1`}
+      className={`${isFirst ? "ml-4" : isLast ? "mr-4" : ""} ${state ? "bg-primary-c_light" : "bg-background-secondary"} rounded-full border-[0.5px] border-primary-border/10 px-4 py-v-1`}
       onPress={() => {
         const _value = !state;
         if (state) return;

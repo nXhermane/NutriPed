@@ -15,13 +15,21 @@ import {
   CreateMedicalRecordRequest,
   CreateMedicalRecordResponse,
   CreateMedicalRecordUseCase,
+  DeleteDataFromMedicalRecordRequest,
+  DeleteDataFromMedicalRecordResponse,
+  DeleteDataFromMedicalRecordUseCase,
   DeleteMedicalRecordRequest,
   DeleteMedicalRecordResponse,
   DeleteMedicalRecordUseCase,
   GetMedicalRecordRequest,
   GetMedicalRecordResponse,
   GetMedicalRecordUseCase,
+  GetNormalizedAnthropometricDataRequest,
+  GetNormalizedAnthropometricDataResponse,
+  GetNormalizedAnthropometricDataUseCase,
+  IClinicalSignDataInterpretationACL,
   IMedicalRecordService,
+  INormalizeAnthropometricDataACL,
   MeasurementValidationACL,
   MeasurementValidationACLImpl,
   MedicalRecord,
@@ -29,6 +37,7 @@ import {
   MedicalRecordMapper,
   MedicalRecordRepository,
   MedicalRecordService,
+  NormalizeAnthropomericDataACL,
   PatientACL,
   UpdateMedicalRecordRequest,
   UpdateMedicalRecordResponse,
@@ -47,7 +56,15 @@ import {
 } from "./infra";
 import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
 import { SQLiteDatabase } from "expo-sqlite";
+import { ClinicalSignDataInterpretationACL } from "@/core/medical_record/adapter/acl/ClinicalSignDataInterpretationACl";
 
+
+export interface MedicalRecordAcls {
+  patientAcl: PatientACL
+  measurementACl: MeasurementValidationACL;
+  clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
+  normalizeAnthropometricDataACL: INormalizeAnthropometricDataACL;
+}
 export class MedicalRecordContext {
   private static instance: MedicalRecordContext | null = null;
   private readonly dbConnection: IndexedDBConnection | null;
@@ -68,7 +85,7 @@ export class MedicalRecordContext {
   >;
 
   //UseCases
-  private readonly createMedicalRecordUC: UseCase<
+  private createMedicalRecordUC: UseCase<
     CreateMedicalRecordRequest,
     CreateMedicalRecordResponse
   >;
@@ -76,7 +93,7 @@ export class MedicalRecordContext {
     GetMedicalRecordRequest,
     GetMedicalRecordResponse
   >;
-  private readonly updateMedicalRecordUC: UseCase<
+  private updateMedicalRecordUC: UseCase<
     UpdateMedicalRecordRequest,
     UpdateMedicalRecordResponse
   >;
@@ -84,15 +101,26 @@ export class MedicalRecordContext {
     DeleteMedicalRecordRequest,
     DeleteMedicalRecordResponse
   >;
-  private readonly addDataToMedicalRecordUC: UseCase<
+  private addDataToMedicalRecordUC: UseCase<
     AddDataToMedicalRecordRequest,
     AddDataToMedicalRecordResponse
   >;
+  private readonly deleteDataFromMedicalRecordUC: UseCase<
+    DeleteDataFromMedicalRecordRequest,
+    DeleteDataFromMedicalRecordResponse
+  >;
+  private getNormalizeAnthropometricDataUC: UseCase<
+    GetNormalizedAnthropometricDataRequest,
+    GetNormalizedAnthropometricDataResponse
+  >;
   // ACL
-  private readonly patientACL: PatientACL;
-  private readonly measurementACl: MeasurementValidationACL;
+  private acls: MedicalRecordAcls | undefined
+  // private readonly patientACL: PatientACL;
+  // private readonly measurementACl: MeasurementValidationACL;
+  // private readonly clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
+  // private readonly normalizeAnthropometricDataACL: INormalizeAnthropometricDataACL;
   // App services
-  private readonly medicalRecordAppService: IMedicalRecordService;
+  private medicalRecordAppService: IMedicalRecordService;
 
   // Subscribers
   private readonly afterPatientCreatedHandler: AfterPatientCreatedMedicalHandler;
@@ -101,7 +129,7 @@ export class MedicalRecordContext {
   private constructor(
     dbConnection: IndexedDBConnection | null,
     expo: SQLiteDatabase | null,
-    eventBus: IEventBus
+    eventBus: IEventBus, alcs?: MedicalRecordAcls
   ) {
     // Infrastructure
     if (isWebEnv() && dbConnection === null) {
@@ -115,30 +143,45 @@ export class MedicalRecordContext {
     this.dbConnection = dbConnection;
     this.expo = expo;
     this.eventBus = eventBus;
-    this.patientACL = new PatientACLImpl(
-      PatientContext.init(dbConnection, expo, this.eventBus).getService()
-    );
-    this.measurementACl = new MeasurementValidationACLImpl(
-      DiagnosticContext.init(
-        dbConnection,
-        expo,
-        this.eventBus
-      ).getValidatePatientMeasurementsService()
-    );
+    this.acls = alcs
+    // this.patientACL = new PatientACLImpl(
+    //   PatientContext.init(dbConnection, expo, this.eventBus).getService()
+    // );
+    // this.measurementACl = new MeasurementValidationACLImpl(
+    //   DiagnosticContext.init(
+    //     dbConnection,
+    //     expo,
+    //     this.eventBus
+    //   ).getValidatePatientMeasurementsService()
+    // );
+    // this.clinicalSignDataInterpreterACL = new ClinicalSignDataInterpretationACL(
+    //   DiagnosticContext.init(
+    //     dbConnection,
+    //     expo,
+    //     this.eventBus
+    //   ).getMakeClinicalSignDataInterpretationService()
+    // );
+    // this.normalizeAnthropometricDataACL = new NormalizeAnthropomericDataACL(
+    //   DiagnosticContext.init(
+    //     dbConnection,
+    //     expo,
+    //     this.eventBus
+    //   ).getNormalizeAnthropomtricDataService()
+    // );
 
     this.infraMapper = new MedicalRecordInfraMapper();
     this.repository = isWebEnv()
       ? new MedicalRecordRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.infraMapper,
-          this.eventBus
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.infraMapper,
+        this.eventBus
+      )
       : new MedicalRecordRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.infraMapper,
-          medical_records,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.infraMapper,
+        medical_records,
+        this.eventBus
+      );
     this.idGenerator = new GenerateUUID();
 
     // Application
@@ -146,7 +189,7 @@ export class MedicalRecordContext {
     this.createMedicalRecordUC = new CreateMedicalRecordUseCase(
       this.idGenerator,
       this.repository,
-      this.patientACL
+      this.acls?.patientAcl! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
     );
     this.getMedicalRecordUC = new GetMedicalRecordUseCase(
       this.repository,
@@ -154,15 +197,26 @@ export class MedicalRecordContext {
     );
     this.updateMedicalRecordUC = new UpdateMedicalRecordUseCase(
       this.repository,
-      this.measurementACl
+      this.acls?.measurementACl!,// FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+      this.acls?.clinicalSignDataInterpreterACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
     );
     this.addDataToMedicalRecordUC = new AddDataToMedicalRecordUseCase(
+      this.idGenerator,
       this.repository,
-      this.measurementACl
+      this.acls?.measurementACl!,// FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+      this.acls?.clinicalSignDataInterpreterACL!
+    );
+    this.deleteDataFromMedicalRecordUC = new DeleteDataFromMedicalRecordUseCase(
+      this.repository
     );
     this.deleteMedicalRecordUC = new DeleteMedicalRecordUseCase(
       this.repository
     );
+    this.getNormalizeAnthropometricDataUC =
+      new GetNormalizedAnthropometricDataUseCase(
+        this.repository,
+        this.acls?.normalizeAnthropometricDataACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+      );
     // Subscribers
     this.afterPatientCreatedHandler = new AfterPatientCreatedMedicalHandler(
       this.createMedicalRecordUC
@@ -177,17 +231,56 @@ export class MedicalRecordContext {
       deleteUC: this.deleteMedicalRecordUC,
       getUC: this.getMedicalRecordUC,
       updateUC: this.updateMedicalRecordUC,
+      deleteDataUC: this.deleteDataFromMedicalRecordUC,
+      getNormalizeAnthropDataUC: this.getNormalizeAnthropometricDataUC,
     });
   }
   static init(
     dbConnection: IndexedDBConnection | null,
     expo: SQLiteDatabase | null,
-    eventBus: IEventBus
+    eventBus: IEventBus,
+
   ) {
     if (!this.instance) {
       this.instance = new MedicalRecordContext(dbConnection, expo, eventBus);
     }
     return this.instance as MedicalRecordContext;
+  }
+  setAcls(acls: MedicalRecordAcls) {
+    this.acls = acls
+    console.log("Set MedicalRecord acls after instantiation without acls");
+
+    this.createMedicalRecordUC = new CreateMedicalRecordUseCase(
+      this.idGenerator,
+      this.repository,
+      acls.patientAcl
+    );
+    this.updateMedicalRecordUC = new UpdateMedicalRecordUseCase(
+      this.repository,
+      acls.measurementACl,
+      acls.clinicalSignDataInterpreterACL
+    );
+    this.addDataToMedicalRecordUC = new AddDataToMedicalRecordUseCase(
+      this.idGenerator,
+      this.repository,
+      acls.measurementACl,
+      acls.clinicalSignDataInterpreterACL
+    );
+    this.getNormalizeAnthropometricDataUC =
+      new GetNormalizedAnthropometricDataUseCase(
+        this.repository,
+        acls.normalizeAnthropometricDataACL
+      );
+
+    this.medicalRecordAppService = new MedicalRecordService({
+      addDataUC: this.addDataToMedicalRecordUC,
+      createUC: this.createMedicalRecordUC,
+      deleteUC: this.deleteMedicalRecordUC!,
+      getUC: this.getMedicalRecordUC!,
+      updateUC: this.updateMedicalRecordUC,
+      deleteDataUC: this.deleteDataFromMedicalRecordUC!,
+      getNormalizeAnthropDataUC: this.getNormalizeAnthropometricDataUC,
+    });
   }
   getMedicalRecordService(): IMedicalRecordService {
     return this.medicalRecordAppService;

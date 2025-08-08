@@ -11,7 +11,7 @@ import {
   AccordionTitleText,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FadeInCardY } from "@/components/custom/motion";
+import { FadeInCardY } from "@/components/custom/motion/FadeInCardY";
 import { HStack } from "@/components/ui/hstack";
 import {
   ArrowBigDownDash,

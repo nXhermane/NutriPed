@@ -42,3 +42,7 @@ adapter/config/auth/config.ts
 # React Component Preview
 previewConfig.json
 /ios 
+suggest.ts 
+DOCUMENTATION_TECHNIQUE.md
+medical_record_prototype.html
+note.txt
