@@ -21,9 +21,12 @@ import {
 } from "../valueObjects";
 import { PatientCareSessionCreatedEvent } from "../../events";
 import {
+  AnthroSystemCodes,
+  COMPLICATION_CODES,
   ORIENTATION_REF_CODES,
   TREATMENT_HISTORY_VARIABLES_CODES,
 } from "@/core/constants";
+import { APPETITE_TEST_RESULT_CODES } from "../../../modules";
 export enum PatientCareSessionStatus {
   NOT_READY = "not_ready",
   IN_PROGRESS = "in_progress",
@@ -156,6 +159,61 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
     this.props.status = PatientCareSessionStatus.COMPLETED;
     this.props.endDate = new DomainDate();
   }
+
+  /**
+   * Checks if the patient can transition from Phase 1 to the Transition Phase.
+   * Based on the protocol: return of appetite, start of edema reduction, and clinical stability.
+   */
+  canTransitionToNextPhase(): boolean {
+    const currentState = this.props.currentState.getProps();
+    const complicationVars =
+      this.props.currentState.getComplicationVariables();
+
+    // 1. Check for return of appetite
+    const appetiteOk =
+      currentState.appetiteTestResult?.appetite_test_result?.value ===
+      APPETITE_TEST_RESULT_CODES.SUCCESS;
+
+    // 2. Check for clinical stability (no major complications)
+    const isClinicallyStable =
+      complicationVars[COMPLICATION_CODES.COMPLICATIONS_NUMBER] === 0;
+
+    // 3. Check for start of edema reduction
+    // The protocol requires "début de la fonte des œdèmes".
+    // A simple check is that edema is not at its maximum level (+++).
+    // A more complex check would involve comparing with the initial edema.
+    const edemaIsReducing =
+      (currentState.anthropometricData[AnthroSystemCodes.OEDEMA]?.value ?? 0) <
+      3;
+
+    return appetiteOk && isClinicallyStable && edemaIsReducing;
+  }
+
+  /**
+   * Checks if the patient can be transferred from CNT to CNA.
+   * Based on the protocol: good appetite, no edema, and no complications.
+   */
+  canBeTransferredToCNA(): boolean {
+    const currentState = this.props.currentState.getProps();
+    const complicationVars =
+      this.props.currentState.getComplicationVariables();
+
+    // 1. Check for good appetite
+    const appetiteOk =
+      currentState.appetiteTestResult?.appetite_test_result?.value ===
+      APPETITE_TEST_RESULT_CODES.SUCCESS;
+
+    // 2. Check for absence of medical complications
+    const noComplications =
+      complicationVars[COMPLICATION_CODES.COMPLICATIONS_NUMBER] === 0;
+
+    // 3. Check for total resolution of edema
+    const noEdema =
+      currentState.anthropometricData[AnthroSystemCodes.OEDEMA]?.value === 0;
+
+    return appetiteOk && noComplications && noEdema;
+  }
+
   private checkIfDailyJournalIsAdded() {
     if (!this.haveCurrentDailyJournal()) {
       throw new IllegalStateException(
