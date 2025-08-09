@@ -28,9 +28,10 @@ import {
 import { Check, X } from "lucide-react-native";
 import { Alert } from "react-native";
 import {
-  usePatientDetail,
   useDailyMedicalRecordDataActionModal,
-} from "../../context";
+  usePatientDetail,
+} from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface MedicalRecordBiologicalDataActionProps {
   data: MedicalRecordDto["biologicalData"][number];
@@ -90,6 +91,7 @@ export const MedicalRecordBiologicalDataAction: React.FC<
       });
       if ("data" in result) {
         setIsSuccessOnUpdateForm(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);
@@ -113,8 +115,10 @@ export const MedicalRecordBiologicalDataAction: React.FC<
               medicalRecordId: patient.id,
               data: { biologicalData: [data.id] },
             });
-            if ("data" in result) setIsSuccessDelete(true);
-            else {
+            if ("data" in result) {
+              setIsSuccessDelete(true);
+              uiBus.emit("medical:update");
+            } else {
               const _errorContent = JSON.parse(result.content);
               console.error(_errorContent);
               setErrorOnDelete(_errorContent);

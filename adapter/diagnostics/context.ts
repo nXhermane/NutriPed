@@ -167,11 +167,14 @@ import {
   IGrowthReferenceTableService,
   IIndicatorService,
   IMakeClinicalSignDataInterpretationService,
+  IMakeClinicalSignDataInterpretationService,
   Indicator,
   IndicatorDto,
   IndicatorMapper,
   IndicatorRepository,
   IndicatorService,
+  INormalizeAnthropometricDataAppService,
+  INormalizeAnthropometricDataService,
   INutritionalAssessmentService,
   INutritionalDiagnosticService,
   INutritionalRiskFactorService,
@@ -191,9 +194,19 @@ import {
   MakeClinicalSignDataInterpretationResponse,
   MakeClinicalSignDataInterpretationService,
   MakeClinicalSignDataInterpretationUseCase,
+  MakeClinicalSignDataInterpretationRequest,
+  MakeClinicalSignDataInterpretationResponse,
+  MakeClinicalSignDataInterpretationService,
+  MakeClinicalSignDataInterpretationUseCase,
   MakeIndependantDiagnosticRequest,
   MakeIndependantDiagnosticResponse,
   MakeIndependantDiagnosticUseCase,
+  MedicalRecordACL,
+  NormalizeAnthropometricDataAppService,
+  NormalizeAnthropometricDataRequest,
+  NormalizeAnthropometricDataResponse,
+  NormalizeAnthropometricDataService,
+  NormalizeAnthropometricDataUseCase,
   NutritionalAssessmentResult,
   NutritionalAssessmentResultDto,
   NutritionalAssessmentResultFactory,
@@ -292,7 +305,7 @@ import {
   GrowthReferenceTableRepositoryWebImpl,
   NutritionalRiskFactorRepoWebImpl,
 } from "./infra/repository.web";
-import { PatientACLImpl, UnitACLImpl } from "@core/sharedAcl";
+import { MedicalRecordACLImpl, PatientACLImpl, UnitACLImpl } from "@core/sharedAcl";
 import { UnitContext } from "../units/context";
 
 import { PatientContext } from "../patient/context";
@@ -328,6 +341,7 @@ import {
   patient_diagnostic_data,
   PatientDiagnosticDataRepositoryExpoImpl,
 } from "./infra";
+import { MedicalRecordContext } from "../medical_record";
 
 export class DiagnosticContext {
   private static instance: DiagnosticContext | null = null;
@@ -400,6 +414,7 @@ export class DiagnosticContext {
   private readonly anthroValidationService: IAnthropometricValidationService;
   private readonly growthIndicatorService: IGrowthIndicatorService;
   private readonly growthRefSelectionService: IReferenceSelectionService;
+  private readonly normalizeAnthropometricDataService: INormalizeAnthropometricDataService;
   private readonly biologicalInterpretationService: IBiologicalInterpretationService;
   private readonly biologicalValidationService: IBiologicalValidationService;
   private readonly biologicalVariableGeneratorService: IBiologicalVariableGeneratorService;
@@ -542,6 +557,10 @@ export class DiagnosticContext {
     CalculateAllAvailableGrowthIndicatorValueRequest,
     CalculateAllAvailableGrowthIndicatorValueResponse
   >;
+  private readonly normalizeAnthropometricDataUC: UseCase<
+    NormalizeAnthropometricDataRequest,
+    NormalizeAnthropometricDataResponse
+  >;
   private readonly createClinicalRefUC: UseCase<
     CreateClinicalSignReferenceRequest,
     CreateClinicalSignReferenceResponse
@@ -654,6 +673,10 @@ export class DiagnosticContext {
     MakeClinicalSignDataInterpretationRequest,
     MakeClinicalSignDataInterpretationResponse
   >;
+  private readonly makeClinicalSignInterpretationUC: UseCase<
+    MakeClinicalSignDataInterpretationRequest,
+    MakeClinicalSignDataInterpretationResponse
+  >;
   // Subscribers
   private readonly afterPatientCareSessionCreated: AfterPatientCareSessionCreatedHandler;
   private readonly afterAnthropometricDataAdded: AfterAnthropometricDataAddedDiagnosticHandler;
@@ -664,6 +687,7 @@ export class DiagnosticContext {
   private readonly indicatorAppService: IIndicatorService;
   private readonly growthChartAppService: IGrowthReferenceChartService;
   private readonly growthTableAppService: IGrowthReferenceTableService;
+  private readonly normalizeAnthropometricDataAppService: INormalizeAnthropometricDataAppService;
   private readonly clinicalRefAppService: IClinicalSignReferenceService;
   private readonly clinicalNutritionalAnalysisAppService: IClinicalNutritionalAnalysisAppService;
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
@@ -674,11 +698,13 @@ export class DiagnosticContext {
   private readonly validatePatientMeasurementsAppService: IValidatePatientMeasurementsService;
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
   private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
+  private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
 
   // ACL
 
   private readonly unitAcl: UnitAcl;
   private readonly patientAcl: PatientACL;
+  private readonly medicalRecordAcl: MedicalRecordACL
   private constructor(
     dbConnection: IndexedDBConnection | null,
     expo: SQLiteDatabase | null,
@@ -703,6 +729,9 @@ export class DiagnosticContext {
     this.patientAcl = new PatientACLImpl(
       PatientContext.init(dbConnection, expo, this.eventBus).getService()
     );
+
+    this.medicalRecordAcl = new MedicalRecordACLImpl(MedicalRecordContext.init(dbConnection, expo, this.eventBus).getMedicalRecordService())
+
     // Initialiser les mappers d'infrastructure
     this.patientDiagnosticDataInfraMapper =
       new PatientDiagnosticDataInfraMapper();
@@ -874,6 +903,11 @@ export class DiagnosticContext {
       this.zScoreCalculationService,
       this.zScoreInterpretationService
     );
+    this.normalizeAnthropometricDataService =
+      new NormalizeAnthropometricDataService(
+        this.anthroMeasureRepo,
+        this.unitAcl
+      );
     this.biologicalInterpretationService = new BiologicalInterpretationService(
       this.biochemicalRefRepo,
       this.unitAcl
@@ -885,6 +919,8 @@ export class DiagnosticContext {
       new BiologicalVariableGeneratorService(this.biochemicalRefRepo);
     this.clinicalAnalysisService = new ClinicalAnalysisService(
       this.clinicalRefRepo,
+      this.nutritionalRiskFactorRepo,
+      this.unitAcl
       this.nutritionalRiskFactorRepo,
       this.unitAcl
     );
@@ -1026,6 +1062,10 @@ export class DiagnosticContext {
         this.anthroVariableGenerator,
         this.growthIndicatorService
       );
+
+    this.normalizeAnthropometricDataUC = new NormalizeAnthropometricDataUseCase(
+      this.normalizeAnthropometricDataService
+    );
     // Clinical Reference Use Cases
     this.createClinicalRefUC = new CreateClinicalSignReferenceUseCase(
       this.idGenerator,
@@ -1119,6 +1159,8 @@ export class DiagnosticContext {
     this.generateDiagnosticResultUC = new GenerateDiagnosticResultUseCase(
       this.nutritionalDiagnosticRepo,
       this.nutritionalAssessmentService,
+      this.medicalRecordAcl,
+      this.patientAcl,
       this.nutritionalAssessmentAppMapper
     );
     this.addNotesUC = new AddNoteToNutritionalDiagnosticUseCase(
@@ -1148,6 +1190,12 @@ export class DiagnosticContext {
     this.validateMeasurementDataUC = new ValidateMeasurementsUseCase(
       this.nutritionalDiagnosticRepo,
       this.patientDataValidationService
+    );
+    this.makeClinicalSignInterpretationUC =
+      new MakeClinicalSignDataInterpretationUseCase(
+        this.nutritionalDiagnosticRepo,
+        this.makeClinicalAnalysisUC
+      );
     );
     this.makeClinicalSignInterpretationUC =
       new MakeClinicalSignDataInterpretationUseCase(
@@ -1210,6 +1258,10 @@ export class DiagnosticContext {
       calculateAllAvailableIndicator:
         this.calculateAllAvailableGrowthIndicatorValueUC,
     });
+    this.normalizeAnthropometricDataAppService =
+      new NormalizeAnthropometricDataAppService({
+        normalizeUC: this.normalizeAnthropometricDataUC,
+      });
     this.clinicalRefAppService = new ClinicalSignReferenceService({
       createUC: this.createClinicalRefUC,
       getUC: this.getClinicalRefUC,
@@ -1254,6 +1306,10 @@ export class DiagnosticContext {
     this.validatePatientMeasurementsAppService =
       new ValidatePatientMeasurementsService({
         validateUC: this.validateMeasurementDataUC,
+      });
+    this.makeClinicalSignInterpretationAppService =
+      new MakeClinicalSignDataInterpretationService({
+        interpretUC: this.makeClinicalSignInterpretationUC,
       });
     this.makeClinicalSignInterpretationAppService =
       new MakeClinicalSignDataInterpretationService({
@@ -1321,7 +1377,9 @@ export class DiagnosticContext {
   getMakeClinicalSignDataInterpretationService(): IMakeClinicalSignDataInterpretationService {
     return this.makeClinicalSignInterpretationAppService;
   }
-
+  getNormalizeAnthropomtricDataService(): INormalizeAnthropometricDataAppService {
+    return this.normalizeAnthropometricDataAppService;
+  }
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {
     this.eventBus.unsubscribe(this.afterPatientCareSessionCreated);

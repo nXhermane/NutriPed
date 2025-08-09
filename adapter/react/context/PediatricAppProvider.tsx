@@ -1,7 +1,7 @@
 import { IEventBus } from "@shared";
 import React, { ReactNode, useState } from "react";
 import { DiagnosticContext } from "../../diagnostics";
-import { MedicalRecordContext } from "../../medical_record";
+import { MedicalRecordAcls, MedicalRecordContext } from "../../medical_record";
 import { NutritionCareContext } from "../../nutrition_care";
 import { PatientContext } from "../../patient";
 import { IndexedDBConnection } from "../../shared";
@@ -12,6 +12,12 @@ import {
 } from "./PediatricAppContext";
 import { SQLiteDatabase } from "expo-sqlite";
 import { ReminderContext } from "@/adapter/reminders";
+import { PatientACLImpl } from "@/core/sharedAcl";
+import {
+  ClinicalSignDataInterpretationACL,
+  MeasurementValidationACLImpl,
+  NormalizeAnthropomericDataACL,
+} from "@/core/medical_record";
 
 interface PediatricAppProviderProps {
   children: ReactNode;
@@ -34,23 +40,40 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
   React.useEffect(() => {
     const initPediatricApp = () => {
       // Initialize all bounded contexts
+      // NOTE: ici on utilise la technique d'injection différée donc faite attention
       const diagnosticContext = DiagnosticContext.init(
-        dbConnection,
-        expo,
-        eventBus
-      );
-      const medicalRecordContext = MedicalRecordContext.init(
-        dbConnection,
-        expo,
-        eventBus
-      );
-      const nutritionCareContext = NutritionCareContext.init(
         dbConnection,
         expo,
         eventBus
       );
       const patientContext = PatientContext.init(dbConnection, expo, eventBus);
       const unitContext = UnitContext.init(dbConnection, expo, eventBus);
+
+      const medicalRecordContext = MedicalRecordContext.init(
+        dbConnection,
+        expo,
+        eventBus
+      );
+
+      const medicalRecordAcls: MedicalRecordAcls = {
+        patientAcl: new PatientACLImpl(patientContext.getService()),
+        clinicalSignDataInterpreterACL: new ClinicalSignDataInterpretationACL(
+          diagnosticContext.getMakeClinicalSignDataInterpretationService()
+        ),
+        measurementACl: new MeasurementValidationACLImpl(
+          diagnosticContext.getValidatePatientMeasurementsService()
+        ),
+        normalizeAnthropometricDataACL: new NormalizeAnthropomericDataACL(
+          diagnosticContext.getNormalizeAnthropomtricDataService()
+        ),
+      };
+      medicalRecordContext.setAcls(medicalRecordAcls);
+      const nutritionCareContext = NutritionCareContext.init(
+        dbConnection,
+        expo,
+        eventBus
+      );
+
       const reminderContext = ReminderContext.init(
         dbConnection,
         expo,

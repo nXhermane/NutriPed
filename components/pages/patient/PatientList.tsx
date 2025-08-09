@@ -106,8 +106,8 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
               onPress={() => {
                 item.id &&
                   router.push({
-                    pathname: "/(screens)/patient_detail/[id]",
-                    params: { id: item.id as string },
+                    pathname: "/(screens)/[patientId]",
+                    params: { patientId: item.id as string },
                   });
               }}
             />

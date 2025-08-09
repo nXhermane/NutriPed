@@ -1,8 +1,9 @@
 import { usePediatricApp } from "@/adapter";
-import { usePatientDetail } from "@/components/pages/patient_detail/context";
+import { usePatientDetail } from "@/src/context/pages/patient";
 import { AnthroSystemCodes } from "@/core/constants";
 import { DateManager } from "@/core/shared";
 import { useCallback, useState } from "react";
+import { uiBus } from "@/uiBus";
 
 export function useAddAnthropometricMeasureToMedicalRecord() {
   const { patient } = usePatientDetail();
@@ -47,6 +48,7 @@ export function useAddAnthropometricMeasureToMedicalRecord() {
       });
       if ("data" in result) {
         setIsSuccess(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

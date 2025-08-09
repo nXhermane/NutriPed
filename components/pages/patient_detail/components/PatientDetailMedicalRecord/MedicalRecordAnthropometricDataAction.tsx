@@ -30,9 +30,10 @@ import { usePediatricApp } from "@/adapter";
 
 import { Alert } from "react-native";
 import {
-  usePatientDetail,
   useDailyMedicalRecordDataActionModal,
-} from "../../context";
+  usePatientDetail,
+} from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface MedicalRecordAnthropometricDataActionProps {
   data: MedicalRecordDto["anthropometricData"][number];
@@ -93,6 +94,7 @@ export const MedicalRecordAnthropometricDataAction: React.FC<
       });
       if ("data" in result) {
         setIsSuccessOnUpdateForm(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);
@@ -116,8 +118,10 @@ export const MedicalRecordAnthropometricDataAction: React.FC<
               medicalRecordId: patient.id,
               data: { anthropometricData: [data.id] },
             });
-            if ("data" in result) setIsSuccessDelete(true);
-            else {
+            if ("data" in result) {
+              setIsSuccessDelete(true);
+              uiBus.emit("medical:update");
+            } else {
               const _errorContent = JSON.parse(result.content);
               console.error(_errorContent);
               setErrorOnDelete(_errorContent);

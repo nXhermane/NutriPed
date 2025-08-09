@@ -1,8 +1,9 @@
 import { usePediatricApp } from "@/adapter";
-import { usePatientDetail } from "@/components/pages/patient_detail/context";
+import { usePatientDetail } from "@/src/context/pages/patient";
 import { useCallback, useState } from "react";
 import { remapSignDataToClinicalSign, VariableUsageMap } from "../tools";
 import { DateManager } from "@/core/shared";
+import { uiBus } from "@/uiBus";
 
 export function useAddClinicalDataToMedicalRecord() {
   const { patient } = usePatientDetail();
@@ -35,6 +36,7 @@ export function useAddClinicalDataToMedicalRecord() {
       });
       if ("data" in result) {
         setIsSuccess(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

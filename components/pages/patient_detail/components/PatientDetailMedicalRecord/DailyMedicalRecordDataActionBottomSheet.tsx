@@ -6,7 +6,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React from "react";
 import colors from "tailwindcss/colors";
 import { DailyMedicalRecordDataAction } from "./DailyMedicalRecordDataAction";
-import { DailyMedicalRecordDataActionModalContext } from "../../context";
+import { DailyMedicalRecordDataActionModalContext } from "@/src/context/pages";
 export type MedicalRecordDataType =
   | {
       tag: "anthropometric";

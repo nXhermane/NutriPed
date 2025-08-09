@@ -7,3 +7,5 @@ export * from "./interfaces/GrowthReferenceSelectionService";
 export * from "./interfaces/ZScoreCalculationService";
 export * from "./interfaces/ZScoreInterpretationService";
 export * from "./AnthropometricVariableGeneratorService";
+export * from "./interfaces/NormalizeAnthropometricDataService";
+export * from "./NormalizeAnthropometricDataService";

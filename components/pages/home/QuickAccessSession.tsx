@@ -12,7 +12,7 @@ import { router } from "expo-router";
 export const QuickAccessSession = () => {
   const QuickAccessTools = TOOLS_DATA.filter(item => item.isQuickAccess);
   return (
-    <VStack>
+    <VStack className="w-full">
       <SessionHeader
         title="Accès rapide"
         actionName="Voir plus"

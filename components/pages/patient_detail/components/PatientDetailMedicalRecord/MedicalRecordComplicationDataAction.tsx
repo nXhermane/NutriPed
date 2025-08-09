@@ -5,10 +5,7 @@ import { Text } from "@/components/ui/text";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  usePatientDetail,
-  useDailyMedicalRecordDataActionModal,
-} from "../../context";
+
 import { Heading } from "@/components/ui/heading";
 import { ComplicationDto } from "@/core/nutrition_care";
 import { useComplicationRefs } from "@/src/hooks";
@@ -26,6 +23,11 @@ import {
   ButtonText,
 } from "@/components/ui/button";
 import { Check, X } from "lucide-react-native";
+import {
+  useDailyMedicalRecordDataActionModal,
+  usePatientDetail,
+} from "@/src/context/pages";
+import { uiBus } from "@/uiBus";
 
 export interface MedicalRecordComplicationDataActionProps {
   data: MedicalRecordDto["complicationData"][number];
@@ -72,6 +74,7 @@ export const MedicalRecordComplicationDataAction: React.FC<
       });
       if ("data" in result) {
         setIsSuccessOnUpdateForm(true);
+        uiBus.emit("medical:update");
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);
@@ -95,8 +98,10 @@ export const MedicalRecordComplicationDataAction: React.FC<
               medicalRecordId: patient.id,
               data: { complicationData: [data.id] },
             });
-            if ("data" in result) setIsSuccessDelete(true);
-            else {
+            if ("data" in result) {
+              setIsSuccessDelete(true);
+              uiBus.emit("medical:update");
+            } else {
               const _errorContent = JSON.parse(result.content);
               console.error(_errorContent);
               setErrorOnDelete(_errorContent);

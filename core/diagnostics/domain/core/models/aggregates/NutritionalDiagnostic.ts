@@ -3,9 +3,11 @@ import {
   AggregateRoot,
   ArgumentNotProvidedException,
   ArgumentOutOfRangeException,
+  Birthday,
   DomainDate,
   EmptyStringError,
   EntityPropsBaseType,
+  Gender,
   Guard,
   InvalidResultError,
 } from "@shared";
@@ -23,7 +25,7 @@ export interface INutritionalDiagnostic extends EntityPropsBaseType {
   patientData: PatientDiagnosticData;
   result?: NutritionalAssessmentResult;
   date: DomainDate;
-  notes: string[];
+  notes: { date: string, content: string }[];
   atInit: boolean;
   modificationHistories: DiagnosticModification[];
 }
@@ -38,15 +40,27 @@ export class NutritionalDiagnostic extends AggregateRoot<INutritionalDiagnostic>
   getDiagnosticResult(): NutritionalAssessmentResult | undefined {
     return this.props.result;
   }
-  getNotes(): string[] {
+  getNotes(): { date: string, content: string }[] {
     return this.props.notes;
   }
   getModificationHistories(): DiagnosticModification[] {
     return this.props.modificationHistories;
   }
-  addNotes(...notes: string[]) {
-    this.props.notes.push(...notes);
+  addNotes(...notes: { date: string, content: string }[]) {
+    notes.forEach((note) => {
+      const findedIndex = this.props.notes.findIndex(n => n.date == note.date)
+      if (findedIndex == -1) this.props.notes.push(note)
+      else this.props.notes[findedIndex] = note
+    })
     this.validate();
+  }
+  changeGender(gender: Gender): void {
+    this.props.patientData.changeGender(gender)
+    this.validate()
+  }
+  changeBirthDay(birthday: Birthday): void {
+    this.props.patientData.changeBirthDay(birthday)
+    this.validate()
   }
   changeAnthropometricData(anthropData: AnthropometricData) {
     this.props.patientData.changeAnthropometricData(anthropData);
