@@ -167,6 +167,7 @@ import {
   IGrowthReferenceTableService,
   IIndicatorService,
   IMakeClinicalSignDataInterpretationService,
+  IMakeClinicalSignDataInterpretationService,
   Indicator,
   IndicatorDto,
   IndicatorMapper,
@@ -189,6 +190,10 @@ import {
   MakeClinicalAnalysisRequest,
   MakeClinicalAnalysisResponse,
   MakeClinicalAnalysisUseCase,
+  MakeClinicalSignDataInterpretationRequest,
+  MakeClinicalSignDataInterpretationResponse,
+  MakeClinicalSignDataInterpretationService,
+  MakeClinicalSignDataInterpretationUseCase,
   MakeClinicalSignDataInterpretationRequest,
   MakeClinicalSignDataInterpretationResponse,
   MakeClinicalSignDataInterpretationService,
@@ -668,6 +673,10 @@ export class DiagnosticContext {
     MakeClinicalSignDataInterpretationRequest,
     MakeClinicalSignDataInterpretationResponse
   >;
+  private readonly makeClinicalSignInterpretationUC: UseCase<
+    MakeClinicalSignDataInterpretationRequest,
+    MakeClinicalSignDataInterpretationResponse
+  >;
   // Subscribers
   private readonly afterPatientCareSessionCreated: AfterPatientCareSessionCreatedHandler;
   private readonly afterAnthropometricDataAdded: AfterAnthropometricDataAddedDiagnosticHandler;
@@ -688,6 +697,7 @@ export class DiagnosticContext {
   private readonly nutritionalDiagnosticAppService: INutritionalDiagnosticService;
   private readonly validatePatientMeasurementsAppService: IValidatePatientMeasurementsService;
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
+  private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
   private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
 
   // ACL
@@ -909,6 +919,8 @@ export class DiagnosticContext {
       new BiologicalVariableGeneratorService(this.biochemicalRefRepo);
     this.clinicalAnalysisService = new ClinicalAnalysisService(
       this.clinicalRefRepo,
+      this.nutritionalRiskFactorRepo,
+      this.unitAcl
       this.nutritionalRiskFactorRepo,
       this.unitAcl
     );
@@ -1184,6 +1196,12 @@ export class DiagnosticContext {
         this.nutritionalDiagnosticRepo,
         this.makeClinicalAnalysisUC
       );
+    );
+    this.makeClinicalSignInterpretationUC =
+      new MakeClinicalSignDataInterpretationUseCase(
+        this.nutritionalDiagnosticRepo,
+        this.makeClinicalAnalysisUC
+      );
     // Subscribers
     this.afterPatientCareSessionCreated =
       new AfterPatientCareSessionCreatedHandler(
@@ -1288,6 +1306,10 @@ export class DiagnosticContext {
     this.validatePatientMeasurementsAppService =
       new ValidatePatientMeasurementsService({
         validateUC: this.validateMeasurementDataUC,
+      });
+    this.makeClinicalSignInterpretationAppService =
+      new MakeClinicalSignDataInterpretationService({
+        interpretUC: this.makeClinicalSignInterpretationUC,
       });
     this.makeClinicalSignInterpretationAppService =
       new MakeClinicalSignDataInterpretationService({

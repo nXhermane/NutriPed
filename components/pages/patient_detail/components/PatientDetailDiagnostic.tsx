@@ -1,4 +1,5 @@
 import { VStack } from "@/components/ui/vstack";
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { InitPatientRootSecure } from "./InitPatient";
 import { useNutritionalDiagnostic } from "@/src/hooks";
@@ -16,12 +17,17 @@ import { ChevronUp } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { HumanDateFormatter } from "@/utils";
+=======
+import React from "react";
+import { InitPatientRootSecure } from "./InitPatient";
+>>>>>>> main
 
 export interface PatientDetailDiagnosticProps {}
 
 const PatientDetailDiagnosticComponent: React.FC<
   PatientDetailDiagnosticProps
 > = ({}) => {
+<<<<<<< HEAD
   const [showAddDataModal, setShowAddDataModal] = useState<boolean>(false);
   const { data, error, onLoading } = useNutritionalDiagnostic();
 
@@ -68,6 +74,9 @@ const PatientDetailDiagnosticComponent: React.FC<
       />
     </React.Fragment>
   );
+=======
+  return <VStack></VStack>;
+>>>>>>> main
 };
 
 export const PatientDetailDiagnostic: React.FC<
@@ -75,9 +84,13 @@ export const PatientDetailDiagnostic: React.FC<
 > = props => {
   return (
     <InitPatientRootSecure>
+<<<<<<< HEAD
       <InitPatientDiagnosticRoot>
         <PatientDetailDiagnosticComponent {...props} />
       </InitPatientDiagnosticRoot>
+=======
+      <PatientDetailDiagnosticComponent {...props} />
+>>>>>>> main
     </InitPatientRootSecure>
   );
 };

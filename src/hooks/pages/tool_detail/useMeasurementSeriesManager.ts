@@ -19,6 +19,7 @@ import { Alert } from "react-native";
 import { usePediatricApp } from "@/adapter";
 import { Sex } from "@/core/shared";
 
+
 export type SelectedChartMeasurementSerie = Omit<
   ChartMeasurementSerie,
   "createdAt" | "updatedAt"
@@ -127,6 +128,7 @@ export function useMeasurementSeriesManager(
                   series = prev.filter(
                     serie =>
                       serie.id !== serieId || serie.id === selectedSerie.serieId
+                      serie.id !== serieId || serie.id === selectedSerie.serieId
                   );
                 return series;
               });
@@ -220,6 +222,8 @@ export function useMeasurementSeriesManager(
                   anthropometricMeasures: Object.values(data).filter(
                     value =>
                       typeof value !== "number" && value.code !== "lenhei"
+                    value =>
+                      typeof value !== "number" && value.code !== "lenhei"
                   ),
                 },
                 age_in_day: (data["age_in_day"] as number) || 0,
@@ -267,6 +271,17 @@ export function useMeasurementSeriesManager(
         }
       }
     },
+    [
+      measurementSeries,
+      chartCode,
+      selectedSerie,
+      sex,
+      indicatorCode,
+      openLabelPicker,
+      growthIndicatorValue,
+      toast,
+      dispatch,
+    ]
     [
       measurementSeries,
       chartCode,
