@@ -74,9 +74,9 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
 
   // Écouter les changements du thème système seulement si l'utilisateur n'a pas encore changé manuellement
   useEffect(() => {
-    if (!isSystemTheme || !isInitialized) return;
-
+    // if (!isSystemTheme || !isInitialized) return;
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+    
       const systemTheme = colorScheme === "dark" ? "dark" : "light";
       setColorMode(systemTheme);
     });

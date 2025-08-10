@@ -15,9 +15,9 @@ export const PatientDetailMedicalRecordSession: React.FC<
 > = ({ children, ...props }) => {
   return (
     <VStack className="">
-      <HStack className="px-4 py-v-3">
+      <VStack className="px-4 py-v-3">
         <SessionHeader {...props} />
-      </HStack>
+      </VStack>
 
       {children && children}
     </VStack>
