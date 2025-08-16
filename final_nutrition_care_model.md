@@ -1,145 +1,106 @@
-# Modèle Conceptuel Détaillé et Final pour `nutrition_care`
+# Modèle Final et Détaillé pour le Moteur de Protocole `nutrition_care`
 
-Ce document est un guide d'architecture et d'implémentation pour le module `nutrition_care`. Il synthétise l'ensemble de nos discussions et intègre toutes les spécifications avancées requises.
+Ce document est le guide d'architecture final pour votre application. Il intègre toutes vos remarques et propose un modèle résilient et dynamique pour gérer la complexité du protocole de malnutrition.
 
-## 1. Principes d'Architecture & Diagramme du Modèle
+## 1. Principes d'Architecture : L'Équilibre du Domaine
 
-### 1.1. Agrégat "Anémique" ou "Riche" ? La Voie de l'Équilibre
+Notre architecture repose sur un principe d'équilibre :
+*   **L'Agrégat `PatientCareSession`** est riche : il gère son état interne et celui de ses entités (les traitements actifs, les journaux). Il sait comment démarrer ou arrêter un traitement.
+*   Les **Services de Domaine** sont les chefs d'orchestre : ils contiennent la logique complexe qui utilise les données de référence (les fichiers JSON) pour prendre des décisions et commander l'agrégat.
 
-La meilleure approche est un équilibre :
+## 2. Les Structures de Données Statiques (Le Cerveau du Protocole)
 
-1.  **L'Agrégat (`PatientCareSession`)** est le garant de sa **cohérence interne**. Il contient la logique qui ne dépend que de son propre état (ex: `addDailyJournal`, `stopTreatment`).
-2.  Les **Services de Domaine** sont utilisés pour la **logique métier complexe** qui dépend de collaborateurs externes (comme les tables de référence JSON) ou qui implique des calculs sur l'historique (ex: `PatientStateEvaluatorService`).
+Voici les interfaces TypeScript finales pour vos fichiers JSON de référence.
 
-Cette séparation permet de garder un domaine riche et expressif tout en externalisant la complexité qui n'est pas intrinsèque à un agrégat.
-
-### 1.2. Diagramme de Classes Final
-
-Ce diagramme illustre l'architecture complète, incluant tous les services de domaine que nous avons identifiés.
-
-```mermaid
-classDiagram
-    direction LR
-
-    subgraph "Couche Application"
-        class UseCases {
-            <<Application Services>>
-            +AdmitPatientUseCase
-            +RecordDailyProgressUseCase
-            +TransitionPatientPhaseUseCase
-        }
-    end
-
-    subgraph "Couche Domaine"
-        class PatientCareSession {
-            <<Aggregate Root>>
-            +activeTreatments: ActiveTreatment[]
-            +dailyJournals: DailyCareJournal[]
-            +addActiveTreatment()
-            +stopTreatment(code)
-        }
-        class ActiveTreatment {
-            <<Entity>>
-            +treatmentCode: string
-            +startDate: Date
-            +status: 'ACTIVE' | 'COMPLETED'
-        }
-        class PatientStateEvaluatorService {
-            <<Domain Service>>
-            +generateContext(session): PatientContext
-        }
-        class TreatmentManagementService {
-            <<Domain Service>>
-            +applyTreatmentsForPhase(session, phaseRef)
-            +updateActiveTreatmentsStatus(session)
-        }
-        class RuleEngineService {
-            <<Domain Service>>
-            +evaluate(condition, context): boolean
-        }
-    end
-
-    subgraph "Contexte & Références"
-        class PatientContext {
-            <<DTO>>
-            +weight: number
-            +days_in_phase: number
-            +weight_gain_rate_g_kg_day: number
-        }
-        class CarePhaseReference {
-            <<Static Data>>
-            +code: string
-            +failureCriteria: PhaseCriterion[]
-            +transitionCriteria: PhaseCriterion[]
-            +monitoringPlan: MonitoringTask[]
-            +recommendedTreatments: RecommendedTreatment[]
-        }
-    end
-
-    ' --- Relations --- '
-    UseCases ..> PatientCareSession : "Charge & Sauvegarde"
-    UseCases ..> PatientStateEvaluatorService
-    UseCases ..> TreatmentManagementService
-    UseCases ..> RuleEngineService
-
-    PatientStateEvaluatorService ..> PatientCareSession : "Lit l'historique"
-    PatientStateEvaluatorService ..> PatientContext : "Crée"
-
-    TreatmentManagementService ..> PatientCareSession : "Modifie"
-    TreatmentManagementService ..> CarePhaseReference : "Lit"
-
-    RuleEngineService ..> PatientContext : "Lit"
-    RuleEngineService ..> CarePhaseReference : "Lit les critères"
-```
-
-## 2. Structures de Données Statiques (Le Cerveau du Protocole)
-
-Voici les structures TypeScript complètes pour vos fichiers de référence JSON.
-
-### 2.1. `CarePhaseReference` : Le Scénario de Prise en Charge
+### 2.1. `CarePhaseReference` : Le Scénario Complet de la Phase
 
 ```typescript
 export interface CarePhaseReference {
-  code: string;
+  /** Condition pour déterminer si cette définition de phase s'applique au patient. */
+  applicabilityCondition: ICondition;
+  code: CARE_PHASE_CODES;
   name: string;
-  description: string;
   failureCriteria: PhaseCriterion[];
   transitionCriteria: PhaseCriterion[];
-  nextPhaseCode: string;
   recommendedTreatments: RecommendedTreatment[];
   monitoringPlan: MonitoringTask[];
+  followUpPlan: FollowUpAction[];
+  nextPhase?: CARE_PHASE_CODES;
 }
 
 export interface PhaseCriterion {
   description: string;
-  condition: string; // ex: "days_in_phase >= 4 && appetite_test_result == 'FAILED'"
+  condition: ICondition;
+}
+
+export interface FollowUpAction {
+  description: string;
+  condition: ICondition;
+  treatmentToApply: RecommendedTreatment;
 }
 ```
 
-### 2.2. `RecommendedTreatment` : Le Plan de Traitement
+### 2.2. `RecommendedTreatment` : Le Plan de Traitement Détaillé
 
 ```typescript
 export interface RecommendedTreatment {
+  planItemId: string; // ID unique. Ex: "PHASE1_AMOX_INITIAL"
   type: 'nutritional' | 'systematic';
-  code: string; // ex: 'MILK_F75', 'MED_AMOXICILLIN'
+  code: string; // Code du produit. Ex: "AMOX", "F75"
   duration: TreatmentDuration;
-  triggers?: {
-    onStart?: TreatmentTrigger[];
-  };
+  triggers?: { onStart?: TreatmentTrigger[] };
+  adjustmentPercentage?: number; // Ex: 50 pour 50% de la dose standard
 }
 
 interface TreatmentDuration {
-  type: 'days' | 'hours' | 'while_in_phase';
+  type: 'days' | 'while_in_phase';
   value?: number;
 }
 
 interface TreatmentTrigger {
   action: 'STOP_TREATMENT';
-  targetCode: string;
+  targetPlanItemId: string; // Cible un plan de traitement à arrêter
 }
 ```
 
-### 2.3. `MonitoringTask` : Le Plan de Surveillance
+### 2.3. `MedicineReference` : La Posologie Conditionnelle
+
+```typescript
+export interface MedicineReference {
+  code: string; // ex: "AMOX"
+  name: string;
+  dosageCases: DosageCase[];
+}
+
+interface DosageCase {
+  condition: ICondition; // ex: "age_in_months >= 24"
+  recommendedLabel: string; // Message pour l'UI
+  weightRanges: DosageByWeight[];
+}
+```
+
+### 2.4. `NutritionalProduct` : Les Dosages Contextuels
+
+```typescript
+export interface NutritionalProduct {
+  code: string; // ex: "F100"
+  name: string;
+  dosageScenarios: DosageScenario[];
+}
+
+interface DosageScenario {
+  condition: ICondition;
+  description: string;
+  dosages: DosageByWeight[];
+}
+
+interface DosageByWeight {
+  weight_kg: [number, number];
+  dosePerMeal: Partial<Record<string, number>>;
+}
+```
+
+### 2.5. `MonitoringTask` : Le Plan de Surveillance Flexible
 
 ```typescript
 export interface MonitoringTask {
@@ -151,108 +112,119 @@ export interface MonitoringTask {
 }
 
 interface MonitoringFrequency {
-  intervalUnit: 'day' | 'week';
+  intervalUnit: 'day' | 'week' | 'hour';
   intervalValue: number;
-  countInUnit?: number; // Nombre de fois par intervalle (ex: 2 fois par jour)
+  countInUnit?: number;
 }
 ```
 
-*(Les autres structures comme `NutritionalProductReference`, `MedicineReference`, etc., suivent une logique similaire.)*
+## 3. L'État Dynamique : Suivi dans l'Agrégat
 
-## 3. Logique Dynamique : Services et Pseudo-code
+L'agrégat `PatientCareSession` doit suivre les traitements en cours.
 
-### 3.1. `PatientStateEvaluatorService` : Créer le Contexte
+```typescript
+// Dans PatientCareSession.ts
+class PatientCareSession {
+  // ...
+  activeTreatments: ActiveTreatment[];
+  // ...
+}
 
-Ce service est la première étape de toute évaluation. Il lit l'historique pour calculer les variables dynamiques.
-
-```pseudocode
-class PatientStateEvaluatorService:
-  function generateContext(session: PatientCareSession): PatientContext
-    let context = createFrom(session.currentState) // Poids, taille, etc.
-
-    // Calcul des durées
-    context.days_in_program = daysBetween(session.startDate, today)
-    context.days_in_phase = daysBetween(session.currentPhase.startDate, today)
-
-    // Calcul des tendances (poids, etc.)
-    let history = session.dailyJournals
-    if history.length > 1:
-      // ... logique pour calculer weight_gain_rate, has_lost_weight_2_visits, etc.
-      // en parcourant l'historique.
-
-    return context
+// Nouvelle Entité
+interface ActiveTreatment {
+  planItemId: string; // L'ID unique du plan de traitement
+  treatmentCode: string; // Le code du produit
+  startDate: Date;
+  status: 'ACTIVE' | 'COMPLETED' | 'STOPPED';
+}
 ```
 
-### 3.2. `TreatmentManagementService` : Gérer le Cycle de Vie des Traitements
+## 4. Exemple Concret de `CarePhaseReference` pour la Phase 1 (Standard)
 
-Ce service applique les plans et met à jour leur statut.
-
-```pseudocode
-class TreatmentManagementService:
-  // Appelé lors d'un changement de phase
-  function applyTreatmentsForPhase(session, phaseRef):
-    for each plan in phaseRef.recommendedTreatments:
-      if not session.hasActiveTreatment(plan.code):
-        session.addActiveTreatment(plan) // Crée une entité ActiveTreatment
-        // ... exécuter les triggers onStart
-
-  // Appelé chaque jour
-  function updateActiveTreatmentsStatus(session):
-    for each treatment in session.activeTreatments:
-      if treatment.status == 'ACTIVE':
-        // Vérifier si la durée est écoulée
-        if hasDurationExpired(treatment, session.currentPhase):
-          treatment.status = 'COMPLETED'
+```json
+{
+  "applicabilityCondition": { "value": "age_in_months >= 6 && weight >= 3" },
+  "code": "cnt_phase_aiguë",
+  "name": "Phase 1 - Cas Standard (>6 mois)",
+  "failureCriteria": [
+    {
+      "description": "Absence de retour de l'appétit au 4ème jour.",
+      "condition": { "value": "days_in_phase >= 4 && appetite_test_result == 'NEGATIVE'" }
+    }
+  ],
+  "transitionCriteria": [
+    {
+      "description": "Retour de l'appétit, stabilité clinique et début de fonte des œdèmes.",
+      "condition": { "value": "appetite_test_result == 'POSITIVE' && complications_number == 0 && edema <= 1" }
+    }
+  ],
+  "nextPhase": "cnt_phase_transition",
+  "recommendedTreatments": [
+    {
+      "planItemId": "PHASE1_F75",
+      "type": "nutritional",
+      "code": "F75",
+      "duration": { "type": "while_in_phase" }
+    },
+    {
+      "planItemId": "PHASE1_AMOX_INITIAL",
+      "type": "systematic",
+      "code": "AMOX",
+      "duration": { "type": "days", "value": 7 }
+    }
+  ],
+  "monitoringPlan": [
+    {
+      "code": "MONITOR_WEIGHT",
+      "label": "Poids du jour (kg)",
+      "uiType": "numeric",
+      "targetVariable": "weight",
+      "frequency": { "intervalUnit": "day", "intervalValue": 1 }
+    }
+  ],
+  "followUpPlan": [
+    {
+      "description": "Si la diarrhée persiste après 2 jours, ajouter du Zinc.",
+      "condition": { "value": "has_diarrhea == true && days_in_phase > 2" },
+      "treatmentToApply": {
+        "planItemId": "FOLLOWUP_ZINC_DIARRHEA",
+        "type": "systematic",
+        "code": "ZINC",
+        "duration": { "type": "days", "value": 10 }
+      }
+    }
+  ]
+}
 ```
 
-### 3.3. `PhaseManagementService` : Orchestrer la Progression du Patient
+## 5. Logique des Services de Domaine (Pseudo-code)
 
-Ce service utilise les autres pour prendre des décisions sur la progression du patient.
-
-```pseudocode
-class PhaseManagementService:
-  function checkForPhaseTransition(session: PatientCareSession):
-
-    // 1. Obtenir le contexte à jour
-    let context = patientStateEvaluatorService.generateContext(session)
-
-    // 2. Charger la référence pour la phase actuelle
-    let phaseRef = loadCarePhaseReference(session.currentPhase.code)
-
-    // 3. Évaluer les critères de transition
-    let canTransition = true
-    for each criterion in phaseRef.transitionCriteria:
-      if ruleEngineService.evaluate(criterion.condition, context) is false:
-        canTransition = false
-        break
-
-    if canTransition:
-      // Déclencher un événement ou une action pour passer à la phase suivante
-      session.transitionToPhase(phaseRef.nextPhaseCode)
-      treatmentManagementService.applyTreatmentsForPhase(session, loadCarePhaseReference(phaseRef.nextPhaseCode))
-
-  // (Logique similaire pour `checkForTreatmentFailure`)
-```
-
-### 3.4. Logique d'Affichage du Formulaire de Suivi
-
-La logique pour générer le formulaire du jour se base sur le plan de monitoring.
+Le `PhaseManagementService` devient le chef d'orchestre principal.
 
 ```pseudocode
-function getTasksForToday(session, carePhaseRef):
-  let tasksForToday = []
-  let daysInPhase = daysBetween(session.currentPhase.startDate, today)
+// Appelé chaque jour pour un patient
+function manageDailyFollowUp(session: PatientCareSession):
 
-  for each task in carePhaseRef.monitoringPlan:
-    let freq = task.frequency
-    if freq.intervalUnit == 'day' and (daysInPhase - 1) % freq.intervalValue == 0:
-      tasksForToday.push(task)
-    else if freq.intervalUnit == 'week' and (daysInPhase - 1) % 7 == 0:
-      let currentWeek = floor((daysInPhase - 1) / 7)
-      if currentWeek % freq.intervalValue == 0:
-        tasksForToday.push(task)
+  // 1. Générer le contexte à jour (avec variables dynamiques)
+  let context = patientStateEvaluatorService.generateContext(session)
 
-  return tasksForToday
+  // 2. Charger la bonne définition de phase pour ce patient
+  let phaseRef = loadCarePhaseReferenceForPatient(context, session.currentPhase.code)
+
+  // 3. Exécuter le plan de suivi (actions réactives)
+  for each action in phaseRef.followUpPlan:
+    if ruleEngineService.evaluate(action.condition, context) is true:
+      treatmentManagementService.applyTreatment(session, action.treatmentToApply)
+
+  // 4. Mettre à jour le statut des traitements actifs
+  treatmentManagementService.updateActiveTreatmentsStatus(session)
+
+  // 5. Vérifier si une transition de phase est possible
+  if ruleEngineService.evaluate(phaseRef.transitionCriteria, context) is true:
+    // ... déclencher la transition vers phaseRef.nextPhase
+
+  // 6. Sauvegarder la session mise à jour
+  repo.save(session)
 ```
 
-Ce document finalisé devrait vous fournir une base de travail extrêmement solide et détaillée pour votre implémentation.
+Ce modèle final est conçu pour être la colonne vertébrale d'un système expert, séparant la "connaissance" (les fichiers JSON) de la "logique" (les services).
