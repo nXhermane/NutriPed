@@ -11,6 +11,7 @@ import {
 import { MedicalRecordDto } from "@/core/medical_record";
 import {
   MedicalRecordDataOrdoredByDay,
+  medicalRecordKeys,
   useAnthropometricMeasure,
   useBiochemicalReference,
   useClinicalReference,
@@ -21,10 +22,6 @@ import { Icon } from "@/components/ui/icon";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-<<<<<<< HEAD
-=======
-  Edit,
->>>>>>> main
   FlaskConical,
   PillBottle,
   Ruler,
@@ -48,14 +45,16 @@ import {
   DailyMedicalRecordDataActionModal,
   MedicalRecordDataType,
 } from "./DailyMedicalRecordDataActionBottomSheet";
+import { useQueryClient } from "@tanstack/react-query";
+import { usePatientDetail } from "@/src/context/pages";
 
 interface DailyMedicalRecordDataProps {
   data: MedicalRecordDataOrdoredByDay[number];
-  onUpdate?: () => void;
+  // onUpdate prop is no longer needed
 }
-export const DailyMedicalRecordDataComponent: React.FC<
-  DailyMedicalRecordDataProps
-> = ({ data, onUpdate = () => void 0 }) => {
+export const DailyMedicalRecordDataComponent = React.memo<DailyMedicalRecordDataProps>(({ data }) => {
+  const queryClient = useQueryClient();
+  const { patient } = usePatientDetail();
   const [
     showMedicalRecordDataActionModal,
     setShowMedicalRecordDataActionModal,
@@ -361,25 +360,18 @@ export const DailyMedicalRecordDataComponent: React.FC<
           onClose={() => {
             setShowMedicalRecordDataActionModal(true);
             setCurrentMedicalRecordData(null);
-<<<<<<< HEAD
-=======
-            onUpdate();
->>>>>>> main
+            // Invalidate query on close to refetch data
+            queryClient.invalidateQueries({
+              queryKey: medicalRecordKeys.detail(patient.id),
+            });
           }}
         />
       )}
     </React.Fragment>
   );
-};
+});
 export interface AnthropometricItemComponentProps {
-<<<<<<< HEAD
-  data: Omit<
-    MedicalRecordDto["anthropometricData"][number],
-    "id" | "recordedAt" | "context"
-  >;
-=======
   data: MedicalRecordDto["anthropometricData"][number];
->>>>>>> main
   onPress?: () => void;
 }
 export function AnthropometricItemComponent({
@@ -417,11 +409,7 @@ export function AnthropometricItemComponent({
 }
 
 export interface BiologicalItemComponentProps {
-<<<<<<< HEAD
-  data: Omit<MedicalRecordDto["biologicalData"][number], "id" | "recordedAt">;
-=======
   data: MedicalRecordDto["biologicalData"][number];
->>>>>>> main
   onPress?: () => void;
 }
 export function BiologicalItemComponent({
@@ -458,16 +446,7 @@ export function BiologicalItemComponent({
 }
 
 export interface ClinicalItemComponentProps {
-<<<<<<< HEAD
-  data: Omit<
-    MedicalRecordDto["clinicalData"][number],
-    "id" | "recordedAt" | "isPresent"
-  > & {
-    isPresent: boolean | undefined;
-  };
-=======
   data: MedicalRecordDto["clinicalData"][number];
->>>>>>> main
   onPress?: () => void;
 }
 
@@ -500,25 +479,11 @@ export function ClinicalItemComponent({
           {clinicalRefData[0]?.name ?? data.code}
         </Text>
         <HStack>
-<<<<<<< HEAD
-          {data.isPresent == undefined ? (
-            <Text className="font-h4 text-sm font-medium text-typography-primary">
-              Non vérifié
-            </Text>
-          ) : (
-            <Text
-              className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
-            >
-              {data.isPresent ? "Présent" : "Absent"}
-            </Text>
-          )}
-=======
           <Text
             className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
           >
             {data.isPresent ? "Présent" : "Absent"}
           </Text>
->>>>>>> main
         </HStack>
       </HStack>
     </Pressable>

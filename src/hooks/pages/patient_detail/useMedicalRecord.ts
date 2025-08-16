@@ -1,37 +1,39 @@
 import { usePediatricApp } from "@/adapter";
 import { usePatientDetail } from "@/src/context/pages/patient";
-import { MedicalRecordDto } from "@/core/medical_record";
-import { useCallback, useEffect, useState } from "react";
-import { uiBus } from "@/uiBus";
+import { useQuery } from "@tanstack/react-query";
+
+// Best practice: Define query keys in a structured way.
+// This allows for easy invalidation from anywhere in the app.
+export const medicalRecordKeys = {
+  all: ["medicalRecords"] as const,
+  detail: (patientId: string) =>
+    [...medicalRecordKeys.all, "detail", patientId] as const,
+};
 
 export function useMedicalRecord() {
   const { medicalRecordService } = usePediatricApp();
-  const [error, setError] = useState<string | null>(null);
-  const [onLoading, setOnLoading] = useState<boolean>(false);
-  const [medicalRecord, setMedicalRecord] = useState<MedicalRecordDto>();
   const { patient } = usePatientDetail();
-  const getMedicalRecord = useCallback(async () => {
-    setOnLoading(true);
-    setError(null);
-    const result = await medicalRecordService.get({
-      patientOrMedicalRecordId: patient.id,
-    });
-    if ("data" in result) {
-      setMedicalRecord(result.data);
-    } else {
-      const _error = JSON.parse(result.content);
-      console.error(_error);
-      setError(_error);
-    }
-    setOnLoading(false);
-  }, [patient, medicalRecordService]);
-  useEffect(() => {
-    uiBus.on("medical:update", async () => {
-      await getMedicalRecord();
-    });
-    getMedicalRecord();
-    return () => uiBus.off("medical:update", getMedicalRecord);
-  }, [getMedicalRecord]);
 
-  return { data: medicalRecord, error, onLoading };
+  // Refactored to use useQuery from @tanstack/react-query
+  return useQuery({
+    queryKey: medicalRecordKeys.detail(patient.id),
+    queryFn: async () => {
+      const result = await medicalRecordService.get({
+        patientOrMedicalRecordId: patient.id,
+      });
+
+      if ("data" in result) {
+        return result.data;
+      } else {
+        // Let react-query handle the error state
+        const errorContent = JSON.parse(result.content);
+        console.error(errorContent);
+        throw new Error(
+          errorContent.message || "Failed to fetch medical record"
+        );
+      }
+    },
+    // Only enable the query if the patient ID exists.
+    enabled: !!patient?.id,
+  });
 }

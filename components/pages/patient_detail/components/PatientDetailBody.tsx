@@ -1,7 +1,7 @@
 import React from "react";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { PatientDetailOverviews } from "./PatientDetailOverviews";
-import { PatientDetailMedicalRecord } from "./PatientDetailMedialRecord";
+import { PatientDetailMedicalRecord } from "./PatientDetailMedicalRecord";
 import { PatientDetailDiagnostic } from "./PatientDetailDiagnostic";
 import { PatientDetailTreatment } from "./PatientDetailTreatment";
 import { Dimensions, useWindowDimensions } from "react-native";
@@ -15,11 +15,7 @@ const renderScene = SceneMap({
 });
 const routes = [
   { key: "overviews", title: "Vue d'ensemble" },
-<<<<<<< HEAD
-  { key: "medical_record", title: "Suivi" },
-=======
   { key: "medical_record", title: "Dossier Medical" },
->>>>>>> main
   { key: "diagnostic", title: "Diagnostic" },
   { key: "treatment", title: "Traitement" },
 ];
