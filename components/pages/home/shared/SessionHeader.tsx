@@ -18,7 +18,7 @@ export const SessionHeader: React.FC<SessionHeaderProps> = ({
   rightNode,
 }) => {
   return (
-    <HStack className={"flex-1 items-center justify-between"}>
+    <HStack className={"items-center justify-between"}>
       <Heading
         className={"font-h2 text-base font-bold text-typography-primary"}
       >
