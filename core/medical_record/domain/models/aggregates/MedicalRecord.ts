@@ -33,6 +33,7 @@ export interface IMedicalRecord extends EntityPropsBaseType {
   clinicalData: ClinicalSingDataRecord[];
   biologicalData: BiologicalValueRecord[];
   complicationData: ComplicationDataRecord[];
+  appetiteTests?: []
   dataFieldsResponse: DataFieldResponse[];
 }
 

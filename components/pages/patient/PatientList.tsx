@@ -154,7 +154,7 @@ export const PatientListSession: React.FC<PatientListSessionProps> = ({
         ]}
       />
       <AddPatientBottomSheet
-        isOpen={showPatientForm}
+        isVisible={showPatientForm}
         onClose={() => setShowPatientForm(false)}
       />
       <DeletePatientBottomSheet

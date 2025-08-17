@@ -1,154 +1,142 @@
-import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
-} from "@/components/ui/actionsheet";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import React, { useEffect, useRef, useState } from "react";
+import { Text } from "@/components/ui/text";
+import React, { useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { DynamicFormGenerator, FormHandler } from "@/components/custom";
+import { DynamicFormGenerator } from "@/components/custom";
 import {
   AddPatientFormSchema,
   AddPatientFormZodSchema,
   PATIENT_STATE,
 } from "@/src/constants/ui";
-import { usePediatricApp } from "@/adapter";
-import { Message } from "@/core/shared";
-import { emptyToUndefined } from "@/utils";
 import { AppDispatch, recordInteraction } from "@/src/store";
 import { useDispatch } from "react-redux";
-import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
+import {
+  Button,
+  ButtonIcon,
+  ButtonSpinner,
+  ButtonText,
+} from "@/components/ui/button";
 import { Check, X } from "lucide-react-native";
-import { useToast } from "@/src/context";
+import { useToast, useUI } from "@/src/context";
 import { recordUiState } from "@/src/store/uiState";
+import { useAddPatientFormHandle } from "@/src/hooks";
+import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import colors from "tailwindcss/colors";
+import { BottomSheetDragIndicator } from "@/components/ui/bottomsheet";
 
 export interface AddPatientBottomSheetProps {
-  isOpen?: boolean;
+  isVisible?: boolean;
   onClose?: () => void;
 }
 export const AddPatientBottomSheet: React.FC<AddPatientBottomSheetProps> = ({
-  isOpen,
+  isVisible,
   onClose = () => void 0,
 }) => {
+  const { addedPatientInfo, error, formRef, handle, onSubmit, onSuccess } =
+    useAddPatientFormHandle();
+  const { colorMode } = useUI();
+  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const [isVisible, setIsVisisble] = useState<boolean>(false);
-  const { patientService } = usePediatricApp();
   const toast = useToast();
-  const dynamicFormRef = useRef<FormHandler<typeof AddPatientFormSchema>>(null);
-  const [onSubmit, setOnSubmit] = useState<boolean>(false);
-  const [onError, setOnError] = useState<boolean>(false);
-  const [onSuccess, setOnSuccess] = useState<boolean>(false);
 
-  const handleClose = () => {
-    dynamicFormRef.current?.reset();
-    setOnError(false);
-    setIsVisisble(false);
-    setOnSuccess(false);
-    setOnSubmit(false);
-    onClose();
-  };
-  const handleSubmit = async () => {
-    const formData = await dynamicFormRef.current?.submit();
-
-    if (formData) {
-      setOnSubmit(true);
-      const createPatientData = {
-        name: formData.fullName,
-        gender: formData.gender,
-        birthday: formData.birthDate,
-        address: {
-          country: emptyToUndefined(formData.country),
-          city: emptyToUndefined(formData.city),
-          postalCode: emptyToUndefined(formData.postalCode),
-          street: emptyToUndefined(formData.street),
-        },
-        contact: {
-          email: emptyToUndefined(formData.email),
-          tel: emptyToUndefined(formData.phone),
-        },
-        parents: {
-          father: emptyToUndefined(formData.fatherName),
-          mother: emptyToUndefined(formData.motherName),
-        },
-      };
-      const result = await patientService.create({ data: createPatientData });
-      if (result instanceof Message) {
-        setOnError(true);
-        toast.show(
-          "Error",
-          "Erreur technique",
-          "Une erreur s'est produite lors de l'enregistrement. Veuillez réessayer dans quelques instants."
-        );
-      } else {
-        setOnSuccess(true);
-        toast.show(
-          "Success",
-          "Patient enregistré",
-          `Les informations de ${formData.fullName} ont été sauvegardées avec succès`
-        );
-        dispatch(
-          recordInteraction({
-            patientId: result.data.id,
-            date: new Date().toISOString(),
-            state: PATIENT_STATE.NEW,
-            isFirstVisitToPatientDetail: true,
-          })
-        );
-        dispatch(recordUiState({ type: "PATIENT_ADDED" }));
-        handleClose();
-      }
+  React.useEffect(() => {
+    console.log("Hello he work properly");
+    if (isVisible) {
+      bottomSheetModalRef.current?.present();
     } else {
-      setOnSubmit(false);
+      bottomSheetModalRef.current?.close();
     }
-  };
+  }, [isVisible]);
 
   useEffect(() => {
-    setIsVisisble(isOpen as boolean);
-  }, [isOpen]);
+    if (onSuccess && addedPatientInfo) {
+      toast.show(
+        "Success",
+        "Patient enregistré",
+        `Les informations de ${addedPatientInfo.fullname} ont été sauvegardées avec succès`
+      );
+      dispatch(
+        recordInteraction({
+          patientId: addedPatientInfo.id,
+          date: new Date().toISOString(),
+          state: PATIENT_STATE.NEW,
+          isFirstVisitToPatientDetail: true,
+        })
+      );
+      dispatch(recordUiState({ type: "PATIENT_ADDED" }));
+      onClose && onClose();
+    }
+  }, [addedPatientInfo, onSuccess]);
+
+  useEffect(() => {
+    if (error)
+      toast.show(
+        "Error",
+        "Erreur technique",
+        "Une erreur s'est produite lors de l'enregistrement. Veuillez réessayer dans quelques instants."
+      );
+  }, [error]);
+
   return (
-    <Actionsheet isOpen={isVisible} onClose={onClose}>
-      <ActionsheetBackdrop />
-      <ActionsheetContent className={"border-0 bg-background-secondary px-0"}>
-        <ActionsheetDragIndicatorWrapper>
-          <ActionsheetDragIndicator className={"h-v-1 w-5 rounded-sm"} />
-        </ActionsheetDragIndicatorWrapper>
-        <VStack className={"h-[85vh] w-full"}>
-          <HStack className={"w-full items-center justify-between px-4 py-v-3"}>
-            <Heading
-              className={
-                "font-h2 text-2xl font-semibold text-typography-primary"
-              }
-            >
-              Nouveau Patient
-            </Heading>
-            <Button
-              className={`h-v-6 rounded-lg bg-primary-c_light px-4 ${onError ? "bg-red-500" : ""}`}
-              onPress={handleSubmit}
-            >
-              {onSubmit && <ButtonSpinner className="" />}
-              {onError && <Icon as={X} className="text-white" />}
-              <ButtonText
-                className={"font-body text-xs font-normal text-white"}
-              >
-                Ajouter
-              </ButtonText>
-              {onSuccess && <Icon as={Check} className="text-white" />}
-            </Button>
-          </HStack>
-          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-            <DynamicFormGenerator
-              ref={dynamicFormRef}
-              schema={AddPatientFormSchema}
-              zodSchema={AddPatientFormZodSchema}
-            />
-          </KeyboardAwareScrollView>
+    <BottomSheetModal
+      onDismiss={() => onClose && onClose()}
+      snapPoints={["60%"]}
+      ref={bottomSheetModalRef}
+      handleIndicatorStyle={{
+        backgroundColor:
+          colorMode === "light" ? colors.gray["300"] : colors.gray["500"],
+      }}
+      handleComponent={props => <BottomSheetDragIndicator {...props} />}
+      backgroundComponent={props => {
+        return (
+          <VStack {...props} className="rounded-2xl bg-background-secondary" />
+        );
+      }}
+      enablePanDownToClose={true}
+    >
+      <VStack className="flex-1 bg-background-primary">
+        <VStack className="px-7">
+          <Heading className="font-h3 text-xl font-semibold text-typography-primary">
+            Ajouter un nouveau patient
+          </Heading>
+          <Text className="font-body text-xs text-typography-primary_light">
+            Ajouter un patient afin de commencer son diagnostic, sa prise en
+            charge et son suivi.
+          </Text>
         </VStack>
-      </ActionsheetContent>
-    </Actionsheet>
+        <KeyboardAwareScrollView
+          ScrollViewComponent={BottomSheetScrollView as any}
+          showsVerticalScrollIndicator={false}
+        >
+          <DynamicFormGenerator
+            ref={formRef}
+            schema={AddPatientFormSchema}
+            zodSchema={AddPatientFormZodSchema}
+          />
+        </KeyboardAwareScrollView>
+        <HStack className="w-full px-8 py-4">
+          <Button
+            className={`h-v-10 w-full rounded-xl data-[active=true]:bg-white ${error ? "bg-red-500" : "bg-primary-c_light"}`}
+            onPress={handle}
+          >
+            {onSubmit ? (
+              <ButtonSpinner
+                size={"small"}
+                className="data-[active=true]:text-primary-c_light"
+              />
+            ) : (
+              <ButtonText className="font-h4 font-medium text-white data-[active=true]:text-primary-c_light">
+                Enregister le patient
+              </ButtonText>
+            )}
+
+            {onSuccess && <ButtonIcon as={Check} className="text-white" />}
+            {error && <ButtonIcon as={X} className="text-white" />}
+          </Button>
+        </HStack>
+      </VStack>
+    </BottomSheetModal>
   );
 };

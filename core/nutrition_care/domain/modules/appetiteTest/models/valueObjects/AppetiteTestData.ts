@@ -23,7 +23,7 @@ export interface IAppetiteTestData {
   patientWeight: number;
 }
 
-//BETA: On verifie l'unite du takenQuantity, mais on s'assure que ce n'est pas égale a négative
+//BETA: On ne verifie l'unite du takenQuantity, mais on s'assure que ce n'est pas égale a négative
 
 export class AppetiteTestData extends ValueObject<IAppetiteTestData> {
   productTypeIsSachet(): boolean {
@@ -34,10 +34,11 @@ export class AppetiteTestData extends ValueObject<IAppetiteTestData> {
       if (
         Guard.isEmpty((props.takenAmount as TakenAmountInSachet)?.takenFraction)
           .succeeded
-      )
+      ) {
         throw new ArgumentInvalidException(
           "Please if the taken product is in sachet provide a product taken fraction in available options."
         );
+      }
       // BETA: Donnons d'abord la liberter de donne n'importe quelle fraction
       //  else if (!Object.values(APPETITE_TEST_SACHET_FRACTION_PARTITION).includes((props.takenAmount as TakenAmountInSachet)?.takenFraction))
       //     throw new ArgumentOutOfRangeException("This fraction is not supported");
