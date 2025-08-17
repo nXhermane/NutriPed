@@ -277,6 +277,17 @@ export enum ClinicalDataType {
   ENUM = "enum",
   QUANTITY = "quantity",
 }
+/**
+ * @version v0.0.1-next
+ **/
+export enum FieldDataType {
+  INT = "number",
+  BOOL = "boolean",
+  STR = "string",
+  RANGE = "range",
+  ENUM = "enum",
+  QUANTITY = "quantity",
+}
 export enum DATA_TYPE_COUNTER {
   ANTHROPOMETRIC = 'anthropometric_counter',
   CLINICAL = 'clinical_sign_counter',
@@ -361,4 +372,11 @@ export enum BiochemicalRangeStatus {
   UNDER = "under",
   NORMAL = "normal",
   OVER = "over",
+}
+
+export enum DataFieldCategory {
+  OBSERVATION = "observation_data_field",
+  VITAL_SIGN = "vital_sign_data_field",
+  QUESTION = "question_data_field",
+  DATA_POINTS = "data_points_data_field",
 }

@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import variables from "@/scaling";
 import { vars } from "nativewind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export interface UIContextType {
   colorMode: "dark" | "light";
@@ -76,7 +77,6 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
   useEffect(() => {
     // if (!isSystemTheme || !isInitialized) return;
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-    
       const systemTheme = colorScheme === "dark" ? "dark" : "light";
       setColorMode(systemTheme);
     });
@@ -144,7 +144,7 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
         >
           <GestureHandlerRootView style={{ flex: 1 }}>
             <GluestackUIProvider mode={colorMode}>
-              {children}
+              <BottomSheetModalProvider >{children}</BottomSheetModalProvider>
             </GluestackUIProvider>
           </GestureHandlerRootView>
         </View>
