@@ -10,7 +10,7 @@ import { VStack } from "@/components/ui/vstack";
 import {
   GetIndicatorRequest,
   GrowthIndicatorValueDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { IndicatorInterpretionBadgeUiData } from "@/src/constants/ui";
 import { useGrowthIndicators } from "@/src/hooks";
 import { router } from "expo-router";

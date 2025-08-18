@@ -10,8 +10,7 @@ import {
   ButtonText,
 } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
-import { ClinicalSignReferenceDto } from "@/core/diagnostics";
-<<<<<<< HEAD
+import { ClinicalSignReferenceDto } from "@/core/evaluation";
 import { useAddDataToMedicalRecordModal } from "@/src/context/pages";
 =======
 >>>>>>> main

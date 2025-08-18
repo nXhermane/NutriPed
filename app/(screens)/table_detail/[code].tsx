@@ -7,7 +7,7 @@ import {
 import {
   GetGrowthReferenceTableRequest,
   GetIndicatorRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { TABLE_UI_DATA } from "@/src/constants/ui";
 import { useToast } from "@/src/context";
 import { useGrowthIndicators, useGrowthTables } from "@/src/hooks";

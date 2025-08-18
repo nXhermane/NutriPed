@@ -4,7 +4,7 @@ import {
 } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { BiochemicalReferenceDto } from "@/core/diagnostics";
+import { BiochemicalReferenceDto } from "@/core/evaluation";
 import { useUI } from "@/src/context";
 import {
   BottomSheetModal,

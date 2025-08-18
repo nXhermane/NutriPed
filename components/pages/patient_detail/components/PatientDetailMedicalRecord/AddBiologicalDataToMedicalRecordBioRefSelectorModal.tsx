@@ -1,7 +1,7 @@
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
-import { BiochemicalReferenceDto } from "@/core/diagnostics";
+import { BiochemicalReferenceDto } from "@/core/evaluation";
 import { useCallback } from "react";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 

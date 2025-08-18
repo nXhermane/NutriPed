@@ -1,7 +1,7 @@
 import { VStack } from "@/components/ui/vstack";
 import React, { useState } from "react";
 import { GrowthInteractiveChart } from "./GrowthChartInteractive";
-import { ChartDataDto, GrowthRefChartAndTableCodes } from "@/core/diagnostics";
+import { ChartDataDto, GrowthRefChartAndTableCodes } from "@/core/evaluation";
 import {
   PlottedPointData,
   SelectedChartMeasurementSerie,

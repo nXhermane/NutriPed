@@ -8,7 +8,7 @@ import {
   RootState,
 } from "@/src/store";
 import { AnthropometricCalculatorHistoryItem } from "./AnthropometricCalculatorHistoryItem";
-import { GrowthIndicatorValueDto } from "@/core/diagnostics";
+import { GrowthIndicatorValueDto } from "@/core/evaluation";
 import { AnthropometricCalculatorResultModal } from "./AnthropometricCalculatorResultModal";
 import { FadeInCardX } from "@/components/custom/motion";
 import { HStack } from "@/components/ui/hstack";

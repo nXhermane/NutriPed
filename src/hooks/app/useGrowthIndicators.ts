@@ -1,5 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import { GetIndicatorRequest, IndicatorDto } from "@/core/diagnostics";
+import { GetIndicatorRequest, IndicatorDto } from "@/core/evaluation";
 import { useEffect, useState } from "react";
 
 export function useGrowthIndicators(request?: GetIndicatorRequest) {

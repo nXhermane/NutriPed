@@ -1,6 +1,6 @@
 import { AggregateID, Result } from "@/core/shared";
 import { IClinicalSignDataInterpretationACL } from "../../domain";
-import { IMakeClinicalSignDataInterpretationService } from "@/core/diagnostics";
+import { IMakeClinicalSignDataInterpretationService } from "@/core/evaluation";
 
 export class ClinicalSignDataInterpretationACL
   implements IClinicalSignDataInterpretationACL

@@ -2,7 +2,7 @@ import { usePediatricApp } from "@/adapter";
 import {
   GetGrowthReferenceChartRequest,
   GrowthReferenceChartDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useEffect, useMemo, useState } from "react";
 
 export function useGrowthCharts(request?: GetGrowthReferenceChartRequest) {

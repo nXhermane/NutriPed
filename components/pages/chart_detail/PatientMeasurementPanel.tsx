@@ -5,7 +5,7 @@ import {
   GrowthRefChartAndTableCodes,
   GrowthReferenceChartDto,
   IndicatorDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import {
   useMeasurementSeriesManager,
   useDynamicFormSchemaForIndicator,

@@ -1,7 +1,7 @@
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { AnthroSystemCodes, GrowthIndicatorValueDto } from "@/core/diagnostics";
+import { AnthroSystemCodes, GrowthIndicatorValueDto } from "@/core/evaluation";
 import React, { useEffect, useState } from "react";
 import {
   IndicatorInterpretionBadgeUiData,

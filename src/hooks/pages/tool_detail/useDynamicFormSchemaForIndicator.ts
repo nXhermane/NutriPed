@@ -1,6 +1,6 @@
 import { DynamicFormZodSchemaType } from "@/components/custom";
 import { IField } from "@/components/custom/FormField";
-import { AnthroSystemCodes, IndicatorDto } from "@/core/diagnostics";
+import { AnthroSystemCodes, IndicatorDto } from "@/core/evaluation";
 import {
   getAnthropDataFormSchemaWithCode,
   validateWithSchemaPipeline,

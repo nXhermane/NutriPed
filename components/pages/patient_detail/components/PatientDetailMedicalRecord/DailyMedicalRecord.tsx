@@ -7,7 +7,7 @@ import {
   GetAnthropometricMeasureRequest,
   GetBiochemicalReferenceRequest,
   GetClinicalSignReferenceRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { MedicalRecordDto } from "@/core/medical_record";
 import {
   MedicalRecordDataOrdoredByDay,

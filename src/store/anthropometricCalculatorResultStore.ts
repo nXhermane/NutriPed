@@ -1,4 +1,4 @@
-import { GrowthIndicatorValueDto } from "@/core/diagnostics";
+import { GrowthIndicatorValueDto } from "@/core/evaluation";
 import { Sex } from "@/core/shared";
 import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
 

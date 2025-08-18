@@ -4,7 +4,7 @@ import {
   GROWTH_INDICATORS,
   IndicatorUIType,
 } from "@/src/constants/ui";
-import { GrowthReferenceChartDto } from "@/core/diagnostics";
+import { GrowthReferenceChartDto } from "@/core/evaluation";
 import { useQuery } from "@tanstack/react-query";
 import { usePediatricApp } from "@/adapter";
 

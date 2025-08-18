@@ -17,7 +17,7 @@ import {
   BiochemicalReferenceDto,
   BiologicalAnalysisInterpretationDto,
   BiologicalTestResult,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useBiologicalInterpretationFormManager } from "@/src/hooks";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";

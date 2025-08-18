@@ -4,7 +4,7 @@ import { GrowthChartScreenHeader } from "@/components/pages/growth_chart";
 import {
   GetGrowthReferenceChartRequest,
   GrowthIndicatorValueDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useUI } from "@/src/context";
 import { useGrowthCharts } from "@/src/hooks";
 import { Stack, useLocalSearchParams } from "expo-router";

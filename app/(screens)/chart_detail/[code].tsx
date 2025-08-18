@@ -20,7 +20,7 @@ import {
   GetGrowthReferenceChartRequest,
   GetIndicatorRequest,
   GrowthRefChartAndTableCodes,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { ScrollView } from "react-native";
 
 const ChartDetail = () => {

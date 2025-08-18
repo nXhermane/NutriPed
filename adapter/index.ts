@@ -1,6 +1,6 @@
 export * from "./react";
 export * from "./constants";
-export * from "./diagnostics";
+export * from "./evaluation";
 export * from "./medical_record";
 export * from "./nutrition_care";
 export * from "./patient";

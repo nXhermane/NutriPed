@@ -3,7 +3,7 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { DAY_IN_MONTHS, DAY_IN_YEARS } from "@/core/diagnostics";
+import { DAY_IN_MONTHS, DAY_IN_YEARS } from "@/core/evaluation";
 import {
   AxisLabel,
   CHART_LEGEND,

@@ -5,7 +5,7 @@ import { MedicalRecordDto } from "@/core/medical_record";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { HStack } from "@/components/ui/hstack";
-import { GetClinicalSignReferenceRequest } from "@/core/diagnostics";
+import { GetClinicalSignReferenceRequest } from "@/core/evaluation";
 import {
   remapSignDataToClinicalSign,
   useClinicalReference,

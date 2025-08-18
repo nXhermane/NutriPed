@@ -3,7 +3,7 @@ import {
   DAY_IN_MONTHS,
   DAY_IN_YEARS,
   GrowthRefChartAndTableCodes,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import {
   CHART_UI_DATA,
   DisplayMode,

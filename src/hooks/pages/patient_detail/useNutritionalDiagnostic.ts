@@ -1,5 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import { NutritionalDiagnosticDto } from "@/core/diagnostics";
+import { NutritionalDiagnosticDto } from "@/core/evaluation";
 import { usePatientDetail } from "@/src/context/pages";
 import { uiBus } from "@/uiBus";
 import { useCallback, useEffect, useState } from "react";

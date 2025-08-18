@@ -3,7 +3,7 @@ import {
   AnthropometricRecord,
   INormalizeAnthropometricDataACL,
 } from "../../domain";
-import { INormalizeAnthropometricDataAppService } from "@/core/diagnostics";
+import { INormalizeAnthropometricDataAppService } from "@/core/evaluation";
 
 export class NormalizeAnthropomericDataACL
   implements INormalizeAnthropometricDataACL

@@ -1,6 +1,6 @@
 import { VStack } from "@/components/ui/vstack";
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { GrowthReferenceTableDto, TableDataDto } from "@/core/diagnostics";
+import { GrowthReferenceTableDto, TableDataDto } from "@/core/evaluation";
 import {
   BottomSheet,
   BottomSheetBackdrop,

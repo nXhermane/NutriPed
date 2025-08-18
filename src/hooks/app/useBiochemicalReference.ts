@@ -2,7 +2,7 @@ import { usePediatricApp } from "@/adapter";
 import {
   BiochemicalReferenceDto,
   GetBiochemicalReferenceRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useEffect, useState } from "react";
 
 export function useBiochemicalReference(req?: GetBiochemicalReferenceRequest) {

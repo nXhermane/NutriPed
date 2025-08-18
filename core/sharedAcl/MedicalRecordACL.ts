@@ -1,4 +1,4 @@
-import { MedicalRecordACL, PatientData } from "../diagnostics";
+import { MedicalRecordACL, PatientData } from "../evaluation";
 import { IMedicalRecordService } from "../medical_record";
 import { Result } from "../shared/core";
 import { AggregateID } from "../shared/domain";

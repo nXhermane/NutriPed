@@ -6,7 +6,7 @@ import {
 import {
   PatientGlobalVariablePerformedEventData,
   PatientGlobalVariablesPerformedEvent,
-} from "../../../diagnostics/application/events";
+} from "../../../evaluation/application/events";
 import {
   ConditionResult,
   DomainDate,

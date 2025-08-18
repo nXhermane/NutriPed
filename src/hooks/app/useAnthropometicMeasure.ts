@@ -2,7 +2,7 @@ import { usePediatricApp } from "@/adapter";
 import {
   AnthropometricMeasureDto,
   GetAnthropometricMeasureRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useEffect, useState } from "react";
 
 export function useAnthropometricMeasure(

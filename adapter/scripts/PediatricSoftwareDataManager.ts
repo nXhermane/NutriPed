@@ -8,7 +8,7 @@ import {
   IIndicatorService,
   INutritionalRiskFactorService,
   TableDataDto,
-} from "@core/diagnostics";
+} from "@/core/evaluation";
 import {
   AnthropometricMeasure,
   AppetiteTestRef,

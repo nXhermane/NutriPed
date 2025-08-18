@@ -49,7 +49,7 @@ import {
 
 import { PatientACLImpl } from "@core/sharedAcl";
 import { PatientContext } from "../patient/context";
-import { DiagnosticContext } from "../diagnostics/context";
+import { DiagnosticContext } from "../evaluation/context";
 import {
   MedicalRecordPersistenceDto,
   MedicalRecordInfraMapper,

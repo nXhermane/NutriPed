@@ -1,6 +1,6 @@
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { ClinicalNutritionalAnalysisResultDto } from "@/core/diagnostics";
+import { ClinicalNutritionalAnalysisResultDto } from "@/core/evaluation";
 import React, { useMemo } from "react";
 import {
   Accordion,
