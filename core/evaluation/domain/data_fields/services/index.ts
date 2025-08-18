@@ -1,1 +1,2 @@
-export * from "./DataFieldValidatior"
+export * from "./DataFieldValidatior";
+export * from "./NormalizeDataFieldResponseService";

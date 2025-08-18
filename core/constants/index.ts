@@ -1,3 +1,5 @@
+import { ValueOf } from "@/utils";
+
 export enum ZScoreComputingStrategyType {
   AGEBASED = "age_based",
   LENHEIBASED = "lenhei_based",
@@ -263,8 +265,17 @@ export const DATA_POINTS = {
   LIQUID_STOOL_COUNT: "data_liquid_stool_count_per_day",
   VOMITING_COUNT: "data_vomiting_count",
   GENERAL_CONDITION: "data_general_condition",
+  NUTRITIONAL_MILK_CONSUMPTION_G_PER_DAY:
+    "data_nutritional_milk_consumption_in_g_per_day",
+  IS_BREASTFED: "data_is_breastfed",
 } as const;
 
+export type DATA_FIELD_CODE_TYPE =
+  | ValueOf<typeof OBSERVATIONS>
+  | ValueOf<typeof VITAL_SIGNS>
+  | ValueOf<typeof DATA_POINTS>
+  | ValueOf<typeof QUESTIONS>;
+  
 export enum GENERAL_CONDITION_VALUES {
   ALTERED = "altered",
   NORMAL = "normal",

@@ -1,0 +1,7 @@
+import { Result } from "@/core/shared";
+import { ClinicalData } from "../../models";
+import { ValidateResult } from "./../../../../common";
+
+export interface IClinicalValidationService {
+    validate(clinicalData: ClinicalData[]): Promise<Result<ValidateResult>>
+}

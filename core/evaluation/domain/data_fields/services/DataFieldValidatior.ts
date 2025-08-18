@@ -1,11 +1,13 @@
 import { formatError, Guard, handleError, Result } from "@/core/shared";
 import { DataFieldResponse, DataFieldReference } from "../models";
-import { IDataFieldValidatationService } from "../ports";
+import { DataFieldReferenceRepository, IDataFieldValidatationService } from "../ports";
 import { DATA_FIELD_ERROS, handleDataFieldError } from "../errors";
 import { FieldDataType } from "@/core/constants";
 
 export class DataFieldValidationService implements IDataFieldValidatationService {
-    validate(data: DataFieldResponse[], dataFieldReferences: DataFieldReference[]): Result<void> {
+    constructor(private readonly repo: DataFieldReferenceRepository) { }
+    async validate(data: DataFieldResponse[]): Promise<Result<void>> {
+        const dataFieldReferences: DataFieldReference[] = await this.getAllFieldsReferences()
         const validationResults = data.map(field => this.validateDataFieldResponse(field, dataFieldReferences))
         const combinedResult = Result.combine(validationResults)
         if (combinedResult.isFailure) {
@@ -61,5 +63,9 @@ export class DataFieldValidationService implements IDataFieldValidatationService
         } catch (e: unknown) {
             return handleError(e)
         }
+    }
+
+    private async getAllFieldsReferences(): Promise<DataFieldReference[]> {
+        return this.repo.getAll()
     }
 }
