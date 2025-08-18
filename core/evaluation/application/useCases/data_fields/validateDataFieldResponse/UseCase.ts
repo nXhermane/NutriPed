@@ -1,19 +1,18 @@
 import { formatError, handleError, left, Result, right, UseCase } from "@/core/shared";
 import { ValidateDataFieldResponseRequest } from "./Request";
 import { ValidateDataFieldResponseResponse } from "./Response";
-import { CreateDataFieldResponse, DataFieldReferenceRepository, DataFieldResponse, IDataFieldValidatationService } from "../../../../domain";
+import { CreateDataFieldResponse, DataFieldResponse, IDataFieldValidatationService } from "../../../../domain";
 
 export class ValidateDataFieldResponseUseCase implements UseCase<ValidateDataFieldResponseRequest, ValidateDataFieldResponseResponse> {
-    constructor(private readonly repo: DataFieldReferenceRepository, private readonly validationService: IDataFieldValidatationService) { }
+    constructor(private readonly validationService: IDataFieldValidatationService) { }
 
     async execute(request: ValidateDataFieldResponseRequest): Promise<ValidateDataFieldResponseResponse> {
         try {
-            const fieldRefs = await this.repo.getAll()
             const dataFieldResponsesResult = this.createDataFieldResponses(request.data)
             if (dataFieldResponsesResult.isFailure) {
                 return left(dataFieldResponsesResult)
             }
-            const validationServiceResult = this.validationService.validate(dataFieldResponsesResult.val, fieldRefs)
+            const validationServiceResult = await this.validationService.validate(dataFieldResponsesResult.val)
             if (validationServiceResult.isFailure) {
                 return left(validationServiceResult)
             }
