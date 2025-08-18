@@ -9,9 +9,9 @@ import {
   BaseTableFields,
   EntityBaseRepositoryExpo,
 } from "./EntityBaseRepository";
-import { AnthropometricMeasure } from "@core/diagnostics";
+import { AnthropometricMeasure } from "@/core/evaluation";
 import { eq } from "drizzle-orm";
-import { AnthropometricMeasurePersistenceDto } from "../../diagnostics/infra";
+import { AnthropometricMeasurePersistenceDto } from "../../evaluation/infra";
 import {
   RepositoryNotFoundError,
   RepositoryException,

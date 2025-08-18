@@ -1,5 +1,5 @@
 import { PatientDetailMedicalRecordSession } from "../PatientDetailMedicalRecord";
-import { NutritionalDiagnosticDto } from "@/core/diagnostics";
+import { NutritionalDiagnosticDto } from "@/core/evaluation";
 import {
   Accordion,
   AccordionContent,

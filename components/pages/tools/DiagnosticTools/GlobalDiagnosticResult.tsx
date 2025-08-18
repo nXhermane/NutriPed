@@ -8,7 +8,7 @@ import {
   GetDiagnosticRuleRequest,
   GlobalDiagnosticDto,
   NutritionalAssessmentResultDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useToast } from "@/src/context";
 import { VStack } from "@/components/ui/vstack";
 import { AnthropometricCalculatorResult } from "./AnthropometricCalculatorResult";

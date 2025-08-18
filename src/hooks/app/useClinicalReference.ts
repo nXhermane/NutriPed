@@ -2,7 +2,7 @@ import { usePediatricApp } from "@/adapter";
 import {
   ClinicalSignReferenceDto,
   GetClinicalSignReferenceRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useEffect, useState } from "react";
 
 export function useClinicalReference(req?: GetClinicalSignReferenceRequest) {

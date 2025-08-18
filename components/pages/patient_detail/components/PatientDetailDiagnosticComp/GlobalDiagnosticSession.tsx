@@ -4,7 +4,7 @@ import {
   GetDiagnosticRuleRequest,
   GlobalDiagnosticDto,
   NutritionalDiagnosticDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { EmptyDiagnostic } from "./EmptyDiagnostic";
 import { CardPressEffect, FadeInCardX } from "@/components/custom/motion";
 import { Text } from "@/components/ui/text";

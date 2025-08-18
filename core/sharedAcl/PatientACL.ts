@@ -1,4 +1,4 @@
-import { PatientACL, PatientInfo } from "./../diagnostics";
+import { PatientACL, PatientInfo } from "../evaluation";
 import { IPatientService, GetPatientRequest } from "./../patient";
 import { AggregateID, Birthday, Gender, handleError, Result, Sex } from "@shared";
 

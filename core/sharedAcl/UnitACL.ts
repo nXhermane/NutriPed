@@ -1,4 +1,4 @@
-import { UnitAcl } from "./../diagnostics";
+import { UnitAcl } from "../evaluation";
 import { handleError, Result, UnitCode } from "@shared";
 
 import { IUnitService } from "./../units";

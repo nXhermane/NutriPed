@@ -5,7 +5,7 @@ import {
   BiochemicalRangeStatus,
   BiologicalAnalysisInterpretationDto,
   GetBiochemicalReferenceRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import React, { useMemo } from "react";
 import { FadeInCardY } from "@/components/custom/motion/FadeInCardY";
 import { HStack } from "@/components/ui/hstack";

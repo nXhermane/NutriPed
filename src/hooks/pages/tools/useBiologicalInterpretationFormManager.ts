@@ -1,6 +1,6 @@
 import { DynamicFormZodSchemaType, FormSchema } from "@/components/custom";
 import { IField } from "@/components/custom/FormField";
-import { BiochemicalReferenceDto } from "@/core/diagnostics";
+import { BiochemicalReferenceDto } from "@/core/evaluation";
 import {
   BirthDateField,
   BirthDateToTodayZodSchema,

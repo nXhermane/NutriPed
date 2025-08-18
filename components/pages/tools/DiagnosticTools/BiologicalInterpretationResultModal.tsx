@@ -1,7 +1,7 @@
 import { FadeInCardY } from "@/components/custom/motion";
 import { BottomSheetDragIndicator } from "@/components/ui/bottomsheet";
 import { VStack } from "@/components/ui/vstack";
-import { BiologicalAnalysisInterpretationDto } from "@/core/diagnostics";
+import { BiologicalAnalysisInterpretationDto } from "@/core/evaluation";
 import { useUI } from "@/src/context";
 import {
   BottomSheetModal,

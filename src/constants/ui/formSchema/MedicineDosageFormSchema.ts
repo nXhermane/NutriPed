@@ -2,7 +2,7 @@ import { FormSchema } from "@/components/custom";
 import { WeightField, WeightZodSchema } from "./sharedAnthropometricDataForm";
 import z from "zod";
 import { validateWithSchemaPipeline } from "./utils";
-import { AnthroSystemCodes } from "@/core/diagnostics";
+import { AnthroSystemCodes } from "@/core/evaluation";
 
 export const MedicineDosageFormSchema: FormSchema = [
   {

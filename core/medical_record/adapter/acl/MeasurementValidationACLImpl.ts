@@ -1,7 +1,7 @@
 import {
   IValidatePatientMeasurementsService,
   ValidateMeasurementsRequest,
-} from "@core/diagnostics";
+} from "@/core/evaluation";
 import {
   MeasurementData,
   MeasurementValidationACL,

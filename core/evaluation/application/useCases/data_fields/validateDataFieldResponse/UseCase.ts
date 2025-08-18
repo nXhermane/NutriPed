@@ -1,0 +1,37 @@
+import { formatError, handleError, left, Result, right, UseCase } from "@/core/shared";
+import { ValidateDataFieldResponseRequest } from "./Request";
+import { ValidateDataFieldResponseResponse } from "./Response";
+import { CreateDataFieldResponse, DataFieldReferenceRepository, DataFieldResponse, IDataFieldValidatationService } from "../../../../domain";
+
+export class ValidateDataFieldResponseUseCase implements UseCase<ValidateDataFieldResponseRequest, ValidateDataFieldResponseResponse> {
+    constructor(private readonly repo: DataFieldReferenceRepository, private readonly validationService: IDataFieldValidatationService) { }
+
+    async execute(request: ValidateDataFieldResponseRequest): Promise<ValidateDataFieldResponseResponse> {
+        try {
+            const fieldRefs = await this.repo.getAll()
+            const dataFieldResponsesResult = this.createDataFieldResponses(request.data)
+            if (dataFieldResponsesResult.isFailure) {
+                return left(dataFieldResponsesResult)
+            }
+            const validationServiceResult = this.validationService.validate(dataFieldResponsesResult.val, fieldRefs)
+            if (validationServiceResult.isFailure) {
+                return left(validationServiceResult)
+            }
+            return right(Result.ok(true))
+        } catch (e: unknown) {
+            return left(handleError(e))
+        }
+    }
+    private createDataFieldResponses(data: CreateDataFieldResponse[]): Result<DataFieldResponse[]> {
+        try {
+            const dataFieldResponseResults = data.map(fieldResProps => DataFieldResponse.create(fieldResProps))
+            const combinedRes = Result.combine(dataFieldResponseResults)
+            if (combinedRes.isFailure) {
+                return Result.fail(formatError(combinedRes, ValidateDataFieldResponseUseCase.name))
+            }
+            return Result.ok(dataFieldResponseResults.map(res => res.val))
+        } catch (e: unknown) {
+            return handleError(e)
+        }
+    }
+}

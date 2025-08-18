@@ -9,7 +9,7 @@ import { usePediatricApp } from "@/adapter";
 import {
   CalculateAllAvailableGrowthIndicatorValueRequest,
   GrowthIndicatorValueDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { VStack } from "@/components/ui/vstack";
 import {
   Button,

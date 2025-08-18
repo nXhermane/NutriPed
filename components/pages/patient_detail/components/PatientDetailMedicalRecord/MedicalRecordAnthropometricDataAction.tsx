@@ -8,7 +8,7 @@ import { HStack } from "@/components/ui/hstack";
 import {
   AnthroSystemCodes,
   GetAnthropometricMeasureRequest,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { useAnthropometricMeasure } from "@/src/hooks";
 import {
   DynamicFormGenerator,

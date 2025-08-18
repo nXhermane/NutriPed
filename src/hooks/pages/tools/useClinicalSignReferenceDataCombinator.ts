@@ -4,7 +4,7 @@ import {
   ClinicalDataType,
   ClinicalSignDataDto,
   ClinicalSignReferenceDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import {
   BirthDateField,
   BirthDateToTodayZodSchema,

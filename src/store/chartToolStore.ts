@@ -5,7 +5,7 @@ import {
 import {
   AnthropometricVariableObject,
   GrowthIndicatorValueDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import { createSlice, PayloadAction, nanoid } from "@reduxjs/toolkit";
 export type ChartMeasurement = {
   data: Partial<

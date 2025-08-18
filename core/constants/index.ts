@@ -374,6 +374,9 @@ export enum BiochemicalRangeStatus {
   OVER = "over",
 }
 
+/**
+ * @version v0.0.1-next
+ **/
 export enum DataFieldCategory {
   OBSERVATION = "observation_data_field",
   VITAL_SIGN = "vital_sign_data_field",

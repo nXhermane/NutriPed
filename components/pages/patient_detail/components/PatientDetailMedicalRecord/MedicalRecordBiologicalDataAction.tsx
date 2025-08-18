@@ -4,7 +4,7 @@ import { Text } from "@/components/ui/text";
 import { MedicalRecordDto } from "@/core/medical_record";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { GetBiochemicalReferenceRequest } from "@/core/diagnostics";
+import { GetBiochemicalReferenceRequest } from "@/core/evaluation";
 import {
   useBiochemicalReference,
   useBiologicalInterpretationFormManager,

@@ -3,7 +3,7 @@ import {
   GrowthIndicatorValueDto,
   GrowthReferenceTableDto,
   IndicatorDto,
-} from "@/core/diagnostics";
+} from "@/core/evaluation";
 import {
   useDynamicFormSchemaForIndicator,
   useGrowthIndicatorValueGeneratorForTable,

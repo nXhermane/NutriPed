@@ -6,7 +6,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react-native";
-import { ClinicalSignReferenceDto } from "@/core/diagnostics";
+import { ClinicalSignReferenceDto } from "@/core/evaluation";
 import { Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { AddClinicalDataToMedicalRecordClinicalSignSelectorModal } from "./AddClinicalDataToMedicalRecordClinicalSignSelectorModal";

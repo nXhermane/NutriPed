@@ -1,6 +1,6 @@
 import { IEventBus } from "@shared";
 import React, { ReactNode, useState } from "react";
-import { DiagnosticContext } from "../../diagnostics";
+import { DiagnosticContext } from "../../evaluation";
 import { MedicalRecordAcls, MedicalRecordContext } from "../../medical_record";
 import { NutritionCareContext } from "../../nutrition_care";
 import { PatientContext } from "../../patient";

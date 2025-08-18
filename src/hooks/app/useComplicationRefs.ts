@@ -1,5 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import { ClinicalSignReferenceDto } from "@/core/diagnostics";
+import { ClinicalSignReferenceDto } from "@/core/evaluation";
 import { ComplicationDto, GetComplicationRequest } from "@/core/nutrition_care";
 import { useEffect, useState } from "react";
 

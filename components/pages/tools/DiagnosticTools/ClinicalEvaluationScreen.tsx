@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { ClinicalNutritionalAnalysisResultDto } from "@/core/diagnostics";
+import { ClinicalNutritionalAnalysisResultDto } from "@/core/evaluation";
 import {
   useClinicalReference,
   useClinicalSignReferenceFormGenerator,

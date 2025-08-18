@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { DiagnosticContext } from "../../diagnostics";
+import { DiagnosticContext } from "../../evaluation";
 import { MedicalRecordContext } from "../../medical_record";
 import { NutritionCareContext } from "../../nutrition_care";
 import { PatientContext } from "../../patient";

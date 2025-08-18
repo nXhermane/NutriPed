@@ -1,5 +1,5 @@
 import { FadeInCardX } from "@/components/custom/motion/FadeInCardX";
-import { GrowthIndicatorValueDto } from "@/core/diagnostics";
+import { GrowthIndicatorValueDto } from "@/core/evaluation";
 import React from "react";
 import { IndicatorCard } from "./IndicatorCard";
 import { VStack } from "@/components/ui/vstack";
