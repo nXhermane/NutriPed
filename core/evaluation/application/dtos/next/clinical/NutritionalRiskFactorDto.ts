@@ -1,7 +1,7 @@
-import { AggregateID } from "@shared";
-import { ICondition } from "../../../domain";
+import { AggregateID, ICondition } from "@shared";
 import { NutrientImpactDto } from "./NutrientImpactDto";
-import { RecommendedTestDto } from "../next/clinical/RecommendedTestDto";
+import { RecommendedTestDto } from "./RecommendedTestDto";
+
 
 export interface NutritionalRiskFactorDto {
   id: AggregateID;

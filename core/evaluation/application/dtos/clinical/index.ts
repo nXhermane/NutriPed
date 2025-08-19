@@ -4,4 +4,4 @@ export * from "./ClinicalSignDto";
 export * from "./ClinicalSignReferenceDto";
 export * from "./NutrientImpactDto";
 export * from "./NutritionalRiskFactorDto";
-export * from "./RecommendedTestDto";
+export * from "../next/clinical/RecommendedTestDto";
