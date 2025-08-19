@@ -275,7 +275,7 @@ export type DATA_FIELD_CODE_TYPE =
   | ValueOf<typeof VITAL_SIGNS>
   | ValueOf<typeof DATA_POINTS>
   | ValueOf<typeof QUESTIONS>;
-  
+
 export enum GENERAL_CONDITION_VALUES {
   ALTERED = "altered",
   NORMAL = "normal",
@@ -394,3 +394,7 @@ export enum DataFieldCategory {
   QUESTION = "question_data_field",
   DATA_POINTS = "data_points_data_field",
 }
+/**
+ * @version v0.0.1-next
+ **/
+export const clinicalEffect = (clinicalCode: string) => `${clinicalCode}_effect`

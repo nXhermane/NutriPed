@@ -24,6 +24,7 @@ import {
   SystemCode,
 } from "@shared";
 import {
+  CreateNutrientImpact,
   INutrientImpact,
   IRecommendedTest,
   NutrientImpact,
@@ -58,8 +59,11 @@ export class NutritionalRiskFactor extends Entity<INutritionalRiskFactor> {
   getClinicalSignCode(): string {
     return this.props.clinicalSignCode.unpack();
   }
-  getAssociatedNutrients(): INutrientImpact[] {
-    return this.props.associatedNutrients.map(nut => nut.unpack());
+  getAssociatedNutrients(): CreateNutrientImpact[] {
+    return this.props.associatedNutrients.map(nut => ({
+      effect: nut.getEffect(),
+      nutrient: nut.getNutient()
+    }));
   }
   getModulatingCondition(): ICondition {
     return this.props.modulatingCondition.unpack();

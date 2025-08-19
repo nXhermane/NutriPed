@@ -1,2 +1,4 @@
-export * from "./ClinicalAnalysisService"
-export * from "./ClinicalValidationService"
+export * from "./ClinicalInterpretationService";
+export * from "./ClinicalValidationService";
+export * from "./ClinicalEvaluationService";
+export * from "./ClinicalVariableGeneratorService";

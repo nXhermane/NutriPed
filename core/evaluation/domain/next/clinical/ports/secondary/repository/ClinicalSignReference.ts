@@ -3,4 +3,6 @@ import { ClinicalSignReference } from "../../../models";
 
 export interface ClinicalSignReferenceRepository extends Repository<ClinicalSignReference> {
     getByCode(code: SystemCode): Promise<ClinicalSignReference>
+    getAllCode(): Promise<SystemCode[]>
+    getAll(): Promise<ClinicalSignReference[]>
 }
