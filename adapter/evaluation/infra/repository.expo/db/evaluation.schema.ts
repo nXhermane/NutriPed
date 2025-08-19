@@ -360,4 +360,29 @@ export const data_field_references = sqliteTable("data_field_references", {
   defaultValue: text('field_value', { mode: 'json' }).$type<any>(),
   createdAt: text('createdAt', { length: 50 }).notNull(),
   updatedAt: text("updatedAt", { length: 50 }).notNull()
-}) 
+})
+/**
+ * @version v0.0.1-next
+ **/
+export const next_clinical_sign_references = sqliteTable("next_clinical_sign_references", {
+  id: text("clinical_sign_reference_id").primaryKey(),
+  createdAt: text("created_at", { length: 50 }).notNull(),
+  updatedAt: text("updated_at", { length: 50 }).notNull(),
+  name: text("clinical_sign_reference_name", { length: 255 }).notNull(),
+  code: text("clinical_sign_reference_code", { length: 10 }).notNull(),
+  description: text("clinical_sign_reference_description", { mode: "json" })
+    .$type<string>()
+    .notNull(),
+  evaluationRule: text("clinical_sign_reference_evaluation_rule", {
+    mode: "json",
+  })
+    .$type<{ value: string; variables: string[] }>()
+    .notNull(),
+  data: text("clinical_sign_reference_data", { mode: "json" })
+    .$type<{ code: string; required: boolean; }[]>()
+    .notNull(),
+
+})
+/**
+ * @version v0.0.1-next
+ **/

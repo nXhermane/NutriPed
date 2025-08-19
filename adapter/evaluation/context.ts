@@ -958,7 +958,7 @@ export class DiagnosticContext {
       this.clinicalValidationService,
       this.biologicalValidationService
     );
-    this.dataFieldValidationService = new DataFieldValidationService()
+    this.dataFieldValidationService = new DataFieldValidationService(this.dataFieldRefRepo)
     // Factories Needs
     this.nutritionalAssessmentFactory = new NutritionalAssessmentResultFactory(
       this.idGenerator
@@ -1157,7 +1157,7 @@ export class DiagnosticContext {
       );
     this.createDataFieldReferenceUC = new CreateDataFieldRefUseCase(this.idGenerator, this.dataFieldRefRepo)
     this.getDataFieldReferenceUC = new GetDataFieldRefUseCase(this.dataFieldRefRepo, this.dataFieldRefAppMapper)
-    this.valideDataFieldResponseUC = new ValidateDataFieldResponseUseCase(this.dataFieldRefRepo, this.dataFieldValidationService)
+    this.valideDataFieldResponseUC = new ValidateDataFieldResponseUseCase(this.dataFieldValidationService)
     // Core Diagnostic Use Cases
     // Core Diagnostic Rules
 
