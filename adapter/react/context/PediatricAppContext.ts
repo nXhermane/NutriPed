@@ -51,6 +51,10 @@ export interface PediatricAppContextType {
     validateMeasurements: ReturnType<
       typeof DiagnosticContext.prototype.getValidatePatientMeasurementsService
     >;
+    dataFields: ReturnType<typeof DiagnosticContext.prototype.getDataFieldService>
+    nextClinicalRefs: ReturnType<typeof DiagnosticContext.prototype.getNextClinicalRefService>
+    nextClinicalAnalysis: ReturnType<typeof DiagnosticContext.prototype.getNextClinicalAnalysis>
+    nextNutritionalRiskFactors: ReturnType<typeof DiagnosticContext.prototype.getNextNutritionalRiskFactorService>
   };
 
   // Services from MedicalRecord BC
