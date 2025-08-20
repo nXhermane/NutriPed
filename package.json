@@ -131,9 +131,11 @@
     "react-native-zip-archive": "^7.0.1",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
+    "reflect-metadata": "^0.2.2",
     "segmented-control-rn": "^0.4.0",
     "smartcal": "^1.0.11",
     "tailwindcss": "3.4.17",
+    "tsyringe": "^4.10.0",
     "victory-native": "^41.17.4",
     "xlsx": "^0.18.5",
     "zod": "^3.25.51"

@@ -187,6 +187,7 @@ import {
   IndicatorService,
   INormalizeAnthropometricDataAppService,
   INormalizeAnthropometricDataService,
+  INormalizeDataFieldResponseService,
   INutritionalAssessmentService,
   INutritionalDiagnosticService,
   INutritionalRiskFactorService,
@@ -210,11 +211,16 @@ import {
   MakeIndependantDiagnosticResponse,
   MakeIndependantDiagnosticUseCase,
   MedicalRecordACL,
+  NextClinicalAppServices,
+  NextClinicalDomain,
+  NextClinicalDtos,
+  NextMappers,
   NormalizeAnthropometricDataAppService,
   NormalizeAnthropometricDataRequest,
   NormalizeAnthropometricDataResponse,
   NormalizeAnthropometricDataService,
   NormalizeAnthropometricDataUseCase,
+  NormalizeDataFieldResponseService,
   NutritionalAssessmentResult,
   NutritionalAssessmentResultDto,
   NutritionalAssessmentResultFactory,
@@ -297,6 +303,7 @@ import {
   GrowthReferenceChartInfraMapper,
   GrowthReferenceTableInfraMapper,
   IndicatorInfraMapper,
+  NextClinicalInfraMappers,
   NutritionalAssessmentResultInfraMapper,
   NutritionalDiagnosticInfraMapper,
   NutritionalRiskFactorInfraMapper,
@@ -348,6 +355,9 @@ import {
   GrowthReferenceTableRepositoryExpoImpl,
   IndicatorRepositoryExpoImpl,
   indicators,
+  next_clinical_sign_references,
+  NextClinicalInfraDtos,
+  NextClinicalInfraRepo,
   nutritional_assessment_results,
   nutritional_diagnostics,
   nutritional_risk_factors,
@@ -358,6 +368,7 @@ import {
   PatientDiagnosticDataRepositoryExpoImpl,
 } from "./infra";
 import { MedicalRecordContext } from "../medical_record";
+import { NextClinicalUseCase } from "@/core/evaluation/application/useCases/next";
 
 export class DiagnosticContext {
   private static instance: DiagnosticContext | null = null;
@@ -412,7 +423,8 @@ export class DiagnosticContext {
     NutritionalRiskFactor,
     NutritionalRiskFactorPersistenceDto
   >;
-
+  private readonly nextClinicalSignRefInfraMapper: InfrastructureMapper<NextClinicalDomain.ClinicalSignReference, NextClinicalInfraDtos.ClinicalSignReferencePersistenceDto>
+  private readonly nextNutritionalRiskFactorInfraMapper: InfrastructureMapper<NextClinicalDomain.NutritionalRiskFactor, NextClinicalInfraDtos.NutritionalRiskFactorPersistenceDto>
 
   // Repo
   // private readonly patientDiagnosticDataRepo: PatientDiagnosticDataRepository
@@ -427,6 +439,8 @@ export class DiagnosticContext {
   private readonly dataFieldRefRepo: DataFieldReferenceRepository;
   private readonly diagnosticRuleRepo: DiagnosticRuleRepository;
   private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository;
+  private readonly nextClinicalSignRefRepo: NextClinicalDomain.ClinicalSignReferenceRepository;
+  private readonly nextNutritionalRiskFactorRepo: NextClinicalDomain.NutritionalRiskFactorRepository;
 
   // Domain Services
   private readonly anthroVariableGenerator: IAnthropometricVariableGeneratorService;
@@ -442,7 +456,12 @@ export class DiagnosticContext {
   private readonly clinicalVariableGeneratorService: IClinicalVariableGeneratorService;
   private readonly dataFieldValidationService: DataFieldValidationService
   private readonly nutritionalAssessmentService: INutritionalAssessmentService;
+  private readonly normalizeDataFieldResponseService: INormalizeDataFieldResponseService
   private readonly patientDataValidationService: IPatientDataValidationService;
+  private readonly nextClinicalEvaluationService: NextClinicalDomain.IClinicalEvaluationService
+  private readonly nextClinicalVariableGenertorService: NextClinicalDomain.IClinicalVariableGeneratorService
+  private readonly nextClinicalInterpretationService: NextClinicalDomain.IClinicalInterpretationService
+  private readonly nextClinicalValidationService: NextClinicalDomain.IClinicalValidationService
 
   // Domain Services Associates
   private readonly zScoreCalculationService: IZScoreCalculationService;
@@ -504,6 +523,8 @@ export class DiagnosticContext {
     NutritionalAssessmentResult,
     NutritionalAssessmentResultDto
   >;
+  private readonly nextClinicalSignRefAppMapper: ApplicationMapper<NextClinicalDomain.ClinicalSignReference, NextClinicalDtos.ClinicalSignReferenceDto>
+  private readonly nextNutritionalRiskFactorAppMapper: ApplicationMapper<NextClinicalDomain.NutritionalRiskFactor, NextClinicalDtos.NutritionalRiskFactorDto>
 
   // UseCases
   private readonly createMeasureUC: UseCase<
@@ -650,6 +671,12 @@ export class DiagnosticContext {
     GetDiagnosticRuleRequest,
     GetDiagnosticRuleResponse
   >;
+  private readonly nextCreateClinicalSignRefUC: UseCase<NextClinicalUseCase.CreateClinicalSignReferenceRequest, NextClinicalUseCase.CreateClinicalSignReferenceResponse>
+  private readonly nextGetClinicalSignRefUC: UseCase<NextClinicalUseCase.GetClinicalSignReferenceRequest, NextClinicalUseCase.GetClinicalSignReferenceResponse>
+  private readonly nextCreateNutritionalRiskFactorUC: UseCase<NextClinicalUseCase.CreateNutritionalRiskFactorRequest, NextClinicalUseCase.CreateNutritionalRiskFactorResponse>
+  private readonly nextGetNutritionalRiskFactorUC: UseCase<NextClinicalUseCase.GetNutritionalRiskFactorRequest, NextClinicalUseCase.GetNutritionalRiskFactorResponse>
+  private readonly nextMakeClinicalDataEvaluationUC: UseCase<NextClinicalUseCase.MakeClinicalEvaluationRequest, NextClinicalUseCase.MakeClinicalEvaluationResponse>
+  private readonly nextMakeClinicalDataInterpretationUC: UseCase<NextClinicalUseCase.MakeClinicalInterpretationRequest, NextClinicalUseCase.MakeClinicalInterpretationResponse>
 
   // Core Diagnostic Use Cases
   private readonly createNutritionalDiagnosticUC: UseCase<
@@ -718,6 +745,9 @@ export class DiagnosticContext {
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
   private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
   private readonly dataFieldReferenceAppService: IDataFieldReferenceService
+  private readonly nextClinicalSignRefAppService: NextClinicalAppServices.IClinicalSignRefService
+  private readonly nextClinicalAnalysisAppService: NextClinicalAppServices.IClinicalAnalysisService
+  private readonly nextNutritionalRiskFactorAppService: NextClinicalAppServices.INutritionalRiskFactorService
   // ACL
 
   private readonly unitAcl: UnitAcl;
@@ -770,6 +800,8 @@ export class DiagnosticContext {
     this.diagnosticRuleInfraMapper = new DiagnosticRuleInfraMapper();
     this.nutritionalRiskFactorInfraMapper =
       new NutritionalRiskFactorInfraMapper();
+    this.nextClinicalSignRefInfraMapper = new NextClinicalInfraMappers.ClinicalSignReferenceInfraMapper()
+    this.nextNutritionalRiskFactorInfraMapper = new NextClinicalInfraMappers.NutritionalRiskFactorInfraMapper()
 
     // Initialiser les repositories
     this.nutritionalDiagnosticRepo = isWebEnv()
@@ -893,12 +925,33 @@ export class DiagnosticContext {
           this.nutritionalRiskFactorInfraMapper
         )
       : new NutritionalRiskFactorRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.nutritionalRiskFactorInfraMapper,
-          nutritional_risk_factors,
-          this.eventBus
-        );
-
+        this.expo as SQLiteDatabase,
+        this.nutritionalRiskFactorInfraMapper,
+        nutritional_risk_factors,
+        this.eventBus
+      );
+    this.nextClinicalSignRefRepo = isWebEnv()
+      ? new ClinicalSignReferenceRepositoryWebImpl(
+        this.dbConnection as IndexedDBConnection,
+        this.clinicalRefInfraMapper
+      ) as any
+      : new NextClinicalInfraRepo.ClinicalSignReferenceRepositoryExpoImpl(
+        this.expo as SQLiteDatabase,
+        this.nextClinicalSignRefInfraMapper,
+        next_clinical_sign_references,
+        this.eventBus
+      );
+    this.nextNutritionalRiskFactorRepo = isWebEnv()
+      ? new NutritionalRiskFactorRepoWebImpl(
+        this.dbConnection as IndexedDBConnection,
+        this.nutritionalRiskFactorInfraMapper
+      ) as any
+      : new NextClinicalInfraRepo.NutritionalRiskFactorRepositoryExpoImpl(
+        this.expo as SQLiteDatabase,
+        this.nextNutritionalRiskFactorInfraMapper,
+        nutritional_risk_factors,
+        this.eventBus
+      );
     // Initialiser les services de domaine
     const anthroComputingHelper = new AnthroComputingHelper();
     const zScoreStrategies = [
@@ -959,6 +1012,12 @@ export class DiagnosticContext {
       this.biologicalValidationService
     );
     this.dataFieldValidationService = new DataFieldValidationService(this.dataFieldRefRepo)
+    this.normalizeDataFieldResponseService = new NormalizeDataFieldResponseService(this.dataFieldRefRepo, this.unitAcl)
+    this.nextClinicalEvaluationService = new NextClinicalDomain.ClinicalEvaluationService(this.nextClinicalSignRefRepo, this.normalizeDataFieldResponseService)
+    this.nextClinicalInterpretationService = new NextClinicalDomain.ClinicalInterpretationService(this.nextNutritionalRiskFactorRepo)
+    this.nextClinicalVariableGenertorService = new NextClinicalDomain.ClinicalVariableGeneratorService(this.nextClinicalSignRefRepo)
+    this.nextClinicalValidationService = new NextClinicalDomain.ClinicalValidationService(this.dataFieldValidationService, this.nextClinicalSignRefRepo)
+
     // Factories Needs
     this.nutritionalAssessmentFactory = new NutritionalAssessmentResultFactory(
       this.idGenerator
@@ -1004,6 +1063,8 @@ export class DiagnosticContext {
       this.nutritionalAssessmentAppMapper
     );
     this.nutritionalRiskFactorAppMapper = new NutritionalRiskFactorMapper();
+    this.nextClinicalSignRefAppMapper = new NextMappers.ClinicalSignReferenceMapper()
+    this.nextNutritionalRiskFactorAppMapper = new NextMappers.NutritionalRiskFactorMapper()
 
     // Initialiser les cas d'utilisation
     this.createMeasureUC = new CreateAnthropometricMeasureUseCase(
@@ -1158,6 +1219,12 @@ export class DiagnosticContext {
     this.createDataFieldReferenceUC = new CreateDataFieldRefUseCase(this.idGenerator, this.dataFieldRefRepo)
     this.getDataFieldReferenceUC = new GetDataFieldRefUseCase(this.dataFieldRefRepo, this.dataFieldRefAppMapper)
     this.valideDataFieldResponseUC = new ValidateDataFieldResponseUseCase(this.dataFieldValidationService)
+    this.nextCreateClinicalSignRefUC = new NextClinicalUseCase.CreateClinicalSignReferenceUseCase(this.nextClinicalSignRefRepo, this.idGenerator)
+    this.nextGetClinicalSignRefUC = new NextClinicalUseCase.GetClinicalSignReferenceUseCase(this.nextClinicalSignRefRepo, this.nextClinicalSignRefAppMapper)
+    this.nextCreateNutritionalRiskFactorUC = new NextClinicalUseCase.CreateNutritionalRiskFactorUseCase(this.idGenerator, this.nextNutritionalRiskFactorRepo)
+    this.nextGetNutritionalRiskFactorUC = new NextClinicalUseCase.GetNutritionalRiskFactorUseCase(this.nextNutritionalRiskFactorRepo, this.nextNutritionalRiskFactorAppMapper)
+    this.nextMakeClinicalDataEvaluationUC = new NextClinicalUseCase.MakeClinicalEvaluationUseCase(this.dataFieldValidationService, this.nextClinicalSignRefRepo, this.nextClinicalEvaluationService)
+    this.nextMakeClinicalDataInterpretationUC = new NextClinicalUseCase.MakeClinicalInterpretationUseCase(this.nextClinicalInterpretationService)
     // Core Diagnostic Use Cases
     // Core Diagnostic Rules
 
@@ -1321,6 +1388,18 @@ export class DiagnosticContext {
       getUC: this.getDataFieldReferenceUC,
       validationUC: this.valideDataFieldResponseUC
     })
+    this.nextClinicalSignRefAppService = new NextClinicalAppServices.ClinicalSignRefService({
+      createUC: this.nextCreateClinicalSignRefUC,
+      getUC: this.nextGetClinicalSignRefUC
+    })
+    this.nextNutritionalRiskFactorAppService = new NextClinicalAppServices.NutritionalRiskFactorService({
+      createUC: this.nextCreateNutritionalRiskFactorUC,
+      getUC: this.nextGetNutritionalRiskFactorUC
+    })
+    this.nextClinicalAnalysisAppService = new NextClinicalAppServices.ClinicalDataAnalysisService({
+      evaluateUC: this.nextMakeClinicalDataEvaluationUC,
+      interpretUC: this.nextMakeClinicalDataInterpretationUC
+    })
     this.diagnosticRuleAppService = new DiagnosticRuleService({
       createUC: this.createDiagnosticRuleUC,
       getUC: this.getDiagnosticRuleUC,
@@ -1415,6 +1494,15 @@ export class DiagnosticContext {
   }
   getDataFieldService(): IDataFieldReferenceService {
     return this.dataFieldReferenceAppService
+  }
+  getNextClinicalRefService(): NextClinicalAppServices.IClinicalSignRefService {
+    return this.nextClinicalSignRefAppService
+  }
+  getNextNutritionalRiskFactorService(): NextClinicalAppServices.INutritionalRiskFactorService {
+    return this.nextNutritionalRiskFactorAppService
+  }
+  getNextClinicalAnalysis(): NextClinicalAppServices.IClinicalAnalysisService {
+    return this.nextClinicalAnalysisAppService
   }
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {
