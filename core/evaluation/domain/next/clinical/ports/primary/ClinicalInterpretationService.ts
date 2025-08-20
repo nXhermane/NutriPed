@@ -4,5 +4,8 @@ import { ClinicalNutritionalAnalysisResult } from "../../models";
 import { EvaluationContext } from "./../../../../common";
 
 export interface IClinicalInterpretationService {
-    interpret(clinicalSigns: ClinicalEvaluationResult[],context: EvaluationContext): Promise<Result<ClinicalNutritionalAnalysisResult[]>> 
+  interpret(
+    clinicalSigns: ClinicalEvaluationResult[],
+    context: EvaluationContext
+  ): Promise<Result<ClinicalNutritionalAnalysisResult[]>>;
 }

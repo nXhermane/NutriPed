@@ -1,7 +1,6 @@
 import { Result } from "@/core/shared";
 import { DataFieldReference, DataFieldResponse } from "../../models";
 
-
 export interface IDataFieldValidatationService {
-    validate(data: DataFieldResponse[]): Promise<Result<void>>
+  validate(data: DataFieldResponse[]): Promise<Result<void>>;
 }

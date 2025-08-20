@@ -52,11 +52,17 @@ export const GlobalDiagnosticSession: React.FC<
           <React.Fragment>
             {result.globalDiagnostics.length == 0 ? (
               result.growthIndicatorValues.length == 0 ? (
-                <Center><Text className="font-body font-normal text-typography-primary text-sm text-center">Veillez verifier si vous avez entrée les données anthropometriques.</Text></Center>
+                <Center>
+                  <Text className="text-center font-body text-sm font-normal text-typography-primary">
+                    Veillez verifier si vous avez entrée les données
+                    anthropometriques.
+                  </Text>
+                </Center>
               ) : (
                 <Center className="rounded-xl bg-background-secondary px-4 py-v-3">
-
-                  <Text className="text-green-500 text-sm font-h4 font-medium ">Bon état nutritionnel</Text>
+                  <Text className="font-h4 text-sm font-medium text-green-500">
+                    Bon état nutritionnel
+                  </Text>
                 </Center>
               )
             ) : (

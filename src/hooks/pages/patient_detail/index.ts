@@ -5,5 +5,5 @@ export * from "./useAddAnthropometricMeasureToMedicalRecord";
 export * from "./useAddClinicalDataToMedicalRecord";
 export * from "./useOrdoredMedicalRecordDataByDay";
 export * from "./useAnthropometricTrendsChartPointGenerator";
-export * from "./useNutritionalDiagnostic"
-export * from './useGenerateNutritionalDiagnostic'
+export * from "./useNutritionalDiagnostic";
+export * from "./useGenerateNutritionalDiagnostic";

@@ -17,14 +17,18 @@ import { IPatientDataValidationService } from "../ports";
 import { CORE_SERVICE_ERRORS, handleDiagnosticCoreError } from "../errors";
 export interface CreateNutritionalDiagnosticProps extends EntityPropsBaseType {
   patientId: AggregateID;
-  patientDiagnosticData: Omit<CreatePatientDiagnosticData, 'anthropometricData' | 'clinicalSigns' | 'biologicalTestResults'>
+  patientDiagnosticData: Omit<
+    CreatePatientDiagnosticData,
+    "anthropometricData" | "clinicalSigns" | "biologicalTestResults"
+  >;
 }
 export class NutritionalDiagnosticFactory
-  implements Factory<CreateNutritionalDiagnosticProps, NutritionalDiagnostic> {
+  implements Factory<CreateNutritionalDiagnosticProps, NutritionalDiagnostic>
+{
   constructor(
     private readonly idGenerator: GenerateUniqueId,
     private readonly patientDataValidationService: IPatientDataValidationService
-  ) { }
+  ) {}
   async create(
     props: CreateNutritionalDiagnosticProps
   ): Promise<Result<NutritionalDiagnostic>> {
@@ -65,7 +69,12 @@ export class NutritionalDiagnosticFactory
     try {
       const patientDiagnosticDataId = this.idGenerator.generate().toString();
       const patientDiagnosticDataResult = PatientDiagnosticData.create(
-        { ...patientDiagnosticData, anthropometricData: { anthropometricMeasures: [] }, biologicalTestResults: [], clinicalSigns: { clinicalSigns: [] } },
+        {
+          ...patientDiagnosticData,
+          anthropometricData: { anthropometricMeasures: [] },
+          biologicalTestResults: [],
+          clinicalSigns: { clinicalSigns: [] },
+        },
         patientDiagnosticDataId
       );
       if (patientDiagnosticDataResult.isFailure)

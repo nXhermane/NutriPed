@@ -1,5 +1,5 @@
-import { CreateDataFieldResponse } from "../../../../domain"
+import { CreateDataFieldResponse } from "../../../../domain";
 
 export type ValidateDataFieldResponseRequest = {
-    data: CreateDataFieldResponse[]
-}
+  data: CreateDataFieldResponse[];
+};

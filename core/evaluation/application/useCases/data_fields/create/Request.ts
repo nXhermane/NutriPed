@@ -1,3 +1,3 @@
 import { CreateDataFieldReference } from "../../../../domain";
 
-export type CreateDataFieldRefRequest =  CreateDataFieldReference 
+export type CreateDataFieldRefRequest = CreateDataFieldReference;

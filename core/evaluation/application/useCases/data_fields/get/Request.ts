@@ -1,6 +1,6 @@
-import { AggregateID } from "@/core/shared"
+import { AggregateID } from "@/core/shared";
 
 export type GetDataFieldRefRequest = {
-    code?: string
-    id?: AggregateID
-}
+  code?: string;
+  id?: AggregateID;
+};

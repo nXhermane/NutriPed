@@ -1,2 +1,2 @@
 export * from "./ClinicalSignReferenceMapper";
-export * from "./NutritionalRiskFactor"
+export * from "./NutritionalRiskFactor";

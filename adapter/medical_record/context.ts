@@ -61,9 +61,8 @@ import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
 import { SQLiteDatabase } from "expo-sqlite";
 import { ClinicalSignDataInterpretationACL } from "@/core/medical_record/adapter/acl/ClinicalSignDataInterpretationACl";
 
-
 export interface MedicalRecordAcls {
-  patientAcl: PatientACL
+  patientAcl: PatientACL;
   measurementACl: MeasurementValidationACL;
   clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
   normalizeAnthropometricDataACL: INormalizeAnthropometricDataACL;
@@ -117,7 +116,7 @@ export class MedicalRecordContext {
     GetNormalizedAnthropometricDataResponse
   >;
   // ACL
-  private acls: MedicalRecordAcls | undefined
+  private acls: MedicalRecordAcls | undefined;
   // private readonly patientACL: PatientACL;
   // private readonly measurementACl: MeasurementValidationACL;
   // private readonly clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
@@ -132,7 +131,8 @@ export class MedicalRecordContext {
   private constructor(
     dbConnection: IndexedDBConnection | null,
     expo: SQLiteDatabase | null,
-    eventBus: IEventBus, alcs?: MedicalRecordAcls
+    eventBus: IEventBus,
+    alcs?: MedicalRecordAcls
   ) {
     // Infrastructure
     if (isWebEnv() && dbConnection === null) {
@@ -146,7 +146,7 @@ export class MedicalRecordContext {
     this.dbConnection = dbConnection;
     this.expo = expo;
     this.eventBus = eventBus;
-    this.acls = alcs
+    this.acls = alcs;
     // this.patientACL = new PatientACLImpl(
     //   PatientContext.init(dbConnection, expo, this.eventBus).getService()
     // );
@@ -175,16 +175,16 @@ export class MedicalRecordContext {
     this.infraMapper = new MedicalRecordInfraMapper();
     this.repository = isWebEnv()
       ? new MedicalRecordRepositoryWebImpl(
-        this.dbConnection as IndexedDBConnection,
-        this.infraMapper,
-        this.eventBus
-      )
+          this.dbConnection as IndexedDBConnection,
+          this.infraMapper,
+          this.eventBus
+        )
       : new MedicalRecordRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.infraMapper,
-        medical_records,
-        this.eventBus
-      );
+          this.expo as SQLiteDatabase,
+          this.infraMapper,
+          medical_records,
+          this.eventBus
+        );
     this.idGenerator = new GenerateUUID();
 
     // Application
@@ -192,7 +192,7 @@ export class MedicalRecordContext {
     this.createMedicalRecordUC = new CreateMedicalRecordUseCase(
       this.idGenerator,
       this.repository,
-      this.acls?.patientAcl! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+      this.acls?.patientAcl! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
     );
     this.getMedicalRecordUC = new GetMedicalRecordUseCase(
       this.repository,
@@ -200,14 +200,14 @@ export class MedicalRecordContext {
     );
     this.updateMedicalRecordUC = new UpdateMedicalRecordUseCase(
       this.repository,
-      this.acls?.measurementACl!,// FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
-      this.acls?.clinicalSignDataInterpreterACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+      this.acls?.measurementACl!, // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
+      this.acls?.clinicalSignDataInterpreterACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
     );
     this.addDataToMedicalRecordUC = new AddDataToMedicalRecordUseCase(
       this.idGenerator,
       this.idGenerator,
       this.repository,
-      this.acls?.measurementACl!,// FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+      this.acls?.measurementACl!, // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
       this.acls?.clinicalSignDataInterpreterACL!
     );
     this.deleteDataFromMedicalRecordUC = new DeleteDataFromMedicalRecordUseCase(
@@ -219,7 +219,7 @@ export class MedicalRecordContext {
     this.getNormalizeAnthropometricDataUC =
       new GetNormalizedAnthropometricDataUseCase(
         this.repository,
-        this.acls?.normalizeAnthropometricDataACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY 
+        this.acls?.normalizeAnthropometricDataACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
       );
     // Subscribers
     this.afterPatientCreatedHandler = new AfterPatientCreatedMedicalHandler(
@@ -242,8 +242,7 @@ export class MedicalRecordContext {
   static init(
     dbConnection: IndexedDBConnection | null,
     expo: SQLiteDatabase | null,
-    eventBus: IEventBus,
-
+    eventBus: IEventBus
   ) {
     if (!this.instance) {
       this.instance = new MedicalRecordContext(dbConnection, expo, eventBus);
@@ -251,7 +250,7 @@ export class MedicalRecordContext {
     return this.instance as MedicalRecordContext;
   }
   setAcls(acls: MedicalRecordAcls) {
-    this.acls = acls
+    this.acls = acls;
     console.log("Set MedicalRecord acls after instantiation without acls");
 
     this.createMedicalRecordUC = new CreateMedicalRecordUseCase(

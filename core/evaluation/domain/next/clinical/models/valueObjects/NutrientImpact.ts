@@ -11,15 +11,15 @@ export interface INutrientImpact {
   effect: "deficiency" | "excess";
 }
 export interface CreateNutrientImpact {
-  nutrient: string
-  effect: 'deficiency' | 'excess'
+  nutrient: string;
+  effect: "deficiency" | "excess";
 }
 export class NutrientImpact extends ValueObject<INutrientImpact> {
   getNutient(): string {
-    return this.props.nutrient.unpack()
+    return this.props.nutrient.unpack();
   }
   getEffect() {
-    return this.props.effect
+    return this.props.effect;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(props: Readonly<INutrientImpact>): void {

@@ -46,8 +46,8 @@ const DATA = [
     icon: "Apple",
     tag: "appetite_test",
     iconColor: "text-red-500",
-     iconBgColor: "bg-red-500/10",
-  }
+    iconBgColor: "bg-red-500/10",
+  },
 ] as const;
 export interface AddDataToMedicalRecordChooseDataTypeScreenProps {}
 

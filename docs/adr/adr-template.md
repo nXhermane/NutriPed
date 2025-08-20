@@ -53,4 +53,3 @@ Note ici ce que tu pourrais **faire plus tard** pour améliorer ou remplacer cet
 
 - [Lien vers un commit Git ou un fichier impacté]
 - [Lien vers une ressource externe, article ou documentation]
-

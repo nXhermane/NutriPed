@@ -1,2 +1,2 @@
 export * from "./usePatientList";
-export * from "./useAddPatientFormHandle"
+export * from "./useAddPatientFormHandle";

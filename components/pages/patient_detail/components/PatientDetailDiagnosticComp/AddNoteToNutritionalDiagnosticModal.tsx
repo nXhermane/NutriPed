@@ -30,8 +30,8 @@ export const AddNoteToNutritionalDiagnosticModal: React.FC<
   const {
     diagnosticServices: { nutritionalDiagnostic },
   } = usePediatricApp();
-const { patient } = usePatientDetail();
-const { colorMode } = useUI();
+  const { patient } = usePatientDetail();
+  const { colorMode } = useUI();
   const [note, setNote] = useState<string>("");
   const [error, setError] = useState<string | undefined>(undefined);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);

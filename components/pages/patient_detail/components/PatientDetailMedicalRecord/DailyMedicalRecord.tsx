@@ -1,7 +1,7 @@
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { HumanDateFormatter } from "@/utils";
 import {
   GetAnthropometricMeasureRequest,
@@ -33,7 +33,6 @@ import {
 import { Center } from "@/components/ui/center";
 import { usePediatricApp } from "@/adapter";
 import { DateManager } from "@/core/shared";
-import React from "react";
 import { Box } from "@/components/ui/box";
 import {
   Accordion,

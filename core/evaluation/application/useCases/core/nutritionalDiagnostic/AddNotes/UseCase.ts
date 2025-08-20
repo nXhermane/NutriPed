@@ -5,13 +5,14 @@ import { NutritionalDiagnosticRepository } from "../../../../../domain";
 
 export class AddNoteToNutritionalDiagnosticUseCase
   implements
-  UseCase<
-    AddNoteToNutritionalDiagnosticRequest,
-    AddNoteToNutritionalDiagnosticResponse
-  > {
+    UseCase<
+      AddNoteToNutritionalDiagnosticRequest,
+      AddNoteToNutritionalDiagnosticResponse
+    >
+{
   constructor(
     private readonly nutritionalDiagnosticRepo: NutritionalDiagnosticRepository
-  ) { }
+  ) {}
   async execute(
     request: AddNoteToNutritionalDiagnosticRequest
   ): Promise<AddNoteToNutritionalDiagnosticResponse> {

@@ -1,11 +1,10 @@
-import { DataFieldResponseDto } from "./../../../../../dtos"
-import { Sex } from "@/core/shared"
-
+import { DataFieldResponseDto } from "./../../../../../dtos";
+import { Sex } from "@/core/shared";
 
 export type MakeClinicalEvaluationRequest = {
-    data: DataFieldResponseDto[]
-    context: {
-        birthday: string
-        sex: Sex
-    }
-}
+  data: DataFieldResponseDto[];
+  context: {
+    birthday: string;
+    sex: Sex;
+  };
+};

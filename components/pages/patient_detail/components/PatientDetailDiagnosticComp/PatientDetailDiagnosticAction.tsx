@@ -57,9 +57,12 @@ export const PatientDetailDiagnosticAction: React.FC<
             />
             <ButtonText className="">Ajouter une note</ButtonText>
           </Button>
-          <Button className="h-v-10 w-full rounded-xl bg-primary-c_light" onPress={() => {
-            setShowPatientDataModal(true)
-          }}>
+          <Button
+            className="h-v-10 w-full rounded-xl bg-primary-c_light"
+            onPress={() => {
+              setShowPatientDataModal(true);
+            }}
+          >
             <ButtonIcon className="font-h4 font-medium text-white" as={View} />
             <ButtonText className="text-center">
               Afficher les données du patient

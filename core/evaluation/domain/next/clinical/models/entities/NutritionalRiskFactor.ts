@@ -62,7 +62,7 @@ export class NutritionalRiskFactor extends Entity<INutritionalRiskFactor> {
   getAssociatedNutrients(): CreateNutrientImpact[] {
     return this.props.associatedNutrients.map(nut => ({
       effect: nut.getEffect(),
-      nutrient: nut.getNutient()
+      nutrient: nut.getNutient(),
     }));
   }
   getModulatingCondition(): ICondition {

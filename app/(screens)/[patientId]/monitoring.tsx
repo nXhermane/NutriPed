@@ -17,8 +17,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "@/utils";
-import React from "react";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FlatList } from "react-native";
 
 const Monitoring = () => {
@@ -74,11 +73,7 @@ const Monitoring = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <FadeInCardX delayNumber={index} key={index}>
-            <DailyMedicalRecordDataComponent
-             
-              data={item}
-              key={index}
-            />
+            <DailyMedicalRecordDataComponent data={item} key={index} />
           </FadeInCardX>
         )}
         ItemSeparatorComponent={() => <Box className="h-v-4 w-full" />}

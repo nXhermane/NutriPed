@@ -300,9 +300,9 @@ export enum FieldDataType {
   QUANTITY = "quantity",
 }
 export enum DATA_TYPE_COUNTER {
-  ANTHROPOMETRIC = 'anthropometric_counter',
-  CLINICAL = 'clinical_sign_counter',
-  BIOLOGICAL = 'biological_test_counter'
+  ANTHROPOMETRIC = "anthropometric_counter",
+  CLINICAL = "clinical_sign_counter",
+  BIOLOGICAL = "biological_test_counter",
 }
 export const COMPLICATION_CODES = {
   COMPLICATIONS_NUMBER: "complications_number",
@@ -397,4 +397,5 @@ export enum DataFieldCategory {
 /**
  * @version v0.0.1-next
  **/
-export const clinicalEffect = (clinicalCode: string) => `${clinicalCode}_effect`
+export const clinicalEffect = (clinicalCode: string) =>
+  `${clinicalCode}_effect`;
