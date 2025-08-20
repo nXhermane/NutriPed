@@ -58,7 +58,11 @@ export const AddDataToMedicalRecordChooseDataTypeScreen: React.FC<
   return (
     <BottomSheetScrollView
       showsVerticalScrollIndicator={false}
+<<<<<<< HEAD
       className={"bg-background-primary"}
+=======
+      className={"bg-transparent"}
+>>>>>>> main
       contentContainerClassName={"bg-background-primary"}
     >
       <VStack className="px-2 py-v-4">

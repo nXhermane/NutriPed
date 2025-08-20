@@ -35,7 +35,11 @@ export const AddAnthropometricDataToMedicalRecordForm: React.FC<
         ref={formRef}
         schema={AddAnthropometricMeasureToMedicalRecordFormSchema}
         zodSchema={AddAnthropometricMeasureToMedicalRecordFormZodSchema}
+<<<<<<< HEAD
         className="bg-background-primary"
+=======
+        className="mx-4 bg-background-primary"
+>>>>>>> main
       />
     </KeyboardAwareScrollView>
   );
