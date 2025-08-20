@@ -2,7 +2,6 @@ import { useWizard, useWizardStep } from "@/components/custom/Wizard";
 import { Loading } from "@/components/custom/Loading";
 import { Text } from "@/components/ui/text";
 import React, { useEffect, useMemo, useState } from "react";
-import { DIAGNOSTIC_WORKFLOW } from "./GlobalDiagnosticScreen";
 import { usePediatricApp } from "@/adapter";
 import {
   GetDiagnosticRuleRequest,
@@ -44,14 +43,14 @@ export const GlobalDiagnosticResult: React.FC<
       setDiagnosticResult(null);
       e.preventDefault();
       const context =
-        wizardStates[DIAGNOSTIC_WORKFLOW.step1.stepNumber].data.data.context;
+        wizardStates[1].data.data.context;
       const anthropometricData =
-        wizardStates[DIAGNOSTIC_WORKFLOW.step1.stepNumber].data.data
+        wizardStates[1].data.data
           .anthropometricData;
       const clinicalData =
-        wizardStates[DIAGNOSTIC_WORKFLOW.step2.stepNumber].data.data;
+        wizardStates[2].data.data;
       const biologicalData =
-        wizardStates[DIAGNOSTIC_WORKFLOW.step3.stepNumber].data.data;
+        wizardStates[3].data.data;
       if (context && anthropometricData && clinicalData && biologicalData) {
         const result = await nutritionalDiagnostic.makeIndependanteDiagnostic({
           context,
