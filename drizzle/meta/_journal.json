@@ -8,6 +8,13 @@
       "when": 1751709444851,
       "tag": "0000_typical_frightful_four",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1755664631463,
+      "tag": "0001_slippery_namora",
+      "breakpoints": true
     }
   ]
 }

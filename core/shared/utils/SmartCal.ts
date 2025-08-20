@@ -31,24 +31,27 @@ export const evaluateCondition = <T extends DataType>(
     return SmartCal(condition);
   }
 };
-export function catchEvaluationError(callback: () => void = () => { }) {
+export function catchEvaluationError(callback: () => void = () => {}) {
   try {
-    callback()
+    callback();
   } catch (e: unknown) {
     if (e instanceof FormulaVariableNotFoundError) {
       return {
         message: e.message,
-        variables: e.getData()
-      }
-    } else if (e instanceof InvalidFormulaError || e instanceof IncorrectSyntaxError) {
+        variables: e.getData(),
+      };
+    } else if (
+      e instanceof InvalidFormulaError ||
+      e instanceof IncorrectSyntaxError
+    ) {
       return {
         message: e.message,
-        data: e.getData()
-      }
+        data: e.getData(),
+      };
     } else {
       return {
-        message: `Unexpected Error : ${(e as any)?.message}`
-      }
+        message: `Unexpected Error : ${(e as any)?.message}`,
+      };
     }
   }
 }

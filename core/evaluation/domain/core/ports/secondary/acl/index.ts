@@ -1,2 +1,2 @@
 export * from "./PatientACL";
-export * from "./MedicalRecordACL"
+export * from "./MedicalRecordACL";

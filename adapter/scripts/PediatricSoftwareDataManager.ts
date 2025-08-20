@@ -2,11 +2,13 @@ import {
   IAnthropometricMeasureService,
   IBiochemicalReferenceService,
   IClinicalSignReferenceService,
+  IDataFieldReferenceService,
   IDiagnosticRuleService,
   IGrowthReferenceChartService,
   IGrowthReferenceTableService,
   IIndicatorService,
   INutritionalRiskFactorService,
+  NextClinicalAppServices,
   TableDataDto,
 } from "@/core/evaluation";
 import {
@@ -69,6 +71,9 @@ export interface AppService {
   complicationService: IComplicationAppService;
   unitService: IUnitService;
   milkService: IMilkAppService;
+  nextClinicalRefService: NextClinicalAppServices.IClinicalSignRefService;
+  nextNutritionlRefService: NextClinicalAppServices.INutritionalRiskFactorService;
+  dataFieldService: IDataFieldReferenceService;
 }
 
 export interface PediatricSoftwareData {
@@ -86,6 +91,7 @@ export interface PediatricSoftwareData {
   complications: ComplicationDto[];
   growthReferenceCharts: GrowthReferenceChartProps[];
   growthReferenceTables: GrowthReferenceTableProps[];
+  nextClinicalSigns: undefined;
 }
 export class PediatricSoftwareDataManager {
   private observers: InitializationObserver[] = [];

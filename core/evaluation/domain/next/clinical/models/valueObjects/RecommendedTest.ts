@@ -11,7 +11,6 @@ export interface IRecommendedTest {
   reason: string;
 }
 export class RecommendedTest extends ValueObject<IRecommendedTest> {
-  
   protected validate(props: Readonly<IRecommendedTest>): void {
     if (Guard.isEmpty(props.testName).succeeded)
       throw new EmptyStringError(

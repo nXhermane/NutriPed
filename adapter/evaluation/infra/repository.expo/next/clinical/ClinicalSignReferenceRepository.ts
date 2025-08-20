@@ -4,9 +4,9 @@ import { NextClinicalInfraDtos } from "../../../dtos";
 import { next_clinical_sign_references } from "../../db";
 
 export class ClinicalSignReferenceRepositoryExpoImpl
-    extends EntityBaseRepositoryExpoWithCodeColumn<
-        NextClinicalDomain.ClinicalSignReference,
-        NextClinicalInfraDtos.ClinicalSignReferencePersistenceDto,
-        typeof next_clinical_sign_references
-    >
-    implements NextClinicalDomain.ClinicalSignReferenceRepository { }
+  extends EntityBaseRepositoryExpoWithCodeColumn<
+    NextClinicalDomain.ClinicalSignReference,
+    NextClinicalInfraDtos.ClinicalSignReferencePersistenceDto,
+    typeof next_clinical_sign_references
+  >
+  implements NextClinicalDomain.ClinicalSignReferenceRepository {}

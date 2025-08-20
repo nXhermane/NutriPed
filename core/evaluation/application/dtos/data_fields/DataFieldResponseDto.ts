@@ -1,6 +1,6 @@
-import { DataFieldResponseValue } from "../../../domain"
+import { DataFieldResponseValue } from "../../../domain";
 
 export interface DataFieldResponseDto {
-    code: string
-    value: DataFieldResponseValue
+  code: string;
+  value: DataFieldResponseValue;
 }

@@ -144,7 +144,7 @@ export const UIProvider: React.FC<UIContextProviderProps> = ({ children }) => {
         >
           <GestureHandlerRootView style={{ flex: 1 }}>
             <GluestackUIProvider mode={colorMode}>
-              <BottomSheetModalProvider >{children}</BottomSheetModalProvider>
+              <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
             </GluestackUIProvider>
           </GestureHandlerRootView>
         </View>

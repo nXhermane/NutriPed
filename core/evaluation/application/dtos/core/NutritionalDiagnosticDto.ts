@@ -9,7 +9,7 @@ export interface NutritionalDiagnosticDto {
   patientData: PatientDiagnosticDataDto;
   result?: NutritionalAssessmentResultDto;
   date: string;
-  notes: { date: string, content: string }[];
+  notes: { date: string; content: string }[];
   atInit: boolean;
   modificationHistories: DiagnosticModificationDto[];
   createAt: string;

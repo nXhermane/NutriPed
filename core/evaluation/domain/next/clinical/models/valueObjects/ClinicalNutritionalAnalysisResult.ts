@@ -32,16 +32,18 @@ export interface CreateClinicalNutritionalAnalysisResultProps {
 }
 export class ClinicalNutritionalAnalysisResult extends ValueObject<IClinicalNutritionalAnalysisResult> {
   getSignCode(): string {
-    return this.props.signCode.unpack()
+    return this.props.signCode.unpack();
   }
   getSuspectedNutrients(): CreateNutrientImpact[] {
     return this.props.suspectedNutrients.map(nutrient => ({
       effect: nutrient.getEffect(),
-      nutrient: nutrient.getNutient()
-    }))
+      nutrient: nutrient.getNutient(),
+    }));
   }
   getRecommendedTests(): IRecommendedTest[] {
-    return this.props.recommendedTests.map(recommendedTest => recommendedTest.unpack())
+    return this.props.recommendedTests.map(recommendedTest =>
+      recommendedTest.unpack()
+    );
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(

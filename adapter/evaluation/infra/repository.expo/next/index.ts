@@ -1,1 +1,1 @@
-export * as NextClinicalInfraRepo from "./clinical"
+export * as NextClinicalInfraRepo from "./clinical";

@@ -1,1 +1,1 @@
-export * as NextClinicalUseCase from './clinical';
+export * as NextClinicalUseCase from "./clinical";

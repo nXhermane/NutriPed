@@ -1,8 +1,5 @@
 import { usePediatricApp } from "@/adapter";
-import {
-  DiagnosticRuleDto,
-  GetDiagnosticRuleRequest,
-} from "@/core/evaluation";
+import { DiagnosticRuleDto, GetDiagnosticRuleRequest } from "@/core/evaluation";
 import { useEffect, useState } from "react";
 
 export function useDiagnosticRules(request?: GetDiagnosticRuleRequest) {

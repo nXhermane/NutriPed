@@ -1,4 +1,4 @@
 export interface ClinicalEvaluationResultDto {
-    code: string
-    isPresent: boolean 
+  code: string;
+  isPresent: boolean;
 }

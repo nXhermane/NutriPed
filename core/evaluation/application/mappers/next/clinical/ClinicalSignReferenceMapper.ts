@@ -3,8 +3,15 @@ import { NextClinicalDomain } from "@/core/evaluation/domain";
 import { NextClinicalDtos } from "../../../dtos";
 
 export class ClinicalSignReferenceMapper
-  implements ApplicationMapper<NextClinicalDomain.ClinicalSignReference, NextClinicalDtos.ClinicalSignReferenceDto> {
-  toResponse(entity: NextClinicalDomain.ClinicalSignReference): NextClinicalDtos.ClinicalSignReferenceDto {
+  implements
+    ApplicationMapper<
+      NextClinicalDomain.ClinicalSignReference,
+      NextClinicalDtos.ClinicalSignReferenceDto
+    >
+{
+  toResponse(
+    entity: NextClinicalDomain.ClinicalSignReference
+  ): NextClinicalDtos.ClinicalSignReferenceDto {
     return {
       id: entity.id,
       code: entity.getCode(),
@@ -13,7 +20,7 @@ export class ClinicalSignReferenceMapper
       data: entity.getNeededDataFields(),
       evaluationRule: entity.getRule(),
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
-    }
+      updatedAt: entity.updatedAt,
+    };
   }
 }

@@ -3,8 +3,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { ClinicalSignReferenceDto } from "@/core/evaluation";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { useCallback } from "react";
-import React from "react";
+import React, { useCallback } from "react";
 
 export interface AddClinicalDataToMedicalRecordClinicalSignSelectorModalProps {
   selectedClinicalSigns: ClinicalSignReferenceDto[];

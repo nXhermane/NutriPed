@@ -1,1 +1,1 @@
-export * as NextClinicalInfraMappers from "./clinical"
+export * as NextClinicalInfraMappers from "./clinical";

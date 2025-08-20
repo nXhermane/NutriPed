@@ -28,7 +28,8 @@ import { NutritionalAssessmentResultDto } from "../../../../dtos";
 
 export class GenerateDiagnosticResultUseCase
   implements
-  UseCase<GenerateDiagnosticResultRequest, GenerateDiagnosticResultResponse> {
+    UseCase<GenerateDiagnosticResultRequest, GenerateDiagnosticResultResponse>
+{
   constructor(
     private readonly nutritionalDiagnosticRepo: NutritionalDiagnosticRepository,
     private readonly nutritionalAssessmentService: INutritionalAssessmentService,
@@ -38,7 +39,7 @@ export class GenerateDiagnosticResultUseCase
       NutritionalAssessmentResult,
       NutritionalAssessmentResultDto
     >
-  ) { }
+  ) {}
 
   async execute(
     request: GenerateDiagnosticResultRequest
@@ -48,13 +49,20 @@ export class GenerateDiagnosticResultUseCase
         request.nutritionalDiagnosticId
       );
 
-      const patientUpdateResult = await this.updatePatientInfo(nutritionalDiagnostic);
+      const patientUpdateResult = await this.updatePatientInfo(
+        nutritionalDiagnostic
+      );
       if (patientUpdateResult.isFailure) return left(patientUpdateResult);
 
-      const medicalDataUpdateResult = await this.updateMedicalData(nutritionalDiagnostic);
-      if (medicalDataUpdateResult.isFailure) return left(medicalDataUpdateResult);
+      const medicalDataUpdateResult = await this.updateMedicalData(
+        nutritionalDiagnostic
+      );
+      if (medicalDataUpdateResult.isFailure)
+        return left(medicalDataUpdateResult);
 
-      const assessmentResult = await this.performNutritionalAssessment(nutritionalDiagnostic);
+      const assessmentResult = await this.performNutritionalAssessment(
+        nutritionalDiagnostic
+      );
       if (assessmentResult.isFailure) return left(assessmentResult);
 
       nutritionalDiagnostic.saveDiagnostic(assessmentResult.val);
@@ -67,14 +75,21 @@ export class GenerateDiagnosticResultUseCase
   }
 
   private async getNutritionalDiagnostic(diagnosticId: AggregateID) {
-    return await this.nutritionalDiagnosticRepo.getByIdOrPatientId(diagnosticId);
+    return await this.nutritionalDiagnosticRepo.getByIdOrPatientId(
+      diagnosticId
+    );
   }
 
-  private async updatePatientInfo(nutritionalDiagnostic: NutritionalDiagnostic): Promise<Result<void>> {
+  private async updatePatientInfo(
+    nutritionalDiagnostic: NutritionalDiagnostic
+  ): Promise<Result<void>> {
     const patientID = nutritionalDiagnostic.getPatientId();
     const patientInfoRes = await this.patientAcl.getPatientInfo(patientID);
 
-    if (patientInfoRes.isFailure) return Result.fail(formatError(patientInfoRes, GenerateDiagnosticResultUseCase.name));
+    if (patientInfoRes.isFailure)
+      return Result.fail(
+        formatError(patientInfoRes, GenerateDiagnosticResultUseCase.name)
+      );
     if (patientInfoRes.val === null) {
       return Result.fail("Patient not found to generate the diagnostic.");
     }
@@ -85,16 +100,24 @@ export class GenerateDiagnosticResultUseCase
     return Result.ok();
   }
 
-  private async updateMedicalData(nutritionalDiagnostic: NutritionalDiagnostic): Promise<Result<void>> {
+  private async updateMedicalData(
+    nutritionalDiagnostic: NutritionalDiagnostic
+  ): Promise<Result<void>> {
     const patientID = nutritionalDiagnostic.getPatientId();
     const medicalRecordDataRes = await this.medicalRecordAcl.getPatientData({
       patientId: patientID,
     });
 
-    if (medicalRecordDataRes.isFailure) return Result.fail(formatError(medicalRecordDataRes, GenerateDiagnosticResultUseCase.name));
+    if (medicalRecordDataRes.isFailure)
+      return Result.fail(
+        formatError(medicalRecordDataRes, GenerateDiagnosticResultUseCase.name)
+      );
 
-    const medicalDataResult = this.createMedicalDataObjects(medicalRecordDataRes.val);
-    if (medicalDataResult.isFailure) return Result.fail(formatError(medicalDataResult));
+    const medicalDataResult = this.createMedicalDataObjects(
+      medicalRecordDataRes.val
+    );
+    if (medicalDataResult.isFailure)
+      return Result.fail(formatError(medicalDataResult));
     const { anthropometric, clinical, biological } = medicalDataResult.val;
 
     nutritionalDiagnostic.changeAnthropometricData(anthropometric);
@@ -121,13 +144,20 @@ export class GenerateDiagnosticResultUseCase
       BiologicalTestResult.create(val)
     );
 
-    const combinedRes = Result.combine([anthropometric, clinical, ...biological]);
-    if (combinedRes.isFailure) return Result.fail(formatError(combinedRes, GenerateDiagnosticResultUseCase.name));
+    const combinedRes = Result.combine([
+      anthropometric,
+      clinical,
+      ...biological,
+    ]);
+    if (combinedRes.isFailure)
+      return Result.fail(
+        formatError(combinedRes, GenerateDiagnosticResultUseCase.name)
+      );
 
     return Result.ok({
       anthropometric: anthropometric.val,
       clinical: clinical.val,
-      biological: biological.map((res) => res.val),
+      biological: biological.map(res => res.val),
     });
   }
 
@@ -145,7 +175,9 @@ export class GenerateDiagnosticResultUseCase
     );
   }
 
-  private generateEvaluationContext(patientData: PatientDiagnosticData): EvaluationContext {
+  private generateEvaluationContext(
+    patientData: PatientDiagnosticData
+  ): EvaluationContext {
     return {
       age_in_day: patientData.age_in_day,
       age_in_month: patientData.age_in_month,

@@ -14,8 +14,8 @@ import {
   DailyMedicalRecordDataComponent,
   AddDataToMedicalRecordModal,
   AnthropometricMeasurementTrendsChart,
+  PatientDetailMedicalRecordSession,
 } from "./PatientDetailMedicalRecord";
-import { PatientDetailMedicalRecordSession } from "./PatientDetailMedicalRecord";
 import { ScrollView } from "react-native";
 import { SessionEmpty } from "../../home/shared/SessionEmpty";
 import { router } from "expo-router";
@@ -39,11 +39,7 @@ const PatientDetailMedicalRecordComponent: React.FC<
       index: number;
     }) => (
       <FadeInCardX delayNumber={index} key={index}>
-        <DailyMedicalRecordDataComponent
-        
-          data={item}
-          key={index}
-        />
+        <DailyMedicalRecordDataComponent data={item} key={index} />
       </FadeInCardX>
     ),
     []

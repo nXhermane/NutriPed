@@ -343,46 +343,63 @@ export const nutritional_diagnostics = sqliteTable("nutritional_diagnostics", {
     .notNull(),
 });
 
-
 /**
  * @version v0.0.1-next
  **/
 export const data_field_references = sqliteTable("data_field_references", {
-  id: text('field_id').primaryKey(),
-  code: text('field_code', { length: 50 }).notNull(),
+  id: text("field_id").primaryKey(),
+  code: text("field_code", { length: 50 }).notNull(),
   label: text("field_label", { length: 250 }).notNull(),
-  question: text('field_question', { length: 500 }).notNull(),
-  category: text("field_category", { enum: ["observation_data_field", "vital_sign_data_field", "question_data_field", "data_points_data_field"] }).notNull(),
-  type: text('field_type', { enum: ["string", "number", "boolean", "enum", "range", "quantity"] }).notNull(),
-  range: text('field_range', { mode: 'json' }).$type<[number, number] | undefined>(),
-  enum: text('field_enum', { mode: 'json' }).$type<{ label: string, value: string }[]>(),
-  units: text('field_units', { mode: 'json' }).$type<{ default: string, available: string[] }>(),
-  defaultValue: text('field_value', { mode: 'json' }).$type<any>(),
-  createdAt: text('createdAt', { length: 50 }).notNull(),
-  updatedAt: text("updatedAt", { length: 50 }).notNull()
-})
+  question: text("field_question", { length: 500 }).notNull(),
+  category: text("field_category", {
+    enum: [
+      "observation_data_field",
+      "vital_sign_data_field",
+      "question_data_field",
+      "data_points_data_field",
+    ],
+  }).notNull(),
+  type: text("field_type", {
+    enum: ["string", "number", "boolean", "enum", "range", "quantity"],
+  }).notNull(),
+  range: text("field_range", { mode: "json" }).$type<
+    [number, number] | undefined
+  >(),
+  enum: text("field_enum", { mode: "json" }).$type<
+    { label: string; value: string }[]
+  >(),
+  units: text("field_units", { mode: "json" }).$type<{
+    default: string;
+    available: string[];
+  }>(),
+  defaultValue: text("field_value", { mode: "json" }).$type<any>(),
+  createdAt: text("createdAt", { length: 50 }).notNull(),
+  updatedAt: text("updatedAt", { length: 50 }).notNull(),
+});
 /**
  * @version v0.0.1-next
  **/
-export const next_clinical_sign_references = sqliteTable("next_clinical_sign_references", {
-  id: text("clinical_sign_reference_id").primaryKey(),
-  createdAt: text("created_at", { length: 50 }).notNull(),
-  updatedAt: text("updated_at", { length: 50 }).notNull(),
-  name: text("clinical_sign_reference_name", { length: 255 }).notNull(),
-  code: text("clinical_sign_reference_code", { length: 10 }).notNull(),
-  description: text("clinical_sign_reference_description", { mode: "json" })
-    .$type<string>()
-    .notNull(),
-  evaluationRule: text("clinical_sign_reference_evaluation_rule", {
-    mode: "json",
-  })
-    .$type<{ value: string; variables: string[] }>()
-    .notNull(),
-  data: text("clinical_sign_reference_data", { mode: "json" })
-    .$type<{ code: string; required: boolean; }[]>()
-    .notNull(),
-
-})
+export const next_clinical_sign_references = sqliteTable(
+  "next_clinical_sign_references",
+  {
+    id: text("clinical_sign_reference_id").primaryKey(),
+    createdAt: text("created_at", { length: 50 }).notNull(),
+    updatedAt: text("updated_at", { length: 50 }).notNull(),
+    name: text("clinical_sign_reference_name", { length: 255 }).notNull(),
+    code: text("clinical_sign_reference_code", { length: 10 }).notNull(),
+    description: text("clinical_sign_reference_description", { mode: "json" })
+      .$type<string>()
+      .notNull(),
+    evaluationRule: text("clinical_sign_reference_evaluation_rule", {
+      mode: "json",
+    })
+      .$type<{ value: string; variables: string[] }>()
+      .notNull(),
+    data: text("clinical_sign_reference_data", { mode: "json" })
+      .$type<{ code: string; required: boolean }[]>()
+      .notNull(),
+  }
+);
 /**
  * @version v0.0.1-next
  **/

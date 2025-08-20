@@ -58,7 +58,7 @@ export class TableBasedStrategy extends AbstractZScoreComputingStrategy {
     //   return 0;
     // else if (columnValue > tableRow.median) return 1;
     // else return NaN;
-    return this.interpolateZScore(columnValue, tableRow)
+    return this.interpolateZScore(columnValue, tableRow);
   }
   private findTableDataCorrespondingToRowValue(
     rowValue: number,
@@ -68,39 +68,64 @@ export class TableBasedStrategy extends AbstractZScoreComputingStrategy {
       .getTableData()
       .find(tableData => tableData.value === rowValue);
   }
-  private linearInterpolation(value: number, x1: number, y1: number, x2: number, y2: number): number {
+  private linearInterpolation(
+    value: number,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ): number {
     if (x1 == x2) return y1;
-    const ratio = (value - x1) / (x2 - x1)
-    const result = y1 + ratio * (y2 - y1)
-    return Math.round(result * 100) / 100
+    const ratio = (value - x1) / (x2 - x1);
+    const result = y1 + ratio * (y2 - y1);
+    return Math.round(result * 100) / 100;
   }
   private interpolateZScore(value: number, tableRow: ITableData): number {
-    const referencePoints = [{
-      threshold: tableRow.hightSeverNeg, zScore: -4,
-    }, {
-      threshold: tableRow.severeNeg, zScore: -3
-    }, {
-      threshold: tableRow.moderateNeg, zScore: -2
-    }, {
-      threshold: tableRow.outComeTargetValueNeg, zScore: -1.5
-    }, {
-      threshold: tableRow.normalNeg, zScore: -1
-    }, {
-      threshold: tableRow.median, zScore: 0
-    }]
-    referencePoints.sort((a, b) => a.threshold - b.threshold)
-    // Cas extrêmes 
-    if (value <= referencePoints[0].threshold) return referencePoints[0].zScore
-    if (value >= referencePoints[referencePoints.length - 1].threshold) return referencePoints[referencePoints.length - 1].zScore
+    const referencePoints = [
+      {
+        threshold: tableRow.hightSeverNeg,
+        zScore: -4,
+      },
+      {
+        threshold: tableRow.severeNeg,
+        zScore: -3,
+      },
+      {
+        threshold: tableRow.moderateNeg,
+        zScore: -2,
+      },
+      {
+        threshold: tableRow.outComeTargetValueNeg,
+        zScore: -1.5,
+      },
+      {
+        threshold: tableRow.normalNeg,
+        zScore: -1,
+      },
+      {
+        threshold: tableRow.median,
+        zScore: 0,
+      },
+    ];
+    referencePoints.sort((a, b) => a.threshold - b.threshold);
+    // Cas extrêmes
+    if (value <= referencePoints[0].threshold) return referencePoints[0].zScore;
+    if (value >= referencePoints[referencePoints.length - 1].threshold)
+      return referencePoints[referencePoints.length - 1].zScore;
     for (let i = 0; i < referencePoints.length - 1; i++) {
-      const current = referencePoints[i]
-      const next = referencePoints[i + 1]
+      const current = referencePoints[i];
+      const next = referencePoints[i + 1];
       if (value >= current.threshold && value <= next.threshold) {
-        return this.linearInterpolation(value, current.threshold, current.zScore, next.threshold, next.zScore)
+        return this.linearInterpolation(
+          value,
+          current.threshold,
+          current.zScore,
+          next.threshold,
+          next.zScore
+        );
       }
     }
-    console.warn("Ce cas ne devrait jamais arriver.")
-    return NaN
+    console.warn("Ce cas ne devrait jamais arriver.");
+    return NaN;
   }
-
 }
