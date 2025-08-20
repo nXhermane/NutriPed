@@ -21,10 +21,6 @@ import { Icon } from "@/components/ui/icon";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-<<<<<<< HEAD
-=======
-  Edit,
->>>>>>> main
   FlaskConical,
   PillBottle,
   Ruler,
@@ -360,10 +356,6 @@ export const DailyMedicalRecordDataComponent: React.FC<
           onClose={() => {
             setShowMedicalRecordDataActionModal(true);
             setCurrentMedicalRecordData(null);
-<<<<<<< HEAD
-=======
-            onUpdate();
->>>>>>> main
           }}
         />
       )}
@@ -371,14 +363,10 @@ export const DailyMedicalRecordDataComponent: React.FC<
   );
 };
 export interface AnthropometricItemComponentProps {
-<<<<<<< HEAD
   data: Omit<
     MedicalRecordDto["anthropometricData"][number],
     "id" | "recordedAt" | "context"
   >;
-=======
-  data: MedicalRecordDto["anthropometricData"][number];
->>>>>>> main
   onPress?: () => void;
 }
 export function AnthropometricItemComponent({
@@ -416,11 +404,7 @@ export function AnthropometricItemComponent({
 }
 
 export interface BiologicalItemComponentProps {
-<<<<<<< HEAD
   data: Omit<MedicalRecordDto["biologicalData"][number], "id" | "recordedAt">;
-=======
-  data: MedicalRecordDto["biologicalData"][number];
->>>>>>> main
   onPress?: () => void;
 }
 export function BiologicalItemComponent({
@@ -457,16 +441,12 @@ export function BiologicalItemComponent({
 }
 
 export interface ClinicalItemComponentProps {
-<<<<<<< HEAD
   data: Omit<
     MedicalRecordDto["clinicalData"][number],
     "id" | "recordedAt" | "isPresent"
   > & {
     isPresent: boolean | undefined;
   };
-=======
-  data: MedicalRecordDto["clinicalData"][number];
->>>>>>> main
   onPress?: () => void;
 }
 
@@ -499,7 +479,6 @@ export function ClinicalItemComponent({
           {clinicalRefData[0]?.name ?? data.code}
         </Text>
         <HStack>
-<<<<<<< HEAD
           {data.isPresent == undefined ? (
             <Text className="font-h4 text-sm font-medium text-typography-primary">
               Non vérifié
@@ -511,13 +490,6 @@ export function ClinicalItemComponent({
               {data.isPresent ? "Présent" : "Absent"}
             </Text>
           )}
-=======
-          <Text
-            className={`font-h4 text-sm font-medium ${data.isPresent ? "text-orange-700" : "text-green-700"}`}
-          >
-            {data.isPresent ? "Présent" : "Absent"}
-          </Text>
->>>>>>> main
         </HStack>
       </HStack>
     </Pressable>

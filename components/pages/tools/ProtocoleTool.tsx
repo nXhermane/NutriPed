@@ -3,15 +3,8 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-<<<<<<< HEAD
 import { View } from "@/components/ui/view";
 import { FlatList, ToastAndroid } from "react-native";
-=======
-import { Pressable } from "@/components/ui/pressable";
-import { View } from "@/components/ui/view";
-import { MokedProtocolList } from "@/data";
-import { FlatList } from "react-native";
->>>>>>> c3547ac (feat: Update version to v0.0.13-beta, enhance PDF viewer with download progress, and implement protocol download functionality)
 import { CardPressEffect, FadeInCardY } from "@/components/custom/motion";
 import { Divider } from "@/components/ui/divider";
 import { router } from "expo-router";
@@ -47,12 +40,7 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
   const downloadProtocole = async () => {
     const fileUri = await downloadAndCacheFile(
       CORE_CONFIG.protocolesUrl,
-<<<<<<< HEAD
       false
-=======
-      false,
-      progress => console.log("Progress", progress)
->>>>>>> c3547ac (feat: Update version to v0.0.13-beta, enhance PDF viewer with download progress, and implement protocol download functionality)
     );
     if (fileUri) {
       const readFile = await FileSystem.readAsStringAsync(fileUri, {
@@ -97,7 +85,6 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
     loadProtocoleList();
   }, []);
 
-<<<<<<< HEAD
   useEffect(() => {
     if (newVersionAvailable)
       ToastAndroid.show(
@@ -105,13 +92,10 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
         5000
       );
   }, [newVersionAvailable]);
-=======
->>>>>>> c3547ac (feat: Update version to v0.0.13-beta, enhance PDF viewer with download progress, and implement protocol download functionality)
   return (
     <React.Fragment>
       <ProtocleToolList data={protocolList} />
       {newVersionAvailable && (
-<<<<<<< HEAD
         <Fab
           placement="bottom right"
           className="h-12 w-12 bg-primary-c_light"
@@ -120,17 +104,6 @@ export const ProtocoleTool: React.FC<ProtocoleToolProps> = ({}) => {
           <View className="absolute right-1 top-1 h-2 w-2 animate-ping rounded-full bg-red-500" />
           <FabIcon as={ArrowDownCircle} className="h-6 w-6 text-white" />
         </Fab>
-=======
-        <Pressable onPress={downloadProtocole}>
-          <Fab
-            placement="bottom right"
-            className="h-12 w-12 bg-primary-c_light"
-          >
-            <View className="absolute right-0 top-0 h-2 w-2 animate-ping rounded-full bg-red-500" />
-            <FabIcon as={ArrowDownCircle} className="h-6 w-6 text-white" />
-          </Fab>
-        </Pressable>
->>>>>>> c3547ac (feat: Update version to v0.0.13-beta, enhance PDF viewer with download progress, and implement protocol download functionality)
       )}
     </React.Fragment>
   );

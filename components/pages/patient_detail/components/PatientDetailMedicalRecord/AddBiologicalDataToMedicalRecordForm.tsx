@@ -20,12 +20,8 @@ import { DateManager } from "@/core/shared";
 import {
   useAddDataToMedicalRecordModal,
   usePatientDetail,
-<<<<<<< HEAD
 } from "@/src/context/pages";
 import { uiBus } from "@/uiBus";
-=======
-} from "../../context";
->>>>>>> main
 
 export interface AddBiologicalDataToMedicalRecordFormProps {
   schema: FormSchema;
@@ -57,10 +53,7 @@ export const AddBiologicalDataToMedicalRecordForm: React.FC<
       });
       if ("data" in result) {
         setIsSuccess(true);
-<<<<<<< HEAD
         uiBus.emit("medical:update");
-=======
->>>>>>> main
       } else {
         const _errorContent = JSON.parse(result.content);
         console.error(_errorContent);

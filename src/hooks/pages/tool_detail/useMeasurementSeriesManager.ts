@@ -64,7 +64,7 @@ export function useMeasurementSeriesManager(
 
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
-      if (!chartCode || !sex || !indicatorCode) return () => {};
+      if (!chartCode || !sex || !indicatorCode) return () => { };
       switch (value) {
         case "new": {
           return async () => {
@@ -127,7 +127,6 @@ export function useMeasurementSeriesManager(
                 else
                   series = prev.filter(
                     serie =>
-                      serie.id !== serieId || serie.id === selectedSerie.serieId
                       serie.id !== serieId || serie.id === selectedSerie.serieId
                   );
                 return series;
@@ -222,8 +221,6 @@ export function useMeasurementSeriesManager(
                   anthropometricMeasures: Object.values(data).filter(
                     value =>
                       typeof value !== "number" && value.code !== "lenhei"
-                    value =>
-                      typeof value !== "number" && value.code !== "lenhei"
                   ),
                 },
                 age_in_day: (data["age_in_day"] as number) || 0,
@@ -267,21 +264,10 @@ export function useMeasurementSeriesManager(
             "This key is not supported on chart tools action.[key]:",
             value
           );
-          return () => {};
+          return () => { };
         }
       }
     },
-    [
-      measurementSeries,
-      chartCode,
-      selectedSerie,
-      sex,
-      indicatorCode,
-      openLabelPicker,
-      growthIndicatorValue,
-      toast,
-      dispatch,
-    ]
     [
       measurementSeries,
       chartCode,

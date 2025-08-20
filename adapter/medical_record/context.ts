@@ -18,9 +18,6 @@ import {
   DeleteDataFromMedicalRecordRequest,
   DeleteDataFromMedicalRecordResponse,
   DeleteDataFromMedicalRecordUseCase,
-  DeleteDataFromMedicalRecordRequest,
-  DeleteDataFromMedicalRecordResponse,
-  DeleteDataFromMedicalRecordUseCase,
   DeleteMedicalRecordRequest,
   DeleteMedicalRecordResponse,
   DeleteMedicalRecordUseCase,
@@ -204,7 +201,6 @@ export class MedicalRecordContext {
       this.acls?.clinicalSignDataInterpreterACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
     );
     this.addDataToMedicalRecordUC = new AddDataToMedicalRecordUseCase(
-      this.idGenerator,
       this.idGenerator,
       this.repository,
       this.acls?.measurementACl!, // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
