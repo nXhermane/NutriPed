@@ -1406,12 +1406,6 @@ export class DiagnosticContext {
         this.nutritionalDiagnosticRepo,
         this.makeClinicalAnalysisUC
       );
-  
-    this.makeClinicalSignInterpretationUC =
-      new MakeClinicalSignDataInterpretationUseCase(
-        this.nutritionalDiagnosticRepo,
-        this.makeClinicalAnalysisUC
-      );
     // Subscribers
     this.afterPatientCareSessionCreated =
       new AfterPatientCareSessionCreatedHandler(
@@ -1541,10 +1535,7 @@ export class DiagnosticContext {
       new MakeClinicalSignDataInterpretationService({
         interpretUC: this.makeClinicalSignInterpretationUC,
       });
-    this.makeClinicalSignInterpretationAppService =
-      new MakeClinicalSignDataInterpretationService({
-        interpretUC: this.makeClinicalSignInterpretationUC,
-      });
+
   }
 
   static init(
