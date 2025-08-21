@@ -11,3 +11,4 @@ export * from "./NutritionalRiskFactorMapper";
 export * from "./PatientDiagnosticDataMapper";
 export * from "./DataFieldReferenceMapper";
 export * from "./next";
+export * from "./AppetiteTestMapper";

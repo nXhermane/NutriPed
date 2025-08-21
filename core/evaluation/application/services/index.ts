@@ -16,3 +16,4 @@ export * from "./MakeClinicalSignDataInterpretation";
 export * from "./NormalizeAnthropometricDataService";
 export * from "./DataFieldReferenceService";
 export * from "./next";
+export * from "./AppetiteTestService";

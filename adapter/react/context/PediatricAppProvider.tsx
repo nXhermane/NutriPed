@@ -110,6 +110,7 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           nextClinicalRefs: diagnosticContext.getNextClinicalRefService(),
           nextNutritionalRiskFactors:
             diagnosticContext.getNextNutritionalRiskFactorService(),
+          appetiteTest: diagnosticContext.getAppetiteTest(),
         },
 
         // Get service from MedicalRecord BC

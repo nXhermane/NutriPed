@@ -10,6 +10,7 @@ import {
   INutritionalRiskFactorService,
   NextClinicalAppServices,
   TableDataDto,
+  IAppetiteTestAppService as EvaluationIAppetiteTestAppService
 } from "@/core/evaluation";
 import {
   AnthropometricMeasure,
@@ -74,6 +75,7 @@ export interface AppService {
   nextClinicalRefService: NextClinicalAppServices.IClinicalSignRefService;
   nextNutritionlRefService: NextClinicalAppServices.INutritionalRiskFactorService;
   dataFieldService: IDataFieldReferenceService;
+  evaluationAppetiteTest: EvaluationIAppetiteTestAppService
 }
 
 export interface PediatricSoftwareData {

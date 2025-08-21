@@ -1,4 +1,6 @@
 import {
+  APPETITE_TEST_PRODUCT_TYPE,
+  APPETITE_TEST_SACHET_FRACTION_PARTITION,
   BiochemicalRangeStatus,
   ClinicalDataType,
   GrowthIndicatorRange,
@@ -403,3 +405,28 @@ export const next_clinical_sign_references = sqliteTable(
 /**
  * @version v0.0.1-next
  **/
+export const next_appetite_test_references = sqliteTable(
+  "next_appetite_test_references",
+  {
+    id: text("appetite_test_reference_id").primaryKey(),
+    createdAt: text("created_at", { length: 50 }).notNull(),
+    updatedAt: text("updated_at", { length: 50 }).notNull(),
+    name: text("name", { length: 255 }).notNull(),
+    code: text("code", { length: 255 }).notNull(),
+    productType: text("product_type", { mode: "json" }).$type<
+      APPETITE_TEST_PRODUCT_TYPE[]
+    >(),
+    appetiteTestTable: text("appetite_test_table", { mode: "json" })
+      .$type<
+        {
+          weightRange: [number, number];
+          sachetRange: [
+            APPETITE_TEST_SACHET_FRACTION_PARTITION,
+            APPETITE_TEST_SACHET_FRACTION_PARTITION,
+          ];
+          potRange: [number, number];
+        }[]
+      >()
+      .notNull(),
+  }
+);

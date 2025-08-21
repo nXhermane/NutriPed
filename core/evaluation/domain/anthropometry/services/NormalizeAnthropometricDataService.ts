@@ -1,11 +1,12 @@
 import { INormalizeAnthropometricDataService } from "./interfaces/NormalizeAnthropometricDataService";
-import { AnthropometricMeasureRepository, UnitAcl } from "../ports";
+import { AnthropometricMeasureRepository } from "../ports";
 import { handleError, Result } from "@/core/shared";
 import { AnthropEntry, AnthropometricData } from "../models";
 import {
   handleAnthropometricError,
   ANTHROPOMETRIC_MEASURE_ERROR,
 } from "../errors";
+import { UnitAcl } from "../../common";
 
 export class NormalizeAnthropometricDataService
   implements INormalizeAnthropometricDataService

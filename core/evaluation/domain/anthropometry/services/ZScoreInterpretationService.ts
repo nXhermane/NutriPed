@@ -6,7 +6,6 @@ import {
 } from "@shared";
 import { AnthropometricVariableObject } from "../common";
 import {
-  AnthroSystemCodes,
   Indicator,
   IndicatorInterpreter,
   ZScoreVarName,

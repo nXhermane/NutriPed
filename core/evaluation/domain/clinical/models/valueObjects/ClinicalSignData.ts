@@ -1,3 +1,4 @@
+import { ClinicalDataType } from "@/core/constants";
 import {
   ArgumentNotProvidedException,
   EmptyStringError,
@@ -9,7 +10,7 @@ import {
   UnitCode,
   ValueObject,
 } from "@shared";
-import { ClinicalDataType } from "../constants";
+
 
 export interface IClinicalSignData {
   name: string;
