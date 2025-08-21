@@ -38,6 +38,15 @@ export const PediatricSoftwareDataZipFileArch = {
   clinicalRef: {
     filePath: "clinicalRef/clinicalRef.json",
   },
+  nextClinicalRef: {
+    filePath: "clinicalRef/clinicalRef.next.json",
+  },
+  dataFields: {
+    filePath: "data_fields/data_fields.json",
+  },
+  carePhases: {
+    filePath: "carePhases/carePhases.json",
+  },
   complications: {
     filePath: "complications/complications.json",
   },
@@ -61,11 +70,24 @@ export const PediatricSoftwareDataZipFileArch = {
   medicine: {
     filePath: "medicine/medicines.json",
   },
+  nextMedicine: {
+    filePath: "medicine/medicines.next.json"
+  },
   milks: {
     filePath: "milks/milks.json",
   },
+  milkEntitie: {
+    filePath: "milks/milk_entities.json"
+  },
+  nutritionalProduct: {
+   filePath: "milks/products.json"
+  },
+
   orientationRef: {
     filePath: "orientationRef/orientationRef.json",
+  },
+  nextOrientationRef: {
+    filePath: "orientationRef/orientationRef.next.json"
   },
   tables: {
     filePath: [

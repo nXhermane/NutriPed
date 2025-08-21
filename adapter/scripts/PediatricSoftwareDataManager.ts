@@ -19,11 +19,13 @@ import {
   ClinicalSignReference,
   ComplicationDto,
   CreateIndicatorProps,
+  DataFieldReference,
   DiagnosticRule,
   GrowthReferenceChartProps,
   GrowthReferenceTableProps,
   Medicine,
   Milk,
+  Next_ClinicalSignReference,
   NutritionalRiskFactor,
   OrientationRef,
   UnitProps,
@@ -73,7 +75,7 @@ export interface AppService {
   unitService: IUnitService;
   milkService: IMilkAppService;
   nextClinicalRefService: NextClinicalAppServices.IClinicalSignRefService;
-  nextNutritionlRefService: NextClinicalAppServices.INutritionalRiskFactorService;
+  nextNutritionalRiskRefService: NextClinicalAppServices.INutritionalRiskFactorService;
   dataFieldService: IDataFieldReferenceService;
   evaluationAppetiteTest: EvaluationIAppetiteTestAppService
 }
@@ -93,14 +95,15 @@ export interface PediatricSoftwareData {
   complications: ComplicationDto[];
   growthReferenceCharts: GrowthReferenceChartProps[];
   growthReferenceTables: GrowthReferenceTableProps[];
-  nextClinicalSigns: undefined;
+  nextClinicalSigns: Next_ClinicalSignReference[];
+  dataFields: DataFieldReference[]
 }
 export class PediatricSoftwareDataManager {
   private observers: InitializationObserver[] = [];
   private totalSteps = 14; // Nombre total d'étapes d'initialisation
   private currentStep = 0;
 
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService) { }
 
   addObserver(observer: InitializationObserver) {
     this.observers.push(observer);
@@ -535,6 +538,83 @@ export class PediatricSoftwareDataManager {
       })
     );
   }
+
+  async addNextClinicalRef(nextClinicalRefs: Next_ClinicalSignReference[]) {
+    await Promise.all(
+      nextClinicalRefs.map(async clinicalRef => {
+        try {
+          const result = await this.appService.nextClinicalRefService.create({
+            code: clinicalRef.code,
+            description: clinicalRef.description,
+            name: clinicalRef.name,
+            neededDataFields: clinicalRef.data,
+            rule: clinicalRef.evaluationRule
+          });
+          if (result instanceof Message) {
+            this.notifyError(
+              "Next Clinical Refs",
+              `${result.type}: ${result.content}`
+            );
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Next Clinical Refs", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
+  async addDataFields(dataFields: DataFieldReference[]) {
+    await Promise.all(
+      dataFields.map(async field => {
+        try {
+          const result = await this.appService.dataFieldService.create({
+            ...field
+          });
+          if (result instanceof Message) {
+            this.notifyError(
+              "data fields refs",
+              `${result.type}: ${result.content}`
+            );
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("data fields refs", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+  async addNextAppetiteTestRef(appetiteTestRefs: AppetiteTestRef[]) {
+    await Promise.all(
+      appetiteTestRefs.map(async ref => {
+        try {
+          const result = await this.appService.evaluationAppetiteTest.create({
+            data: {
+              appetiteTestTable: ref.appetiteTestTable as any,
+              code: ref.code,
+              name: ref.name,
+              neededDataFields: ref.neededDataFields,
+              productType: ref.productType
+            }
+          });
+          if (result instanceof Message) {
+            this.notifyError(
+              "Next Appetite Test Reference",
+              `${result.type}: ${result.content}`
+            );
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Next Appetite Test Reference", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
+
   prepareData(data: Map<string, string>): PediatricSoftwareData {
     return {
       measures: this.jsonToObj(
@@ -593,6 +673,8 @@ export class PediatricSoftwareDataManager {
         PediatricSoftwareDataZipFileArch.nutritionalRiskFactors.filePath,
         data
       ),
+      nextClinicalSigns: this.jsonToObj(PediatricSoftwareDataZipFileArch.nextClinicalRef.filePath, data),
+      dataFields: this.jsonToObj(PediatricSoftwareDataZipFileArch.dataFields.filePath, data)
     };
   }
   jsonToObj<T>(filePath: string[] | string, data: Map<string, string>): T[] {

@@ -8,23 +8,25 @@ import {
   SystemCode,
   UnitCode,
 } from "@shared";
-import { DataFieldResponse, IDataFieldResponse } from "../valueObjects";
 import {
   LastAnthropometricDataChangedEvent,
   LastBiologicalValueChangedEvent,
   LastClinicalSignDataChangedEvent,
   LastComplicationDataChangedEvent,
-  DataFieldResponseAddedEvent,
+  LastDataFieldResponseChangedEvent,
 } from "../../events";
 import {
   AnthropometricRecord,
   BiologicalValueRecord,
   ClinicalSingDataRecord,
   ComplicationDataRecord,
+  DataFieldResponse,
+  DataFieldResponseValue,
   IAnthropometricRecord,
   IBiologicalValueRecord,
   IClinicalSignDataRecord,
   IComplicationDataRecord,
+  IDataFieldResponse,
 } from "../entities";
 
 export interface IMedicalRecord extends EntityPropsBaseType {
@@ -53,8 +55,8 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
   getComplicationData(): (IComplicationDataRecord & BaseEntityProps)[] {
     return this.props.complicationData.map(valObj => valObj.getProps());
   }
-  getDataFields(): IDataFieldResponse[] {
-    return this.props.dataFieldsResponse.map(valObj => valObj.unpack());
+  getDataFields(): (IDataFieldResponse & BaseEntityProps)[] {
+    return this.props.dataFieldsResponse.map(valObj => valObj.getProps());
   }
   addAnthropometricData(anthropometricRecord: AnthropometricRecord) {
     this.props.anthropometricData.push(anthropometricRecord);
@@ -111,15 +113,12 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
   }
   addDataField(dataField: DataFieldResponse) {
     this.props.dataFieldsResponse.push(dataField);
-    const { code, type, value, unit } = dataField.unpack();
     this.addDomainEvent(
-      new DataFieldResponseAddedEvent({
+      new LastDataFieldResponseChangedEvent({
         patientId: this.getPatientId(),
         data: {
-          code: code.unpack(),
-          type,
-          value,
-          unit: unit?.unpack(),
+          code: dataField.getCode(),
+          data: dataField.getData(),
         },
       })
     );
@@ -133,7 +132,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     );
     if (findedIndex != -1) {
       this.props.anthropometricData[findedIndex].changeMeasurement(measurement);
-      this.puslishAnthropometricDataChange(
+      this.publishAnthropometricDataChange(
         this.props.anthropometricData[findedIndex].getProps().code
       );
     }
@@ -150,7 +149,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
         this.props.clinicalData[findedIndex].changeData(data.clinicalSignData);
       if (data.isPresent != undefined)
         this.props.clinicalData[findedIndex].changeIsPresent(data.isPresent);
-      this.puslishClinicalDataChange(
+      this.publishClinicalDataChange(
         this.props.clinicalData[findedIndex].getProps().code
       );
     }
@@ -165,7 +164,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     );
     if (findedIndex != -1) {
       this.props.biologicalData[findedIndex].changeMeasurement(measurement);
-      this.puslishBiologicalDataChange(
+      this.publishBiologicalDataChange(
         this.props.biologicalData[findedIndex].getProps().code
       );
     }
@@ -183,13 +182,18 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
           data.isPresent
         );
 
-      this.puslishComplicationDataChange(
+      this.publishComplicationDataChange(
         this.props.complicationData[findedIndex].getProps().code
       );
     }
   }
-  changeDataFields(dataFields: DataFieldResponse[]) {
-    this.props.dataFieldsResponse = dataFields;
+  changeDataFields(id: AggregateID, data: DataFieldResponseValue) {
+    const findedIndex = this.props.dataFieldsResponse.findIndex(record => record.id == id)
+    if (findedIndex != -1) {
+      this.props.dataFieldsResponse[findedIndex].changeData(data)
+      this.publishDataFieldResponseChange(this.props.dataFieldsResponse[findedIndex].getProps().code)
+    }
+
   }
   deleteAnthropometricRecord(id: AggregateID) {
     const findedIndex = this.props.anthropometricData.findIndex(
@@ -197,7 +201,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     );
     if (findedIndex != -1) {
       const deletedData = this.props.anthropometricData.splice(findedIndex, 1);
-      this.puslishAnthropometricDataChange(deletedData[0].getProps().code);
+      this.publishAnthropometricDataChange(deletedData[0].getProps().code);
     }
   }
   deleteClinicalSignRecord(id: AggregateID) {
@@ -206,7 +210,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     );
     if (findedIndex != -1) {
       const deletedData = this.props.clinicalData.splice(findedIndex, 1);
-      this.puslishClinicalDataChange(deletedData[0].getProps().code);
+      this.publishClinicalDataChange(deletedData[0].getProps().code);
     }
   }
   deleteBiologicalRecord(id: AggregateID) {
@@ -215,7 +219,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     );
     if (findedIndex != -1) {
       const deletedData = this.props.biologicalData.splice(findedIndex, 1);
-      this.puslishBiologicalDataChange(deletedData[0].getProps().code);
+      this.publishBiologicalDataChange(deletedData[0].getProps().code);
     }
   }
   deleteComplicationRecord(id: AggregateID) {
@@ -224,10 +228,19 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     );
     if (findedIndex != -1) {
       const deletedData = this.props.complicationData.splice(findedIndex, 1);
-      this.puslishComplicationDataChange(deletedData[0].getProps().code);
+      this.publishComplicationDataChange(deletedData[0].getProps().code);
     }
   }
-  private puslishAnthropometricDataChange(code: SystemCode) {
+  deleteDataFieldResponse(id: AggregateID) {
+    const findedIndex = this.props.dataFieldsResponse.findIndex(
+      record => record.id == id
+    );
+    if (findedIndex != -1) {
+      const deletedData = this.props.dataFieldsResponse.splice(findedIndex, 1);
+      this.publishDataFieldResponseChange(deletedData[0].getProps().code);
+    }
+  }
+  private publishAnthropometricDataChange(code: SystemCode) {
     const filteredAnthropometricData = this.props.anthropometricData.filter(
       anthrop => anthrop.getCode() == code.unpack()
     );
@@ -249,9 +262,9 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       })
     );
   }
-  private puslishClinicalDataChange(code: SystemCode) {
+  private publishClinicalDataChange(code: SystemCode) {
     const filteredData = this.props.clinicalData.filter(
-      anthrop => anthrop.getCode() == code.unpack()
+      clinical => clinical.getCode() == code.unpack()
     );
     if (filteredData.length == 0) return;
     const sortedData = filteredData.sort(
@@ -270,9 +283,9 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       })
     );
   }
-  private puslishBiologicalDataChange(code: SystemCode) {
+  private publishBiologicalDataChange(code: SystemCode) {
     const filteredData = this.props.biologicalData.filter(
-      anthrop => anthrop.getCode() == code.unpack()
+      biological => biological.getCode() == code.unpack()
     );
     if (filteredData.length == 0) return;
     const sortedData = filteredData.sort(
@@ -291,9 +304,9 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       })
     );
   }
-  private puslishComplicationDataChange(code: SystemCode) {
+  private publishComplicationDataChange(code: SystemCode) {
     const filteredData = this.props.complicationData.filter(
-      anthrop => anthrop.getCode() == code.unpack()
+      comp => comp.getCode() == code.unpack()
     );
     if (filteredData.length == 0) return;
     const sortedData = filteredData.sort(
@@ -308,6 +321,27 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
         data: {
           code: lastValue.getCode(),
           isPresent: lastValue.getIsPresent(),
+        },
+      })
+    );
+  }
+  private publishDataFieldResponseChange(code: SystemCode) {
+    const filteredData = this.props.dataFieldsResponse.filter(
+      field => field.getCode() == code.unpack()
+    );
+    if (filteredData.length == 0) return;
+    const sortedData = filteredData.sort(
+      (a, b) =>
+        new Date(b.getRecordAt()).getTime() -
+        new Date(a.getRecordAt()).getTime()
+    );
+    const lastValue = sortedData[0];
+    this.addDomainEvent(
+      new LastDataFieldResponseChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          code: lastValue.getCode(),
+          data: lastValue.getData()
         },
       })
     );
