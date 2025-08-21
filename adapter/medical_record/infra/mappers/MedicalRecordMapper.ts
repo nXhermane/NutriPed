@@ -15,8 +15,7 @@ import {
 import { MedicalRecordPersistenceDto } from "../dtos";
 
 export class MedicalRecordInfraMapper
-  implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto>
-{
+  implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto> {
   toPersistence(entity: MedicalRecord): MedicalRecordPersistenceDto {
     const {
       anthropometricData,
@@ -53,13 +52,12 @@ export class MedicalRecordInfraMapper
         isPresent: complication.getIsPresent(),
         recordedAt: complication.getRecordAt(),
       })),
-      dataFieldsResponse: entity.getDataFields().map(valObj => ({
-        code: valObj.code.unpack(),
-        recordedAt: valObj.recodedAt.unpack(),
-        type: valObj.type,
-        value: valObj.value,
-        unit: valObj.unit?.unpack(),
-      })),
+      dataFieldsResponse: entity.getDataFields().map(entity => ({
+        code: entity.code,
+        id: entity.id,
+        data: entity.code: {
+        recordAt: entity.getDataFields()
+      }),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -87,8 +85,8 @@ export class MedicalRecordInfraMapper
     );
 
     // Convert dataFields
-    const dataFieldsResults = record.dataFieldsResponse.map(
-      DataFieldResponse.create
+    const dataFieldsResults = record.dataFieldsResponse.map(field => 
+
     );
 
     // Combine all results
@@ -118,6 +116,7 @@ export class MedicalRecordInfraMapper
         complications: complicationResults.map(r => r.val),
         complicationData: complicationResults.map(r => r.val),
         dataFieldsResponse: dataFieldsResults.map(r => r.val),
+        appetiteTests: dataFieldsResults.map(r => r.val )
       },
     });
   }

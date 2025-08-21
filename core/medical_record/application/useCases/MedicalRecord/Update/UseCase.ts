@@ -19,13 +19,12 @@ import {
 } from "./../../../../domain";
 
 export class UpdateMedicalRecordUseCase
-  implements UseCase<UpdateMedicalRecordRequest, UpdateMedicalRecordResponse>
-{
+  implements UseCase<UpdateMedicalRecordRequest, UpdateMedicalRecordResponse> {
   constructor(
     private readonly repo: MedicalRecordRepository,
     private measureValidation: MeasurementValidationACL,
     private readonly clinicalAnalysisMaker: IClinicalSignDataInterpretationACL
-  ) {}
+  ) { }
   async execute(
     request: UpdateMedicalRecordRequest
   ): Promise<UpdateMedicalRecordResponse> {
@@ -106,14 +105,14 @@ export class UpdateMedicalRecordUseCase
       }
       if (data.dataFieldResponses) {
         const dataFieldRes = data.dataFieldResponses.map(props =>
-          DataFieldResponse.create(props)
+          DataFieldResponse.create(props.data, props.id)
         );
         const combinedRes = Result.combine(dataFieldRes);
         if (combinedRes.isFailure)
           return Result.fail(
             formatError(combinedRes, UpdateMedicalRecordUseCase.name)
           );
-        medicalRecord.changeDataFields(dataFieldRes.map(res => res.val));
+        data.dataFieldResponses.map(field => medicalRecord.changeDataFields(field.id, field.data.data))
       }
       if (data.clinicalData) {
         const clinicalResError: Result<any>[] = [];
@@ -152,6 +151,9 @@ export class UpdateMedicalRecordUseCase
             isPresent: complication.isPresent,
           });
         });
+      }
+      if (data.appetiteTests) {
+        data.appetiteTests.forEach(test => medicalRecord.changeAppetiteTest(test.id, test.data))
       }
 
       return Result.ok(true);

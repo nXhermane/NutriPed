@@ -1,6 +1,7 @@
 import { AggregateID } from "@shared";
 import {
   CreateAnthropometricRecord,
+  CreateAppetiteTestRecord,
   CreateBiologicalValueRecord,
   CreateClinicalSignDataRecord,
   CreateComplicationDataRecord,
@@ -22,7 +23,8 @@ export interface MedicalRecordDto {
     recordedAt: string;
     id: AggregateID;
   })[];
-  dataFieldResponse: (CreateDataFieldResponse & { recordedAt: string })[];
+  dataFieldResponse: (CreateDataFieldResponse & { recordedAt: string, id: AggregateID })[];
+  appetiteTests: (CreateAppetiteTestRecord & { recordedAt: string, id: AggregateID })[];
   complicationData: (CreateComplicationDataRecord & {
     recordedAt: string;
     id: AggregateID;

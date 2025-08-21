@@ -1,9 +1,12 @@
 import {
   AnthropometricDataContext,
-  DataFieldResponseType,
+  DataFieldResponseValue,
+  TakenAmountInSachet,
+  TakenAmountOfPot,
 } from "@core/medical_record";
 import { EntityPersistenceDto } from "../../../shared";
 import { AggregateID } from "@/core/shared";
+import { APPETITE_TEST_PRODUCT_TYPE, DATA_FIELD_CODE_TYPE } from "@/core/constants";
 
 export interface AnthropometricDataPersistenceDto {
   id: AggregateID;
@@ -38,11 +41,15 @@ export interface ComplicationDataPersistenceDto {
   isPresent: boolean;
 }
 export interface DataFieldResponsePersistenceDto {
-  code: string;
-  recordedAt: string;
-  value: number | string | boolean;
-  unit?: string;
-  type: DataFieldResponseType;
+  id: AggregateID
+  recordAt: string
+  code: DATA_FIELD_CODE_TYPE;
+  data: DataFieldResponseValue
+}
+export interface AppetiteTestReference {
+  amount: TakenAmountOfPot | TakenAmountInSachet;
+  productType: APPETITE_TEST_PRODUCT_TYPE;
+  recordAt: string;
 }
 export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
   patientId: AggregateID;

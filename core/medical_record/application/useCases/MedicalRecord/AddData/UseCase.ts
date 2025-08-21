@@ -11,6 +11,7 @@ import { AddDataToMedicalRecordRequest } from "./Request";
 import { AddDataToMedicalRecordResponse } from "./Response";
 import {
   AnthropometricRecord,
+  AppetiteTestRecord,
   BiologicalValueRecord,
   ClinicalSingDataRecord,
   ComplicationDataRecord,
@@ -23,14 +24,13 @@ import {
 
 export class AddDataToMedicalRecordUseCase
   implements
-    UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse>
-{
+  UseCase<AddDataToMedicalRecordRequest, AddDataToMedicalRecordResponse> {
   constructor(
     private readonly idGenerator: GenerateUniqueId,
     private readonly repo: MedicalRecordRepository,
     private readonly measureValidation: MeasurementValidationACL,
     private readonly clinicalAnalysisMaker: IClinicalSignDataInterpretationACL
-  ) {}
+  ) { }
   async execute(
     request: AddDataToMedicalRecordRequest
   ): Promise<AddDataToMedicalRecordResponse> {
@@ -151,7 +151,7 @@ export class AddDataToMedicalRecordUseCase
       }
       if (data.dataFieldResponses) {
         const dataFieldRes = data.dataFieldResponses.map(props =>
-          DataFieldResponse.create(props)
+          DataFieldResponse.create(props, this.idGenerator.generate().toValue())
         );
         const combinedRes = Result.combine(dataFieldRes);
         if (combinedRes.isFailure)
@@ -159,6 +159,13 @@ export class AddDataToMedicalRecordUseCase
             formatError(combinedRes, AddDataToMedicalRecordUseCase.name)
           );
         dataFieldRes.forEach(res => medicalRecord.addDataField(res.val));
+      }
+      if (data.appetiteTests) {
+        const appetiteTestRes = data.appetiteTests.map(props => AppetiteTestRecord.create(props, this.idGenerator.generate().toValue()))
+        const combinedRes = Result.combine(appetiteTestRes)
+        if (combinedRes.isFailure) {
+          return Result.fail(formatError(combinedRes, AddDataToMedicalRecordUseCase.name))
+        }
       }
       return Result.ok(true);
     } catch (e: unknown) {

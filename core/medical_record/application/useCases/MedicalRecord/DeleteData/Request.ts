@@ -7,5 +7,7 @@ export type DeleteDataFromMedicalRecordRequest = {
     clinicalData: AggregateID[];
     biologicalData: AggregateID[];
     complicationData: AggregateID[];
+    dataFields: AggregateID[]
+    appetiteTests: AggregateID[]
   }>;
 };

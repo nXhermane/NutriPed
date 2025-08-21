@@ -1,8 +1,8 @@
 import { AggregateID } from "@shared";
-import { MedicalRecordDto } from "./../../../dtos";
 
 import {
   CreateAnthropometricRecord,
+  CreateAppetiteTestRecord,
   CreateBiologicalValueRecord,
   CreateClinicalSignDataRecord,
   CreateComplicationDataRecord,
@@ -17,5 +17,6 @@ export type AddDataToMedicalRecordRequest = {
     biologicalData: CreateBiologicalValueRecord[];
     complicationData: CreateComplicationDataRecord[];
     dataFieldResponses: CreateDataFieldResponse[];
+    appetiteTests: CreateAppetiteTestRecord[]
   }>;
 };

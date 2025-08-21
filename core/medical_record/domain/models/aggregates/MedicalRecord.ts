@@ -10,6 +10,7 @@ import {
 } from "@shared";
 import {
   LastAnthropometricDataChangedEvent,
+  LastAppetiteTestRecordChangedEvent,
   LastBiologicalValueChangedEvent,
   LastClinicalSignDataChangedEvent,
   LastComplicationDataChangedEvent,
@@ -17,17 +18,21 @@ import {
 } from "../../events";
 import {
   AnthropometricRecord,
+  AppetiteTestRecord,
   BiologicalValueRecord,
   ClinicalSingDataRecord,
   ComplicationDataRecord,
   DataFieldResponse,
   DataFieldResponseValue,
   IAnthropometricRecord,
+  IAppetiteTestRecord,
   IBiologicalValueRecord,
   IClinicalSignDataRecord,
   IComplicationDataRecord,
   IDataFieldResponse,
 } from "../entities";
+import { APPETITE_TEST_PRODUCT_TYPE } from "@/core/constants";
+import { TakenAmountInSachet, TakenAmountOfPot } from "../entities/AppetiteTestRecord";
 
 export interface IMedicalRecord extends EntityPropsBaseType {
   patientId: AggregateID;
@@ -35,7 +40,7 @@ export interface IMedicalRecord extends EntityPropsBaseType {
   clinicalData: ClinicalSingDataRecord[];
   biologicalData: BiologicalValueRecord[];
   complicationData: ComplicationDataRecord[];
-  appetiteTests?: [];
+  appetiteTests: AppetiteTestRecord[];
   dataFieldsResponse: DataFieldResponse[];
 }
 
@@ -57,6 +62,9 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
   }
   getDataFields(): (IDataFieldResponse & BaseEntityProps)[] {
     return this.props.dataFieldsResponse.map(valObj => valObj.getProps());
+  }
+  getAppetiteTest(): (IAppetiteTestRecord & BaseEntityProps)[] {
+    return this.props.appetiteTests.map(entity => entity.getProps())
   }
   addAnthropometricData(anthropometricRecord: AnthropometricRecord) {
     this.props.anthropometricData.push(anthropometricRecord);
@@ -122,6 +130,18 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
         },
       })
     );
+  }
+  addAppetiteTestRecord(appetiteTest: AppetiteTestRecord) {
+    this.props.appetiteTests.push(appetiteTest)
+    this.addDomainEvent(
+      new LastAppetiteTestRecordChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          amount: appetiteTest.getAmount(),
+          productType: appetiteTest.getProductType()
+        }
+      })
+    )
   }
   changeAnthropometricRecord(
     id: AggregateID,
@@ -195,6 +215,17 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     }
 
   }
+  changeAppetiteTest(id: AggregateID, data: {
+    amount: TakenAmountInSachet | TakenAmountOfPot
+    productType: APPETITE_TEST_PRODUCT_TYPE
+  }) {
+    const findedIndex = this.props.appetiteTests.findIndex(record => record.id == id)
+    if (findedIndex != -1) {
+      this.props.appetiteTests[findedIndex].changeData(data)
+      this.publishAppetiteTestRecordChange()
+    }
+
+  }
   deleteAnthropometricRecord(id: AggregateID) {
     const findedIndex = this.props.anthropometricData.findIndex(
       record => record.id == id
@@ -238,6 +269,15 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     if (findedIndex != -1) {
       const deletedData = this.props.dataFieldsResponse.splice(findedIndex, 1);
       this.publishDataFieldResponseChange(deletedData[0].getProps().code);
+    }
+  }
+  deleteAppetiteTestRecord(id: AggregateID) {
+    const findedIndex = this.props.appetiteTests.findIndex(
+      test => test.id == id
+    );
+    if (findedIndex != -1) {
+      const deletedData = this.props.appetiteTests.splice(findedIndex, 1);
+      this.publishAppetiteTestRecordChange()
     }
   }
   private publishAnthropometricDataChange(code: SystemCode) {
@@ -346,6 +386,23 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       })
     );
   }
+  private publishAppetiteTestRecordChange() {
+    const sortedData = this.props.appetiteTests.sort(
+      (a, b) =>
+        new Date(b.getRecordAt()).getTime() -
+        new Date(a.getRecordAt()).getTime()
+    );
+    const lastValue = sortedData[0];
+    this.addDomainEvent(
+      new LastAppetiteTestRecordChangedEvent({
+        patientId: this.getPatientId(),
+        data: {
+          amount: lastValue.getAmount(),
+          productType: lastValue.getProductType()
+        },
+      })
+    );
+  }
   public validate(): void {
     this._isValid = false;
     // BETA: Validation code here if needed
@@ -365,6 +422,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
             anthropometricData: [],
             biologicalData: [],
             clinicalData: [],
+            appetiteTests: [],
             complicationData: [],
             dataFieldsResponse: [],
           },
