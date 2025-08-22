@@ -129,6 +129,9 @@ import {
   GenerateDiagnosticResultRequest,
   GenerateDiagnosticResultResponse,
   GenerateDiagnosticResultUseCase,
+  GetAllPatientAppetiteTestResultRequest,
+  GetAllPatientAppetiteTestResultResponse,
+  GetAllPatientAppetiteTestResultUseCase,
   GetAnthropometricMeasureRequest,
   GetAnthropometricMeasureResponse,
   GetAnthropometricMeasureUseCase,
@@ -156,6 +159,9 @@ import {
   GetIndicatorRequest,
   GetIndicatorResponse,
   GetIndicatorUseCase,
+  GetLastPatientAppetiteTestResultRequest,
+  GetLastPatientAppetiteTestResultResponse,
+  GetLastPatientAppetiteTestResultUseCase,
   GetNutritionalDiagnosticRequest,
   GetNutritionalDiagnosticResponse,
   GetNutritionalDiagnosticUseCase,
@@ -210,6 +216,7 @@ import {
   INutritionalDiagnosticService,
   INutritionalRiskFactorService,
   IPatientDataValidationService,
+  IPatientEvaluationOrchestratorService,
   IReferenceSelectionService,
   IValidatePatientMeasurementsService,
   IZScoreCalculationService,
@@ -260,6 +267,7 @@ import {
   PatientDiagnosticDataDto,
   PatientDiagnosticDataMapper,
   PatientDiagnosticDataRepository,
+  PatientEvaluationOrchestratorService,
   PerformPatientGlobalVariableRequest,
   PerformPatientGlobalVariableResponse,
   PerformPatientGlobalVariableUseCase,
@@ -802,6 +810,8 @@ export class DiagnosticContext {
     MakeClinicalSignDataInterpretationRequest,
     MakeClinicalSignDataInterpretationResponse
   >;
+  private readonly getAllPatientAppetiteTestUC: UseCase<GetAllPatientAppetiteTestResultRequest, GetAllPatientAppetiteTestResultResponse>
+  private readonly getLastPatientAppetiteTestUC: UseCase<GetLastPatientAppetiteTestResultRequest, GetLastPatientAppetiteTestResultResponse>
   // Subscribers
   private readonly afterPatientCareSessionCreated: AfterPatientCareSessionCreatedHandler;
   private readonly afterAnthropometricDataAdded: AfterAnthropometricDataAddedDiagnosticHandler;
@@ -828,6 +838,7 @@ export class DiagnosticContext {
   private readonly nextClinicalAnalysisAppService: NextClinicalAppServices.IClinicalAnalysisService;
   private readonly nextNutritionalRiskFactorAppService: NextClinicalAppServices.INutritionalRiskFactorService;
   private readonly appetiteTestAppService: IAppetiteTestAppService
+  private readonly patientEvaluationOrchestrator: IPatientEvaluationOrchestratorService
   // ACL
 
   private readonly unitAcl: UnitAcl;
@@ -1457,6 +1468,10 @@ export class DiagnosticContext {
         this.nutritionalDiagnosticRepo,
         this.makeClinicalAnalysisUC
       );
+
+    // Patient UseCase Orchestrator 
+    this.getAllPatientAppetiteTestUC = new GetAllPatientAppetiteTestResultUseCase(this.evaluateAppetiteUC, this.medicalRecordAcl, this.normalizeAnthropometricDataUC)
+    this.getLastPatientAppetiteTestUC = new GetLastPatientAppetiteTestResultUseCase(this.evaluateAppetiteUC, this.medicalRecordAcl, this.normalizeAnthropometricDataUC)
     // Subscribers
     this.afterPatientCareSessionCreated =
       new AfterPatientCareSessionCreatedHandler(
@@ -1595,6 +1610,10 @@ export class DiagnosticContext {
       new MakeClinicalSignDataInterpretationService({
         interpretUC: this.makeClinicalSignInterpretationUC,
       });
+    this.patientEvaluationOrchestrator = new PatientEvaluationOrchestratorService({
+      getAllAppetiteTest: this.getAllPatientAppetiteTestUC,
+      getLastAppetiteTest: this.getLastPatientAppetiteTestUC
+    })
   }
 
   static init(
@@ -1674,6 +1693,9 @@ export class DiagnosticContext {
   }
   getAppetiteTest(): IAppetiteTestAppService {
     return this.appetiteTestAppService
+  }
+  getPatientOrchestrator(): IPatientEvaluationOrchestratorService {
+    return this.patientEvaluationOrchestrator
   }
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {

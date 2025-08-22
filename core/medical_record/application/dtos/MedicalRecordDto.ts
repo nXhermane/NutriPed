@@ -23,8 +23,8 @@ export interface MedicalRecordDto {
     recordedAt: string;
     id: AggregateID;
   })[];
-  dataFieldResponse: (CreateDataFieldResponse & { recordedAt: string, id: AggregateID })[];
-  appetiteTests: (CreateAppetiteTestRecord & { recordedAt: string, id: AggregateID })[];
+  dataFieldResponse: (Omit<CreateDataFieldResponse, 'recordAt'> & { recordedAt: string, id: AggregateID })[];
+  appetiteTests: (Omit<CreateAppetiteTestRecord, 'recordAt'> & { recordedAt: string, id: AggregateID })[];
   complicationData: (CreateComplicationDataRecord & {
     recordedAt: string;
     id: AggregateID;

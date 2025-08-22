@@ -17,3 +17,4 @@ export * from "./NormalizeAnthropometricDataService";
 export * from "./DataFieldReferenceService";
 export * from "./next";
 export * from "./AppetiteTestService";
+export * from "./PatientEvaluationOrchestratorService";
