@@ -384,7 +384,20 @@ export enum BiochemicalRangeStatus {
   NORMAL = "normal",
   OVER = "over",
 }
-
+export enum MEDICINE_CODES {
+  AMOX = "AMOX",
+  AMP = "AMP",
+  GENT = "GENT",
+  CEFO = "CEFO",
+  CIPRO = "CIPRO",
+  CLOXA = "CLOXA",
+  METRO = "METRO",
+  NYST = "NYST",
+  FLUC = "FLUC",
+  FURO = "FURO",
+  CEFT = "CEFT",
+  AMOXI_ACIDE_CLAVULANIQUE = "AMOXI_ACIDE_CLAVULANIQUE",
+}
 /**
  * @version v0.0.1-next
  **/
@@ -399,3 +412,55 @@ export enum DataFieldCategory {
  **/
 export const clinicalEffect = (clinicalCode: string) =>
   `${clinicalCode}_effect`;
+/**
+ * @version v0.0.1-next
+ **/
+export enum CARE_PHASE_CODES {
+  CNT_PHASE1 = "cnt_phase_aiguë",
+  CNT_TRANS_PHASE = "cnt_phase_transition",
+  CNT_PHASE2 = "cnt_phase_rehabilitation",
+  CNT_INFANT_LT6m_LT3kg = "cnt_infant_lt6m_lt3kg",
+}
+/**
+ * @version v0.0.1-next
+ */
+export enum CARE_PHASE_DURATION_TYPE {
+  DAYS = "days",
+  HOURS = "hours",
+  WHILE_PHASE = "while_phase",
+}
+/**
+ * @version v0.0.1-next
+ */
+export enum TREATMENT_DURATION_TYPE {
+  DAYS = "days",
+  HOURS = "hours",
+  WHILE_IN_PHASE = "while_in_phase",
+}
+/**
+ * @version v0.0.1-next
+ */
+export enum RECOMMENDED_TREATMENT_TYPE {
+  NUTRITIONAL = "nutritional",
+  SYSTEMATIC = "systematic",
+}
+export enum TREATMENT_TRIGGER_ACTION {
+  STOP = "STOP_TREATMENT",
+  START = "START_TREATMENT",
+}
+
+export enum MONITORING_VALUE_SOURCE {
+  CALCULATED = "calculated_monitoring_value", // Intégrer pour pouvoir distinguer les monitorings values calculables a partie d'autre source de donnée . ex.: Pourcentage de variation d'un monitoring value sur une periods donnée et on pourra aussi fournir la formule de calcule et les variables independantes
+  NOT_CALCULATED = "not_calculated_monitoring_value",
+}
+export enum MONITORING_FREQUENCY_TYPE {
+  DAILY = "day",
+  HOURSLY = "hours",
+  WEEKLY = "week",
+}
+export enum MONITORING_ELEMENT_CATEGORY {
+  ANTHROPOMETRIC = "anthropometric_monitoring_element",
+  BIOCHEMICAL = "biochemical_monitoring_element",
+  CLINICAL_SIGNS = "clinical_signs_monitoring_element",
+  DATA_FIELD = "data_field_monitoring_element",
+}

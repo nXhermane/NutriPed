@@ -14,3 +14,4 @@ export * from "./Condition";
 export * from "./Time";
 export * from "./DateTime";
 export * from "./Duration";
+export * from "./Criterion";
