@@ -25,7 +25,6 @@ export class MakeClinicalSignDataInterpretationService
   > {
     const res = await this.ucs.interpretUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 }

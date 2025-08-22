@@ -59,7 +59,7 @@ export class ReminderInfraMapper
       throw new InfraMapToDomainError(
         formatError(reminderRes, ReminderInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { createdAt, updatedAt, id, ...props } = reminderRes.val.getProps();
     return new Reminder({
       id,

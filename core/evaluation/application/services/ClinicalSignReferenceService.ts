@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AggregateID, AppServiceResponse, Message, UseCase } from "@shared";
 import {
   CreateClinicalSignReferenceRequest,

@@ -25,7 +25,7 @@ export class ComplicationInfraMapper
       throw new InfraMapToDomainError(
         formatError(complicationRes, ComplicationInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { id, createdAt, updatedAt, ...props } =
       complicationRes.val.getProps();
     return new Complication({

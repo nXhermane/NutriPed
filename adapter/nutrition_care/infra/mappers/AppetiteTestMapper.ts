@@ -30,7 +30,7 @@ export class AppetiteTestInfraMapper
       throw new InfraMapToDomainError(
         formatError(appetiteTestRes, AppetiteTestInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { createdAt, updatedAt, id, ...props } =
       appetiteTestRes.val.getProps();
     return new AppetiteTestRef({

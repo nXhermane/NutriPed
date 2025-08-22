@@ -35,7 +35,7 @@ export class AfterPatientCreatedMedicalHandler extends EventHandler<
     const result = await this.createMedicalRecordUseCase.execute({
       patientId: eventData.id,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     if (result.isLeft())
       throw new EventHandlerExecutionFailed(
         JSON.stringify((result.value as any)?.err)

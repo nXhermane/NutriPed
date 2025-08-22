@@ -74,7 +74,6 @@ export class AfterPatientGlobalVariablePerformedEvent extends EventHandler<
       });
       if (result.isRight()) {
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = (addResponse.value as any).err;
         console.error(AfterPatientGlobalVariablePerformedEvent.name, error);
         throw new EventHandlerExecutionFailed(
@@ -82,7 +81,6 @@ export class AfterPatientGlobalVariablePerformedEvent extends EventHandler<
         );
       }
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = (addResponse.value as any).err;
       console.error(AfterPatientGlobalVariablePerformedEvent.name, error);
       throw new EventHandlerExecutionFailed(

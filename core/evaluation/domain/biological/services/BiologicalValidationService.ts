@@ -28,7 +28,7 @@ export class BiologicalValidationService
         data,
         referencesResult.val
       );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       if (validationResult.isFailure) return validationResult as Result<any>;
       return Result.ok({ isValid: true });
     } catch (e: unknown) {

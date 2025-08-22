@@ -1406,7 +1406,7 @@ export class DiagnosticContext {
         this.nutritionalDiagnosticRepo,
         this.makeClinicalAnalysisUC
       );
-  
+
     this.makeClinicalSignInterpretationUC =
       new MakeClinicalSignDataInterpretationUseCase(
         this.nutritionalDiagnosticRepo,

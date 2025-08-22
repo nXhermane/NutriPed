@@ -302,7 +302,7 @@ const GridItem = forwardRef<React.ComponentRef<typeof View>, IGridItemProps>(
 
         setFlexBasisValue(flexBasisVal);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [
       calculatedWidth,
       responsiveColSpan,

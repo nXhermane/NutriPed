@@ -409,7 +409,6 @@ export class PediatricSoftwareDataManager {
     await Promise.all(
       appetiteTestRefs.map(async ref => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const result = await this.appService.appetiteTestRefService.create({
             data: ref as any,
           });

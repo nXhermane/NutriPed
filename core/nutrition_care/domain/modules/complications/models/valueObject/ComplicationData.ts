@@ -18,7 +18,6 @@ export interface CreateComplicationDataProps {
 }
 
 export class ComplicationData extends ValueObject<IComplicationData> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(props: Readonly<IComplicationData>): void {
     if (typeof props.isPresent !== "boolean") {
       throw new ArgumentInvalidException("isPresent must be a boolean");

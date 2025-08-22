@@ -21,7 +21,6 @@ export interface CreateClinicalEvent {
   isPresent: boolean;
 }
 export class ClinicalEvent extends ValueObject<IClinicalEvent> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(props: Readonly<IClinicalEvent>): void {}
 
   static create(props: CreateClinicalEvent): Result<ClinicalEvent> {

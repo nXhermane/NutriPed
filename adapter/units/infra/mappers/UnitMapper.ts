@@ -27,7 +27,7 @@ export class UnitInfraMapper
       throw new InfraMapToDomainError(
         formatError(unitRes, UnitInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { id, updatedAt, createdAt, ...props } = unitRes.val.getProps();
     return new Unit({
       id,

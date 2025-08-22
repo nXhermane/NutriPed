@@ -80,7 +80,6 @@ export class EvaluatePatientAppetiteUseCase
       if (response.isRight()) {
         return Result.ok(response.value.val);
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return Result.fail((response.value as any).err);
       }
     } catch (e: unknown) {

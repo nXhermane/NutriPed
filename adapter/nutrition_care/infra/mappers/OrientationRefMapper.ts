@@ -36,7 +36,7 @@ export class OrientationReferenceInfraMapper
       throw new InfraMapToDomainError(
         formatError(orientationRefRes, OrientationReferenceInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { id, createdAt, updatedAt, ...props } =
       orientationRefRes.val.getProps();
     return new OrientationReference({

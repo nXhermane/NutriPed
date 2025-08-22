@@ -21,7 +21,7 @@ export class NutrientImpact extends ValueObject<INutrientImpact> {
   getEffect() {
     return this.props.effect;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   protected validate(props: Readonly<INutrientImpact>): void {
     // validation code here
   }

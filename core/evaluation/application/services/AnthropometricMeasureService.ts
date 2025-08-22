@@ -46,7 +46,6 @@ export class AnthropometricMeasureService
   ): Promise<AppServiceResponse<AnthropometricMeasureDto[]> | Message> {
     const res = await this.ucs.getUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
   async update(
@@ -54,7 +53,6 @@ export class AnthropometricMeasureService
   ): Promise<AppServiceResponse<AnthropometricMeasureDto> | Message> {
     const res = await this.ucs.updateUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
   async delete(
@@ -62,7 +60,6 @@ export class AnthropometricMeasureService
   ): Promise<AppServiceResponse<AnthropometricMeasureDto> | Message> {
     const res = await this.ucs.deleteUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 }

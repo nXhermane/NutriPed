@@ -16,7 +16,6 @@ export class Contact extends ValueObject<ContactProps> {
     super(props);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(props: ContactProps): void {
     // Validation des propriétés de contact si nécessaire
   }

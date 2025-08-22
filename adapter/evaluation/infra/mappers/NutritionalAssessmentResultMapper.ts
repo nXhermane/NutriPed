@@ -78,7 +78,7 @@ export class NutritionalAssessmentResultInfraMapper
           NutritionalAssessmentResultInfraMapper.name
         )
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { createdAt, updatedAt, id, ...props } =
       nutritionAssessmentResultRes.val.getProps();
     return new NutritionalAssessmentResult({

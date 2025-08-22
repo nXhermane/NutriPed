@@ -18,7 +18,6 @@ export interface CreateAvailableChart {
 }
 
 export class AvailableChart extends ValueObject<IAvailableChart> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(_props: Readonly<IAvailableChart>): void {}
   static create(createProps: CreateAvailableChart): Result<AvailableChart> {
     try {

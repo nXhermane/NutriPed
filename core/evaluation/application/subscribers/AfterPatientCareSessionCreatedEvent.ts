@@ -54,7 +54,6 @@ export class AfterPatientCareSessionCreatedHandler extends EventHandler<
       });
       await this.eventBus.publishAndDispatchImmediate(globalEvent);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = (result.value as any).err;
       console.error(AfterPatientCareSessionCreatedHandler.name, error);
       throw new EventHandlerExecutionFailed(

@@ -28,7 +28,7 @@ export class ZScoreInterpretationService
       const interpretation = interpretations.find(interp => {
         const { condition } = interp.unpack();
         const conditionEvaluationContext = data;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         (conditionEvaluationContext as any)[ZScoreVarName] = zScore;
         const conditionResult = evaluateCondition(
           condition.unpack().value,

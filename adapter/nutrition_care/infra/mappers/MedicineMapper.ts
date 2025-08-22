@@ -32,7 +32,7 @@ export class MedicineInfraMapper
       throw new InfraMapToDomainError(
         formatError(medicineRes, MedicineInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { id, updatedAt, createdAt, ...props } = medicineRes.val.getProps();
     return new Medicine({
       id,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @fileoverview Service responsible for analyzing clinical signs and determining their
  * nutritional implications.

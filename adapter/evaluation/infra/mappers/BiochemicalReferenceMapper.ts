@@ -40,7 +40,7 @@ export class BiochemicalReferenceInfraMapper
       throw new InfraMapToDomainError(
         formatError(biochemicalRefRes, BiochemicalReferenceInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { createdAt, updatedAt, id, ...props } =
       biochemicalRefRes.val.getProps();
     return new BiochemicalReference({

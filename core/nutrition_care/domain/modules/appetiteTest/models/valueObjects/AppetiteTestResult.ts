@@ -13,7 +13,6 @@ export interface IAppetiteTestResult {
 }
 
 export class AppetiteTestResult extends ValueObject<IAppetiteTestResult> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(props: Readonly<IAppetiteTestResult>): void {}
   static create(props: {
     code: string;

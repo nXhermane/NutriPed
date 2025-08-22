@@ -39,7 +39,7 @@ export class ClinicalSignReferenceInfraMapper
       throw new InfraMapToDomainError(
         formatError(clinicalRefRes, ClinicalSignReferenceInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { createdAt, updatedAt, id, ...props } =
       clinicalRefRes.val.getProps();
     return new ClinicalSignReference({

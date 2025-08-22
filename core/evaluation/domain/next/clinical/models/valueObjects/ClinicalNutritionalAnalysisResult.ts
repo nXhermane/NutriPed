@@ -45,7 +45,7 @@ export class ClinicalNutritionalAnalysisResult extends ValueObject<IClinicalNutr
       recommendedTest.unpack()
     );
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   protected validate(
     props: Readonly<IClinicalNutritionalAnalysisResult>
   ): void {

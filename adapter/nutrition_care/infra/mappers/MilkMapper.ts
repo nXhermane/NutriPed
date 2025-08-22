@@ -28,7 +28,7 @@ export class MilkInfraMapper
       throw new InfraMapToDomainError(
         formatError(milkRes, MilkInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { id, updatedAt, createdAt, ...props } = milkRes.val.getProps();
     return new Milk({
       id,

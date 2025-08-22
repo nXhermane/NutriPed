@@ -21,7 +21,6 @@ export class ValidatePatientMeasurementsService
   ): Promise<AppServiceResponse<boolean> | Message> {
     const res = await this.ucs.validateUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 }

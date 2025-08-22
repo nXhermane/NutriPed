@@ -24,7 +24,6 @@ export class AnthropometricMeasureInfraMapper
     };
   }
   toDomain(record: AnthropometricMeasurePersistenceDto): AnthropometricMeasure {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { createdAt, updatedAt, id, ...otherProps } =
       AnthropometricMeasure.create(record, record.id).val.getProps();
     return new AnthropometricMeasure({

@@ -16,7 +16,6 @@ export interface CreateAvailableTableProps {
   condition: ICondition;
 }
 export class AvailableTable extends ValueObject<IAvailableTable> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected validate(props: Readonly<IAvailableTable>): void {}
   static create(
     createProps: CreateAvailableTableProps

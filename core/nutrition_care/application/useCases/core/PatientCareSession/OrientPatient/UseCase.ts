@@ -123,7 +123,6 @@ export class OrientPatientUseCase
       if (orientResponse.isRight()) {
         return Result.ok(orientResponse.value.val);
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return Result.fail((orientResponse.value as any).err);
       }
     } catch (e: unknown) {

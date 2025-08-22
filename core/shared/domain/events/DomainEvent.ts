@@ -25,6 +25,6 @@ export interface IEventBus {
   unsubscribe<DataType extends EventData, T extends IDomainEvent<DataType>>(
     handler: EventHandler<DataType, T>
   ): void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   dispatch<T extends EventData = any>(eventType: EventType<T>): void;
 }
