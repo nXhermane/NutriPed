@@ -1,6 +1,7 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 import {
   AnthropometricDataPersistenceDto,
+  AppetiteTestRecordPersistenceDto,
   BiologicalDataPersistenceDto,
   ClinicalDataPersistenceDto,
   ComplicationDataPersistenceDto,
@@ -27,4 +28,8 @@ export const medical_records = sqliteTable("medical_records", {
   dataFieldsResponse: text("data_fields_response", { mode: "json" })
     .$type<DataFieldResponsePersistenceDto[]>()
     .notNull(),
+    /**
+     * @version 0.1.0-next 
+     */
+  appetiteTests: text("appetite_tests", { mode: "json" }).$type<AppetiteTestRecordPersistenceDto[]>().notNull()
 });

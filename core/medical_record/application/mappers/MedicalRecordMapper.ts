@@ -50,6 +50,7 @@ export class MedicalRecordMapper
         amount: test.amount,
         id: test.id,
         productType: test.productType,
+        fieldResponses: test.fieldResponses,
         recordedAt: test.recordAt.unpack()
       })),
       createdAt: entity.createdAt,

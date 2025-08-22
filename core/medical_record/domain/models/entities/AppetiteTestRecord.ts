@@ -1,5 +1,6 @@
-import { APPETITE_TEST_PRODUCT_TYPE, APPETITE_TEST_SACHET_FRACTION_PARTITION } from "@/core/constants";
+import { APPETITE_TEST_PRODUCT_TYPE, APPETITE_TEST_SACHET_FRACTION_PARTITION, DATA_FIELD_CODE_TYPE } from "@/core/constants";
 import { AggregateID, ArgumentInvalidException, ArgumentOutOfRangeException, DomainDate, Entity, EntityPropsBaseType, formatError, Guard, handleError, NegativeValueError, Result } from "@/core/shared";
+import { DataFieldResponseValue } from "./DataFieldResponse";
 export type TakenAmountOfPot = {
     quantity: number;
 };
@@ -9,11 +10,13 @@ export type TakenAmountInSachet = {
 export interface IAppetiteTestRecord extends EntityPropsBaseType {
     amount: TakenAmountInSachet | TakenAmountOfPot
     productType: APPETITE_TEST_PRODUCT_TYPE
+    fieldResponses: Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue>
     recordAt: DomainDate
 }
 export interface CreateAppetiteTestRecord {
     amount: TakenAmountInSachet | TakenAmountOfPot
     productType: APPETITE_TEST_PRODUCT_TYPE
+    fieldResponses: Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue>
     recordAt?: string
 }
 
@@ -26,6 +29,9 @@ export class AppetiteTestRecord extends Entity<IAppetiteTestRecord> {
     }
     getRecordAt() {
         return this.props.recordAt.unpack()
+    }
+    getFields(): Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue> {
+        return this.props.fieldResponses
     }
     changeData(data: { amount: TakenAmountInSachet | TakenAmountOfPot, productType: APPETITE_TEST_PRODUCT_TYPE }) {
         this.props.amount = data.amount
@@ -71,6 +77,7 @@ export class AppetiteTestRecord extends Entity<IAppetiteTestRecord> {
                 id, props: {
                     amount: createProps.amount,
                     productType: createProps.productType,
+                    fieldResponses: createProps.fieldResponses,
                     recordAt: recordedAtRes.val
                 }
             }))

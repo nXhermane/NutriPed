@@ -46,9 +46,11 @@ export interface DataFieldResponsePersistenceDto {
   code: DATA_FIELD_CODE_TYPE;
   data: DataFieldResponseValue
 }
-export interface AppetiteTestReference {
+export interface AppetiteTestRecordPersistenceDto {
+  id: AggregateID
   amount: TakenAmountOfPot | TakenAmountInSachet;
   productType: APPETITE_TEST_PRODUCT_TYPE;
+  fieldResponses: Record<DATA_FIELD_CODE_TYPE,DataFieldResponseValue>
   recordAt: string;
 }
 export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
@@ -58,4 +60,5 @@ export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
   clinicalData: ClinicalDataPersistenceDto[];
   complications: ComplicationDataPersistenceDto[];
   dataFieldsResponse: DataFieldResponsePersistenceDto[];
+  appetiteTests: AppetiteTestRecordPersistenceDto[]
 }

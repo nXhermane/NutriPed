@@ -2,6 +2,7 @@ import {
   AggregateID,
   AggregateRoot,
   BaseEntityProps,
+  DomainDate,
   EntityPropsBaseType,
   handleError,
   Result,
@@ -65,6 +66,60 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
   }
   getAppetiteTest(): (IAppetiteTestRecord & BaseEntityProps)[] {
     return this.props.appetiteTests.map(entity => entity.getProps())
+  }
+  getLastAnthropometricData(date?: DomainDate): (IAnthropometricRecord & BaseEntityProps) {
+    const unpackedEntitites = this.props.anthropometricData.map(entity => entity.getProps())
+    const anthropArray = (date ? this.getRecordBeforeDate(unpackedEntitites, date) : unpackedEntitites).sort(
+      (a, b) =>
+        b.recordedAt.getDate().getTime() -
+        a.recordedAt.getDate().getTime()
+    );
+    return anthropArray[0]
+  }
+  getLastClinicalData(date?: DomainDate): (IClinicalSignDataRecord & BaseEntityProps) {
+    const unpackedEntitites = this.props.clinicalData.map(entity => entity.getProps())
+    const array = (date ? this.getRecordBeforeDate(unpackedEntitites, date) : unpackedEntitites).sort(
+      (a, b) =>
+        b.recordedAt.getDate().getTime() -
+        a.recordedAt.getDate().getTime()
+    );
+    return array[0]
+  }
+  getLastBiologicalData(date?: DomainDate): (IBiologicalValueRecord & BaseEntityProps) {
+    const unpackedEntitites = this.props.biologicalData.map(entity => entity.getProps())
+    const array = (date ? this.getRecordBeforeDate(unpackedEntitites, date) : unpackedEntitites).sort(
+      (a, b) =>
+        b.recordedAt.getDate().getTime() -
+        a.recordedAt.getDate().getTime()
+    );
+    return array[0]
+  }
+  getLastComplicationData(date?: DomainDate): (IComplicationDataRecord & BaseEntityProps) {
+    const unpackedEntitites = this.props.complicationData.map(entity => entity.getProps())
+    const array = (date ? this.getRecordBeforeDate(unpackedEntitites, date) : unpackedEntitites).sort(
+      (a, b) =>
+        b.recordedAt.getDate().getTime() -
+        a.recordedAt.getDate().getTime()
+    );
+    return array[0]
+  }
+  getLastDataFieldData(date?: DomainDate): (IDataFieldResponse & BaseEntityProps) {
+    const unpackedEntitites = this.props.dataFieldsResponse.map(entity => entity.getProps())
+    const array = (date ? this.getRecordBeforeDate(unpackedEntitites, date) : unpackedEntitites).sort(
+      (a, b) =>
+        b.recordAt.getDate().getTime() -
+        a.recordAt.getDate().getTime()
+    );
+    return array[0]
+  }
+  getLastAppetiteTestData(date?: DomainDate): (IAppetiteTestRecord & BaseEntityProps) {
+    const unpackedEntitites = this.props.appetiteTests.map(entity => entity.getProps())
+    const array = (date ? this.getRecordBeforeDate(unpackedEntitites, date) : unpackedEntitites).sort(
+      (a, b) =>
+        b.recordAt.getDate().getTime() -
+        a.recordAt.getDate().getTime()
+    );
+    return array[0]
   }
   addAnthropometricData(anthropometricRecord: AnthropometricRecord) {
     this.props.anthropometricData.push(anthropometricRecord);
@@ -138,7 +193,8 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
         patientId: this.getPatientId(),
         data: {
           amount: appetiteTest.getAmount(),
-          productType: appetiteTest.getProductType()
+          productType: appetiteTest.getProductType(),
+          fieldResponse: appetiteTest.getFields()
         }
       })
     )
@@ -399,9 +455,13 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
         data: {
           amount: lastValue.getAmount(),
           productType: lastValue.getProductType()
+          , fieldResponse: lastValue.getFields()
         },
       })
     );
+  }
+  private getRecordBeforeDate<T extends { recordAt: DomainDate } | { recordedAt: DomainDate }>(data: T[], date: DomainDate): T[] {
+    return data.filter(value => "recordedAt" in value ? value.recordedAt.isBefore(date) : value.recordAt.isBefore(date))
   }
   public validate(): void {
     this._isValid = false;

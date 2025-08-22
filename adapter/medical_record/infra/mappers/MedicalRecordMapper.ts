@@ -1,5 +1,6 @@
 import {
   AnthropometricRecord,
+  AppetiteTestRecord,
   BiologicalValueRecord,
   ClinicalSingDataRecord,
   ComplicationDataRecord,
@@ -52,12 +53,19 @@ export class MedicalRecordInfraMapper
         isPresent: complication.getIsPresent(),
         recordedAt: complication.getRecordAt(),
       })),
-      dataFieldsResponse: entity.getDataFields().map(entity => ({
-        code: entity.code,
-        id: entity.id,
-        data: entity.code: {
-        recordAt: entity.getDataFields()
-      }),
+      dataFieldsResponse: entity.getDataFields().map(field => ({
+        code: field.code.unpack(),
+        id: field.id,
+        data: field.data,
+        recordAt: field.recordAt.unpack()
+      })),
+      appetiteTests: entity.getAppetiteTest().map(test => ({
+        id: test.id,
+        amount: test.amount,
+        productType: test.productType,
+        fieldResponses: test.fieldResponses,
+        recordAt: test.recordAt.unpack()
+      })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -85,9 +93,12 @@ export class MedicalRecordInfraMapper
     );
 
     // Convert dataFields
-    const dataFieldsResults = record.dataFieldsResponse.map(field => 
-
+    const dataFieldsResults = record.dataFieldsResponse.map(field =>
+      DataFieldResponse.create(field, field.id)
     );
+
+    // Convert Appetite Tests
+    const appetiteTestResults = record.appetiteTests.map(test => AppetiteTestRecord.create(test, test.id))
 
     // Combine all results
     const combinedRes = Result.combine([
@@ -96,6 +107,7 @@ export class MedicalRecordInfraMapper
       ...clinicalDataResults,
       ...complicationResults,
       ...dataFieldsResults,
+      ...appetiteTestResults
     ]);
 
     if (combinedRes.isFailure) {
@@ -116,7 +128,7 @@ export class MedicalRecordInfraMapper
         complications: complicationResults.map(r => r.val),
         complicationData: complicationResults.map(r => r.val),
         dataFieldsResponse: dataFieldsResults.map(r => r.val),
-        appetiteTests: dataFieldsResults.map(r => r.val )
+        appetiteTests: appetiteTestResults.map(r => r.val)
       },
     });
   }
