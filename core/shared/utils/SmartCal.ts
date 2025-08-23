@@ -1,4 +1,3 @@
-import { Key, RussianRuble } from "lucide-react-native";
 import SmartCal, {
   isValidExpression,
   ConditionResult,
@@ -6,9 +5,7 @@ import SmartCal, {
   FormulaVariableNotFoundError,
   InvalidFormulaError,
   IncorrectSyntaxError,
-  FormulaInterpreterError,
 } from "smartcal";
-import { Result } from "../core";
 
 export const isValidCondition = isValidExpression;
 export const evaluateCondition = <T extends DataType>(
@@ -31,9 +28,15 @@ export const evaluateCondition = <T extends DataType>(
     return SmartCal(condition);
   }
 };
-export function catchEvaluationError(callback: () => void = () => {}) {
+export function catchEvaluationError(
+  callback: () => number | string = () => {
+    return 0;
+  }
+) {
   try {
-    callback();
+    return {
+      result: callback(),
+    };
   } catch (e: unknown) {
     if (e instanceof FormulaVariableNotFoundError) {
       return {
@@ -45,8 +48,7 @@ export function catchEvaluationError(callback: () => void = () => {}) {
       e instanceof IncorrectSyntaxError
     ) {
       return {
-        message: e.message,
-        data: e.getData(),
+        message: `[Message]: ${e.message}\n [Data]:${e.getData()}`,
       };
     } else {
       return {

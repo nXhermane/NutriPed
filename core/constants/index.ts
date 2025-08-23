@@ -464,3 +464,43 @@ export enum MONITORING_ELEMENT_CATEGORY {
   CLINICAL_SIGNS = "clinical_signs_monitoring_element",
   DATA_FIELD = "data_field_monitoring_element",
 }
+
+export enum MedicineCategory {
+  ANTIBACTERIALS = "antibacterials",
+  ANTIFUNGALS = "antifungals",
+  ANTIMALARIALS = "antimalarials",
+  SCABIES = "scabies",
+  CARDIAC_FAILURE = "cardiac_failure",
+  ALTERNATIVES = "alternatives",
+}
+
+export enum AdministrationRoute {
+  ORAL = "oral",
+  IV = "iv",
+  IM = "im",
+  IV_IM = "iv/im",
+  RECTAL = "rectal",
+  TOPICAL = "topical",
+  ORAL_IV = "oral/iv",
+  ORAL_IM = "oral/im",
+}
+
+export enum DosageUnit {
+  MG = "mg",
+  MG_KG = "mg/kg",
+  MG_KG_DAY = "mg/kg/day",
+  UI = "UI",
+  ML = "ml",
+  G = "g",
+}
+
+export enum MilkType {
+  F100 = "f100",
+  F75 = "f75",
+  F100Diluted = "f100_diluted",
+}
+export enum RecommendedMilkPerDay {
+  EIGHT = "8",
+  FIVE = "5",
+  SIX = "6",
+}
