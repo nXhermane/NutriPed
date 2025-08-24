@@ -17,7 +17,6 @@ import { ITherapeuticMilkAdvisorService, MilkSuggestionInput } from "../ports";
 export class TherapeuticMilkAdvisorService
   implements ITherapeuticMilkAdvisorService
 {
-  constructor() {}
   suggest(
     input: MilkSuggestionInput,
     milks: Milk[]
