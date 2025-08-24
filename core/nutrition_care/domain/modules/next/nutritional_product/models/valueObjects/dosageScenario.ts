@@ -10,14 +10,20 @@ import {
   ValueObject,
 } from "@/core/shared";
 import { DosageByWeight, IDosageByWeight } from "./dosageByWeight";
+import {
+  ConditionalDosageFormula,
+  CreateConditionalDosageFormula,
+} from "./ConditionalDosageFormula";
 
 export interface IDosageScenario {
   applicability: Criterion;
+  conditionalDosageFormulas: ConditionalDosageFormula[];
   dosages: DosageByWeight[];
 }
 
 export interface CreateDosageScenario {
   applicability: CreateCriterion;
+  conditionalDosageFormulas: CreateConditionalDosageFormula[];
   dosages: IDosageByWeight[];
 }
 
@@ -39,7 +45,15 @@ export class DosageScenario extends ValueObject<IDosageScenario> {
       const dosageRes = createProps.dosages.map(dosage =>
         DosageByWeight.create(dosage)
       );
-      const combinedRes = Result.combine([criteriaRes, ...dosageRes]);
+      const conditionalDosageFormulasRes =
+        createProps.conditionalDosageFormulas.map(props =>
+          ConditionalDosageFormula.create(props)
+        );
+      const combinedRes = Result.combine([
+        criteriaRes,
+        ...dosageRes,
+        ...conditionalDosageFormulasRes,
+      ]);
       if (combinedRes.isFailure) {
         return Result.fail(formatError(combinedRes, DosageScenario.name));
       }
@@ -47,6 +61,9 @@ export class DosageScenario extends ValueObject<IDosageScenario> {
       return Result.ok(
         new DosageScenario({
           applicability: criteriaRes.val,
+          conditionalDosageFormulas: conditionalDosageFormulasRes.map(
+            res => res.val
+          ),
           dosages: dosageRes.map(res => res.val),
         })
       );

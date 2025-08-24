@@ -536,3 +536,11 @@ export const TREATMENT_PLAN_IDS = {
   CNT_PHASE2_F100: "CNT_PHASE2::nutritional::F100",
   CNT_PHASE2_F100_DILUTED: "CNT_PHASE2::nutritional::F100::diluted",
 } as const;
+/**
+ * @version v0.1.1-next
+ */
+export enum DosageFormulaUnit {
+  ML = "ml",
+  G = "g",
+  PACKET = "packet",
+}
