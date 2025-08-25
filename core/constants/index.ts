@@ -544,3 +544,22 @@ export enum DosageFormulaUnit {
   G = "g",
   PACKET = "packet",
 }
+/**
+ * @version v0.1.1-next
+ */
+export enum FeedingFrequenciePerDay {
+  EIGHT = "8",
+  FIVE = "5",
+  SIX = "6",
+}
+export type AdmissionVariable<T extends string> = `admission_${T}`;
+
+/**
+ *
+ * @param {string} code
+ * @returns {string}
+ * @version v0.1.1-next
+ */
+export const admissionVariable = <T extends string>(
+  code: T
+): AdmissionVariable<T> => `admission_${code}`;

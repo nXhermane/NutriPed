@@ -19,12 +19,14 @@ export interface IDosageScenario {
   applicability: Criterion;
   conditionalDosageFormulas: ConditionalDosageFormula[];
   dosages: DosageByWeight[];
+  isAdmissionWeight: boolean;
 }
 
 export interface CreateDosageScenario {
   applicability: CreateCriterion;
   conditionalDosageFormulas: CreateConditionalDosageFormula[];
   dosages: IDosageByWeight[];
+  isAdmissionWeight: boolean;
 }
 
 export class DosageScenario extends ValueObject<IDosageScenario> {
@@ -33,6 +35,9 @@ export class DosageScenario extends ValueObject<IDosageScenario> {
   }
   getDosages(): IDosageByWeight[] {
     return this.props.dosages.map(dosage => dosage.unpack());
+  }
+  isAdmissionWeight(): boolean {
+    return this.props.isAdmissionWeight;
   }
   protected validate(props: Readonly<IDosageScenario>): void {
     if (Guard.isEmpty(props.dosages).succeeded) {
@@ -65,6 +70,7 @@ export class DosageScenario extends ValueObject<IDosageScenario> {
             res => res.val
           ),
           dosages: dosageRes.map(res => res.val),
+          isAdmissionWeight: createProps.isAdmissionWeight,
         })
       );
     } catch (e: unknown) {

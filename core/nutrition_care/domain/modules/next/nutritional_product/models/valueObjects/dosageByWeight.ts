@@ -9,7 +9,7 @@ import {
 } from "@/core/shared";
 
 export interface IDosageByWeight {
-  weight_kg: [number, number];
+  weight_kg: number;
   dosePerMeal: Partial<Record<RecommendedMilkPerDay, number>>;
 }
 
@@ -21,10 +21,7 @@ export class DosageByWeight extends ValueObject<IDosageByWeight> {
     return this.props.dosePerMeal;
   }
   protected validate(props: Readonly<IDosageByWeight>): void {
-    if (
-      Guard.isNegative(props.weight_kg[0]).succeeded ||
-      Guard.isNegative(props.weight_kg[1]).succeeded
-    ) {
+    if (Guard.isNegative(props.weight_kg).succeeded) {
       throw new NegativeValueError(
         "The weight can't be negative value on dosage by weight."
       );

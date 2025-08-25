@@ -57,6 +57,21 @@ export function catchEvaluationError(
     }
   }
 }
+export function getResultFormCatchEvaluationResult(
+  evaluationResult: ReturnType<typeof catchEvaluationError>,
+  variablesExplanation: Record<string, string>
+) {
+  if ("result" in evaluationResult) {
+    return evaluationResult.result;
+  } else if ("variables" in evaluationResult) {
+    throw new Error(
+      `The variable missing error. La variable ${evaluationResult.variables?.variableName} (${variablesExplanation[evaluationResult.variables?.variableName as string]}) n'est pas disponible. [Error]:${evaluationResult.message}.`
+    );
+  } else {
+    throw new Error(evaluationResult.message);
+  }
+}
+
 export const isValidFormula = isValidExpression;
 export const evaluateFormula = evaluateCondition;
 export { ConditionResult };
