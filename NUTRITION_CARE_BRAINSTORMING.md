@@ -1,3 +1,4 @@
+# Brainstorming - Phase d’orientation avant la génération de la session de traitement
 
 Pour la structuration des idées autour de la prise en charge, commençons par faire un sequenceDiagram pour essayer de voir d'un point de vue macro ce que la logique applicative devra être capable de faire.
 
@@ -81,4 +82,3 @@ flowchart TD
     G --> O
 
 ```
-
