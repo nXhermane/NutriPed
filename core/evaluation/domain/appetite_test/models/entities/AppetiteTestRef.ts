@@ -22,8 +22,7 @@ export interface IAppetiteTestRef extends EntityPropsBaseType {
   code: SystemCode;
   productType: APPETITE_TEST_PRODUCT_TYPE[];
   appetiteTestTable: AppetiteTestTableRange[];
-  neededDataFields: { code: DATA_FIELD_CODE_TYPE, require: boolean }[];
-
+  neededDataFields: { code: DATA_FIELD_CODE_TYPE; require: boolean }[];
 }
 // NOTE: on doit tenir compte de l'unité et de la taille du cupule pour chaque produit. Si tu ne te rappels pas exactement de ce que sert, va lire la note au dessous du table du test d'appetit presente dans le protocole .
 
@@ -32,7 +31,7 @@ export interface CreateAppetiteTestRefProps {
   code: string;
   productType: APPETITE_TEST_PRODUCT_TYPE[];
   appetiteTestTable: IAppetiteTestTableRange[];
-  neededDataFields: { code: DATA_FIELD_CODE_TYPE, require: boolean }[];
+  neededDataFields: { code: DATA_FIELD_CODE_TYPE; require: boolean }[];
 }
 
 export class AppetiteTestRef extends Entity<IAppetiteTestRef> {
@@ -49,7 +48,7 @@ export class AppetiteTestRef extends Entity<IAppetiteTestRef> {
     return this.props.appetiteTestTable.map(range => range.unpack());
   }
   getNeededFields() {
-    return this.props.neededDataFields
+    return this.props.neededDataFields;
   }
   changeName(name: string) {
     this.props.name = name;
@@ -93,7 +92,7 @@ export class AppetiteTestRef extends Entity<IAppetiteTestRef> {
           code: codeRes.val,
           productType: createProps.productType,
           appetiteTestTable: appetiteTestTableRes.map(res => res.val),
-          neededDataFields: createProps.neededDataFields
+          neededDataFields: createProps.neededDataFields,
         },
       });
       return Result.ok(appetiteTestRef);

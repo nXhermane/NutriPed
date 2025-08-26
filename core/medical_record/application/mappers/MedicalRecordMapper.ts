@@ -3,7 +3,8 @@ import { ApplicationMapper } from "@shared";
 import { MedicalRecordDto } from "../dtos";
 
 export class MedicalRecordMapper
-  implements ApplicationMapper<MedicalRecord, MedicalRecordDto> {
+  implements ApplicationMapper<MedicalRecord, MedicalRecordDto>
+{
   toResponse(entity: MedicalRecord): MedicalRecordDto {
     const {
       anthropometricData,
@@ -44,14 +45,14 @@ export class MedicalRecordMapper
         code: field.code.unpack(),
         data: field.data,
         id: field.id,
-        recordedAt: field.recordAt.unpack()
+        recordedAt: field.recordAt.unpack(),
       })),
       appetiteTests: entity.getAppetiteTest().map(test => ({
         amount: test.amount,
         id: test.id,
         productType: test.productType,
         fieldResponses: test.fieldResponses,
-        recordedAt: test.recordAt.unpack()
+        recordedAt: test.recordAt.unpack(),
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

@@ -16,7 +16,8 @@ import {
 import { MedicalRecordPersistenceDto } from "../dtos";
 
 export class MedicalRecordInfraMapper
-  implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto> {
+  implements InfrastructureMapper<MedicalRecord, MedicalRecordPersistenceDto>
+{
   toPersistence(entity: MedicalRecord): MedicalRecordPersistenceDto {
     const {
       anthropometricData,
@@ -57,14 +58,14 @@ export class MedicalRecordInfraMapper
         code: field.code.unpack(),
         id: field.id,
         data: field.data,
-        recordAt: field.recordAt.unpack()
+        recordAt: field.recordAt.unpack(),
       })),
       appetiteTests: entity.getAppetiteTest().map(test => ({
         id: test.id,
         amount: test.amount,
         productType: test.productType,
         fieldResponses: test.fieldResponses,
-        recordAt: test.recordAt.unpack()
+        recordAt: test.recordAt.unpack(),
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -98,7 +99,9 @@ export class MedicalRecordInfraMapper
     );
 
     // Convert Appetite Tests
-    const appetiteTestResults = record.appetiteTests.map(test => AppetiteTestRecord.create(test, test.id))
+    const appetiteTestResults = record.appetiteTests.map(test =>
+      AppetiteTestRecord.create(test, test.id)
+    );
 
     // Combine all results
     const combinedRes = Result.combine([
@@ -107,7 +110,7 @@ export class MedicalRecordInfraMapper
       ...clinicalDataResults,
       ...complicationResults,
       ...dataFieldsResults,
-      ...appetiteTestResults
+      ...appetiteTestResults,
     ]);
 
     if (combinedRes.isFailure) {
@@ -128,7 +131,7 @@ export class MedicalRecordInfraMapper
         complications: complicationResults.map(r => r.val),
         complicationData: complicationResults.map(r => r.val),
         dataFieldsResponse: dataFieldsResults.map(r => r.val),
-        appetiteTests: appetiteTestResults.map(r => r.val)
+        appetiteTests: appetiteTestResults.map(r => r.val),
       },
     });
   }

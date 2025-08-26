@@ -3,7 +3,6 @@ import {
   formatError,
   InfraMapToDomainError,
   InfrastructureMapper,
-  Result,
 } from "@/core/shared";
 import { NextClinicalInfraDtos } from "../../../dtos";
 

@@ -326,7 +326,7 @@ export const nutritional_diagnostics = sqliteTable("nutritional_diagnostics", {
   result: text("nutritional_diagnostic_results_id", { length: 50 }),
   date: text("nutritional_diagnostic_date", { length: 50 }).notNull(),
   notes: text("nutritional_diagnostic_notes", { mode: "json" })
-    .$type<string[]>()
+    .$type<{ date: string; content: string }[]>()
     .notNull(),
   atInit: integer("nutritional_diagnostic_at_init", {
     mode: "boolean",

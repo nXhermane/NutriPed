@@ -38,7 +38,6 @@ export class GrowthReferenceTableInfraMapper
       throw new InfraMapToDomainError(
         formatError(growthRefTableRes, GrowthReferenceTableInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { createdAt, updatedAt, id, ...props } =
       growthRefTableRes.val.getProps();
     return new GrowthReferenceTable({

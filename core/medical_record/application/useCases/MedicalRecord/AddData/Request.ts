@@ -17,6 +17,6 @@ export type AddDataToMedicalRecordRequest = {
     biologicalData: CreateBiologicalValueRecord[];
     complicationData: CreateComplicationDataRecord[];
     dataFieldResponses: CreateDataFieldResponse[];
-    appetiteTests: CreateAppetiteTestRecord[]
+    appetiteTests: CreateAppetiteTestRecord[];
   }>;
 };

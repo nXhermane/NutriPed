@@ -64,7 +64,6 @@ export class PatientDiagnosticDataInfraMapper
           PatientDiagnosticDataInfraMapper.name
         )
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, updatedAt, createdAt, ...props } =
       patientDiagnosticDataRes.val.getProps();
     return new PatientDiagnosticData({

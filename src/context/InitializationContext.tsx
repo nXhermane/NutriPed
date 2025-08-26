@@ -123,7 +123,8 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
         dataFieldService: diagnosticServices.dataFields,
         evaluationAppetiteTest: diagnosticServices.appetiteTest,
         nextClinicalRefService: diagnosticServices.nextClinicalRefs,
-        nextNutritionalRiskRefService: diagnosticServices.nextNutritionalRiskFactors
+        nextNutritionalRiskRefService:
+          diagnosticServices.nextNutritionalRiskFactors,
       });
 
       pediatricDataManager.addObserver({

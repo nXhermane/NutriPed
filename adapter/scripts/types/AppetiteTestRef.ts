@@ -16,5 +16,5 @@ export interface AppetiteTestRef {
     ];
     potRange: [number, number | null];
   }[];
-  neededDataFields: { code: DATA_FIELD_CODE_TYPE, require: boolean }[]
+  neededDataFields: { code: DATA_FIELD_CODE_TYPE; require: boolean }[];
 }

@@ -47,7 +47,6 @@ export class IndicatorInfraMapper
       throw new InfraMapToDomainError(
         formatError(indicatorRes, IndicatorInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { createdAt, updatedAt, id, ...props } = indicatorRes.val.getProps();
     return new Indicator({
       id,

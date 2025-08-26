@@ -5,11 +5,12 @@ import { MedicalRecord, MedicalRecordRepository } from "../../../../domain";
 
 export class DeleteDataFromMedicalRecordUseCase
   implements
-  UseCase<
-    DeleteDataFromMedicalRecordRequest,
-    DeleteDataFromMedicalRecordResponse
-  > {
-  constructor(private readonly repo: MedicalRecordRepository) { }
+    UseCase<
+      DeleteDataFromMedicalRecordRequest,
+      DeleteDataFromMedicalRecordResponse
+    >
+{
+  constructor(private readonly repo: MedicalRecordRepository) {}
   async execute(
     request: DeleteDataFromMedicalRecordRequest
   ): Promise<DeleteDataFromMedicalRecordResponse> {
@@ -55,10 +56,14 @@ export class DeleteDataFromMedicalRecordUseCase
         );
       }
       if (data.appetiteTests) {
-        data.appetiteTests.forEach(id => medicalRecord.deleteAppetiteTestRecord(id))
+        data.appetiteTests.forEach(id =>
+          medicalRecord.deleteAppetiteTestRecord(id)
+        );
       }
       if (data.dataFields) {
-        data.dataFields.forEach(id => medicalRecord.deleteDataFieldResponse(id))
+        data.dataFields.forEach(id =>
+          medicalRecord.deleteDataFieldResponse(id)
+        );
       }
       return Result.ok(true);
     } catch (e: unknown) {

@@ -11,7 +11,6 @@ import {
   ValueObject,
 } from "@shared";
 
-
 export interface IClinicalSignData {
   name: string;
   code: SystemCode;

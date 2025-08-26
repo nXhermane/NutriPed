@@ -12,9 +12,9 @@ This project and everyone participating in it is governed by a [Code of Conduct]
 
 There are many ways to contribute, from writing code and documentation to reporting bugs and suggesting new features.
 
-*   **Reporting Bugs:** If you find a bug, please create an issue in our issue tracker, describing the bug, how to reproduce it, and the expected behavior.
-*   **Suggesting Enhancements:** If you have an idea for a new feature or an improvement to an existing one, please create an issue to discuss it.
-*   **Writing Code:** If you want to contribute code, please follow the process outlined below.
+- **Reporting Bugs:** If you find a bug, please create an issue in our issue tracker, describing the bug, how to reproduce it, and the expected behavior.
+- **Suggesting Enhancements:** If you have an idea for a new feature or an improvement to an existing one, please create an issue to discuss it.
+- **Writing Code:** If you want to contribute code, please follow the process outlined below.
 
 ## Development Process
 
@@ -22,9 +22,9 @@ There are many ways to contribute, from writing code and documentation to report
 
 We follow a GitFlow-like branching model. Please create a new branch for every feature or bugfix you work on. The branch name should be descriptive and follow this convention:
 
-*   `feature/<feature-name>` for new features (e.g., `feature/add-pdf-export`).
-*   `bugfix/<issue-number>-<description>` for bug fixes (e.g., `bugfix/123-fix-login-crash`).
-*   `docs/<topic>` for documentation changes (e.g., `docs/update-readme`).
+- `feature/<feature-name>` for new features (e.g., `feature/add-pdf-export`).
+- `bugfix/<issue-number>-<description>` for bug fixes (e.g., `bugfix/123-fix-login-crash`).
+- `docs/<topic>` for documentation changes (e.g., `docs/update-readme`).
 
 Do not commit directly to the `main` branch.
 
@@ -88,8 +88,8 @@ While the project is still growing its test suite, we encourage contributors to 
 
 This application is designed to handle sensitive medical data. When contributing, please be mindful of the following:
 
-*   **Do not commit any real patient data.** Use only anonymized or synthetic data for testing and development.
-*   **Consider security and privacy** in all your changes. Ensure that data handling practices are secure and protect user privacy.
-*   **Adhere to ethical guidelines** regarding the treatment of medical information.
+- **Do not commit any real patient data.** Use only anonymized or synthetic data for testing and development.
+- **Consider security and privacy** in all your changes. Ensure that data handling practices are secure and protect user privacy.
+- **Adhere to ethical guidelines** regarding the treatment of medical information.
 
 Thank you again for your interest in contributing to Nutriped!

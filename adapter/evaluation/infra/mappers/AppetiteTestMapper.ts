@@ -1,4 +1,3 @@
-
 import {
   formatError,
   InfraMapToDomainError,
@@ -9,7 +8,8 @@ import { AppetiteTestRef } from "@/core/evaluation";
 
 export class AppetiteTestInfraMapper
   implements
-  InfrastructureMapper<AppetiteTestRef, AppetiteTestReferencePersistenceDto> {
+    InfrastructureMapper<AppetiteTestRef, AppetiteTestReferencePersistenceDto>
+{
   toPersistence(entity: AppetiteTestRef): AppetiteTestReferencePersistenceDto {
     return {
       id: entity.id as string,
@@ -23,15 +23,11 @@ export class AppetiteTestInfraMapper
     };
   }
   toDomain(record: AppetiteTestReferencePersistenceDto): AppetiteTestRef {
-    const appetiteTestRes = AppetiteTestRef.create(
-      { ...record},
-      record.id
-    );
+    const appetiteTestRes = AppetiteTestRef.create({ ...record }, record.id);
     if (appetiteTestRes.isFailure)
       throw new InfraMapToDomainError(
         formatError(appetiteTestRes, AppetiteTestInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { createdAt, updatedAt, id, ...props } =
       appetiteTestRes.val.getProps();
     return new AppetiteTestRef({

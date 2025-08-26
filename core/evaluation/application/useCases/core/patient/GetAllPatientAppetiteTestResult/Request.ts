@@ -1,5 +1,5 @@
-import { AggregateID } from "@/core/shared"
+import { AggregateID } from "@/core/shared";
 
 export type GetAllPatientAppetiteTestResultRequest = {
-    patientId: AggregateID
-}
+  patientId: AggregateID;
+};

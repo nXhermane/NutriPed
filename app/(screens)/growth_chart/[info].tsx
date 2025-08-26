@@ -5,15 +5,15 @@ import {
   GetGrowthReferenceChartRequest,
   GrowthIndicatorValueDto,
 } from "@/core/evaluation";
-import { useUI } from "@/src/context";
+import { useToast } from "@/src/context";
 import { useGrowthCharts } from "@/src/hooks";
 import { Stack, useLocalSearchParams } from "expo-router";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { ScrollView } from "react-native";
 
 const GrowthChart = () => {
   const { info } = useLocalSearchParams();
-  const { colorMode } = useUI();
+  const toast = useToast();
   const growthIndicatorValue = useMemo<GrowthIndicatorValueDto>(
     () => JSON.parse(info as string),
     [info]
@@ -28,7 +28,15 @@ const GrowthChart = () => {
     error,
     onLoading,
   } = useGrowthCharts(growthChartRequest);
-
+  useEffect(() => {
+    if (error) {
+      toast.show(
+        "Error",
+        "Erreur de chargement de la courbe de reference.",
+        `Une Erreur technique s'est produite. Veillez ressayer. ${error}`
+      );
+    }
+  }, [error, toast]);
   if (onLoading) return <Loading />;
 
   return (

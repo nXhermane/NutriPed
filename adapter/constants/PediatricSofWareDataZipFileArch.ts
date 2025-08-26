@@ -71,23 +71,23 @@ export const PediatricSoftwareDataZipFileArch = {
     filePath: "medicine/medicines.json",
   },
   nextMedicine: {
-    filePath: "medicine/medicines.next.json"
+    filePath: "medicine/medicines.next.json",
   },
   milks: {
     filePath: "milks/milks.json",
   },
   milkEntitie: {
-    filePath: "milks/milk_entities.json"
+    filePath: "milks/milk_entities.json",
   },
   nutritionalProduct: {
-   filePath: "milks/products.json"
+    filePath: "milks/products.json",
   },
 
   orientationRef: {
     filePath: "orientationRef/orientationRef.json",
   },
   nextOrientationRef: {
-    filePath: "orientationRef/orientationRef.next.json"
+    filePath: "orientationRef/orientationRef.next.json",
   },
   tables: {
     filePath: [

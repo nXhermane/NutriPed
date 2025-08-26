@@ -1,6 +1,5 @@
 import { FieldDataType } from "@/core/constants";
 
-
 export enum DataFieldCategory {
   OBSERVATION = "observation_data_field",
   VITAL_SIGN = "vital_sign_data_field",

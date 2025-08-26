@@ -5,7 +5,7 @@ export interface LastDataFieldResponseChangedEventData {
   patientId: AggregateID;
   data: {
     code: string;
-    data: DataFieldResponseValue
+    data: DataFieldResponseValue;
   };
 }
 

@@ -20,7 +20,7 @@ export default function Index() {
         router.replace("./onboarding");
       }
     }, 2000);
-  }, [user]);
+  }, [user, router]);
 
   return (
     <Center className={"bg-background-primary"} style={{ flex: 1 }}>

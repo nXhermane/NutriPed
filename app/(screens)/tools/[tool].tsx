@@ -57,7 +57,7 @@ const Tool = () => {
           animationMatchesGesture: true,
         }}
       />
-      {tool?.code != "diagnostic_tools" && (
+      {tool?.code !== "diagnostic_tools" && (
         <ToolDetailScreenHeader name={tool?.name || "Oops! Tool Not Found"} />
       )}
 

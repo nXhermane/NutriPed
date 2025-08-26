@@ -5,11 +5,7 @@ import {
   Result,
 } from "@shared";
 import { AnthropometricVariableObject } from "../common";
-import {
-  Indicator,
-  IndicatorInterpreter,
-  ZScoreVarName,
-} from "../models";
+import { Indicator, IndicatorInterpreter, ZScoreVarName } from "../models";
 import { IZScoreInterpretationService } from "./interfaces/ZScoreInterpretationService";
 import { GROWTH_INDICATOR_ERRORS, handleGrowthIndicatorError } from "../errors";
 

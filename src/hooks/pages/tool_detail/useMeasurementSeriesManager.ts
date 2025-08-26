@@ -19,7 +19,6 @@ import { Alert } from "react-native";
 import { usePediatricApp } from "@/adapter";
 import { Sex } from "@/core/shared";
 
-
 export type SelectedChartMeasurementSerie = Omit<
   ChartMeasurementSerie,
   "createdAt" | "updatedAt"
@@ -64,7 +63,7 @@ export function useMeasurementSeriesManager(
 
   const handleSeriesAction = useCallback(
     (value: ActionCodeItemKeyType) => {
-      if (!chartCode || !sex || !indicatorCode) return () => { };
+      if (!chartCode || !sex || !indicatorCode) return () => {};
       switch (value) {
         case "new": {
           return async () => {
@@ -264,7 +263,7 @@ export function useMeasurementSeriesManager(
             "This key is not supported on chart tools action.[key]:",
             value
           );
-          return () => { };
+          return () => {};
         }
       }
     },

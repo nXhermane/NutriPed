@@ -10,7 +10,7 @@ import {
   INutritionalRiskFactorService,
   NextClinicalAppServices,
   TableDataDto,
-  IAppetiteTestAppService as EvaluationIAppetiteTestAppService
+  IAppetiteTestAppService as EvaluationIAppetiteTestAppService,
 } from "@/core/evaluation";
 import {
   AnthropometricMeasure,
@@ -77,7 +77,7 @@ export interface AppService {
   nextClinicalRefService: NextClinicalAppServices.IClinicalSignRefService;
   nextNutritionalRiskRefService: NextClinicalAppServices.INutritionalRiskFactorService;
   dataFieldService: IDataFieldReferenceService;
-  evaluationAppetiteTest: EvaluationIAppetiteTestAppService
+  evaluationAppetiteTest: EvaluationIAppetiteTestAppService;
 }
 
 export interface PediatricSoftwareData {
@@ -96,14 +96,14 @@ export interface PediatricSoftwareData {
   growthReferenceCharts: GrowthReferenceChartProps[];
   growthReferenceTables: GrowthReferenceTableProps[];
   nextClinicalSigns: Next_ClinicalSignReference[];
-  dataFields: DataFieldReference[]
+  dataFields: DataFieldReference[];
 }
 export class PediatricSoftwareDataManager {
   private observers: InitializationObserver[] = [];
   private totalSteps = 14; // Nombre total d'étapes d'initialisation
   private currentStep = 0;
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {}
 
   addObserver(observer: InitializationObserver) {
     this.observers.push(observer);
@@ -548,7 +548,7 @@ export class PediatricSoftwareDataManager {
             description: clinicalRef.description,
             name: clinicalRef.name,
             neededDataFields: clinicalRef.data,
-            rule: clinicalRef.evaluationRule
+            rule: clinicalRef.evaluationRule,
           });
           if (result instanceof Message) {
             this.notifyError(
@@ -570,7 +570,7 @@ export class PediatricSoftwareDataManager {
       dataFields.map(async field => {
         try {
           const result = await this.appService.dataFieldService.create({
-            ...field
+            ...field,
           });
           if (result instanceof Message) {
             this.notifyError(
@@ -596,8 +596,8 @@ export class PediatricSoftwareDataManager {
               code: ref.code,
               name: ref.name,
               neededDataFields: ref.neededDataFields,
-              productType: ref.productType
-            }
+              productType: ref.productType,
+            },
           });
           if (result instanceof Message) {
             this.notifyError(
@@ -613,7 +613,6 @@ export class PediatricSoftwareDataManager {
       })
     );
   }
-
 
   prepareData(data: Map<string, string>): PediatricSoftwareData {
     return {
@@ -673,8 +672,14 @@ export class PediatricSoftwareDataManager {
         PediatricSoftwareDataZipFileArch.nutritionalRiskFactors.filePath,
         data
       ),
-      nextClinicalSigns: this.jsonToObj(PediatricSoftwareDataZipFileArch.nextClinicalRef.filePath, data),
-      dataFields: this.jsonToObj(PediatricSoftwareDataZipFileArch.dataFields.filePath, data)
+      nextClinicalSigns: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.nextClinicalRef.filePath,
+        data
+      ),
+      dataFields: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.dataFields.filePath,
+        data
+      ),
     };
   }
   jsonToObj<T>(filePath: string[] | string, data: Map<string, string>): T[] {
