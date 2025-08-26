@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Database, Smartphone, Code, Cpu } from 'lucide-react';
+import { Layers, Smartphone, Cpu } from 'lucide-react';
 
 const TechCard = ({ name, description }: { name: string, description: string }) => (
   <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 text-center transition-all duration-300 hover:border-blue-500 hover:bg-gray-800">
