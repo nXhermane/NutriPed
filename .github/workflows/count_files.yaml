@@ -1,18 +1,30 @@
-name: Count number of files in a given directory
+name: File Counter
 
 on:
   push:
-    branches:
-      - master # Change this to your main branch name
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Permet de déclencher manuellement le workflow
 
 jobs:
-  check_number_of_files:
+  count-files:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-    - name: test gh action
-      uses: omagdy7/count_files@v1.0
+    - name: Checkout du code
+      uses: actions/checkout@v4
       with:
-        path: "./"
+        fetch-depth: 0  # Récupère tout l'historique pour avoir tous les fichiers
+
+    - name: Compter les fichiers (exclut node_modules)
+      id: file-count
+      run: |
+        # Compter les fichiers suivis par Git en excluant node_modules
+        COUNT=$(git ls-files -- . | grep -v 'node_modules' | wc -l | tr -d ' ')
+        echo "Nombre de fichiers: $COUNT"
+        echo "COUNT=$COUNT" >> $GITHUB_OUTPUT
+
+    - name: Afficher le résultat
+      run: |
+        echo "Ce dépôt contient ${{ steps.file-count.outputs.COUNT }} fichiers (node_modules exclus)"
