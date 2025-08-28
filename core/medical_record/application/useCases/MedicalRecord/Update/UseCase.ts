@@ -5,6 +5,7 @@ import {
   left,
   Result,
   right,
+  SystemCode,
   UnitCode,
   UseCase,
 } from "@shared";
@@ -160,8 +161,25 @@ export class UpdateMedicalRecordUseCase
           medicalRecord.changeAppetiteTest(test.id, test.data)
         );
       }
-      if(data.orientationRecords) {
-         // TODO
+      if (data.orientationRecords) {
+        for (const orientationRecord of data.orientationRecords) {
+          const codeRes = orientationRecord.data.code
+            ? SystemCode.create(orientationRecord.data.code)
+            : Result.ok(undefined);
+          const treatmentRes = orientationRecord.data.treatmentPhase
+            ? SystemCode.create(orientationRecord.data.treatmentPhase)
+            : Result.ok(undefined);
+          const combinedRes = Result.combine([codeRes, treatmentRes as any]);
+          if (combinedRes.isFailure) {
+            return Result.fail(
+              formatError(combinedRes, UpdateMedicalRecordUseCase.name)
+            );
+          }
+          medicalRecord.changeOrientationRecord(orientationRecord.id, {
+            code: codeRes.val,
+            treatmentPhase: treatmentRes.val,
+          });
+        }
       }
 
       return Result.ok(true);

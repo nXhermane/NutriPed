@@ -7,6 +7,7 @@ import {
   CreateClinicalSignDataRecord,
   CreateComplicationDataRecord,
   CreateDataFieldResponse,
+  CreateOrientationRecord,
 } from "./../../../../domain";
 
 export type AddDataToMedicalRecordRequest = {
@@ -18,5 +19,6 @@ export type AddDataToMedicalRecordRequest = {
     complicationData: CreateComplicationDataRecord[];
     dataFieldResponses: CreateDataFieldResponse[];
     appetiteTests: CreateAppetiteTestRecord[];
+    orientationRecords: CreateOrientationRecord[];
   }>;
 };

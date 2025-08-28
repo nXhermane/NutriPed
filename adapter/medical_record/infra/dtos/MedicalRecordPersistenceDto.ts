@@ -8,6 +8,7 @@ import { EntityPersistenceDto } from "../../../shared";
 import { AggregateID } from "@/core/shared";
 import {
   APPETITE_TEST_PRODUCT_TYPE,
+  CARE_PHASE_CODES,
   DATA_FIELD_CODE_TYPE,
 } from "@/core/constants";
 
@@ -54,6 +55,12 @@ export interface AppetiteTestRecordPersistenceDto {
   productType: APPETITE_TEST_PRODUCT_TYPE;
   fieldResponses: Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue>;
   recordAt: string;
+}
+export interface OrientationRecordPersistenceDto {
+  id: AggregateID;
+  code: string;
+  treatmentPhase: CARE_PHASE_CODES | null;
+  recordedAt: string;
 }
 export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
   patientId: AggregateID;

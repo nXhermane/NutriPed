@@ -20,6 +20,7 @@ import {
   MeasurementValidationACL,
   MedicalRecord,
   MedicalRecordRepository,
+  OrientationRecord,
 } from "./../../../../domain";
 
 export class AddDataToMedicalRecordUseCase
@@ -174,6 +175,20 @@ export class AddDataToMedicalRecordUseCase
             formatError(combinedRes, AddDataToMedicalRecordUseCase.name)
           );
         }
+      }
+      if (data.orientationRecords) {
+        const orientationRecordRes = data.orientationRecords.map(props =>
+          OrientationRecord.create(props, this.idGenerator.generate().toValue())
+        );
+        const combinedRes = Result.combine(orientationRecordRes);
+        if (combinedRes.isFailure) {
+          return Result.fail(
+            formatError(combinedRes, AddDataToMedicalRecordUseCase.name)
+          );
+        }
+        orientationRecordRes.map(res =>
+          medicalRecord.addOrientationRecord(res.val)
+        );
       }
       return Result.ok(true);
     } catch (e: unknown) {

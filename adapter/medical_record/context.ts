@@ -31,22 +31,17 @@ import {
   IMedicalRecordService,
   INormalizeAnthropometricDataACL,
   MeasurementValidationACL,
-  MeasurementValidationACLImpl,
   MedicalRecord,
   MedicalRecordDto,
   MedicalRecordMapper,
   MedicalRecordRepository,
   MedicalRecordService,
-  NormalizeAnthropomericDataACL,
   PatientACL,
   UpdateMedicalRecordRequest,
   UpdateMedicalRecordResponse,
   UpdateMedicalRecordUseCase,
 } from "@core/medical_record";
 
-import { PatientACLImpl } from "@core/sharedAcl";
-import { PatientContext } from "../patient/context";
-import { DiagnosticContext } from "../evaluation/context";
 import {
   MedicalRecordPersistenceDto,
   MedicalRecordInfraMapper,
@@ -56,7 +51,6 @@ import {
 } from "./infra";
 import { IndexedDBConnection, GenerateUUID, isWebEnv } from "../shared";
 import { SQLiteDatabase } from "expo-sqlite";
-import { ClinicalSignDataInterpretationACL } from "@/core/medical_record/adapter/acl/ClinicalSignDataInterpretationACl";
 
 export interface MedicalRecordAcls {
   patientAcl: PatientACL;

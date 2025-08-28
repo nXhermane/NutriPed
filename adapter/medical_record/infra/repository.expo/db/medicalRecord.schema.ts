@@ -6,6 +6,7 @@ import {
   ClinicalDataPersistenceDto,
   ComplicationDataPersistenceDto,
   DataFieldResponsePersistenceDto,
+  OrientationRecordPersistenceDto,
 } from "../../dtos";
 
 export const medical_records = sqliteTable("medical_records", {
@@ -34,4 +35,7 @@ export const medical_records = sqliteTable("medical_records", {
   appetiteTests: text("appetite_tests", { mode: "json" })
     .$type<AppetiteTestRecordPersistenceDto[]>()
     .notNull(),
+  orientationRecords: text("orientation_records", { mode: "json" }).$type<
+    OrientationRecordPersistenceDto[]
+  >(),
 });
