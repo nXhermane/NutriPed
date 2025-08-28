@@ -160,6 +160,9 @@ export class UpdateMedicalRecordUseCase
           medicalRecord.changeAppetiteTest(test.id, test.data)
         );
       }
+      if(data.orientationRecords) {
+         // TODO
+      }
 
       return Result.ok(true);
     } catch (e: unknown) {

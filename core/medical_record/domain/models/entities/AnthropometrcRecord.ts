@@ -1,7 +1,7 @@
 import {
   AggregateID,
   ArgumentOutOfRangeException,
-  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -19,7 +19,7 @@ export interface IAnthropometricRecord extends EntityPropsBaseType {
   code: SystemCode;
   value: number;
   unit: UnitCode;
-  recordedAt: DomainDate;
+  recordedAt: DomainDateTime;
   context: AnthropometricDataContext;
 }
 
@@ -68,7 +68,7 @@ export class AnthropometricRecord extends Entity<IAnthropometricRecord> {
     this.validate();
   }
   isFollowUpContext() {
-    return this.props.context == AnthropometricDataContext.FOLLOW_UP;
+    return this.props.context === AnthropometricDataContext.FOLLOW_UP;
   }
   static create(
     createProps: CreateAnthropometricRecord,
@@ -78,8 +78,8 @@ export class AnthropometricRecord extends Entity<IAnthropometricRecord> {
       const codeRes = SystemCode.create(createProps.code);
       const unitRes = UnitCode.create(createProps.unit);
       const recordedDate = createProps.recordedAt
-        ? DomainDate.create(createProps.recordedAt)
-        : DomainDate.create();
+        ? DomainDateTime.create(createProps.recordedAt)
+        : DomainDateTime.create();
       const combinedRes = Result.combine([codeRes, unitRes, recordedDate]);
       if (combinedRes.isFailure)
         return Result.fail(formatError(combinedRes, AnthropometricRecord.name));

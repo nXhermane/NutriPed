@@ -2,7 +2,7 @@ import { DATA_FIELD_CODE_TYPE } from "@/core/constants";
 import {
   AggregateID,
   ArgumentNotProvidedException,
-  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -20,7 +20,7 @@ export type DataFieldResponseValue =
 export interface IDataFieldResponse extends EntityPropsBaseType {
   code: SystemCode<DATA_FIELD_CODE_TYPE>;
   data: DataFieldResponseValue;
-  recordAt: DomainDate;
+  recordAt: DomainDateTime;
 }
 
 export interface CreateDataFieldResponse {
@@ -59,8 +59,8 @@ export class DataFieldResponse extends Entity<IDataFieldResponse> {
     try {
       const codeRes = SystemCode.create(createProps.code);
       const recordedAtRes = createProps.recordAt
-        ? DomainDate.create(createProps.recordAt)
-        : DomainDate.create();
+        ? DomainDateTime.create(createProps.recordAt)
+        : DomainDateTime.create();
       const combinedRes = Result.combine([codeRes, recordedAtRes]);
       if (combinedRes.isFailure) {
         return Result.fail(formatError(combinedRes, DataFieldResponse.name));

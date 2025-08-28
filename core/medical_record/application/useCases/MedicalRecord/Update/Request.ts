@@ -1,3 +1,4 @@
+import { CARE_PHASE_CODES } from "@/core/constants";
 import {
   CreateAppetiteTestRecord,
   CreateDataFieldResponse,
@@ -23,6 +24,13 @@ export type UpdateMedicalRecordRequest = {
       data: {
         amount: CreateAppetiteTestRecord["amount"];
         productType: CreateAppetiteTestRecord["productType"];
+      };
+    }[];
+    orientationRecords: {
+      id: AggregateID;
+      data: {
+        code?: string;
+        treatmentPhase?: CARE_PHASE_CODES;
       };
     }[];
   }>;

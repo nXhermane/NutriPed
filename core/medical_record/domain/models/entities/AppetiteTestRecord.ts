@@ -7,7 +7,7 @@ import {
   AggregateID,
   ArgumentInvalidException,
   ArgumentOutOfRangeException,
-  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -27,7 +27,7 @@ export interface IAppetiteTestRecord extends EntityPropsBaseType {
   amount: TakenAmountInSachet | TakenAmountOfPot;
   productType: APPETITE_TEST_PRODUCT_TYPE;
   fieldResponses: Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue>;
-  recordAt: DomainDate;
+  recordAt: DomainDateTime;
 }
 export interface CreateAppetiteTestRecord {
   amount: TakenAmountInSachet | TakenAmountOfPot;
@@ -101,8 +101,8 @@ export class AppetiteTestRecord extends Entity<IAppetiteTestRecord> {
   ): Result<AppetiteTestRecord> {
     try {
       const recordedAtRes = createProps.recordAt
-        ? DomainDate.create(createProps.recordAt)
-        : DomainDate.create();
+        ? DomainDateTime.create(createProps.recordAt)
+        : DomainDateTime.create();
       if (recordedAtRes.isFailure) {
         return Result.fail(formatError(recordedAtRes));
       }

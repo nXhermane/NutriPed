@@ -1,6 +1,6 @@
 import {
   AggregateID,
-  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -16,7 +16,7 @@ export interface IBiologicalValueRecord extends EntityPropsBaseType {
   code: SystemCode;
   value: number;
   unit: UnitCode;
-  recordedAt: DomainDate;
+  recordedAt: DomainDateTime;
 }
 export interface CreateBiologicalValueRecord {
   code: string;
@@ -40,8 +40,8 @@ export class BiologicalValueRecord extends Entity<IBiologicalValueRecord> {
     return this.props.recordedAt.unpack();
   }
   changeMeasurement(measurement: { unit: UnitCode; value: number }) {
-    ((this.props.unit = measurement.unit),
-      (this.props.value = measurement.value));
+    this.props.unit = measurement.unit;
+    this.props.value = measurement.value;
     this.validate();
   }
   static create(
@@ -52,8 +52,8 @@ export class BiologicalValueRecord extends Entity<IBiologicalValueRecord> {
       const codeRes = SystemCode.create(createProps.code);
       const unitRes = UnitCode.create(createProps.unit);
       const recordedAt = createProps.recordedAt
-        ? DomainDate.create(createProps.recordedAt)
-        : DomainDate.create();
+        ? DomainDateTime.create(createProps.recordedAt)
+        : DomainDateTime.create();
       const combinedRes = Result.combine([codeRes, unitRes, recordedAt]);
       if (combinedRes.isFailure)
         return Result.fail(

@@ -15,7 +15,7 @@ export interface CreateEntityProps<T> {
   createdAt?: string;
   updatedAt?: string;
 }
-export type EntityPropsKeyValueType = ValueType | undefined;
+export type EntityPropsKeyValueType = ValueType | undefined | null;
 export type EntityPropsBaseType = Record<string, EntityPropsKeyValueType>;
 // Entity Class Base
 export abstract class Entity<EntityProps extends EntityPropsBaseType> {

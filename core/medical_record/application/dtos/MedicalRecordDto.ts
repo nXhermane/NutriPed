@@ -5,6 +5,7 @@ import {
   CreateBiologicalValueRecord,
   CreateClinicalSignDataRecord,
   CreateComplicationDataRecord,
+  CreateOrientationRecord,
 } from "../../domain/models/entities";
 import { CreateDataFieldResponse } from "../../domain";
 
@@ -32,6 +33,10 @@ export interface MedicalRecordDto {
     id: AggregateID;
   })[];
   complicationData: (CreateComplicationDataRecord & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
+  orientationRecords: (CreateOrientationRecord & {
     recordedAt: string;
     id: AggregateID;
   })[];

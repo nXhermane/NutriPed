@@ -4,3 +4,4 @@ export * from "./ClinicalSignDataRecord";
 export * from "./ComplicationRecord";
 export * from "./DataFieldResponse";
 export * from "./AppetiteTestRecord";
+export * from "./OrientationRecord";

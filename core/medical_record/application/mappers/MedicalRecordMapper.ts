@@ -54,6 +54,15 @@ export class MedicalRecordMapper
         fieldResponses: test.fieldResponses,
         recordedAt: test.recordAt.unpack(),
       })),
+      orientationRecords: entity.getOrientationRecord().map(orientation => ({
+        id: orientation.id,
+        code: orientation.code.unpack(),
+        treatmentPhase:
+          orientation.treatmentPhase !== null
+            ? orientation.treatmentPhase.unpack()
+            : orientation.treatmentPhase,
+        recordedAt: orientation.recordedAt.toString(),
+      })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
