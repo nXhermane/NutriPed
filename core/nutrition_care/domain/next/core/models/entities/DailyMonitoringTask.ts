@@ -44,10 +44,19 @@ export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
   completed() {
     this.props.status = DailyMonitoringTaskStatus.COMPLETED;
   }
+  isCompleted(): boolean {
+    return this.props.status === DailyMonitoringTaskStatus.COMPLETED;
+  }
   notCompleted() {
     if (this.props.status === DailyMonitoringTaskStatus.IN_WAITING) {
       this.props.status = DailyMonitoringTaskStatus.NOT_COMPLETED;
     }
+  }
+  isNotCompleted(): boolean {
+    return this.props.status === DailyMonitoringTaskStatus.NOT_COMPLETED;
+  }
+  isWaiting(): boolean {
+    return this.props.status === DailyMonitoringTaskStatus.IN_WAITING;
   }
   public validate(): void {
     this._isValid = false;

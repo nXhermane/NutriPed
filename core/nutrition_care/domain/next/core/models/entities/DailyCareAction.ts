@@ -39,7 +39,7 @@ export interface IDailyCareAction extends EntityPropsBaseType {
 }
 export interface CreateDailyCareAction {
   treatmentId: AggregateID;
-  status: DailyCareActionStatus;
+  status?: DailyCareActionStatus;
   type: DailyCareActionType;
   action: INutritionalAction | IMedicalAction;
   effectiveDate: string;
@@ -66,18 +66,30 @@ export class DailyCareAction extends Entity<IDailyCareAction> {
       this.props.status = DailyCareActionStatus.COMPLETED;
     }
   }
+  isCompleted(): boolean {
+    return this.props.status === DailyCareActionStatus.COMPLETED;
+  }
   notCompleted(): void {
     if (this.checkIsEffective()) {
       this.props.status = DailyCareActionStatus.NOT_COMPLETED;
     }
   }
+  isNotCompleted(): boolean {
+    return this.props.status === DailyCareActionStatus.NOT_COMPLETED;
+  }
   inWaiting(): void {
     this.props.status = DailyCareActionStatus.IN_WAITING;
+  }
+  isWaiting(): boolean {
+    return this.props.status === DailyCareActionStatus.IN_WAITING;
   }
   inProgress(): void {
     if (this.checkIsEffective()) {
       this.props.status = DailyCareActionStatus.IN_PROGRESS;
     }
+  }
+  isInProgress(): boolean {
+    return this.props.status === DailyCareActionStatus.IN_PROGRESS;
   }
   public validate(): void {
     this._isValid = false;
@@ -129,7 +141,7 @@ export class DailyCareAction extends Entity<IDailyCareAction> {
           id,
           props: {
             treatmentId: createProps.treatmentId,
-            status: createProps.status,
+            status: createProps.status || DailyCareActionStatus.IN_WAITING,
             type: createProps.type,
             action: actionRes.val,
             effectiveDate: effectiveDateRes.val,
