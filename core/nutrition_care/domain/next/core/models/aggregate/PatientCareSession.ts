@@ -1,3 +1,4 @@
+import { CarePhase } from "./../entities";
 import { DomainDateTime, EntityPropsBaseType } from "@/core/shared";
 
 export enum PatientCareSessionStatus {
@@ -9,5 +10,7 @@ export interface IPatientCareSession extends EntityPropsBaseType {
   status: PatientCareSessionStatus;
   startDate: DomainDateTime;
   endDate: DomainDateTime | null;
-  
+  currentPhase: CarePhase | null;
+  currentDailyRecord: DailyCareRecord | null
+
 }
