@@ -70,4 +70,5 @@ export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
   complications: ComplicationDataPersistenceDto[];
   dataFieldsResponse: DataFieldResponsePersistenceDto[];
   appetiteTests: AppetiteTestRecordPersistenceDto[];
+  orientationRecords: OrientationRecordPersistenceDto[];
 }

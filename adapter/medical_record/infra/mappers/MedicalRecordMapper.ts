@@ -6,6 +6,7 @@ import {
   ComplicationDataRecord,
   DataFieldResponse,
   MedicalRecord,
+  OrientationRecord,
 } from "@core/medical_record";
 import {
   InfrastructureMapper,
@@ -67,6 +68,14 @@ export class MedicalRecordInfraMapper
         fieldResponses: test.fieldResponses,
         recordAt: test.recordAt.unpack(),
       })),
+      orientationRecords: entity.getOrientationRecord().map(record => ({
+        id: record.id,
+        code: record.code.unpack(),
+        treatmentPhase: record.treatmentPhase
+          ? record.treatmentPhase.unpack()
+          : null,
+        recordedAt: record.recordedAt.unpack(),
+      })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -102,6 +111,10 @@ export class MedicalRecordInfraMapper
     const appetiteTestResults = record.appetiteTests.map(test =>
       AppetiteTestRecord.create(test, test.id)
     );
+    // Convert Orientation Records
+    const orientationRecordResults = record.orientationRecords.map(record =>
+      OrientationRecord.create(record, record.id)
+    );
 
     // Combine all results
     const combinedRes = Result.combine([
@@ -111,6 +124,7 @@ export class MedicalRecordInfraMapper
       ...complicationResults,
       ...dataFieldsResults,
       ...appetiteTestResults,
+      ...orientationRecordResults,
     ]);
 
     if (combinedRes.isFailure) {
@@ -132,6 +146,7 @@ export class MedicalRecordInfraMapper
         complicationData: complicationResults.map(r => r.val),
         dataFieldsResponse: dataFieldsResults.map(r => r.val),
         appetiteTests: appetiteTestResults.map(r => r.val),
+        orienationResults: orientationRecordResults.map(r => r.val),
       },
     });
   }

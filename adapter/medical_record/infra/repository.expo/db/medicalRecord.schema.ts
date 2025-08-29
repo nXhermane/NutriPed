@@ -35,7 +35,7 @@ export const medical_records = sqliteTable("medical_records", {
   appetiteTests: text("appetite_tests", { mode: "json" })
     .$type<AppetiteTestRecordPersistenceDto[]>()
     .notNull(),
-  orientationRecords: text("orientation_records", { mode: "json" }).$type<
-    OrientationRecordPersistenceDto[]
-  >(),
+  orientationRecords: text("orientation_records", { mode: "json" })
+    .$type<OrientationRecordPersistenceDto[]>()
+    .notNull(),
 });
