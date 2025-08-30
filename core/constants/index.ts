@@ -563,4 +563,3 @@ export type AdmissionVariable<T extends string> = `admission_${T}`;
 export const admissionVariable = <T extends string>(
   code: T
 ): AdmissionVariable<T> => `admission_${code}`;
-
