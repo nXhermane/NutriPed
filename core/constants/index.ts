@@ -523,8 +523,6 @@ export const CALCULATED_MONITORING_ELEMENT = {
     "nutritional_milk_consumption_rate_percent_per_day",
 } as const;
 export const initialValueCode = (code: string) => "initial_" + code;
-export const clinicalSignChangeDay = (code: ValueOf<typeof CLINICAL_SIGNS>) =>
-  "change_day_" + code;
 
 export const TREATMENT_PLAN_IDS = {
   CNT_PHASE1_F75: "CNT_PHASE1::nutritional::F75",
@@ -563,3 +561,15 @@ export type AdmissionVariable<T extends string> = `admission_${T}`;
 export const admissionVariable = <T extends string>(
   code: T
 ): AdmissionVariable<T> => `admission_${code}`;
+
+export type ClinicalSignChangeDay<T extends string> = `change_day_${T}`;
+
+/**
+ *
+ * @param {T extends ValueOf<typeof CLINICAL_SIGNS>} code
+ * @returns {ClinicalSignChangeDay<T>}
+ * @version v0.1.1-next
+ */
+export const clinicalSignChangeDay = <T extends ValueOf<typeof CLINICAL_SIGNS>>(
+  code: T
+): ClinicalSignChangeDay<T> => `change_day_${code}`;
