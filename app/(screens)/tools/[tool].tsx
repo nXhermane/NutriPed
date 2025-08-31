@@ -13,7 +13,6 @@ import {
   TableTools,
   ToolDetailScreenHeader,
 } from "@/components/pages/tools";
-import { FastDataCollectionTools } from "@/components/pages/tools/FastDataCollectionTools/FastDataCollectionTools";
 
 const Tool = () => {
   const { tool: toolCode } = useLocalSearchParams<{ tool: string }>();
