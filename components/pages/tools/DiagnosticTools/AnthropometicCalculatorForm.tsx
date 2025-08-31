@@ -19,9 +19,10 @@ export interface AnthropometricCalculatorFormProps {
   initialState?: Record<string, { value: any; error?: string }>;
 }
 
-export const AnthropometricCalcualtorForm: React.FC<
+const AnthropometricCalcualtorFormComponent: React.FC<
   AnthropometricCalculatorFormProps
 > = ({ formRef, schema, title, zodSchema, initialState }) => {
+  
   return (
     <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
       {title && (
@@ -47,3 +48,7 @@ export const AnthropometricCalcualtorForm: React.FC<
     </VStack>
   );
 };
+
+export const AnthropometricCalcualtorForm = React.memo(
+  AnthropometricCalcualtorFormComponent
+);

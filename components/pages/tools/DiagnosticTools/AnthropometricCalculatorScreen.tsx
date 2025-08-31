@@ -17,7 +17,7 @@ const routes = [
   { key: "second", title: "Historique" },
 ];
 
-export const AnthropometricCalculatorScreen = () => {
+function AnthropometricCalculatorScreenComponent() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const navigation = useNavigation();
@@ -55,4 +55,8 @@ export const AnthropometricCalculatorScreen = () => {
       )}
     />
   );
-};
+}
+
+export const AnthropometricCalculatorScreen = React.memo(
+  AnthropometricCalculatorScreenComponent
+);

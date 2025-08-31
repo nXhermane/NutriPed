@@ -8,3 +8,4 @@ export * from "./TableTools";
 export * from "./DiagnosticTools";
 export * from "./ProtocoleTool";
 export * from "./CalculationTools";
+export * from "./FastDataCollectionTools";

@@ -2,8 +2,6 @@ import { FormSchema } from "@/components/custom";
 import {
   BirthDateField,
   BirthDateToTodayZodSchema,
-  dateZodSchema,
-  EdemaField,
   HeadCircumferenceField,
   HeadCircumferenceZodSchema,
   HeightField,
@@ -24,11 +22,8 @@ import {
 import { z } from "zod";
 import {
   AnthroSystemCodes,
-  DAY_IN_MONTHS,
-  DAY_IN_YEARS,
 } from "@/core/constants";
 import { makeOptionalSchema, validateWithSchemaPipeline } from "./utils";
-import { Sex } from "@/core/shared";
 
 export const AnthropometricCalculatorFormSchema: FormSchema = [
   {
@@ -71,7 +66,6 @@ export const AnthropometricCalculatorFormZodSchema = {
       }),
       BirthDateToTodayZodSchema,
       SexZodSchema,
-
       z
         .object({
           [AnthroSystemCodes.HEIGHT]: makeOptionalSchema(HeightZodSchema),

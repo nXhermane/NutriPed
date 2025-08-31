@@ -41,4 +41,11 @@ export const TOOLS_DATA = [
     code: "tables_tools",
     isQuickAccess: false,
   },
+  {
+    name: "Collecte Rappide",
+    desc: "Collecte rapide de données",
+    iconName: "ClipboardPlus",
+    code: "fast_data_collection_tool",
+    isQuickAccess: false,
+  }
 ] as const;

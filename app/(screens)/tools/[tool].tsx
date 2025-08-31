@@ -13,6 +13,7 @@ import {
   TableTools,
   ToolDetailScreenHeader,
 } from "@/components/pages/tools";
+import { FastDataCollectionTools } from "@/components/pages/tools/FastDataCollectionTools/FastDataCollectionTools";
 
 const Tool = () => {
   const { tool: toolCode } = useLocalSearchParams<{ tool: string }>();
@@ -34,6 +35,8 @@ const Tool = () => {
         return <CalculTools />;
       case "diagnostic_tools":
         return <DiagnosticTools />;
+      case "fast_data_collection_tool":
+        return <FastDataCollectionTools />;
       default:
         return (
           <Center className="flex-1">

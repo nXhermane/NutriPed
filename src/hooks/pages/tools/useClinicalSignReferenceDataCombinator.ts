@@ -1,10 +1,11 @@
 import { DynamicFormZodSchemaType, FormSchema } from "@/components/custom";
 import { IField } from "@/components/custom/FormField";
 import {
-  ClinicalDataType,
+
   ClinicalSignDataDto,
   ClinicalSignReferenceDto,
 } from "@/core/evaluation";
+import { ClinicalDataType } from "@/core/constants";
 import {
   BirthDateField,
   BirthDateToTodayZodSchema,
@@ -50,14 +51,14 @@ export function useClinicalSignReferenceFormGenerator(
           schema: [
             ...(withGeneralInfo
               ? [
-                  {
-                    section:
-                      ClinicalRefCategoryUiData[
-                        ClinicalSignRefDataCategory.DEMOGRAPHIC
-                      ].uiText,
-                    fields: [SexField, BirthDateField],
-                  },
-                ]
+                {
+                  section:
+                    ClinicalRefCategoryUiData[
+                      ClinicalSignRefDataCategory.DEMOGRAPHIC
+                    ].uiText,
+                  fields: [SexField, BirthDateField],
+                },
+              ]
               : []),
             ...dynamicForm,
           ],
