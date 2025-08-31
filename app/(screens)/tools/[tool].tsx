@@ -35,7 +35,7 @@ const Tool = () => {
       case "diagnostic_tools":
         return <DiagnosticTools />;
       case "fast_data_collection_tool":
-        return <FastDataCollectionTools />;
+        
       default:
         return (
           <Center className="flex-1">
