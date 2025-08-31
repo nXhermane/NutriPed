@@ -1,3 +1,4 @@
+import { TREATMENT_PLAN_IDS } from "@/core/constants";
 import {
   ArgumentNotProvidedException,
   CreateCriterion,
@@ -10,22 +11,23 @@ import {
   SystemCode,
   ValueObject,
 } from "@/core/shared";
+import { ValueOf } from "@/utils";
 
 export interface IFollowUpAction {
   applicabilities: Criterion[];
-  treatmentToApply: SystemCode[];
+  treatmentToApply: SystemCode<ValueOf<typeof TREATMENT_PLAN_IDS>>[];
 }
 
 export interface CreateFollowUpAction {
   applicabilities: CreateCriterion[];
-  treatmentToApply: string[];
+  treatmentToApply: ValueOf<typeof TREATMENT_PLAN_IDS>[];
 }
 
 export class FollowUpAction extends ValueObject<IFollowUpAction> {
   getCriterions(): ICriterion[] {
     return this.props.applicabilities.map(criterion => criterion.unpack());
   }
-  getTreatmentToApply(): string[] {
+  getTreatmentToApply(): ValueOf<typeof TREATMENT_PLAN_IDS>[] {
     return this.props.treatmentToApply.map(treatmentCode =>
       treatmentCode.unpack()
     );

@@ -1,4 +1,8 @@
-import { MEDICINE_CODES, RECOMMENDED_TREATMENT_TYPE } from "@/core/constants";
+import {
+  MEDICINE_CODES,
+  RECOMMENDED_TREATMENT_TYPE,
+  TREATMENT_PLAN_IDS,
+} from "@/core/constants";
 import {
   AggregateID,
   CreateCriterion,
@@ -19,9 +23,10 @@ import {
   TreatmentDuration,
   TreatmentTrigger,
 } from "../valueObjects";
+import { ValueOf } from "@/utils";
 
 export interface IRecommendedTreatment extends EntityPropsBaseType {
-  code: SystemCode;
+  code: SystemCode<ValueOf<typeof TREATMENT_PLAN_IDS>>;
   applicabilyCondition: Criterion;
   type: RECOMMENDED_TREATMENT_TYPE;
   treatmentCode: SystemCode<MilkType | MEDICINE_CODES>;
@@ -33,7 +38,7 @@ export interface IRecommendedTreatment extends EntityPropsBaseType {
   ajustmentPercentage?: number;
 }
 export interface CreateRecommededTreatment {
-  code: string;
+  code: ValueOf<typeof TREATMENT_PLAN_IDS>;
   applicabilyCondition: CreateCriterion;
   type: RECOMMENDED_TREATMENT_TYPE;
   treatmentCode: MilkType | MEDICINE_CODES;
@@ -45,7 +50,7 @@ export interface CreateRecommededTreatment {
   ajustmentPercentage?: number;
 }
 export class RecommendedTreatment extends Entity<IRecommendedTreatment> {
-  getCode(): string {
+  getCode(): ValueOf<typeof TREATMENT_PLAN_IDS> {
     return this.props.code.unpack();
   }
   getApplicabilyCondition(): ICriterion {

@@ -59,7 +59,7 @@ export interface ICarePhaseReferenceOrchestrator {
   evaluatePhaseStatus(
     carePhaseCode: SystemCode<CARE_PHASE_CODES>,
     context: CarePhaseEvaluationContext
-  ): Promise<Result<CarePhaseDecision>>;
+  ): Promise<Result<CarePhaseEvaluationStatusResult>>;
   determineApplicableCare(
     carePhaseCode: SystemCode<CARE_PHASE_CODES>,
     context: CarePhaseEvaluationContext
@@ -67,5 +67,5 @@ export interface ICarePhaseReferenceOrchestrator {
   ajustOnGoingCarePlan(
     carePhaseCode: SystemCode<CARE_PHASE_CODES>,
     context: CarePhaseEvaluationContext
-  ): Promise<CarePlanAjustement>;
+  ): Promise<Result<CarePlanAjustement>>;
 }
