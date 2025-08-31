@@ -34,7 +34,7 @@ const Tool = () => {
         return <CalculTools />;
       case "diagnostic_tools":
         return <DiagnosticTools />;
-      case "fast_data_collection_tool":
+     
         
       default:
         return (
