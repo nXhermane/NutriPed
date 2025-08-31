@@ -10,7 +10,6 @@ import { VStack } from "@/components/ui/vstack";
 import { useUI } from "@/src/context";
 import {
   BottomSheetModal,
-  BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import React, { useRef } from "react";

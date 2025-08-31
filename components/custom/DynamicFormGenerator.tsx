@@ -105,7 +105,7 @@ export interface FormHandler<T extends FormSchema> {
   getState: () => Record<string, { value: any; error?: any }>;
 }
 
-export const DynamicFormGenerator = forwardRef(
+const DynamicFormGeneratorComponent = forwardRef(
   <T extends FormSchema>(
     {
       schema,
@@ -235,3 +235,4 @@ export const DynamicFormGenerator = forwardRef(
     );
   }
 );
+export const DynamicFormGenerator = React.memo(DynamicFormGeneratorComponent);

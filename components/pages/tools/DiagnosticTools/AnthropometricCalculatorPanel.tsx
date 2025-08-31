@@ -18,24 +18,17 @@ import {
   ButtonText,
 } from "@/components/ui/button";
 import { Calculator, Check, X } from "lucide-react-native";
-import { ScrollView } from "react-native";
 import { HStack } from "@/components/ui/hstack";
-import { BlurView } from "expo-blur";
-import { useUI } from "@/src/context";
 import { AnthropometricCalculatorResultModal } from "./AnthropometricCalculatorResultModal";
 import { AnthropometricCalculatorSavingLabelModal } from "./AnthropometricCalculatorSavedLabelModal";
 import { useDispatch } from "react-redux";
 import { addAnthropometricCalculatorResult } from "@/src/store";
 import { usePicker } from "@/src/hooks";
-import { LinearGradient } from "expo-linear-gradient";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
-export const AnthropometricCalculatorPanel = () => {
+const AnthropometricCalculatorPanelComponent = () => {
   const {
     diagnosticServices: { growthIndicatorValue },
   } = usePediatricApp();
-
-  const { colorMode } = useUI();
   const dispatch = useDispatch();
   const { closePicker, isOpen, openPicker } = usePicker<{ label: string }>();
 
@@ -52,7 +45,7 @@ export const AnthropometricCalculatorPanel = () => {
   const [onSucess, setOnSucess] = useState<boolean>(false);
   const [showResultModal, setShowResultModal] = useState<boolean>(false);
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = React.useCallback(async () => {
     setOnSubmit(true);
     setError(null);
     setAnthropometricCalculatorResult(null);
@@ -86,9 +79,8 @@ export const AnthropometricCalculatorPanel = () => {
       setError("Des champs sont invalides.");
     }
     setOnSubmit(false);
-  };
-
-  const handleSaveResult = async () => {
+  }, [growthIndicatorValue]);
+  const handleSaveResult = React.useCallback(async () => {
     const label = await openPicker();
     if (
       label &&
@@ -111,30 +103,23 @@ export const AnthropometricCalculatorPanel = () => {
       );
       setShowResultModal(false);
     }
-  };
+  }, [
+    openPicker,
+    anthropometricCalculatorResult,
+    anthropometricCalulatorUsedData,
+    addAnthropometricCalculatorResult,
+  ]);
 
   return (
     <React.Fragment>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        className="bg-background-primary"
-      >
-        <VStack className="bg-background-primary pb-16">
-          <AnthropometricCalcualtorForm
-            formRef={formRef}
-            schema={AnthropometricCalculatorFormSchema}
-            zodSchema={AnthropometricCalculatorFormZodSchema}
-          />
-        </VStack>
-      </KeyboardAwareScrollView>
-
+      <VStack className="bg-background-primary pb-16">
+        <AnthropometricCalcualtorForm
+          formRef={formRef}
+          schema={AnthropometricCalculatorFormSchema}
+          zodSchema={AnthropometricCalculatorFormZodSchema}
+        />
+      </VStack>
       <HStack className="absolute bottom-0 w-full overflow-hidden rounded-xl">
-        {/* <BlurView
-          experimentalBlurMethod="dimezisBlurView"
-          intensity={50}
-          tint={colorMode}
-          className="w-full px-8 py-4"
-        > */}
         <FakeBlur className="w-full px-8 py-4">
           <Button
             className={`h-v-10 w-full rounded-xl ${error ? "bg-red-500" : "bg-primary-c_light"}`}
@@ -155,7 +140,6 @@ export const AnthropometricCalculatorPanel = () => {
             {error && <ButtonIcon as={X} className="text-white" />}
           </Button>
         </FakeBlur>
-        {/* </BlurView> */}
       </HStack>
 
       <AnthropometricCalculatorResultModal
@@ -174,3 +158,6 @@ export const AnthropometricCalculatorPanel = () => {
     </React.Fragment>
   );
 };
+
+export const AnthropometricCalculatorPanel =
+  AnthropometricCalculatorPanelComponent;
