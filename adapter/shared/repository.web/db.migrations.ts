@@ -12,5 +12,11 @@ export const migrations: Migration[] = [
       createStoreIndexes(db);
     },
   },
+  {
+    version: 3,
+    up: (db: IDBDatabase) => {
+      createStoreIndexes(db);
+    },
+  },
   // Futures migrations...
 ];
