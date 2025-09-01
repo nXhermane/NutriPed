@@ -6,6 +6,7 @@ import {
   formatError,
   InfraMapToDomainError,
   InfrastructureMapper,
+  IFormula,
 } from "@/core/shared";
 import { FormulaFieldReferencePersistenceDto } from "../dtos";
 
@@ -24,7 +25,12 @@ export class FormulaFieldReferenceInfraMapper
       id: entity.id,
       code: entity.getCode(),
       formula: {
-        formula: formula.formula,
+        formula: {
+          value: formula.formula,
+          variables: formula.variablesExplanation
+            ? Object.keys(formula.variablesExplanation)
+            : [],
+        },
         description: formula.description,
         variablesExplanation: formula.variablesExplanation,
       },

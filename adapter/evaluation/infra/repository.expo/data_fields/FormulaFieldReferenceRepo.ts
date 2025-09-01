@@ -20,8 +20,4 @@ export class FormulaFieldReferenceExpoRepo
   ) {
     super(db, formula_field_references, mapper);
   }
-  async getAll(): Promise<FormulaFieldReference[]> {
-    const res = await this.db.select().from(this.table);
-    return res.map(this.mapper.toDomain);
-  }
 }

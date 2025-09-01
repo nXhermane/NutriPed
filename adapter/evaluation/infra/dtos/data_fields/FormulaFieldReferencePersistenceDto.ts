@@ -1,10 +1,10 @@
-import { AggregateID } from "@/core/shared";
+import { AggregateID, IFormula } from "@/core/shared";
 
 export interface FormulaFieldReferencePersistenceDto {
   id: AggregateID;
   code: string;
   formula: {
-    formula: string;
+    formula: IFormula;
     description: string;
     variablesExplanation: Record<string, string>;
   };
