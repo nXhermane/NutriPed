@@ -5,4 +5,4 @@ export * from "./db";
 export * from "./medicines";
 export * from "./milk";
 export * from "./orientations";
-export * as Next from "./next";
+export * as NextNutritionCareRepoExpo from "./next";

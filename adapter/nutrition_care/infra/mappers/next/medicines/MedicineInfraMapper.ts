@@ -1,18 +1,16 @@
-import {
-  Medicine,
-  CreateMedicine,
-} from "../../../../../core/nutrition_care/domain/modules/next/medicines/models";
+
+import { NextNutritionCare } from "@/core/nutrition_care";
 import {
   formatError,
   InfraMapToDomainError,
   InfrastructureMapper,
 } from "@/core/shared";
-import { MedicinePersistenceDto } from "../../dtos/next/medicines/MedicinePersistenceDto";
+import { MedicinePersistenceDto } from "../../../dtos/next/medicines";
+
 
 export class MedicineInfraMapper
-  implements InfrastructureMapper<Medicine, MedicinePersistenceDto>
-{
-  toPersistence(entity: Medicine): MedicinePersistenceDto {
+  implements InfrastructureMapper<NextNutritionCare.Medicine, MedicinePersistenceDto> {
+  toPersistence(entity: NextNutritionCare.Medicine): MedicinePersistenceDto {
     return {
       id: entity.id,
       code: entity.getCode(),
@@ -28,18 +26,18 @@ export class MedicineInfraMapper
       updatedAt: entity.updatedAt,
     };
   }
-  toDomain(record: MedicinePersistenceDto): Medicine {
-    const medicineRes = Medicine.create(
-      record as CreateMedicine,
+  toDomain(record: MedicinePersistenceDto): NextNutritionCare.Medicine {
+    const medicineRes = NextNutritionCare.Medicine.create(
+      record as NextNutritionCare.CreateMedicine,
       record.id
     );
 
     if (medicineRes.isFailure) {
       throw new InfraMapToDomainError(
-        formatError(medicineRes, Medicine.name)
+        formatError(medicineRes, NextNutritionCare.Medicine.name)
       );
     }
     const { id, createdAt, updatedAt, ...props } = medicineRes.val.getProps();
-    return new Medicine({ id, createdAt, updatedAt, props });
+    return new NextNutritionCare.Medicine({ id, createdAt, updatedAt, props });
   }
 }
