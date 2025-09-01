@@ -15,14 +15,17 @@ export class NormalizeAnthropomericDataACL
     anthropRecord: AnthropometricRecord
   ): Promise<Result<AnthropometricRecord>> {
     try {
-      const result = await this.normalizeAnthropometricDataService.normalizeAnthropometricData({
-        anthropometricMeasures: [
+      const result =
+        await this.normalizeAnthropometricDataService.normalizeAnthropometricData(
           {
-            code: anthropRecord.getCode(),
-            ...anthropRecord.getMeasurement(),
-          },
-        ],
-      });
+            anthropometricMeasures: [
+              {
+                code: anthropRecord.getCode(),
+                ...anthropRecord.getMeasurement(),
+              },
+            ],
+          }
+        );
       if ("data" in result) {
         const normalizeRecord = result.data[0];
         const newUnitRes = UnitCode.create(normalizeRecord.unit);

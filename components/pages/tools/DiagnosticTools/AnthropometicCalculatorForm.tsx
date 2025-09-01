@@ -22,7 +22,6 @@ export interface AnthropometricCalculatorFormProps {
 const AnthropometricCalcualtorFormComponent: React.FC<
   AnthropometricCalculatorFormProps
 > = ({ formRef, schema, title, zodSchema, initialState }) => {
-  
   return (
     <VStack className="m-4 gap-4 rounded-xl bg-background-secondary px-3 py-3">
       {title && (

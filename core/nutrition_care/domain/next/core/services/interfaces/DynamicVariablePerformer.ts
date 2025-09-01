@@ -1,7 +1,9 @@
 import { Result } from "@/core/shared";
 
 export interface IDynamicVariablePerformer {
-    generateVariable(context: Record<string, number>): Promise<Result<Record<string, number>>>;
+  generateVariable(
+    context: Record<string, number>
+  ): Promise<Result<Record<string, number>>>;
 }
 
 /**

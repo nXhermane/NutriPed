@@ -9,7 +9,7 @@ import { AggregateID, DomainDateTime } from "../shared/domain";
 import { handleError } from "../shared/exceptions";
 
 export class MedicalRecordACLImpl implements MedicalRecordACL {
-  constructor(private readonly medicalRecordService: IMedicalRecordService) { }
+  constructor(private readonly medicalRecordService: IMedicalRecordService) {}
 
   async getPatientData(data: {
     patientId: AggregateID;
@@ -114,7 +114,7 @@ export class MedicalRecordACLImpl implements MedicalRecordACL {
         if (
           !acc[key] ||
           new Date(acc[key].recordedAt).getTime() <=
-          new Date(current.recordedAt).getTime()
+            new Date(current.recordedAt).getTime()
         )
           acc[current.code] = current;
         return acc;

@@ -237,7 +237,9 @@ export const next_medicines = sqliteTable("next_medicines", {
   code: text("code").notNull(),
   name: text("name").notNull(),
   category: text("category").notNull(),
-  administrationRoutes: text("administration_routes", { mode: "json" }).notNull(),
+  administrationRoutes: text("administration_routes", {
+    mode: "json",
+  }).notNull(),
   dosageCases: text("dosage_cases", { mode: "json" }).notNull(),
   warnings: text("warnings", { mode: "json" }).notNull(),
   contraindications: text("contraindications", { mode: "json" }).notNull(),

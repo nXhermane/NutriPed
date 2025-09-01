@@ -1,7 +1,5 @@
 import { Result } from "@shared";
-import {
-  NutritionalAssessmentResult,
-} from "../../../models";
+import { NutritionalAssessmentResult } from "../../../models";
 import { EvaluationContext } from "../../../../common";
 import { AnthropometricData } from "../../../../anthropometry";
 import { ClinicalData } from "../../../../clinical";

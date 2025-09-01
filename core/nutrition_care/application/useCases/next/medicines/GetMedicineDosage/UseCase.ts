@@ -13,14 +13,15 @@ import { NextNutritionCare } from "@/core/nutrition_care/domain";
 import { NextMedicinesDto } from "@/core/nutrition_care/application/dtos";
 
 export class GetMedicineDosageUseCase
-  implements UseCase<GetMedicineDosageRequest, GetMedicineDosageResponse> {
+  implements UseCase<GetMedicineDosageRequest, GetMedicineDosageResponse>
+{
   constructor(
     private readonly calculator: NextNutritionCare.IMedicationDosageCalculator,
     private readonly mapper: ApplicationMapper<
       NextNutritionCare.MedicationDosageResult,
       NextMedicinesDto.MedicationDosageResultDto
     >
-  ) { }
+  ) {}
   async execute(
     request: GetMedicineDosageRequest
   ): Promise<GetMedicineDosageResponse> {

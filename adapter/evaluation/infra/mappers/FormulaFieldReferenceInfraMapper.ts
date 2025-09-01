@@ -27,9 +27,7 @@ export class FormulaFieldReferenceInfraMapper
       updatedAt: entity.updatedAt,
     };
   }
-  toDomain(
-    record: FormulaFieldReferencePersistenceDto
-  ): FormulaFieldReference {
+  toDomain(record: FormulaFieldReferencePersistenceDto): FormulaFieldReference {
     const formulaFieldRes = FormulaFieldReference.create(
       {
         code: record.code,

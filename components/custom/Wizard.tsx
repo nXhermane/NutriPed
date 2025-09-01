@@ -148,11 +148,11 @@ export function Wizard({ children, startStep = 0 }: WizardProps) {
         isValidElement(child) &&
         (child.type as any).displayName === WIZARD_STEP_NAME
     );
-    
+
     if (validSteps.length !== allChildren.length) {
       throw new Error("All <Wizard> children must be <Wizard.Step>");
     }
-    
+
     return validSteps.sort((a, b) => a.props.stepNumber - b.props.stepNumber);
   }, [children]);
 
@@ -162,33 +162,45 @@ export function Wizard({ children, startStep = 0 }: WizardProps) {
   }, [steps, currentStepNumber]);
 
   // Optimisation 5: Memoize changeStepNumber avec les bonnes dépendances
-  const changeStepNumber = useCallback((stepNumber: number) => {
-    const stepsNumbers = steps.map(step => step.props.stepNumber);
-    if (stepsNumbers.includes(stepNumber)) {
-      setCurrentStepNumber(stepNumber);
-    }
-  }, [steps]);
+  const changeStepNumber = useCallback(
+    (stepNumber: number) => {
+      const stepsNumbers = steps.map(step => step.props.stepNumber);
+      if (stepsNumbers.includes(stepNumber)) {
+        setCurrentStepNumber(stepNumber);
+      }
+    },
+    [steps]
+  );
 
   // Optimisation 6: Memoize context value
-  const contextValue = useMemo(() => ({
-    changeStepNumber,
-    wizardStateDispatcher: dispatch,
-    wizardStates,
-    currentStepNumber,
-    currentStepIndex,
-  }), [changeStepNumber, wizardStates, currentStepNumber, currentStepIndex]);
+  const contextValue = useMemo(
+    () => ({
+      changeStepNumber,
+      wizardStateDispatcher: dispatch,
+      wizardStates,
+      currentStepNumber,
+      currentStepIndex,
+    }),
+    [changeStepNumber, wizardStates, currentStepNumber, currentStepIndex]
+  );
 
   return (
     <WizardContext.Provider value={contextValue}>
       <VStack className="flex-1">
         <Header
           currentTitle={
-            currentStepIndex !== -1 ? steps[currentStepIndex].props.label : undefined
+            currentStepIndex !== -1
+              ? steps[currentStepIndex].props.label
+              : undefined
           }
           stepsLength={steps.length}
           currentStepIndex={currentStepIndex}
         />
-        <Body component={currentStepIndex !== -1 ? steps[currentStepIndex] : undefined} />
+        <Body
+          component={
+            currentStepIndex !== -1 ? steps[currentStepIndex] : undefined
+          }
+        />
         <Footer
           isStart={startStep === currentStepNumber}
           currentStepNumber={currentStepNumber}
@@ -207,49 +219,47 @@ interface WizardHeaderProps {
 }
 
 // Optimisation 7: Memoize Header component
-const Header = memo<WizardHeaderProps>(({
-  currentTitle,
-  currentStepIndex,
-  stepsLength,
-}) => {
-  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
+const Header = memo<WizardHeaderProps>(
+  ({ currentTitle, currentStepIndex, stepsLength }) => {
+    const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
 
-  useEffect(() => {
-    const timeOutId = setTimeout(() => {
-      setIsTimeOut(true);
-    }, 1500);
-    return () => clearTimeout(timeOutId);
-  }, []);
+    useEffect(() => {
+      const timeOutId = setTimeout(() => {
+        setIsTimeOut(true);
+      }, 1500);
+      return () => clearTimeout(timeOutId);
+    }, []);
 
-  // Optimisation 8: Memoize progress value calculation
-  const progressValue = useMemo(() => {
-    return currentStepIndex !== -1 
-      ? (currentStepIndex * 100) / Math.max(stepsLength - 1, 1)
-      : 0;
-  }, [currentStepIndex, stepsLength]);
+    // Optimisation 8: Memoize progress value calculation
+    const progressValue = useMemo(() => {
+      return currentStepIndex !== -1
+        ? (currentStepIndex * 100) / Math.max(stepsLength - 1, 1)
+        : 0;
+    }, [currentStepIndex, stepsLength]);
 
-  return (
-    <VStack>
-      <HStack className="h-v-8 w-full items-center justify-between bg-background-secondary px-2">
-        <FadeInCardY trigger={currentStepIndex} delayNumber={0.4}>
-          <Text className="font-body text-sm font-normal text-typography-primary">
-            {currentTitle || (isTimeOut ? "Step not found" : "Loading...")}
+    return (
+      <VStack>
+        <HStack className="h-v-8 w-full items-center justify-between bg-background-secondary px-2">
+          <FadeInCardY trigger={currentStepIndex} delayNumber={0.4}>
+            <Text className="font-body text-sm font-normal text-typography-primary">
+              {currentTitle || (isTimeOut ? "Step not found" : "Loading...")}
+            </Text>
+          </FadeInCardY>
+
+          <Text className="rounded-full bg-primary-border/5 p-1 px-2 font-light text-xs text-typography-primary_light">
+            {`${currentStepIndex + 1}/${stepsLength}`}
           </Text>
-        </FadeInCardY>
-
-        <Text className="rounded-full bg-primary-border/5 p-1 px-2 font-light text-xs text-typography-primary_light">
-          {`${currentStepIndex + 1}/${stepsLength}`}
-        </Text>
-      </HStack>
-      <Progress
-        className="absolute bottom-0 h-v-1 rounded-none bg-background-secondary"
-        value={progressValue}
-      >
-        <ProgressFilledTrack className="rounded-full bg-primary-c_light" />
-      </Progress>
-    </VStack>
-  );
-});
+        </HStack>
+        <Progress
+          className="absolute bottom-0 h-v-1 rounded-none bg-background-secondary"
+          value={progressValue}
+        >
+          <ProgressFilledTrack className="rounded-full bg-primary-c_light" />
+        </Progress>
+      </VStack>
+    );
+  }
+);
 
 Header.displayName = "WizardHeader";
 
@@ -270,18 +280,24 @@ const Body = memo<WizardBodyProps>(({ component }) => {
   }, []);
 
   // Optimisation 10: Memoize error view style
-  const errorViewStyle = useMemo(() => ({
-    flex: 1,
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-  }), []);
+  const errorViewStyle = useMemo(
+    () => ({
+      flex: 1,
+      justifyContent: "center" as const,
+      alignItems: "center" as const,
+    }),
+    []
+  );
 
-  const errorTextStyle = useMemo(() => ({
-    fontSize: 14,
-    color: colorScheme === "light" ? "#000" : "#fff",
-    fontStyle: "italic" as const,
-    fontWeight: 500 as const,
-  }), [colorScheme]);
+  const errorTextStyle = useMemo(
+    () => ({
+      fontSize: 14,
+      color: colorScheme === "light" ? "#000" : "#fff",
+      fontStyle: "italic" as const,
+      fontWeight: 500 as const,
+    }),
+    [colorScheme]
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -289,9 +305,7 @@ const Body = memo<WizardBodyProps>(({ component }) => {
         component
       ) : isTimeOut ? (
         <View style={errorViewStyle}>
-          <RNText style={errorTextStyle}>
-            Step not found
-          </RNText>
+          <RNText style={errorTextStyle}>Step not found</RNText>
         </View>
       ) : (
         <Loading />
@@ -310,53 +324,51 @@ export interface WizardFooterProps {
 }
 
 // Optimisation 11: Memoize Footer component et utilise le context
-const Footer = memo<WizardFooterProps>(({
-  isStart = false,
-  currentStepNumber,
-  currentStepIndex,
-  steps,
-}) => {
-  const { wizardStates } = useWizard();
-  
-  const currentStep = wizardStates[currentStepNumber];
-  const stepProps = currentStepIndex !== -1 ? steps[currentStepIndex].props : null;
-  
-  const onNext = useCallback(() => {
-    currentStep?.onNext?.();
-  }, [currentStep]);
+const Footer = memo<WizardFooterProps>(
+  ({ isStart = false, currentStepNumber, currentStepIndex, steps }) => {
+    const { wizardStates } = useWizard();
 
-  const onPrev = useCallback(() => {
-    currentStep?.onPrev?.();
-  }, [currentStep]);
+    const currentStep = wizardStates[currentStepNumber];
+    const stepProps =
+      currentStepIndex !== -1 ? steps[currentStepIndex].props : null;
 
-  const nextBtnLabel = stepProps?.nextBtnLabel || "Next";
-  const prevBtnLabel = stepProps?.prevBtnLabel || "Previous";
-  const hasError = typeof currentStep?.error === "string";
+    const onNext = useCallback(() => {
+      currentStep?.onNext?.();
+    }, [currentStep]);
 
-  return (
-    <HStack className="justify-between gap-2 px-4 py-v-2">
-      {!isStart && (
+    const onPrev = useCallback(() => {
+      currentStep?.onPrev?.();
+    }, [currentStep]);
+
+    const nextBtnLabel = stepProps?.nextBtnLabel || "Next";
+    const prevBtnLabel = stepProps?.prevBtnLabel || "Previous";
+    const hasError = typeof currentStep?.error === "string";
+
+    return (
+      <HStack className="justify-between gap-2 px-4 py-v-2">
+        {!isStart && (
+          <Button
+            variant="outline"
+            className="flex-grow rounded-xl border-[0.5px] border-primary-border/5 bg-primary-c_light/20"
+            onPress={onPrev}
+          >
+            <ButtonText className="border-typography-primary_light font-h4 text-base font-medium text-primary-c_light">
+              {prevBtnLabel}
+            </ButtonText>
+          </Button>
+        )}
         <Button
-          variant="outline"
-          className="flex-grow rounded-xl border-[0.5px] border-primary-border/5 bg-primary-c_light/20"
-          onPress={onPrev}
+          className={`flex-grow rounded-xl ${hasError ? "bg-red-500" : "bg-primary-c_light"}`}
+          onPress={onNext}
         >
-          <ButtonText className="border-typography-primary_light font-h4 text-base font-medium text-primary-c_light">
-            {prevBtnLabel}
+          <ButtonText className="font-h4 text-base font-medium text-white data-[active=true]:text-primary-c_light">
+            {nextBtnLabel}
           </ButtonText>
         </Button>
-      )}
-      <Button
-        className={`flex-grow rounded-xl ${hasError ? "bg-red-500" : "bg-primary-c_light"}`}
-        onPress={onNext}
-      >
-        <ButtonText className="font-h4 text-base font-medium text-white data-[active=true]:text-primary-c_light">
-          {nextBtnLabel}
-        </ButtonText>
-      </Button>
-    </HStack>
-  );
-});
+      </HStack>
+    );
+  }
+);
 
 Footer.displayName = "WizardFooter";
 
@@ -403,7 +415,7 @@ const Step: React.FC<WizardStepProps> = ({
   const onNext = useCallback(
     (callback: (event: WizardNavigationEvent) => void) => {
       if (!wizardStateDispatcher) return;
-      
+
       wizardStateDispatcher({
         type: WIZARD_STEP_ACTION.SET_ON_NEXT,
         stepNumber,
@@ -429,7 +441,7 @@ const Step: React.FC<WizardStepProps> = ({
   const onPrev = useCallback(
     (callback: (event: WizardNavigationEvent) => void) => {
       if (!wizardStateDispatcher) return;
-      
+
       wizardStateDispatcher({
         type: WIZARD_STEP_ACTION.SET_ON_PREV,
         stepNumber,
@@ -477,14 +489,17 @@ const Step: React.FC<WizardStepProps> = ({
   );
 
   // Optimisation 13: Memoize context value
-  const stepContextValue = useMemo(() => ({
-    data: wizardStates[stepNumber]?.data ?? null,
-    error: wizardStates[stepNumber]?.error ?? null,
-    setData,
-    onNext,
-    onPrev,
-    setError,
-  }), [wizardStates, stepNumber, setData, onNext, onPrev, setError]);
+  const stepContextValue = useMemo(
+    () => ({
+      data: wizardStates[stepNumber]?.data ?? null,
+      error: wizardStates[stepNumber]?.error ?? null,
+      setData,
+      onNext,
+      onPrev,
+      setError,
+    }),
+    [wizardStates, stepNumber, setData, onNext, onPrev, setError]
+  );
 
   return (
     <WizardStepContext.Provider value={stepContextValue}>

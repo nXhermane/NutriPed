@@ -1,7 +1,5 @@
 import { Text } from "@/components/ui/text";
-import {
-  NavigationIndependentTree,
-} from "@react-navigation/native";
+import { NavigationIndependentTree } from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,

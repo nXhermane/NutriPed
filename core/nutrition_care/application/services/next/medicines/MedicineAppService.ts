@@ -8,7 +8,10 @@ import {
   GetMedicineDosageRequest,
   GetMedicineDosageResponse,
 } from "../../../useCases/next/medicines";
-import { MedicineDto, MedicationDosageResultDto } from "../../../../dtos/next/medicines";
+import {
+  MedicineDto,
+  MedicationDosageResultDto,
+} from "../../../../dtos/next/medicines";
 
 export interface MedicineServiceUseCases {
   createUC: UseCase<CreateMedicineRequest, CreateMedicineResponse>;

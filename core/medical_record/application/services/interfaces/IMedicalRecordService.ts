@@ -37,12 +37,14 @@ export interface IMedicalRecordService {
     req: GetNormalizedAnthropometricDataRequest
   ): Promise<
     | AppServiceResponse<
-      (CreateAnthropometricRecord & {
-        recordedAt: string;
-        id: AggregateID;
-      })[]
-    >
+        (CreateAnthropometricRecord & {
+          recordedAt: string;
+          id: AggregateID;
+        })[]
+      >
     | Message
   >;
-  getLatestValuesUntilDate(req: GetLatestValuesUntilDateRequest): Promise<AppServiceResponse<GetLastestValuesUnitlDateDto> | Message>
+  getLatestValuesUntilDate(
+    req: GetLatestValuesUntilDateRequest
+  ): Promise<AppServiceResponse<GetLastestValuesUnitlDateDto> | Message>;
 }

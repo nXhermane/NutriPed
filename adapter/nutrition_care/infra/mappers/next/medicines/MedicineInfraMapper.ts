@@ -1,4 +1,3 @@
-
 import { NextNutritionCare } from "@/core/nutrition_care";
 import {
   formatError,
@@ -7,9 +6,10 @@ import {
 } from "@/core/shared";
 import { MedicinePersistenceDto } from "../../../dtos/next/medicines";
 
-
 export class MedicineInfraMapper
-  implements InfrastructureMapper<NextNutritionCare.Medicine, MedicinePersistenceDto> {
+  implements
+    InfrastructureMapper<NextNutritionCare.Medicine, MedicinePersistenceDto>
+{
   toPersistence(entity: NextNutritionCare.Medicine): MedicinePersistenceDto {
     return {
       id: entity.id,

@@ -16,7 +16,13 @@ import React, { Ref, useEffect, useRef } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export function GeneralInformationStep() {
-  const { onNext, onPrev, setError, setData, data:wizardData } = useWizardStep();
+  const {
+    onNext,
+    onPrev,
+    setError,
+    setData,
+    data: wizardData,
+  } = useWizardStep();
   const formRef = useRef<FormHandler<any>>(null);
   useEffect(() => {
     onNext(async e => {

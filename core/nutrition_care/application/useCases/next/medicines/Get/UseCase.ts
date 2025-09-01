@@ -5,7 +5,7 @@ import {
   Result,
   right,
   UseCase,
-  SystemCode
+  SystemCode,
 } from "@shared";
 import { GetMedicineRequest } from "./Request";
 import { GetMedicineResponse } from "./Response";
@@ -13,11 +13,15 @@ import { NextNutritionCare } from "@/core/nutrition_care/domain";
 import { NextMedicinesDto } from "@/core/nutrition_care/application/dtos";
 
 export class GetMedicineUseCase
-  implements UseCase<GetMedicineRequest, GetMedicineResponse> {
+  implements UseCase<GetMedicineRequest, GetMedicineResponse>
+{
   constructor(
     private readonly repo: NextNutritionCare.MedicineRepository,
-    private readonly mapper: ApplicationMapper<NextNutritionCare.Medicine, NextMedicinesDto.MedicineDto>
-  ) { }
+    private readonly mapper: ApplicationMapper<
+      NextNutritionCare.Medicine,
+      NextMedicinesDto.MedicineDto
+    >
+  ) {}
   async execute(request: GetMedicineRequest): Promise<GetMedicineResponse> {
     try {
       const medicines = await (request.code

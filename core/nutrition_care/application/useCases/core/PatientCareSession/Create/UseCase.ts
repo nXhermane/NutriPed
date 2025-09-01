@@ -22,7 +22,8 @@ import {
 
 export class CreatePatientCareSessionUseCase
   implements
-  UseCase<CreatePatientCareSessionRequest, CreatePatientCareSessionResponse> {
+    UseCase<CreatePatientCareSessionRequest, CreatePatientCareSessionResponse>
+{
   constructor(
     private readonly patientCareSessionFactory: Factory<
       CreatePatientCareSessionProps,
@@ -30,7 +31,7 @@ export class CreatePatientCareSessionUseCase
     >,
     private readonly repo: PatientCareSessionRepository,
     private readonly patientAcl: NutritionCarePatientACL
-  ) { }
+  ) {}
 
   async execute(
     request: CreatePatientCareSessionRequest
@@ -70,12 +71,12 @@ export class CreatePatientCareSessionUseCase
     });
   }
   private async patientExist(patientId: AggregateID): Promise<boolean> {
-    const patientInfoRes = await this.patientAcl.getPatientInfo(patientId)
+    const patientInfoRes = await this.patientAcl.getPatientInfo(patientId);
     if (patientInfoRes.isFailure) {
       return false;
     }
     if (patientInfoRes.val === null) {
-      return false
+      return false;
     }
     return true;
   }

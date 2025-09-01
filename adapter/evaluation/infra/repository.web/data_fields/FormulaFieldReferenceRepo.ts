@@ -20,7 +20,9 @@ export class FormulaFieldReferenceRepositoryWebImpl extends EntityBaseRepository
             reject(new Error("Entity Not found"));
             return;
           }
-          resolve(this.mapper.toDomain(result as FormulaFieldReferencePersistenceDto));
+          resolve(
+            this.mapper.toDomain(result as FormulaFieldReferencePersistenceDto)
+          );
         };
 
         request.onerror = event => {

@@ -14,8 +14,14 @@ import { IFormulaFieldReferenceService } from "./interfaces";
 import { FormulaFieldReferenceDto } from "../dtos";
 
 export interface FormulaFieldReferenceUseCases {
-  createUC: UseCase<CreateFormulaFieldReferenceRequest, CreateFormulaFieldReferenceResponse>;
-  getUC: UseCase<GetFormulaFieldReferenceRequest, GetFormulaFieldReferenceResponse>;
+  createUC: UseCase<
+    CreateFormulaFieldReferenceRequest,
+    CreateFormulaFieldReferenceResponse
+  >;
+  getUC: UseCase<
+    GetFormulaFieldReferenceRequest,
+    GetFormulaFieldReferenceResponse
+  >;
 }
 
 export class FormulaFieldReferenceService

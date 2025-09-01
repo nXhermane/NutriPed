@@ -20,9 +20,7 @@ import {
   WeightZodSchema,
 } from "./sharedAnthropometricDataForm";
 import { z } from "zod";
-import {
-  AnthroSystemCodes,
-} from "@/core/constants";
+import { AnthroSystemCodes } from "@/core/constants";
 import { makeOptionalSchema, validateWithSchemaPipeline } from "./utils";
 
 export const AnthropometricCalculatorFormSchema: FormSchema = [

@@ -9,6 +9,4 @@ export class MedicineRepositoryExpo
     MedicinePersistenceDto,
     typeof next_medicines
   >
-  implements NextNutritionCare.MedicineRepository {
-
-}
+  implements NextNutritionCare.MedicineRepository {}

@@ -10,5 +10,4 @@ export class FormulaFieldReferenceExpoRepo
     FormulaFieldReferencePersistenceDto,
     typeof formula_field_references
   >
-  implements FormulaFieldRefrenceRepo {
-}
+  implements FormulaFieldRefrenceRepo {}

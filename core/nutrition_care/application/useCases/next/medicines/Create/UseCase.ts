@@ -11,17 +11,21 @@ import { CreateMedicineResponse } from "./Response";
 import { NextNutritionCare } from "@/core/nutrition_care/domain";
 
 export class CreateMedicineUseCase
-  implements UseCase<CreateMedicineRequest, CreateMedicineResponse> {
+  implements UseCase<CreateMedicineRequest, CreateMedicineResponse>
+{
   constructor(
     private readonly idGenerator: GenerateUniqueId,
     private readonly repo: NextNutritionCare.MedicineRepository
-  ) { }
+  ) {}
   async execute(
     request: CreateMedicineRequest
   ): Promise<CreateMedicineResponse> {
     try {
       const newId = this.idGenerator.generate().toValue();
-      const medicineRes = NextNutritionCare.Medicine.create(request.data, newId);
+      const medicineRes = NextNutritionCare.Medicine.create(
+        request.data,
+        newId
+      );
       if (medicineRes.isFailure) return left(medicineRes);
 
       const medicine = medicineRes.val;
