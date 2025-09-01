@@ -878,7 +878,7 @@ export class DiagnosticContext {
   private readonly indicatorAppService: IIndicatorService;
   private readonly growthChartAppService: IGrowthReferenceChartService;
   private readonly growthTableAppService: IGrowthReferenceTableService;
-  private readonly normalizeAnthropometricDataAppService: INormalizeDataAppService;
+  private readonly normalizeDataAppService: INormalizeDataAppService;
   private readonly clinicalRefAppService: IClinicalSignReferenceService;
   private readonly clinicalNutritionalAnalysisAppService: IClinicalNutritionalAnalysisAppService;
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
@@ -1627,7 +1627,7 @@ export class DiagnosticContext {
       calculateAllAvailableIndicator:
         this.calculateAllAvailableGrowthIndicatorValueUC,
     });
-    this.normalizeAnthropometricDataAppService =
+    this.normalizeDataAppService =
       new NormalizeDataAppService({
         normalizeAnthropometricDataUC: this.normalizeAnthropometricDataUC,
         normalizeAndFillDefaultUC: this.normalizeAndFillDefaultDataFieldResponseUC
@@ -1781,8 +1781,8 @@ export class DiagnosticContext {
   getMakeClinicalSignDataInterpretationService(): IMakeClinicalSignDataInterpretationService {
     return this.makeClinicalSignInterpretationAppService;
   }
-  getNormalizeAnthropomtricDataService(): INormalizeDataAppService {
-    return this.normalizeAnthropometricDataAppService;
+  getNormalizeDataService(): INormalizeDataAppService {
+    return this.normalizeDataAppService;
   }
   getDataFieldService(): IDataFieldReferenceService {
     return this.dataFieldReferenceAppService;

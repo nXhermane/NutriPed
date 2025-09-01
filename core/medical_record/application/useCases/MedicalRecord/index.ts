@@ -5,3 +5,4 @@ export * from "./Update";
 export * from "./Delete";
 export * from "./DeleteData";
 export * from "./GetNormalizedAnthropometricData";
+export * from "./GetLastestValuesUntilDate";
