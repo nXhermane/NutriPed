@@ -387,12 +387,12 @@ export const formula_field_references = sqliteTable(
   {
     id: text("field_id").primaryKey(),
     code: text("field_code", { length: 50 }).notNull(),
-    formula: text("field_formula").notNull(),
-    description: text("field_description").notNull(),
-    variablesExplanation: text("field_variables_explanation", {
-      mode: "json",
-    })
-      .$type<Record<string, string>>()
+    formula: text("field_formula", { mode: "json" })
+      .$type<{
+        formula: string;
+        description: string;
+        variablesExplanation: Record<string, string>;
+      }>()
       .notNull(),
     createdAt: text("createdAt", { length: 50 }).notNull(),
     updatedAt: text("updatedAt", { length: 50 }).notNull(),

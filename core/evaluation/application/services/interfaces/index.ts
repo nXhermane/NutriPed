@@ -7,7 +7,6 @@ export * from "./GrowthReferenceTableService";
 export * from "./NutritionalDiagnosticService";
 export * from "./NutritionalRiskFactorService";
 export * from "./ValidatePatientMeasurementsService";
-export * from "./FormulaFieldReferenceService";
 export * from "./DiagnosticRuleService";
 export * from "./GrowthIndicatorValueService";
 export * from "./ClinicalNutritionalAnalysisService";

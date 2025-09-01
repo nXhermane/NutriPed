@@ -3,6 +3,6 @@ import { FormulaFieldReference } from "../../../models";
 
 export interface FormulaFieldReferenceRepository
   extends Repository<FormulaFieldReference> {
-  getByCode(code: SystemCode): Promise<FormulaFieldReference | null>;
+  getByCode(code: SystemCode): Promise<FormulaFieldReference>;
   getAll(): Promise<FormulaFieldReference[]>;
 }
