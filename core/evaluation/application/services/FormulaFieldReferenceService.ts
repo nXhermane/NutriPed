@@ -5,17 +5,17 @@ import {
   UseCase,
 } from "@/core/shared";
 import {
-  CreateFormulaFieldRefRequest,
-  CreateFormulaFieldRefResponse,
-  GetFormulaFieldRefRequest,
-  GetFormulaFieldRefResponse,
+  CreateFormulaFieldReferenceRequest,
+  CreateFormulaFieldReferenceResponse,
+  GetFormulaFieldReferenceRequest,
+  GetFormulaFieldReferenceResponse,
 } from "../useCases";
 import { IFormulaFieldReferenceService } from "./interfaces";
 import { FormulaFieldReferenceDto } from "../dtos";
 
 export interface FormulaFieldReferenceUseCases {
-  createUC: UseCase<CreateFormulaFieldRefRequest, CreateFormulaFieldRefResponse>;
-  getUC: UseCase<GetFormulaFieldRefRequest, GetFormulaFieldRefResponse>;
+  createUC: UseCase<CreateFormulaFieldReferenceRequest, CreateFormulaFieldReferenceResponse>;
+  getUC: UseCase<GetFormulaFieldReferenceRequest, GetFormulaFieldReferenceResponse>;
 }
 
 export class FormulaFieldReferenceService
@@ -23,14 +23,14 @@ export class FormulaFieldReferenceService
 {
   constructor(private readonly ucs: FormulaFieldReferenceUseCases) {}
   async create(
-    req: CreateFormulaFieldRefRequest
+    req: CreateFormulaFieldReferenceRequest
   ): Promise<AppServiceResponse<{ id: AggregateID }> | Message> {
     const res = await this.ucs.createUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any).err));
   }
   async get(
-    req: GetFormulaFieldRefRequest
+    req: GetFormulaFieldReferenceRequest
   ): Promise<AppServiceResponse<FormulaFieldReferenceDto[]> | Message> {
     const res = await this.ucs.getUC.execute(req);
     if (res.isRight()) return { data: res.value.val };

@@ -1,15 +1,15 @@
 import { AggregateID, AppServiceResponse, Message } from "@/core/shared";
 import {
-  CreateFormulaFieldRefRequest,
-  GetFormulaFieldRefRequest,
+  CreateFormulaFieldReferenceRequest,
+  GetFormulaFieldReferenceRequest,
 } from "../../useCases";
 import { FormulaFieldReferenceDto } from "../../dtos";
 
 export interface IFormulaFieldReferenceService {
   create(
-    req: CreateFormulaFieldRefRequest
+    req: CreateFormulaFieldReferenceRequest
   ): Promise<AppServiceResponse<{ id: AggregateID }> | Message>;
   get(
-    req: GetFormulaFieldRefRequest
+    req: GetFormulaFieldReferenceRequest
   ): Promise<AppServiceResponse<FormulaFieldReferenceDto[]> | Message>;
 }
