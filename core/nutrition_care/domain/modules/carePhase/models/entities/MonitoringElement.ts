@@ -16,7 +16,7 @@ import {
   SystemCode,
 } from "@/core/shared";
 import { ValueOf } from "@/utils";
-import { IMonitoringFrequency, MonitoringFrequency } from "../valueObjects";
+import { IFrequency, Frequency, Duration, IDuration } from "../valueObjects";
 export type MONITORING_CODE_TYPE =
   | AnthroSystemCodes
   | ValueOf<typeof BIOCHEMICAL_REF_CODES>
@@ -26,14 +26,16 @@ export interface IMonitoringElement extends EntityPropsBaseType {
   category: MONITORING_ELEMENT_CATEGORY;
   source: MONITORING_VALUE_SOURCE;
   code: SystemCode<MONITORING_CODE_TYPE>;
-  frequency: MonitoringFrequency;
+  frequency: Frequency;
+  duration: Duration;
 }
 
 export interface CreateMonitoringElement {
   category: MONITORING_ELEMENT_CATEGORY;
   source: MONITORING_VALUE_SOURCE;
   code: MONITORING_CODE_TYPE;
-  frequency: IMonitoringFrequency;
+  frequency: IFrequency;
+  duration: IDuration;
 }
 
 export class MonitoringElement extends Entity<IMonitoringElement> {
@@ -46,8 +48,11 @@ export class MonitoringElement extends Entity<IMonitoringElement> {
   getCode(): MONITORING_CODE_TYPE {
     return this.props.code.unpack();
   }
-  getFrequency(): IMonitoringFrequency {
+  getFrequency(): IFrequency {
     return this.props.frequency.unpack();
+  }
+  getDuration(): IDuration {
+    return this.props.duration.unpack();
   }
   // BETA: laisser les methods d'update d'abord...
   validate(): void {
@@ -60,9 +65,10 @@ export class MonitoringElement extends Entity<IMonitoringElement> {
     id: AggregateID
   ): Result<MonitoringElement> {
     try {
-      const frequencyRes = MonitoringFrequency.create(createProps.frequency);
+      const frequencyRes = Frequency.create(createProps.frequency);
+      const durationRes = Duration.create(createProps.duration);
       const codeRes = SystemCode.create(createProps.code);
-      const combinedRes = Result.combine([codeRes, frequencyRes]);
+      const combinedRes = Result.combine([codeRes, frequencyRes, durationRes]);
       if (combinedRes.isFailure) {
         return Result.fail(formatError(combinedRes, MonitoringElement.name));
       }
@@ -73,6 +79,7 @@ export class MonitoringElement extends Entity<IMonitoringElement> {
             category: createProps.category,
             code: codeRes.val,
             frequency: frequencyRes.val,
+            duration: durationRes.val,
             source: createProps.source,
           },
         })

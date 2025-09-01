@@ -1,4 +1,4 @@
-import { MONITORING_FREQUENCY_TYPE } from "@/core/constants";
+import { FREQUENCY_TYPE } from "@/core/constants";
 import {
   Guard,
   handleError,
@@ -7,13 +7,13 @@ import {
   ValueObject,
 } from "@/core/shared";
 
-export interface IMonitoringFrequency {
-  intervalUnit: MONITORING_FREQUENCY_TYPE;
+export interface IFrequency {
+  intervalUnit: FREQUENCY_TYPE;
   intervalValue: number;
   countInUnit: number;
 }
-export class MonitoringFrequency extends ValueObject<IMonitoringFrequency> {
-  getUnit(): MONITORING_FREQUENCY_TYPE {
+export class Frequency extends ValueObject<IFrequency> {
+  getUnit(): FREQUENCY_TYPE {
     return this.props.intervalUnit;
   }
   getIntervalValue(): number {
@@ -22,7 +22,7 @@ export class MonitoringFrequency extends ValueObject<IMonitoringFrequency> {
   getCountInUnit(): number {
     return this.props.countInUnit;
   }
-  protected validate(props: Readonly<IMonitoringFrequency>): void {
+  protected validate(props: Readonly<IFrequency>): void {
     if (
       Guard.isNegative(props.countInUnit).succeeded ||
       Guard.isNegative(props.intervalValue).succeeded
@@ -32,9 +32,9 @@ export class MonitoringFrequency extends ValueObject<IMonitoringFrequency> {
       );
     }
   }
-  static create(props: IMonitoringFrequency): Result<MonitoringFrequency> {
+  static create(props: IFrequency): Result<Frequency> {
     try {
-      return Result.ok(new MonitoringFrequency(props));
+      return Result.ok(new Frequency(props));
     } catch (e: unknown) {
       return handleError(e);
     }
