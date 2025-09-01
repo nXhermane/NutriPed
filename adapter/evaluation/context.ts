@@ -67,6 +67,7 @@ import {
   CreateDataFieldRefRequest,
   CreateDataFieldRefResponse,
   CreateDataFieldRefUseCase,
+  CreateFormulaFieldReferenceUseCase,
   CreateDiagnosticRuleRequest,
   CreateDiagnosticRuleResponse,
   CreateDiagnosticRuleUseCase,
@@ -92,6 +93,7 @@ import {
   DataFieldReferenceMapper,
   DataFieldReferenceRepository,
   DataFieldReferenceService,
+  FormulaFieldReferenceService,
   DataFieldValidationService,
   DeleteAnthropometricMeasureRequest,
   DeleteAnthropometricMeasureResponse,
@@ -146,6 +148,7 @@ import {
   GetDataFieldRefRequest,
   GetDataFieldRefResponse,
   GetDataFieldRefUseCase,
+  GetFormulaFieldReferenceUseCase,
   GetDiagnosticRuleRequest,
   GetDiagnosticRuleResponse,
   GetDiagnosticRuleUseCase,
@@ -219,6 +222,14 @@ import {
   IReferenceSelectionService,
   IValidatePatientMeasurementsService,
   IZScoreCalculationService,
+  FormulaFieldReference,
+  FormulaFieldReferenceDto,
+  CreateFormulaFieldReferenceRequest,
+  CreateFormulaFieldReferenceResponse,
+  GetFormulaFieldReferenceRequest,
+  GetFormulaFieldReferenceResponse,
+  IFormulaFieldReferenceService,
+  FormulaFieldRefrenceRepo,
   IZScoreInterpretationService,
   LenheiBasedStrategy,
   MakeBiologicalInterpretationRequest,
@@ -316,6 +327,7 @@ import {
   NutritionalDiagnosticPersistenceDto,
   NutritionalRiskFactorPersistenceDto,
   PatientDiagnosticDataPersistenceDto,
+  FormulaFieldReferencePersistenceDto,
 } from "./infra/dtos";
 import {
   AnthropometricMeasureInfraMapper,
@@ -323,6 +335,7 @@ import {
   BiochemicalReferenceInfraMapper,
   ClinicalSignReferenceInfraMapper,
   DataFieldReferenceInfraMapper,
+  FormulaFieldReferenceMapper,
   DiagnosticRuleInfraMapper,
   GrowthReferenceChartInfraMapper,
   GrowthReferenceTableInfraMapper,
@@ -332,6 +345,7 @@ import {
   NutritionalDiagnosticInfraMapper,
   NutritionalRiskFactorInfraMapper,
   PatientDiagnosticDataInfraMapper,
+  FormulaFieldReferenceInfraMapper,
 } from "./infra/mappers";
 import {
   NutritionalAssessmentService,
@@ -348,6 +362,7 @@ import {
   GrowthReferenceTableRepositoryWebImpl,
   NutritionalRiskFactorRepoWebImpl,
   DataFieldReferenceRepositoryWebImpl,
+  FormulaFieldReferenceRepositoryWebImpl,
   AppetiteTestRefRepositoryWebImpl,
 } from "./infra/repository.web";
 import {
@@ -398,6 +413,8 @@ import {
   NutritionalRiskFactorRepositoryExpoImpl,
   patient_diagnostic_data,
   PatientDiagnosticDataRepositoryExpoImpl,
+  formula_field_references,
+  FormulaFieldReferenceExpoRepo,
 } from "./infra";
 import { MedicalRecordContext } from "../medical_record";
 import { NextClinicalUseCase } from "@/core/evaluation/application/useCases/next";
@@ -450,6 +467,10 @@ export class DiagnosticContext {
     DataFieldReference,
     DataFieldReferencePersistenceDto
   >;
+  private readonly formulaFieldRefInfraMapper: InfrastructureMapper<
+    FormulaFieldReference,
+    FormulaFieldReferencePersistenceDto
+  >;
   private readonly diagnosticRuleInfraMapper: InfrastructureMapper<
     DiagnosticRule,
     DiagnosticRulePersistenceDto
@@ -482,6 +503,7 @@ export class DiagnosticContext {
   private readonly clinicalRefRepo: ClinicalSignReferenceRepository;
   private readonly biochemicalRefRepo: BiochemicalReferenceRepository;
   private readonly dataFieldRefRepo: DataFieldReferenceRepository;
+  private readonly formulaFieldRefRepo: FormulaFieldRefrenceRepo;
   private readonly diagnosticRuleRepo: DiagnosticRuleRepository;
   private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository;
   private readonly nextClinicalSignRefRepo: NextClinicalDomain.ClinicalSignReferenceRepository;
@@ -556,6 +578,10 @@ export class DiagnosticContext {
   private readonly dataFieldRefAppMapper: ApplicationMapper<
     DataFieldReference,
     DataFieldReferenceDto
+  >;
+  private readonly formulaFieldRefAppMapper: ApplicationMapper<
+    FormulaFieldReference,
+    FormulaFieldReferenceDto
   >;
   private readonly diagnosticRuleAppMapper: ApplicationMapper<
     DiagnosticRule,
@@ -724,9 +750,17 @@ export class DiagnosticContext {
     CreateDataFieldRefRequest,
     CreateDataFieldRefResponse
   >;
+  private readonly createFormulaFieldReferenceUC: UseCase<
+    CreateFormulaFieldReferenceRequest,
+    CreateFormulaFieldReferenceResponse
+  >;
   private readonly getDataFieldReferenceUC: UseCase<
     GetDataFieldRefRequest,
     GetDataFieldRefResponse
+  >;
+  private readonly getFormulaFieldReferenceUC: UseCase<
+    GetFormulaFieldReferenceRequest,
+    GetFormulaFieldReferenceResponse
   >;
   private readonly valideDataFieldResponseUC: UseCase<
     ValidateDataFieldResponseRequest,
@@ -852,6 +886,7 @@ export class DiagnosticContext {
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
   private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
   private readonly dataFieldReferenceAppService: IDataFieldReferenceService;
+  private readonly formulaFieldReferenceAppService: IFormulaFieldReferenceService;
   private readonly nextClinicalSignRefAppService: NextClinicalAppServices.IClinicalSignRefService;
   private readonly nextClinicalAnalysisAppService: NextClinicalAppServices.IClinicalAnalysisService;
   private readonly nextNutritionalRiskFactorAppService: NextClinicalAppServices.INutritionalRiskFactorService;
@@ -912,6 +947,7 @@ export class DiagnosticContext {
     this.clinicalRefInfraMapper = new ClinicalSignReferenceInfraMapper();
     this.biochemicalRefInfraMapper = new BiochemicalReferenceInfraMapper();
     this.dataFieldRefInfraMapper = new DataFieldReferenceInfraMapper();
+    this.formulaFieldRefInfraMapper = new FormulaFieldReferenceInfraMapper();
     this.diagnosticRuleInfraMapper = new DiagnosticRuleInfraMapper();
     this.nutritionalRiskFactorInfraMapper =
       new NutritionalRiskFactorInfraMapper();
@@ -1028,6 +1064,16 @@ export class DiagnosticContext {
           this.dataFieldRefInfraMapper,
           data_field_references,
           this.eventBus
+        );
+    this.formulaFieldRefRepo = isWebEnv()
+      ? new FormulaFieldReferenceRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.formulaFieldRefInfraMapper
+        )
+      : new FormulaFieldReferenceExpoRepo(
+          this.expo as SQLiteDatabase,
+          this.formulaFieldRefInfraMapper,
+          formula_field_references
         );
     this.diagnosticRuleRepo = isWebEnv()
       ? new DiagnosticRuleRepositoryWebImpl(
@@ -1206,6 +1252,7 @@ export class DiagnosticContext {
     this.clinicalRefAppMapper = new ClinicalSignReferenceMapper();
     this.biochemicalRefAppMapper = new BiochemicalReferenceMapper();
     this.dataFieldRefAppMapper = new DataFieldReferenceMapper();
+    this.formulaFieldRefAppMapper = new FormulaFieldReferenceMapper();
     this.diagnosticRuleAppMapper = new DiagnosticRuleMapper();
     this.patientDiagnosticDataAppMapper = new PatientDiagnosticDataMapper();
     this.nutritionalAssessmentAppMapper =
@@ -1376,9 +1423,17 @@ export class DiagnosticContext {
       this.idGenerator,
       this.dataFieldRefRepo
     );
+    this.createFormulaFieldReferenceUC = new CreateFormulaFieldReferenceUseCase(
+      this.idGenerator,
+      this.formulaFieldRefRepo
+    );
     this.getDataFieldReferenceUC = new GetDataFieldRefUseCase(
       this.dataFieldRefRepo,
       this.dataFieldRefAppMapper
+    );
+    this.getFormulaFieldReferenceUC = new GetFormulaFieldReferenceUseCase(
+      this.formulaFieldRefRepo,
+      this.formulaFieldRefAppMapper
     );
     this.valideDataFieldResponseUC = new ValidateDataFieldResponseUseCase(
       this.dataFieldValidationService
@@ -1602,6 +1657,10 @@ export class DiagnosticContext {
       getUC: this.getDataFieldReferenceUC,
       validationUC: this.valideDataFieldResponseUC,
     });
+    this.formulaFieldReferenceAppService = new FormulaFieldReferenceService({
+      createUC: this.createFormulaFieldReferenceUC,
+      getUC: this.getFormulaFieldReferenceUC,
+    });
     this.nextClinicalSignRefAppService =
       new NextClinicalAppServices.ClinicalSignRefService({
         createUC: this.nextCreateClinicalSignRefUC,
@@ -1721,6 +1780,9 @@ export class DiagnosticContext {
   }
   getDataFieldService(): IDataFieldReferenceService {
     return this.dataFieldReferenceAppService;
+  }
+  getFormulaFieldService(): IFormulaFieldReferenceService {
+    return this.formulaFieldReferenceAppService;
   }
   getNextClinicalRefService(): NextClinicalAppServices.IClinicalSignRefService {
     return this.nextClinicalSignRefAppService;
