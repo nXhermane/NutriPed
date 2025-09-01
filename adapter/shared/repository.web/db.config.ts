@@ -3,6 +3,7 @@ export const DB_CONFIG = {
   version: 3,
   stores: {
     next_medicines: { keyPath: "id", indexes: ["code"] },
+    formula_field_references: { keyPath: "id", indexes: ["code"] 
     appetite_test_refs: { keyPath: "id", indexes: ["code"] },
     complications: { keyPath: "id", indexes: ["code"] },
     medicines: { keyPath: "id", indexes: ["code"] },

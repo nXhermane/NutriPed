@@ -1,6 +1,7 @@
 import {
   AggregateID,
   DomainDate,
+  DomainDateTime,
   formatError,
   handleError,
   left,
@@ -64,7 +65,7 @@ export class GetAllPatientAppetiteTestResultUseCase
     appetiteTest: AclAppetiteTestData,
     patientId: AggregateID
   ) {
-    const domainDateRes = DomainDate.create(appetiteTest.recordedAt);
+    const domainDateRes = DomainDateTime.create(appetiteTest.recordedAt);
     if (domainDateRes.isFailure) {
       throw new Error(formatError(domainDateRes));
     }
@@ -85,7 +86,7 @@ export class GetAllPatientAppetiteTestResultUseCase
 
   private async getPatientNormalizedWeightAtDate(
     patientId: AggregateID,
-    date: DomainDate
+    date: DomainDateTime
   ): Promise<number> {
     const patientDataRes = await this.medicalRecordACL.getPatientDataBefore({
       patientId,

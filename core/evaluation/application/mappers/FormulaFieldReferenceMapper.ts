@@ -2,7 +2,7 @@ import { ApplicationMapper } from "@/core/shared";
 import { FormulaFieldReference } from "../../domain";
 import { FormulaFieldReferenceDto } from "../dtos";
 
-export class FormulaFieldRefrenceMapper
+export class FormulaFieldReferenceMapper
   implements ApplicationMapper<FormulaFieldReference, FormulaFieldReferenceDto>
 {
   toResponse(entity: FormulaFieldReference): FormulaFieldReferenceDto {
