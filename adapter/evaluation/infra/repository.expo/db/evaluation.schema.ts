@@ -8,7 +8,7 @@ import {
   GrowthStandard,
   StandardShape,
 } from "@core/constants";
-import { Sex } from "@shared";
+import { IFormula, Sex } from "@shared";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { NutritionalAssessmentResultPersistenceDto } from "../../dtos";
 
@@ -378,6 +378,27 @@ export const data_field_references = sqliteTable("data_field_references", {
   createdAt: text("createdAt", { length: 50 }).notNull(),
   updatedAt: text("updatedAt", { length: 50 }).notNull(),
 });
+
+/**
+ * @version v0.0.1-next
+ **/
+export const formula_field_references = sqliteTable(
+  "formula_field_references",
+  {
+    id: text("field_id").primaryKey(),
+    code: text("field_code", { length: 50 }).notNull(),
+    formula: text("field_formula", { mode: "json" })
+      .$type<{
+        formula: IFormula;
+        description: string;
+        variablesExplanation: Record<string, string>;
+      }>()
+      .notNull(),
+    createdAt: text("createdAt", { length: 50 }).notNull(),
+    updatedAt: text("updatedAt", { length: 50 }).notNull(),
+  }
+);
+
 /**
  * @version v0.0.1-next
  **/
