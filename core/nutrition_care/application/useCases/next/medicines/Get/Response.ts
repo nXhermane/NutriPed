@@ -1,7 +1,7 @@
+import { NextMedicinesDto } from "@/core/nutrition_care/application/dtos";
 import { Either, ExceptionBase, Result } from "@/core/shared";
-import { MedicineDto } from "../../../../dtos/next/medicines/MedicineDto";
 
 export type GetMedicineResponse = Either<
-  ExceptionBase,
-  Result<MedicineDto[]>
+  ExceptionBase | unknown,
+  Result<NextMedicinesDto.MedicineDto[]>
 >;

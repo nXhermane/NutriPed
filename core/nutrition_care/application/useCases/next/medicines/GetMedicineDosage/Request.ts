@@ -1,7 +1,7 @@
 import { MEDICINE_CODES } from "@/core/constants";
-import { MedicationDosageContext } from "../../../../../domain/modules/next/medicines/models";
+import { NextNutritionCare } from "@/core/nutrition_care/domain";
 
 export interface GetMedicineDosageRequest {
   code: MEDICINE_CODES;
-  context: MedicationDosageContext;
+  context: NextNutritionCare.MedicationDosageContext;
 }

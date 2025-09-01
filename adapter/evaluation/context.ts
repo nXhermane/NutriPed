@@ -314,6 +314,7 @@ import {
   ValidatePatientMeasurementsService,
   ZScoreCalculationService,
   ZScoreInterpretationService,
+  FormulaFieldReferenceMapper,
 } from "@/core/evaluation";
 import {
   AnthropometricMeasurePersistenceDto,
@@ -335,7 +336,6 @@ import {
   BiochemicalReferenceInfraMapper,
   ClinicalSignReferenceInfraMapper,
   DataFieldReferenceInfraMapper,
-  FormulaFieldReferenceMapper,
   DiagnosticRuleInfraMapper,
   GrowthReferenceChartInfraMapper,
   GrowthReferenceTableInfraMapper,
