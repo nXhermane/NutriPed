@@ -1,4 +1,4 @@
-import { FormulaFieldReferenceRepository } from "@/core/evaluation";
+import { FormulaFieldRefrenceRepo } from "@/core/evaluation";
 import { EntityBaseRepositoryExpoWithCodeColumn } from "@/adapter/shared/repository.expo";
 import { FormulaFieldReference } from "@/core/evaluation";
 import { formula_field_references } from "../db/evaluation.schema";
@@ -12,7 +12,7 @@ export class FormulaFieldReferenceExpoRepo
     FormulaFieldReferencePersistenceDto,
     typeof formula_field_references
   >
-  implements FormulaFieldReferenceRepository
+  implements FormulaFieldRefrenceRepo
 {
   constructor(
     db: ExpoSQLiteDatabase<Record<string, unknown>>,
