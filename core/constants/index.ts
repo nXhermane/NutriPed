@@ -432,7 +432,7 @@ export enum CARE_PHASE_DURATION_TYPE {
 /**
  * @version v0.0.1-next
  */
-export enum TREATMENT_DURATION_TYPE {
+export enum DURATION_TYPE {
   DAYS = "days",
   HOURS = "hours",
   WHILE_IN_PHASE = "while_in_phase",
@@ -453,7 +453,7 @@ export enum MONITORING_VALUE_SOURCE {
   CALCULATED = "calculated_monitoring_value", // Intégrer pour pouvoir distinguer les monitorings values calculables a partie d'autre source de donnée . ex.: Pourcentage de variation d'un monitoring value sur une periods donnée et on pourra aussi fournir la formule de calcule et les variables independantes
   NOT_CALCULATED = "not_calculated_monitoring_value",
 }
-export enum MONITORING_FREQUENCY_TYPE {
+export enum FREQUENCY_TYPE {
   DAILY = "day",
   HOURSLY = "hours",
   WEEKLY = "week",

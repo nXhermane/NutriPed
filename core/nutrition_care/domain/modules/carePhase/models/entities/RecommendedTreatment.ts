@@ -18,10 +18,12 @@ import {
 import { MilkType } from "../../../milk";
 import {
   CreateTreatmentTrigger,
-  ITreatmentDuration,
+  Duration,
   ITreatmentTrigger,
-  TreatmentDuration,
+  IDuration,
   TreatmentTrigger,
+  Frequency,
+  IFrequency,
 } from "../valueObjects";
 import { ValueOf } from "@/utils";
 
@@ -30,7 +32,8 @@ export interface IRecommendedTreatment extends EntityPropsBaseType {
   applicabilyCondition: Criterion;
   type: RECOMMENDED_TREATMENT_TYPE;
   treatmentCode: SystemCode<MilkType | MEDICINE_CODES>;
-  duration: TreatmentDuration;
+  duration: Duration;
+  frequency: Frequency;
   triggers: {
     onStart: TreatmentTrigger[];
     onEnd: TreatmentTrigger[];
@@ -42,7 +45,8 @@ export interface CreateRecommededTreatment {
   applicabilyCondition: CreateCriterion;
   type: RECOMMENDED_TREATMENT_TYPE;
   treatmentCode: MilkType | MEDICINE_CODES;
-  duration: ITreatmentDuration;
+  duration: IDuration;
+  frequency: IFrequency;
   triggers: {
     onStart: CreateTreatmentTrigger[];
     onEnd: CreateTreatmentTrigger[];
@@ -62,8 +66,11 @@ export class RecommendedTreatment extends Entity<IRecommendedTreatment> {
   getTreatmentCode(): MilkType | MEDICINE_CODES {
     return this.props.treatmentCode.unpack();
   }
-  getDuration(): ITreatmentDuration {
+  getDuration(): IDuration {
     return this.props.duration.unpack();
+  }
+  getFrequency(): IFrequency {
+    return this.props.frequency.unpack();
   }
   getStartedTriggers(): ITreatmentTrigger[] {
     return this.props.triggers.onStart.map(trigger => trigger.unpack());
@@ -88,20 +95,21 @@ export class RecommendedTreatment extends Entity<IRecommendedTreatment> {
       const codeRes = SystemCode.create(createProps.code);
       const treatmentCodeRes = SystemCode.create(createProps.treatmentCode);
       const criterionRes = Criterion.create(createProps.applicabilyCondition);
-      const treatmentDurationRes = TreatmentDuration.create(
-        createProps.duration
-      );
+      const treatmentDurationRes = Duration.create(createProps.duration);
+      const frequencyRes = Frequency.create(createProps.frequency);
       const onStartTriggersRes = createProps.triggers.onStart.map(trigger =>
         TreatmentTrigger.create(trigger)
       );
       const onEndTriggersRes = createProps.triggers.onEnd.map(trigger =>
         TreatmentTrigger.create(trigger)
       );
+
       const combinedRes = Result.combine([
         codeRes,
         treatmentCodeRes,
         criterionRes,
         treatmentDurationRes,
+        frequencyRes,
         ...onStartTriggersRes,
         ...onEndTriggersRes,
       ]);
@@ -115,6 +123,7 @@ export class RecommendedTreatment extends Entity<IRecommendedTreatment> {
           code: codeRes.val,
           treatmentCode: treatmentCodeRes.val,
           duration: treatmentDurationRes.val,
+          frequency: frequencyRes.val,
           type: createProps.type,
           triggers: {
             onStart: onStartTriggersRes.map(trigger => trigger.val),
