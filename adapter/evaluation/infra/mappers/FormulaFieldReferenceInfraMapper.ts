@@ -6,7 +6,6 @@ import {
   formatError,
   InfraMapToDomainError,
   InfrastructureMapper,
-  IFormula,
 } from "@/core/shared";
 import { FormulaFieldReferencePersistenceDto } from "../dtos";
 
@@ -20,20 +19,10 @@ export class FormulaFieldReferenceInfraMapper
   toPersistence(
     entity: FormulaFieldReference
   ): FormulaFieldReferencePersistenceDto {
-    const formula = entity.getFormula();
     return {
       id: entity.id,
       code: entity.getCode(),
-      formula: {
-        formula: {
-          value: formula.formula,
-          variables: formula.variablesExplanation
-            ? Object.keys(formula.variablesExplanation)
-            : [],
-        },
-        description: formula.description,
-        variablesExplanation: formula.variablesExplanation,
-      },
+      formula: entity.getFormula(),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -44,11 +33,7 @@ export class FormulaFieldReferenceInfraMapper
     const formulaFieldRes = FormulaFieldReference.create(
       {
         code: record.code,
-        formula: {
-          formula: record.formula.formula,
-          description: record.formula.description,
-          variablesExplanation: record.formula.variablesExplanation,
-        },
+        formula: record.formula,
       } as CreateFormulaFieldReference,
       record.id
     );
