@@ -1,7 +1,0 @@
-import { MEDICINE_CODES } from "@/core/constants";
-import { AggregateID } from "@/core/shared";
-
-export interface GetMedicineRequest {
-  code?: MEDICINE_CODES;
-  id?: AggregateID;
-}

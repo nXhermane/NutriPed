@@ -5,3 +5,4 @@ export * from "./MilkService";
 export * from "./OrientationService";
 export * from "./PatientCareSessionService";
 export * from "./interfaces";
+export * as Next from "./next";
