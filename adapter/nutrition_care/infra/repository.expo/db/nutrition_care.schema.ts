@@ -231,3 +231,18 @@ export const patient_care_sessions = sqliteTable("patient_care_sessions", {
     enum: ["not_ready", "in_progress", "completed"],
   }).notNull(),
 });
+
+export const next_medicines = sqliteTable("next_medicines", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  name: text("name").notNull(),
+  category: text("category").notNull(),
+  administrationRoutes: text("administration_routes", { mode: "json" }).notNull(),
+  dosageCases: text("dosage_cases", { mode: "json" }).notNull(),
+  warnings: text("warnings", { mode: "json" }).notNull(),
+  contraindications: text("contraindications", { mode: "json" }).notNull(),
+  interactions: text("interactions", { mode: "json" }).notNull(),
+  notes: text("notes", { mode: "json" }).notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});

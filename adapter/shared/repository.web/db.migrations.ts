@@ -13,7 +13,7 @@ export const migrations: Migration[] = [
     },
   },
   {
-    version: 2,
+    version: 3,
     up: (db: IDBDatabase) => {
       createStoreIndexes(db);
     },
