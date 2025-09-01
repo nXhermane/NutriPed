@@ -4,4 +4,5 @@ import { FormulaFieldReference } from "../../../models";
 export interface FormulaFieldRefrenceRepo
   extends Repository<FormulaFieldReference> {
   getByCode(code: SystemCode): Promise<FormulaFieldReference>;
+  getAll(): Promise<FormulaFieldReference[]>;
 }
