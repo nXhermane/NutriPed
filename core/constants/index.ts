@@ -551,7 +551,9 @@ export enum FeedingFrequenciePerDay {
   SIX = "6",
 }
 export type AdmissionVariable<T extends string> = `admission_${T}`;
-
+export type ConsecutiveVariable<T extends string> =
+  `consecutive_${number}_${T}`;
+export type DailyVariable<T extends string> = `daily_${number}_${T}`;
 /**
  *
  * @param {string} code
@@ -561,7 +563,15 @@ export type AdmissionVariable<T extends string> = `admission_${T}`;
 export const admissionVariable = <T extends string>(
   code: T
 ): AdmissionVariable<T> => `admission_${code}`;
+export const consecutiveVariable = <T extends string>(
+  code: T,
+  n: number
+): ConsecutiveVariable<T> => `consecutive_${n}_${code}`;
 
+export const dailyVariable = <T extends string>(
+  code: T,
+  n: number
+): DailyVariable<T> => `daily_${n}_${code}`;
 export type ClinicalSignChangeDay<T extends string> = `change_day_${T}`;
 
 /**
@@ -573,3 +583,27 @@ export type ClinicalSignChangeDay<T extends string> = `change_day_${T}`;
 export const clinicalSignChangeDay = <T extends ValueOf<typeof CLINICAL_SIGNS>>(
   code: T
 ): ClinicalSignChangeDay<T> => `change_day_${code}`;
+
+export const WEIGHT_RECORDING_PREV_DAY = dailyVariable(
+  AnthroSystemCodes.WEIGHT,
+  0
+);
+export const WEIGHT_RECORDING_BEFORE_PREV_DAY = dailyVariable(
+  AnthroSystemCodes.WEIGHT,
+  1
+);
+export const WEIGHT_IN_PHASE_ADMISSION = admissionVariable(
+  AnthroSystemCodes.WEIGHT
+);
+export const WEIGHT_CONSECUTIVE_RECORDING_1 = consecutiveVariable(
+  AnthroSystemCodes.WEIGHT,
+  1
+);
+export const WEIGHT_CONSECUTIVE_RECORDING_2 = consecutiveVariable(
+  AnthroSystemCodes.WEIGHT,
+  2
+);
+export const WEIGHT_CONSECUTIVE_RECORDING_0 = consecutiveVariable(
+  AnthroSystemCodes.WEIGHT,
+  0
+);

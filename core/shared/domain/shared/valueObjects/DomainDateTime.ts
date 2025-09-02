@@ -191,6 +191,11 @@ export class DomainDateTime extends ValueObject<string> {
     date.setDate(date.getDate() + days);
     return new DomainDateTime(date);
   }
+  public removeDays(days: number): DomainDateTime {
+    const date = new Date(this.props._value);
+    date.setDate(date.getDate() - days);
+    return new DomainDateTime(date);
+  }
 
   public getYear(): number {
     return new Date(this.props._value).getFullYear();

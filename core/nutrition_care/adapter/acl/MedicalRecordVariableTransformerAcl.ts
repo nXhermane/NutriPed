@@ -24,7 +24,11 @@ import {
   IGrowthIndicatorValueAppService,
   INormalizeDataAppService,
 } from "@/core/evaluation";
-import { COMPLICATION_CODES } from "@/core/constants";
+import {
+  COMPLICATION_CODES,
+  ConsecutiveVariable,
+  consecutiveVariable,
+} from "@/core/constants";
 export type PatientInfo = {
   [AnthroSystemCodes.SEX]: Sex;
   [AnthroSystemCodes.AGE_IN_DAY]: number;
@@ -87,7 +91,7 @@ export class MedicalRecordVariableTransformerAclImpl
     code: SystemCode<T>,
     type: NextCore.ConsecutiveVariableType,
     counter: number
-  ): Promise<Result<Record<`${T}_${number}`, number>>> {
+  ): Promise<Result<Record<ConsecutiveVariable<T>, number>>> {
     try {
       const medicalRecordDtoRes = await this.getMedicalRecordData(patientId);
       if (medicalRecordDtoRes.isFailure) {
@@ -115,7 +119,7 @@ export class MedicalRecordVariableTransformerAclImpl
     code: T,
     type: NextCore.ConsecutiveVariableType,
     counter: number
-  ): Promise<Result<Record<`${T}_${number}`, number>>> {
+  ): Promise<Result<Record<ConsecutiveVariable<T>, number>>> {
     try {
       switch (type) {
         case NextCore.ConsecutiveVariableType.ANTHROP: {
@@ -133,11 +137,14 @@ export class MedicalRecordVariableTransformerAclImpl
           }
           const normalizedArray = normalizedArrayRes.val;
 
-          const consecutiveVariables: Record<`${T}_${number}`, number> =
-            {} as Record<`${T}_${number}`, number>;
+          const consecutiveVariables: Record<
+            ConsecutiveVariable<T>,
+            number
+          > = {} as Record<ConsecutiveVariable<T>, number>;
           for (let i = 0; i < counter && i < normalizedArray.length; i++) {
             const currentValue = normalizedArray[i];
-            consecutiveVariables[`${code}_${i}`] = currentValue.value;
+            consecutiveVariables[consecutiveVariable(code, i)] =
+              currentValue.value;
           }
           return Result.ok(consecutiveVariables);
         }
@@ -149,13 +156,17 @@ export class MedicalRecordVariableTransformerAclImpl
             return Result.fail(`The consecutive value of ${code} not found.`);
           }
           const sortedArray = this.sortValues(filteredArray);
-          const consecutiveVariables: Record<`${T}_${number}`, number> =
-            {} as Record<`${T}_${number}`, number>;
+
+          const consecutiveVariables: Record<
+            ConsecutiveVariable<T>,
+            number
+          > = {} as Record<ConsecutiveVariable<T>, number>;
           for (let i = 0; i < counter && i < sortedArray.length; i++) {
             const currentValue = sortedArray[i];
-            consecutiveVariables[`${code}_${i}`] = currentValue.isPresent
-              ? ConditionResult.True
-              : ConditionResult.False;
+            consecutiveVariables[consecutiveVariable(code, i)] =
+              currentValue.isPresent
+                ? ConditionResult.True
+                : ConditionResult.False;
           }
           return Result.ok(consecutiveVariables);
         }
@@ -167,11 +178,14 @@ export class MedicalRecordVariableTransformerAclImpl
             return Result.fail(`The consecutive value of ${code} not found.`);
           }
           const sortedArray = this.sortValues(filteredArray);
-          const consecutiveVariables: Record<`${T}_${number}`, number> =
-            {} as Record<`${T}_${number}`, number>;
+          const consecutiveVariables: Record<
+            ConsecutiveVariable<T>,
+            number
+          > = {} as Record<ConsecutiveVariable<T>, number>;
           for (let i = 0; i < counter && i < sortedArray.length; i++) {
             const currentValue = sortedArray[i];
-            consecutiveVariables[`${code}_${i}`] = currentValue.data as number;
+            consecutiveVariables[consecutiveVariable(code, i)] =
+              currentValue.data as number;
           }
           return Result.ok(consecutiveVariables);
         }
@@ -183,11 +197,14 @@ export class MedicalRecordVariableTransformerAclImpl
             return Result.fail(`The consecutive value of ${code} not found.`);
           }
           const sortedArray = this.sortValues(filteredArray);
-          const consecutiveVariables: Record<`${T}_${number}`, number> =
-            {} as Record<`${T}_${number}`, number>;
+          const consecutiveVariables: Record<
+            ConsecutiveVariable<T>,
+            number
+          > = {} as Record<ConsecutiveVariable<T>, number>;
           for (let i = 0; i < counter && i < sortedArray.length; i++) {
             const currentValue = sortedArray[i];
-            consecutiveVariables[`${code}_${i}`] = currentValue.value;
+            consecutiveVariables[consecutiveVariable(code, i)] =
+              currentValue.value;
           }
           return Result.ok(consecutiveVariables);
         }

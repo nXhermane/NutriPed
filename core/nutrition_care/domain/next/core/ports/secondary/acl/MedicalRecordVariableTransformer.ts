@@ -1,3 +1,4 @@
+import { ConsecutiveVariable } from "@/core/constants";
 import { AggregateID, DomainDateTime, Result, SystemCode } from "@/core/shared";
 
 export enum ConsecutiveVariableType {
@@ -17,5 +18,5 @@ export interface MedicalRecordVariableTransformerAcl {
     code: SystemCode<T>,
     type: ConsecutiveVariableType,
     counter: number
-  ): Promise<Result<Record<`${T}_${number}`, number>>>;
+  ): Promise<Result<Record<ConsecutiveVariable<T>, number>>>;
 }
