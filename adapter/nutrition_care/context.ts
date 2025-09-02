@@ -7,6 +7,10 @@ import {
   UseCase,
 } from "@shared";
 
+import * as Next from "@core/nutrition_care/domain/next";
+import * as NextApp from "@core/nutrition_care/application/next";
+import * as NextInfra from "./infra/next";
+
 import {
   AddDataToPatientCareSessionRequest,
   AddDataToPatientCareSessionResponse,
@@ -200,6 +204,10 @@ export class NutritionCareContext {
     Medicine,
     MedicinePersistenceDto
   >;
+  private readonly nextMedicineInfraMapper: InfrastructureMapper<
+    Next.Medicine,
+    NextInfra.MedicinePersistenceDto
+  >;
   private readonly milkInfraMapper: InfrastructureMapper<
     Milk,
     MilkPersistenceDto
@@ -225,6 +233,7 @@ export class NutritionCareContext {
   private readonly appetiteTestRefRepo: AppetiteTestRefRepository;
   private readonly complicationRepo: ComplicationRepository;
   private readonly medicineRepo: MedicineRepository;
+  private readonly nextMedicineRepo: Next.MedicineRepository;
   private readonly milkRepo: MilkRepository;
   private readonly orientationRepo: OrientationReferenceRepository;
   private readonly dailyCareJournalRepo: DailyCareJournalRepository;
@@ -234,6 +243,7 @@ export class NutritionCareContext {
   // Domain Services
   private readonly appetiteTestService: IAppetiteTestService;
   private readonly medicineDosageService: IMedicineDosageService;
+  private readonly nextMedicineDosageService: Next.IMedicineDosageService;
   private readonly therapeuticMilkService: ITherapeuticMilkAdvisorService;
   private readonly orientationService: IOrientationService;
   private readonly patientDailyJournalGenerator: IPatientDailyJournalGenerator;
@@ -254,6 +264,10 @@ export class NutritionCareContext {
     ComplicationDto
   >;
   private readonly medicineAppMapper: ApplicationMapper<Medicine, MedicineDto>;
+  private readonly nextMedicineAppMapper: ApplicationMapper<
+    Next.Medicine,
+    NextApp.MedicineDto
+  >;
   private readonly milkAppMapper: ApplicationMapper<Milk, MilkDto>;
   private readonly orientationAppMapper: ApplicationMapper<
     OrientationReference,
@@ -309,6 +323,18 @@ export class NutritionCareContext {
     GetMedicineDosageRequest,
     GetMedicineDosageResponse
   >;
+  private readonly nextCreateMedicineUC: UseCase<
+    NextApp.CreateMedicineRequest,
+    NextApp.CreateMedicineResponse
+  >;
+  private readonly nextGetMedicineUC: UseCase<
+    NextApp.GetMedicineRequest,
+    NextApp.GetMedicineResponse
+  >;
+  private readonly nextGetMedicineDosageUC: UseCase<
+    NextApp.GetMedicineDosageRequest,
+    NextApp.GetMedicineDosageResponse
+  >;
   private readonly createMilkUC: UseCase<CreateMilkRequest, CreateMilkResponse>;
   private readonly getMilkUC: UseCase<GetMilkRequest, GetMilkResponse>;
   private readonly suggestMilkUC: UseCase<
@@ -357,6 +383,7 @@ export class NutritionCareContext {
   private readonly appetiteTestAppService: IAppetiteTestAppService;
   private readonly complicationAppService: IComplicationAppService;
   private readonly medicineAppService: IMedicineAppService;
+  private readonly nextMedicineAppService: NextApp.IMedicineAppService;
   private readonly milkAppService: IMilkAppService;
   private readonly orientationAppService: IOrientationAppService;
   private readonly patientCareSessionAppService: IPatientCareSessionAppService;
@@ -393,6 +420,7 @@ export class NutritionCareContext {
     this.appetiteTestRefInfraMapper = new AppetiteTestInfraMapper();
     this.complicationInfraMapper = new ComplicationInfraMapper();
     this.medicineInfraMapper = new MedicineInfraMapper();
+    this.nextMedicineInfraMapper = new NextInfra.MedicineInfraMapper();
     this.milkInfraMapper = new MilkInfraMapper();
     this.orientationRefInfraMapper = new OrientationReferenceInfraMapper();
     this.patientCurrentStateInfraMapper = new PatientCurrentStateInfraMapper();
@@ -434,6 +462,17 @@ export class NutritionCareContext {
           this.expo as SQLiteDatabase,
           this.medicineInfraMapper,
           medicines,
+          this.eventBus
+        );
+    this.nextMedicineRepo = isWebEnv()
+      ? new NextInfra.MedicineRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.nextMedicineInfraMapper
+        )
+      : new NextInfra.MedicineRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextMedicineInfraMapper,
+          NextInfra.medicines,
           this.eventBus
         );
     this.milkRepo = isWebEnv()
@@ -506,6 +545,7 @@ export class NutritionCareContext {
       this.appetiteTestRefRepo
     );
     this.medicineDosageService = new MedicineDosageService();
+    this.nextMedicineDosageService = new Next.MedicineDosageService();
     this.therapeuticMilkService = new TherapeuticMilkAdvisorService();
     this.orientationService = new OrientationService();
     this.patientDailyJournalGenerator = new PatientDailyJournalGenerator(
@@ -522,6 +562,7 @@ export class NutritionCareContext {
     this.appetiteTestAppMapper = new AppetiteTestReferenceMapper();
     this.complicationAppMapper = new ComplicationMapper();
     this.medicineAppMapper = new MedicineMapper();
+    this.nextMedicineAppMapper = new NextApp.MedicineMapper();
     this.milkAppMapper = new MilkMapper();
     this.orientationAppMapper = new OrientationRefMapper();
     this.patientCurrentStateAppMapper = new PatientCurrentStateMapper();
@@ -564,6 +605,18 @@ export class NutritionCareContext {
     this.getMedicineDosageUC = new GetMedicineDosageUseCase(
       this.medicineRepo,
       this.medicineDosageService
+    );
+    this.nextCreateMedicineUC = new NextApp.CreateMedicineUseCase(
+      this.idGenerator,
+      this.nextMedicineRepo
+    );
+    this.nextGetMedicineUC = new NextApp.GetMedicineUseCase(
+      this.nextMedicineRepo,
+      this.nextMedicineAppMapper
+    );
+    this.nextGetMedicineDosageUC = new NextApp.GetMedicineDosageUseCase(
+      this.nextMedicineRepo,
+      this.nextMedicineDosageService
     );
     this.createMilkUC = new CreateMilkUseCase(this.idGenerator, this.milkRepo);
     this.getMilkUC = new GetMilkUseCase(this.milkRepo, this.milkAppMapper);
@@ -636,6 +689,11 @@ export class NutritionCareContext {
       getDosageUC: this.getMedicineDosageUC,
       getUC: this.getMedicineUC,
     });
+    this.nextMedicineAppService = new NextApp.MedicineAppService({
+      createUC: this.nextCreateMedicineUC,
+      getDosageUC: this.nextGetMedicineDosageUC,
+      getUC: this.nextGetMedicineUC,
+    });
     this.milkAppService = new MilkAppService({
       createUC: this.createMilkUC,
       getUC: this.getMilkUC,
@@ -684,6 +742,10 @@ export class NutritionCareContext {
   }
   getMedicineService(): IMedicineAppService {
     return this.medicineAppService;
+  }
+
+  getNextMedicineService(): NextApp.IMedicineAppService {
+    return this.nextMedicineAppService;
   }
 
   getMilkService(): IMilkAppService {
