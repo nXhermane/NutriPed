@@ -40,7 +40,6 @@ import {
   TakenAmountInSachet,
   TakenAmountOfPot,
 } from "../entities/AppetiteTestRecord";
-import { TypeOf } from "zod";
 
 export interface IMedicalRecord extends EntityPropsBaseType {
   patientId: AggregateID;
@@ -196,7 +195,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
       }, {})
     );
   }
-  getLatetAppetiteTestDataUntilDate(
+  getLatestAppetiteTestDataUntilDate(
     date?: DomainDateTime
   ): IAppetiteTestRecord & BaseEntityProps {
     const unpackedEntitites = this.props.appetiteTests.map(entity =>
@@ -209,7 +208,7 @@ export class MedicalRecord extends AggregateRoot<IMedicalRecord> {
     ).sort((a, b) => b.recordAt.getTimestamp() - a.recordAt.getTimestamp());
     return array[0];
   }
-  getLastOrienationRecord(
+  getLastOrientationRecord(
     date?: DomainDateTime
   ): IOrientationRecord & BaseEntityProps {
     const unpackedEntities = this.props.orienationResults.map(entity =>

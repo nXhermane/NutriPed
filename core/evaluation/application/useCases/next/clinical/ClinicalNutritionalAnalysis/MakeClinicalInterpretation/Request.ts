@@ -1,7 +1,4 @@
-import {
-  DataFieldResponseDto,
-  NextClinicalDtos,
-} from "@/core/evaluation/application/dtos";
+import { NextClinicalDtos } from "@/core/evaluation/application/dtos";
 import { Sex } from "@/core/shared";
 
 export type MakeClinicalInterpretationRequest = {

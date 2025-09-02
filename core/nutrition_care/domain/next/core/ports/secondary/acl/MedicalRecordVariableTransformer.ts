@@ -6,7 +6,7 @@ export enum ConsecutiveVariableType {
   BIOLOGICAL = "biological",
   DATA_FIELD = "data_fields",
 }
-export type MedicalRecordVariables = Record<string, number>;
+export type MedicalRecordVariables = Record<string, number | string>;
 export interface MedicalRecordVariableTransformerAcl {
   getVariableByDate(
     patientId: AggregateID,

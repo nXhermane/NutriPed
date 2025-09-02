@@ -9,6 +9,7 @@ import {
   right,
   UseCase,
 } from "@/core/shared";
+import { AnthroSystemCodes, DATA_FIELD_CODE_TYPE } from "@/core/constants";
 import { GetLatestValuesUntilDateRequest } from "./Request";
 import {
   GetLastestValuesUnitlDateDto,
@@ -28,8 +29,12 @@ import {
   INormalizeDataFieldResponseAcl,
   MedicalRecord,
   MedicalRecordRepository,
+  IAppetiteTestRecord,
 } from "@/core/medical_record/domain";
-import { DATA_FIELD_CODE_TYPE } from "@/core/constants";
+import {
+  AppetiteTestResultDto,
+  IAppetiteTestAppService,
+} from "@/core/evaluation";
 
 export class GetLatestValuesUntilDateUseCase
   implements
@@ -38,7 +43,8 @@ export class GetLatestValuesUntilDateUseCase
   constructor(
     private readonly medicalRecordRepo: MedicalRecordRepository,
     private readonly normalizeAnthropDataACL: INormalizeAnthropometricDataACL,
-    private readonly normalizeDataFieldRespnseACL: INormalizeDataFieldResponseAcl
+    private readonly normalizeDataFieldRespnseACL: INormalizeDataFieldResponseAcl,
+    private readonly evaluateAppetiteTestService: IAppetiteTestAppService
   ) {}
   async execute(
     request: GetLatestValuesUntilDateRequest
@@ -86,6 +92,7 @@ export class GetLatestValuesUntilDateUseCase
         clinicalData: medicalRecord.getLatestClinicalDataUntilDate(date),
         biological: medicalRecord.getLatestBiologicalDataUntilDate(date),
         complication: medicalRecord.getLatestComplicationDataUntilDate(date),
+        appetiteTest: medicalRecord.getLatestAppetiteTestDataUntilDate(date),
       });
     } catch (e: unknown) {
       return handleError(e);
@@ -98,6 +105,7 @@ export class GetLatestValuesUntilDateUseCase
     clinicalData: (IClinicalSignDataRecord & BaseEntityProps)[];
     biological: (IBiologicalValueRecord & BaseEntityProps)[];
     complication: (IComplicationDataRecord & BaseEntityProps)[];
+    appetiteTest: IAppetiteTestRecord & BaseEntityProps;
   }): Promise<Result<GetLastestValuesUnitlDateDto>> {
     try {
       const anthropometricRes = await this.normalizeAnthropometriData(
@@ -106,7 +114,16 @@ export class GetLatestValuesUntilDateUseCase
       const dataFieldsRes = await this.normalizeDataFieldResponse(
         data.dataFields
       );
-      const combinedRes = Result.combine([anthropometricRes, dataFieldsRes]);
+      const normalizeAppetiteTestRes = await this.normalizeAppetiteTest(
+        data.appetiteTest,
+        anthropometricRes.val
+      );
+
+      const combinedRes = Result.combine([
+        anthropometricRes,
+        dataFieldsRes,
+        normalizeAppetiteTestRes,
+      ]);
       if (combinedRes.isFailure) {
         return Result.fail(
           formatError(combinedRes, GetLatestValuesUntilDateUseCase.name)
@@ -139,6 +156,7 @@ export class GetLatestValuesUntilDateUseCase
             isPresent: props.isPresent,
           })
         ),
+        appetiteTest: normalizeAppetiteTestRes.val,
       });
     } catch (e: unknown) {
       return handleError(e);
@@ -165,6 +183,37 @@ export class GetLatestValuesUntilDateUseCase
         );
       }
       return Result.ok(normalizationResults.val);
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
+  private async normalizeAppetiteTest(
+    appetiteTest: IAppetiteTestRecord,
+    anthropometricNormalized: CreateAnthropometricRecord[]
+  ): Promise<Result<AppetiteTestResultDto>> {
+    try {
+      const patientWeight = anthropometricNormalized.find(
+        item => item.code === AnthroSystemCodes.WEIGHT
+      );
+      if (patientWeight === undefined) {
+        return Result.fail(
+          "Patient weight is undefined. Please provide the patient's weight."
+        );
+      }
+      const appetiteTestEvaluationRes =
+        await this.evaluateAppetiteTestService.evaluateAppetite({
+          givenProductType: appetiteTest.productType,
+          takenAmount:
+            "fraction" in appetiteTest.amount
+              ? { takenFraction: appetiteTest.amount.fraction }
+              : { takenQuantity: appetiteTest.amount.quantity },
+          patientWeight: patientWeight.value,
+        });
+      if ("content" in appetiteTestEvaluationRes) {
+        const { content } = appetiteTestEvaluationRes;
+        return Result.fail(JSON.parse(content));
+      }
+      return Result.ok(appetiteTestEvaluationRes.data);
     } catch (e: unknown) {
       return handleError(e);
     }

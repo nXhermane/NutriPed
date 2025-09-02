@@ -1,3 +1,4 @@
+import { AppetiteTestResultDto } from "@/core/evaluation";
 import {
   CreateAnthropometricRecord,
   CreateBiologicalValueRecord,
@@ -12,6 +13,7 @@ export type GetLastestValuesUnitlDateDto = {
   clinical: CreateClinicalSignDataRecord[];
   dataFields: Omit<CreateDataFieldResponse, "recordAt">[];
   complication: CreateComplicationDataRecord[];
+  appetiteTest: AppetiteTestResultDto;
 };
 export type GetLatestValuesUntilDateResponse = Either<
   ExceptionBase | unknown,
