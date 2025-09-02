@@ -1,4 +1,3 @@
-export * from "./ComputedVariablePerformer";
 export * from "./DynamicVariablePerformer";
 export * from "./CarePlanApplicatorService";
 export * from "./DailyActionGeneratorService";
