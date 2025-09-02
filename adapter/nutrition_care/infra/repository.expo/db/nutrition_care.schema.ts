@@ -17,6 +17,7 @@ import {
   ValueTypeDto,
   WeightRange,
 } from "@core/nutrition_care";
+import { ICriterion } from "@core/shared";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const appetite_test_references = sqliteTable(
@@ -248,3 +249,18 @@ export const next_medicines = sqliteTable("next_medicines", {
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
+
+export const next_orientation_references = sqliteTable(
+  "next_orientation_references",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    code: text("code").notNull(),
+    criteria: text("criteria", { mode: "json" })
+      .$type<ICriterion[]>()
+      .notNull(),
+    treatmentPhase: text("treatment_phase"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  }
+);

@@ -6,3 +6,4 @@ export * from "./OrientationService";
 export * from "./PatientCareSessionService";
 export * from "./interfaces";
 export * as NextNutritionCareAppService from "./next";
+export * as NextOrientationAppService from "./next/orientation";
