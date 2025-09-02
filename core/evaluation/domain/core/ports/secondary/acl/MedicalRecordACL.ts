@@ -4,7 +4,7 @@ import {
 } from "@/core/constants";
 import { DataFieldResponseValue } from "@/core/evaluation/domain/data_fields";
 import { TakenAmountInSachet, TakenAmountOfPot } from "@/core/medical_record";
-import { AggregateID, DomainDate, Result } from "@/core/shared";
+import { AggregateID, DomainDateTime, Result } from "@/core/shared";
 
 export interface PatientData {
   anthroData: { code: string; value: number; unit: string }[];
@@ -34,6 +34,6 @@ export interface MedicalRecordACL {
   }): Promise<Result<AclAppetiteTestData[]>>;
   getPatientDataBefore(data: {
     patientId: AggregateID;
-    date: DomainDate;
+    date: DomainDateTime;
   }): Promise<Result<PatientData>>;
 }

@@ -5,11 +5,11 @@ import {
 } from "../evaluation";
 import { IMedicalRecordService } from "../medical_record";
 import { Result } from "../shared/core";
-import { AggregateID, DomainDate } from "../shared/domain";
+import { AggregateID, DomainDateTime } from "../shared/domain";
 import { handleError } from "../shared/exceptions";
 
 export class MedicalRecordACLImpl implements MedicalRecordACL {
-  constructor(private readonly medicalRecordService: IMedicalRecordService) {}
+  constructor(private readonly medicalRecordService: IMedicalRecordService) { }
 
   async getPatientData(data: {
     patientId: AggregateID;
@@ -72,7 +72,7 @@ export class MedicalRecordACLImpl implements MedicalRecordACL {
 
   async getPatientDataBefore(data: {
     patientId: AggregateID;
-    date: DomainDate;
+    date: DomainDateTime;
   }): Promise<Result<PatientData>> {
     try {
       const result = await this.medicalRecordService.get({
@@ -114,7 +114,7 @@ export class MedicalRecordACLImpl implements MedicalRecordACL {
         if (
           !acc[key] ||
           new Date(acc[key].recordedAt).getTime() <=
-            new Date(current.recordedAt).getTime()
+          new Date(current.recordedAt).getTime()
         )
           acc[current.code] = current;
         return acc;
@@ -123,10 +123,10 @@ export class MedicalRecordACLImpl implements MedicalRecordACL {
   }
   private getAllValueBefore<T extends { code: string; recordedAt: string }>(
     array: T[],
-    date: DomainDate
+    date: DomainDateTime
   ): T[] {
     return array.filter(
-      value => new Date(value.recordedAt).getTime() < date.getDate().getTime()
+      value => new Date(value.recordedAt).getTime() < date.getTimestamp()
     );
   }
 }

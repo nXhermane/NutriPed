@@ -21,6 +21,9 @@ import {
   DeleteMedicalRecordRequest,
   DeleteMedicalRecordResponse,
   DeleteMedicalRecordUseCase,
+  GetLatestValuesUntilDateRequest,
+  GetLatestValuesUntilDateResponse,
+  GetLatestValuesUntilDateUseCase,
   GetMedicalRecordRequest,
   GetMedicalRecordResponse,
   GetMedicalRecordUseCase,
@@ -30,6 +33,7 @@ import {
   IClinicalSignDataInterpretationACL,
   IMedicalRecordService,
   INormalizeAnthropometricDataACL,
+  INormalizeDataFieldResponseAcl,
   MeasurementValidationACL,
   MedicalRecord,
   MedicalRecordDto,
@@ -57,6 +61,7 @@ export interface MedicalRecordAcls {
   measurementACl: MeasurementValidationACL;
   clinicalSignDataInterpreterACL: IClinicalSignDataInterpretationACL;
   normalizeAnthropometricDataACL: INormalizeAnthropometricDataACL;
+  normalizeAndFillDataFieldResponseACL: INormalizeDataFieldResponseAcl,
 }
 export class MedicalRecordContext {
   private static instance: MedicalRecordContext | null = null;
@@ -106,6 +111,7 @@ export class MedicalRecordContext {
     GetNormalizedAnthropometricDataRequest,
     GetNormalizedAnthropometricDataResponse
   >;
+  private getLatestValuesUntilDateUC: UseCase<GetLatestValuesUntilDateRequest, GetLatestValuesUntilDateResponse>;
   // ACL
   private acls: MedicalRecordAcls | undefined;
   // private readonly patientACL: PatientACL;
@@ -166,16 +172,16 @@ export class MedicalRecordContext {
     this.infraMapper = new MedicalRecordInfraMapper();
     this.repository = isWebEnv()
       ? new MedicalRecordRepositoryWebImpl(
-          this.dbConnection as IndexedDBConnection,
-          this.infraMapper,
-          this.eventBus
-        )
+        this.dbConnection as IndexedDBConnection,
+        this.infraMapper,
+        this.eventBus
+      )
       : new MedicalRecordRepositoryExpoImpl(
-          this.expo as SQLiteDatabase,
-          this.infraMapper,
-          medical_records,
-          this.eventBus
-        );
+        this.expo as SQLiteDatabase,
+        this.infraMapper,
+        medical_records,
+        this.eventBus
+      );
     this.idGenerator = new GenerateUUID();
 
     // Application
@@ -211,6 +217,7 @@ export class MedicalRecordContext {
         this.repository,
         this.acls?.normalizeAnthropometricDataACL! // FIND: FIND SOLUTION FOR CICULAR DEPENDENCY
       );
+    this.getLatestValuesUntilDateUC = new GetLatestValuesUntilDateUseCase(this.repository, this.acls?.normalizeAnthropometricDataACL!, this.acls?.normalizeAndFillDataFieldResponseACL!);
     // Subscribers
     this.afterPatientCreatedHandler = new AfterPatientCreatedMedicalHandler(
       this.createMedicalRecordUC
@@ -227,6 +234,7 @@ export class MedicalRecordContext {
       updateUC: this.updateMedicalRecordUC,
       deleteDataUC: this.deleteDataFromMedicalRecordUC,
       getNormalizeAnthropDataUC: this.getNormalizeAnthropometricDataUC,
+      getLatestValuesUntilDate: this.getLatestValuesUntilDateUC
     });
   }
   static init(
@@ -273,6 +281,7 @@ export class MedicalRecordContext {
       updateUC: this.updateMedicalRecordUC,
       deleteDataUC: this.deleteDataFromMedicalRecordUC!,
       getNormalizeAnthropDataUC: this.getNormalizeAnthropometricDataUC,
+      getLatestValuesUntilDate: this.getLatestValuesUntilDateUC
     });
   }
   getMedicalRecordService(): IMedicalRecordService {

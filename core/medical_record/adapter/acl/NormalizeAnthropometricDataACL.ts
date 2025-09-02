@@ -3,19 +3,19 @@ import {
   AnthropometricRecord,
   INormalizeAnthropometricDataACL,
 } from "../../domain";
-import { INormalizeAnthropometricDataAppService } from "@/core/evaluation";
+import { INormalizeDataAppService } from "@/core/evaluation";
 
 export class NormalizeAnthropomericDataACL
   implements INormalizeAnthropometricDataACL
 {
   constructor(
-    private readonly normalizeAnthropometricDataService: INormalizeAnthropometricDataAppService
+    private readonly normalizeAnthropometricDataService: INormalizeDataAppService
   ) {}
   async normalize(
     anthropRecord: AnthropometricRecord
   ): Promise<Result<AnthropometricRecord>> {
     try {
-      const result = await this.normalizeAnthropometricDataService.normalize({
+      const result = await this.normalizeAnthropometricDataService.normalizeAnthropometricData({
         anthropometricMeasures: [
           {
             code: anthropRecord.getCode(),

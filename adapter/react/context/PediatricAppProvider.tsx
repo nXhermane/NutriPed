@@ -17,6 +17,7 @@ import {
   ClinicalSignDataInterpretationACL,
   MeasurementValidationACLImpl,
   NormalizeAnthropomericDataACL,
+  NormalizeDataFieldResponseACl,
 } from "@/core/medical_record";
 
 interface PediatricAppProviderProps {
@@ -64,7 +65,10 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           diagnosticContext.getValidatePatientMeasurementsService()
         ),
         normalizeAnthropometricDataACL: new NormalizeAnthropomericDataACL(
-          diagnosticContext.getNormalizeAnthropomtricDataService()
+          diagnosticContext.getNormalizeDataService()
+        ),
+        normalizeAndFillDataFieldResponseACL: new NormalizeDataFieldResponseACl(
+          diagnosticContext.getNormalizeDataService()
         ),
       };
       medicalRecordContext.setAcls(medicalRecordAcls);
