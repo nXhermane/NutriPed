@@ -18,14 +18,5 @@ export const migrations: Migration[] = [
       createStoreIndexes(db);
     },
   },
-  {
-    version: 4,
-    up: (db: IDBDatabase) => {
-      // More precise migration as suggested by reviewer
-      if (!db.objectStoreNames.contains("next_orientation_references")) {
-        db.createObjectStore("next_orientation_references", { keyPath: "id" });
-      }
-    },
-  },
   // Futures migrations...
 ];
