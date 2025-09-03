@@ -1,6 +1,6 @@
 import { AggregateID } from "@shared";
 
-export interface GetOrientationReferenceRequest {
+export type GetOrientationReferenceRequest = {
   orientationRefId?: AggregateID;
   orientationRefCode?: string;
 }
