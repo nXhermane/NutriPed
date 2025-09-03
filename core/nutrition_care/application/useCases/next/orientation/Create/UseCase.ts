@@ -50,7 +50,7 @@ export class CreateOrientationReferenceUseCase
           )
         );
       }
-
+  orientationRefResult.val.created();
       await this.repo.save(orientationRefResult.val);
 
       return right(Result.ok({ id: orientationRefResult.val.id }));
