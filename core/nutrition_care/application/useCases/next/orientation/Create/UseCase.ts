@@ -1,4 +1,5 @@
 import {
+  GenerateUniqueId,
   handleError,
   left,
   Result,
@@ -16,7 +17,10 @@ export class CreateOrientationReferenceUseCase
   implements
     UseCase<CreateOrientationReferenceRequest, CreateOrientationReferenceResponse>
 {
-  constructor(private readonly repo: OrientationReferenceRepository) {}
+  constructor(
+    private readonly idGenerator: GenerateUniqueId,
+    private readonly repo: OrientationReferenceRepository
+  ) {}
 
   async execute(
     request: CreateOrientationReferenceRequest
@@ -31,16 +35,25 @@ export class CreateOrientationReferenceUseCase
           criteria,
           treatmentPhase,
         },
-        this.repo.getNextId()
+        this.idGenerator.generate()
       );
 
       if (orientationRefResult.isFailure) {
         return left(orientationRefResult);
       }
 
+      const exist = await this.repo.exist(orientationRefResult.val.getCode());
+      if (exist) {
+        return left(
+          Result.fail(
+            `The orientation reference with this code [${orientationRefResult.val.getCode()}] already exist.`
+          )
+        );
+      }
+
       await this.repo.save(orientationRefResult.val);
 
-      return right(Result.ok<void>());
+      return right(Result.ok({ id: orientationRefResult.val.id }));
     } catch (e: unknown) {
       return left(handleError(e));
     }

@@ -1,3 +1,7 @@
-import { AppServiceResponse } from "@shared";
+import { Either, ExceptionBase, Result } from "@shared";
+import { OrientationReferenceDto } from "../../../../dtos/next/orientation";
 
-export type UpdateOrientationReferenceResponse = AppServiceResponse<void>;
+export type UpdateOrientationReferenceResponse = Either<
+  ExceptionBase | unknown,
+  Result<OrientationReferenceDto>
+>;

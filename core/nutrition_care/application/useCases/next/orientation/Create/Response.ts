@@ -1,3 +1,6 @@
-import { AppServiceResponse } from "@shared";
+import { AggregateID, Either, ExceptionBase, Result } from "@shared";
 
-export type CreateOrientationReferenceResponse = AppServiceResponse<void>;
+export type CreateOrientationReferenceResponse = Either<
+  ExceptionBase | unknown,
+  Result<{ id: AggregateID }>
+>;
