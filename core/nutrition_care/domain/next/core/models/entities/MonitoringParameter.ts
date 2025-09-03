@@ -9,17 +9,24 @@ import {
   handleError,
   Result,
 } from "@/core/shared";
+import {
+  CreateMonitoringParameterElement,
+  IMonitoringParameterElement,
+  MonitoringParameterElement,
+} from "../valueObjects";
 
 export interface IMonitoringParameter extends EntityPropsBaseType {
   startDate: DomainDateTime;
   endDate: DomainDateTime | null;
   nextTaskDate: DomainDateTime | null;
+  element: MonitoringParameterElement;
 }
 
 export interface CreateMonitoringParameter {
   startDate?: string;
   endDate: string | null;
   nextTaskDate: string | null;
+  element: CreateMonitoringParameterElement;
 }
 
 export class MonitoringParameter extends Entity<IMonitoringParameter> {
@@ -31,6 +38,9 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
   }
   getNextTaskDate(): string | null {
     return this.props.nextTaskDate ? this.props.nextTaskDate.toString() : null;
+  }
+  getElement(): IMonitoringParameterElement {
+    return this.props.element.unpack();
   }
   changeNextTaskDate(nextTaskDate: DomainDateTime | null): void {
     this.props.nextTaskDate = nextTaskDate;
@@ -74,10 +84,12 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
       const nextTaskDateRes = createProps.nextTaskDate
         ? DomainDateTime.create(createProps.nextTaskDate)
         : Result.ok(null);
+      const elementRes = MonitoringParameterElement.create(createProps.element);
       const combinedRes = Result.combine([
         startDateRes,
         endDateRes,
         nextTaskDateRes,
+        elementRes,
       ]);
       if (combinedRes.isFailure) {
         return Result.fail(formatError(combinedRes, MonitoringParameter.name));
@@ -89,6 +101,7 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
             startDate: startDateRes.val,
             endDate: endDateRes.val,
             nextTaskDate: nextTaskDateRes.val,
+            element: elementRes.val,
           },
         })
       );

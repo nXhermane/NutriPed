@@ -12,6 +12,11 @@ import {
   SystemCode,
 } from "@/core/shared";
 import { ValueOf } from "@/utils";
+import {
+  CreateOnGoingTreatmentRecommendation,
+  IOnGoingTreatmentRecommendation,
+  OnGoingTreatmentRecommendation,
+} from "../valueObjects";
 
 export enum OnGoingTreatmentStatus {
   ACTIVE = "active",
@@ -24,6 +29,7 @@ export interface IOnGoingTreatment extends EntityPropsBaseType {
   endDate: DomainDateTime | null;
   status: OnGoingTreatmentStatus;
   nextActionDate: DomainDateTime | null;
+  recommendation: OnGoingTreatmentRecommendation;
 }
 
 export interface CreateOnGoindTreatment {
@@ -32,6 +38,7 @@ export interface CreateOnGoindTreatment {
   endDate: string | null;
   status: OnGoingTreatmentStatus;
   nextActionDate: string | null;
+  recommendation: CreateOnGoingTreatmentRecommendation;
 }
 
 export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
@@ -51,6 +58,9 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
   }
   getStatus(): OnGoingTreatmentStatus {
     return this.props.status;
+  }
+  getRecommendation(): IOnGoingTreatmentRecommendation {
+    return this.props.recommendation.unpack();
   }
   stopTreatment(): void {
     this.props.status = OnGoingTreatmentStatus.STOPPED;
@@ -115,11 +125,15 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
       const nextActionDateRes = createProps.nextActionDate
         ? DomainDateTime.create(createProps.nextActionDate)
         : Result.ok(null);
+      const recommendationRes = OnGoingTreatmentRecommendation.create(
+        createProps.recommendation
+      );
       const combinedRes = Result.combine([
         codeRes,
         startDateRes,
         endDateRes,
         nextActionDateRes,
+        recommendationRes,
       ]);
       if (combinedRes.isFailure) {
         return Result.fail(formatError(combinedRes, OnGoingTreatment.name));
@@ -133,6 +147,7 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
             endDate: endDateRes.val,
             nextActionDate: nextActionDateRes.val,
             status: createProps.status,
+            recommendation: recommendationRes.val,
           },
         })
       );

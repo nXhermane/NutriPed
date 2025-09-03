@@ -20,6 +20,7 @@ import {
   CARE_SESSION,
   ConsecutiveVariable,
   dailyVariable,
+  MONITORING_VALUE_SOURCE,
 } from "@/core/constants";
 
 export class CareSessionVariableGeneratorService
@@ -88,28 +89,11 @@ export class CareSessionVariableGeneratorService
         );
       }
 
-      // // 5. Récupérer les variables calculées via le service de performance
-      // const computedVariablesRes =
-      //   await this.computedVariablePerformerAcl.computeVariables(
-      //     patientId,
-      //     currentDailyRecord.getProps().date
-      //   );
-
-      // if (computedVariablesRes.isFailure) {
-      //   return Result.fail(
-      //     formatError(
-      //       computedVariablesRes,
-      //       CareSessionVariableGeneratorService.name
-      //     )
-      //   );
-      // }
-
       const allResults = Result.combine([
         dynamicVariablesRes,
         admissionAndCurrentDayRes,
         lastTwoDaysRes,
         weightConsecutiveRes,
-        // computedVariablesRes, TODO: Demain je vais implementer cela.
       ]);
 
       if (allResults.isFailure) {
@@ -118,12 +102,27 @@ export class CareSessionVariableGeneratorService
         );
       }
 
-      // 7. Fusionner toutes les variables en un seul objet
-      const combinedVariables = {
+      const contextVariables = {
         ...dynamicVariablesRes.val,
         ...admissionAndCurrentDayRes.val,
         ...lastTwoDaysRes.val,
         ...weightConsecutiveRes.val,
+      };
+      const computedVariablesRes = await this.generateComputedVariables(
+        currentCarePhase,
+        contextVariables
+      );
+      if (computedVariablesRes.isFailure) {
+        return Result.fail(
+          formatError(
+            computedVariablesRes,
+            CareSessionVariableGeneratorService.name
+          )
+        );
+      }
+
+      const combinedVariables = {
+        ...contextVariables,
         ...computedVariablesRes.val,
       };
 
@@ -133,6 +132,26 @@ export class CareSessionVariableGeneratorService
     }
   }
 
+  private async generateComputedVariables(
+    carePhase: CarePhase,
+    context: Record<string, string | number>
+  ): Promise<Result<Record<string, number | string>>> {
+    try {
+      const codeRes = this.getCodeOfCalculcatedMonitoringParameters(carePhase);
+      if (codeRes.isFailure) {
+        return Result.fail(
+          formatError(codeRes, CareSessionVariableGeneratorService.name)
+        );
+      }
+
+      return this.computedVariablePerformerAcl.computeVariables(
+        codeRes.val,
+        context as any
+      );
+    } catch (e) {
+      return handleError(e);
+    }
+  }
   private async getRecordLastTwoDays(
     patientId: AggregateID,
     currentDate: DomainDateTime
@@ -253,7 +272,22 @@ export class CareSessionVariableGeneratorService
       return handleError(e);
     }
   }
-
+  private getCodeOfCalculcatedMonitoringParameters(
+    carePhase: CarePhase
+  ): Result<SystemCode<string>[]> {
+    try {
+      const parameters = carePhase.getMonitoringParameters();
+      const codes = parameters
+        .filter(
+          parameter =>
+            parameter.element.getSource() === MONITORING_VALUE_SOURCE.CALCULATED
+        )
+        .map(parameter => parameter.element.unpack().code);
+      return Result.ok(codes);
+    } catch (e) {
+      return handleError(e);
+    }
+  }
   /**
    * Crée le résultat pour une phase active avec journal quotidien
    */
