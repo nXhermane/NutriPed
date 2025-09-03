@@ -35,7 +35,7 @@ export class CreateOrientationReferenceUseCase
           criteria,
           treatmentPhase,
         },
-        this.idGenerator.generate()
+        this.idGenerator.generate().toValue()
       );
 
       if (orientationRefResult.isFailure) {
