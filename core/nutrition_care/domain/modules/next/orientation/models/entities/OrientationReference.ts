@@ -42,6 +42,22 @@ export class OrientationReference extends Entity<IOrientationReference> {
   getTreatmentPhase(): CARE_PHASE_CODES | undefined {
     return this.props.treatmentPhase?.unpack();
   }
+
+  changeName(newName: string): void {
+    this.props.name = newName;
+  }
+
+  changeCode(newCode: SystemCode): void {
+    this.props.code = newCode;
+  }
+
+  changeCriteria(newCriteria: Criterion[]): void {
+    this.props.criteria = newCriteria;
+  }
+
+  changeTreatmentPhase(newTreatmentPhase: SystemCode<CARE_PHASE_CODES> | undefined): void {
+    this.props.treatmentPhase = newTreatmentPhase;
+  }
   public validate(): void {
     this._isValid = false;
     if (Guard.isEmpty(this.props.name).succeeded) {
