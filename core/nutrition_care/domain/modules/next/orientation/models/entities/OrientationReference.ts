@@ -45,22 +45,18 @@ export class OrientationReference extends Entity<IOrientationReference> {
 
   changeName(newName: string): void {
     this.props.name = newName;
-    this.props.updatedAt = new Date().toISOString();
   }
 
   changeCode(newCode: SystemCode): void {
     this.props.code = newCode;
-    this.props.updatedAt = new Date().toISOString();
   }
 
   changeCriteria(newCriteria: Criterion[]): void {
     this.props.criteria = newCriteria;
-    this.props.updatedAt = new Date().toISOString();
   }
 
   changeTreatmentPhase(newTreatmentPhase: SystemCode<CARE_PHASE_CODES> | undefined): void {
     this.props.treatmentPhase = newTreatmentPhase;
-    this.props.updatedAt = new Date().toISOString();
   }
   public validate(): void {
     this._isValid = false;
