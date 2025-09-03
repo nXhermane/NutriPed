@@ -91,18 +91,18 @@ export class Unit extends AggregateRoot<IUnit> {
       const combinedRes = Result.combine([codeRes, baseUnitRes]);
       if (combinedRes.isFailure)
         return Result.fail(formatError(combinedRes, Unit.name));
-      const unit = new Unit({
-        id,
-        props: {
-          name: createProps.name,
-          code: codeRes.val,
-          baseUnitCode: baseUnitRes.val,
-          conversionFactor: createProps.conversionFactor,
-          type: createProps.type,
-        },
-      });
-      unit.created();
-      return Result.ok(unit);
+      return Result.ok(
+        new Unit({
+          id,
+          props: {
+            name: createProps.name,
+            code: codeRes.val,
+            baseUnitCode: baseUnitRes.val,
+            conversionFactor: createProps.conversionFactor,
+            type: createProps.type,
+          },
+        })
+      );
     } catch (e: unknown) {
       return handleError(e);
     }

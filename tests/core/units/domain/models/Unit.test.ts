@@ -35,11 +35,4 @@ describe("Unit", () => {
     expect(() => unit.changeName("")).toThrow(EmptyStringError);
   });
 
-  it("should dispatch a UnitCreatedEvent upon successful creation", () => {
-    const result = Unit.create(validProps, id);
-    const unit = result.val;
-    const events = unit.getDomainEvents();
-    const event = events.find(e => e instanceof UnitCreatedEvent);
-    expect(event).toBeInstanceOf(UnitCreatedEvent);
-  });
 });
