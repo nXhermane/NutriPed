@@ -1,7 +1,7 @@
 import { CARE_PHASE_CODES } from "@/core/constants";
 import { CreateCriterion } from "@shared";
 
-export interface CreateOrientationReferenceRequest {
+export type CreateOrientationReferenceRequest = {
   name: string;
   code: string;
   criteria: CreateCriterion[];
