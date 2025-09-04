@@ -14,6 +14,7 @@ import {
   IMonitoringParameterElement,
   MonitoringParameterElement,
 } from "../valueObjects";
+import { DateCalculatorService } from "../../services/helpers/DateCalculatorService";
 
 export interface IMonitoringParameter extends EntityPropsBaseType {
   startDate: DomainDateTime;
@@ -49,6 +50,74 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
   changeEndDate(endDate: DomainDateTime | null) {
     this.props.endDate = endDate;
     this.validate();
+  }
+
+  /**
+   * Génère automatiquement la prochaine date de tâche basée sur la fréquence et la durée
+   * @param lastExecutionDate Date de dernière exécution (optionnelle, utilise startDate si non fournie)
+   * @returns true si une nouvelle date a été générée, false si le monitoring doit se terminer
+   */
+  generateNextTaskDate(lastExecutionDate?: DomainDateTime): boolean {
+    const element = this.getElement();
+    const frequency = element.frequency;
+    const duration = element.duration;
+    
+    const baseDate = lastExecutionDate || this.props.startDate;
+    
+    const result = DateCalculatorService.calculateNextDate(
+      this.props.startDate,
+      baseDate,
+      frequency,
+      duration,
+      this.props.endDate
+    );
+
+    if (result.shouldContinue) {
+      this.props.nextTaskDate = result.nextDate;
+    } else {
+      this.props.nextTaskDate = null;
+      // Si la durée est terminée, marquer la date de fin
+      if (this.props.endDate === null) {
+        this.props.endDate = DomainDateTime.now();
+      }
+    }
+
+    this.validate();
+    return result.shouldContinue;
+  }
+
+  /**
+   * Génère la date de tâche initiale lors de la création du paramètre
+   */
+  generateInitialNextTaskDate(): boolean {
+    const element = this.getElement();
+    const frequency = element.frequency;
+    const duration = element.duration;
+
+    const result = DateCalculatorService.calculateInitialNextDate(
+      this.props.startDate,
+      frequency,
+      duration,
+      this.props.endDate
+    );
+
+    if (result.shouldContinue) {
+      this.props.nextTaskDate = result.nextDate;
+    } else {
+      this.props.nextTaskDate = null;
+    }
+
+    this.validate();
+    return result.shouldContinue;
+  }
+
+  /**
+   * Met à jour la prochaine date après l'exécution d'une tâche
+   * @param executionDate Date d'exécution de la tâche
+   * @returns true si le monitoring doit continuer, false sinon
+   */
+  updateNextTaskDateAfterExecution(executionDate: DomainDateTime): boolean {
+    return this.generateNextTaskDate(executionDate);
   }
   public validate(): void {
     this._isValid = false;

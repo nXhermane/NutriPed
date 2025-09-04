@@ -45,6 +45,8 @@ export class TreatmentManager {
           const onGoingTreatment = mappedCurrentTreatments.get(treatment.id)!;
           if (onGoingTreatment.getStatus() === OnGoingTreatmentStatus.STOPPED) {
             onGoingTreatment.activeTreatment();
+            // Régénérer la prochaine date d'action lors de la réactivation
+            onGoingTreatment.generateNextActionDate();
             reactivatedTreatments.push(onGoingTreatment);
           }
         } else {
@@ -131,6 +133,12 @@ export class TreatmentManager {
         },
         this.idGenerator.generate().toValue()
       );
+
+      if (onGoingTreatmentRes.isSuccess) {
+        // Générer automatiquement la première date d'action
+        onGoingTreatmentRes.val.generateInitialNextActionDate();
+      }
+
       return onGoingTreatmentRes;
     } catch (e: unknown) {
       return handleError(e);

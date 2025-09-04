@@ -41,6 +41,8 @@ export class MonitoringParameterManager {
           // Réactiver si le paramètre était terminé
           if (parameter.getEndDate() !== null) {
             parameter.changeEndDate(null);
+            // Régénérer la prochaine date de tâche lors de la réactivation
+            parameter.generateNextTaskDate();
             reactivatedParameters.push(parameter);
           }
         } else {
@@ -125,6 +127,12 @@ export class MonitoringParameterManager {
         },
         this.idGenerator.generate().toValue()
       );
+
+      if (monitoringRes.isSuccess) {
+        // Générer automatiquement la première date de tâche
+        monitoringRes.val.generateInitialNextTaskDate();
+      }
+
       return monitoringRes;
     } catch (e: unknown) {
       return handleError(e);

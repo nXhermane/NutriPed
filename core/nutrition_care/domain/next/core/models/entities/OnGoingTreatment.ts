@@ -17,6 +17,7 @@ import {
   IOnGoingTreatmentRecommendation,
   OnGoingTreatmentRecommendation,
 } from "../valueObjects";
+import { DateCalculatorService } from "../../services/helpers/DateCalculatorService";
 
 export enum OnGoingTreatmentStatus {
   ACTIVE = "active",
@@ -82,6 +83,74 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
   changeNextActionDate(nextActionDate: DomainDateTime | null) {
     this.props.nextActionDate = nextActionDate;
     this.validate();
+  }
+
+  /**
+   * Génère automatiquement la prochaine date d'action basée sur la fréquence et la durée
+   * @param lastExecutionDate Date de dernière exécution (optionnelle, utilise startDate si non fournie)
+   * @returns true si une nouvelle date a été générée, false si le traitement doit se terminer
+   */
+  generateNextActionDate(lastExecutionDate?: DomainDateTime): boolean {
+    const recommendation = this.getRecommendation();
+    const frequency = recommendation.frequency;
+    const duration = recommendation.duration;
+    
+    const baseDate = lastExecutionDate || this.props.startDate;
+    
+    const result = DateCalculatorService.calculateNextDate(
+      this.props.startDate,
+      baseDate,
+      frequency,
+      duration,
+      this.props.endDate
+    );
+
+    if (result.shouldContinue) {
+      this.props.nextActionDate = result.nextDate;
+    } else {
+      this.props.nextActionDate = null;
+      // Si la durée est terminée, marquer le traitement comme complété
+      if (this.props.status === OnGoingTreatmentStatus.ACTIVE) {
+        this.completedTreatment();
+      }
+    }
+
+    this.validate();
+    return result.shouldContinue;
+  }
+
+  /**
+   * Génère la date d'action initiale lors de la création du traitement
+   */
+  generateInitialNextActionDate(): boolean {
+    const recommendation = this.getRecommendation();
+    const frequency = recommendation.frequency;
+    const duration = recommendation.duration;
+
+    const result = DateCalculatorService.calculateInitialNextDate(
+      this.props.startDate,
+      frequency,
+      duration,
+      this.props.endDate
+    );
+
+    if (result.shouldContinue) {
+      this.props.nextActionDate = result.nextDate;
+    } else {
+      this.props.nextActionDate = null;
+    }
+
+    this.validate();
+    return result.shouldContinue;
+  }
+
+  /**
+   * Met à jour la prochaine date après l'exécution d'une action
+   * @param executionDate Date d'exécution de l'action
+   * @returns true si le traitement doit continuer, false sinon
+   */
+  updateNextActionDateAfterExecution(executionDate: DomainDateTime): boolean {
+    return this.generateNextActionDate(executionDate);
   }
 
   public validate(): void {
