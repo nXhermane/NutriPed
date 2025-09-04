@@ -18,6 +18,7 @@ import {
   MedicalAction,
   NutritionalAction,
 } from "../valueObjects";
+import { asc } from "drizzle-orm";
 
 export enum DailyCareActionStatus {
   COMPLETED = "completed",
@@ -41,7 +42,7 @@ export interface CreateDailyCareAction {
   treatmentId: AggregateID;
   status?: DailyCareActionStatus;
   type: DailyCareActionType;
-  action: INutritionalAction | IMedicalAction;
+  action: CreateNutritionalAction | CreateMedicalAction;
   effectiveDate: string;
 }
 
@@ -125,11 +126,9 @@ export class DailyCareAction extends Entity<IDailyCareAction> {
       const actionRes =
         createProps.type === DailyCareActionType.NUTRITIONAL_ACTION
           ? NutritionalAction.create(
-              createProps.action as unknown as CreateNutritionalAction
+              createProps.action as CreateNutritionalAction
             )
-          : MedicalAction.create(
-              createProps.action as unknown as CreateMedicalAction
-            );
+          : MedicalAction.create(createProps.action as CreateMedicalAction);
       const effectiveDateRes = DomainDateTime.create(createProps.effectiveDate);
       const combinedRes = Result.combine([actionRes, effectiveDateRes]);
       if (combinedRes.isFailure) {

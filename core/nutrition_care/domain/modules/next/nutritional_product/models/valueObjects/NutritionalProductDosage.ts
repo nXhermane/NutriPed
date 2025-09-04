@@ -46,6 +46,9 @@ export class NutritionalProductDosage extends ValueObject<INutritionalProductDos
   getFeedingFrequencies(): FeedingFrequenciePerDay[] {
     return this.props.feedingFrequencies;
   }
+  getProductType(): NUTRITIONAL_PRODUCT_CODE {
+    return this.props.productType.unpack();
+  }
   protected validate(props: Readonly<INutritionalProductDosage>): void {
     if (
       Guard.isNegative(props.calculatedQuantity.minValue).succeeded ||

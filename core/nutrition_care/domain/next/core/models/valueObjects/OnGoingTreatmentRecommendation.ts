@@ -47,6 +47,9 @@ export class OnGoingTreatmentRecommendation extends ValueObject<IOnGoingTreatmen
   getCode(): MilkType | MEDICINE_CODES {
     return this.props.code.unpack();
   }
+  getType(): RECOMMENDED_TREATMENT_TYPE {
+    return this.props.type;
+  }
   getRecommendatioCode(): ValueOf<typeof TREATMENT_PLAN_IDS> {
     return this.props.recommendationCode.unpack();
   }
