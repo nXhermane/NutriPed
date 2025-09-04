@@ -1,12 +1,16 @@
 import { CreateUnitUseCase } from "../../../../../../../core/units/application/useCases/Unit/Create/UseCase";
 import { GenerateUniqueId, Result } from "../../../../../../../core/shared";
-import { Unit, UnitRepository, UnitType } from "../../../../../../../core/units/domain";
+import {
+  Unit,
+  UnitRepository,
+  UnitType,
+} from "../../../../../../../core/units/domain";
 import { CreateUnitRequest } from "../../../../../../../core/units/application/useCases/Unit/Create/Request";
 
 // Mock GenerateUniqueId
 const mockIdGenerator: GenerateUniqueId = {
   generate: () => ({
-    toValue: () => 'mock-id',
+    toValue: () => "mock-id",
   }),
 };
 
@@ -21,7 +25,7 @@ const mockUnitRepository: jest.Mocked<UnitRepository> = {
   delete: jest.fn(),
 };
 
-describe('CreateUnitUseCase', () => {
+describe("CreateUnitUseCase", () => {
   let useCase: CreateUnitUseCase;
 
   beforeEach(() => {
@@ -32,15 +36,15 @@ describe('CreateUnitUseCase', () => {
 
   const validRequest: CreateUnitRequest = {
     data: {
-      name: 'Kilogram',
-      code: 'kg',
+      name: "Kilogram",
+      code: "kg",
       conversionFactor: 1000,
-      baseUnitCode: 'g',
+      baseUnitCode: "g",
       type: UnitType.MASS,
     },
   };
 
-  it('should create and save a new unit successfully', async () => {
+  it("should create and save a new unit successfully", async () => {
     // Arrange
     mockUnitRepository.exist.mockResolvedValue(false);
 
@@ -51,14 +55,14 @@ describe('CreateUnitUseCase', () => {
     expect(result.isRight()).toBe(true);
     if (result.isRight()) {
       const value = result.value.val;
-      expect(value.id).toBe('mock-id');
+      expect(value.id).toBe("mock-id");
     }
     expect(mockUnitRepository.exist).toHaveBeenCalledTimes(1);
     expect(mockUnitRepository.save).toHaveBeenCalledTimes(1);
     expect(mockUnitRepository.save).toHaveBeenCalledWith(expect.any(Unit));
   });
 
-  it('should return a failure when the unit code already exists', async () => {
+  it("should return a failure when the unit code already exists", async () => {
     // Arrange
     mockUnitRepository.exist.mockResolvedValue(true);
 
@@ -69,18 +73,18 @@ describe('CreateUnitUseCase', () => {
     expect(result.isLeft()).toBe(true);
     if (result.isLeft()) {
       const error = result.value;
-      expect(error.err).toBe('The unit with code already exist.');
+      expect(error.err).toBe("The unit with code already exist.");
     }
     expect(mockUnitRepository.exist).toHaveBeenCalledTimes(1);
     expect(mockUnitRepository.save).not.toHaveBeenCalled();
   });
 
-  it('should return a failure when the provided data is invalid', async () => {
+  it("should return a failure when the provided data is invalid", async () => {
     // Arrange
     const invalidRequest: CreateUnitRequest = {
       data: {
         ...validRequest.data,
-        code: '', // Invalid code
+        code: "", // Invalid code
       },
     };
 

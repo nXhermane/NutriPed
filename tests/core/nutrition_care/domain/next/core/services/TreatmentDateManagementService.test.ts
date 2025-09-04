@@ -1,8 +1,22 @@
 import { DomainDateTime, Result } from "@/core/shared";
-import { DURATION_TYPE, FREQUENCY_TYPE, RECOMMENDED_TREATMENT_TYPE, MEDICINE_CODES, TREATMENT_PLAN_IDS, MONITORING_ELEMENT_CATEGORY, MONITORING_VALUE_SOURCE } from "@/core/constants";
-import { OnGoingTreatment, MonitoringParameter } from "@/core/nutrition_care/domain/next/core/models";
+import {
+  DURATION_TYPE,
+  FREQUENCY_TYPE,
+  RECOMMENDED_TREATMENT_TYPE,
+  MEDICINE_CODES,
+  TREATMENT_PLAN_IDS,
+  MONITORING_ELEMENT_CATEGORY,
+  MONITORING_VALUE_SOURCE,
+} from "@/core/constants";
+import {
+  OnGoingTreatment,
+  MonitoringParameter,
+} from "@/core/nutrition_care/domain/next/core/models";
 import { TreatmentDateManagementService } from "@/core/nutrition_care/domain/next/core/services/TreatmentDateManagementService";
-import { IDateCalculatorService, IDateCalculationResult } from "@/core/nutrition_care/domain/next/core/services/helpers/interfaces";
+import {
+  IDateCalculatorService,
+  IDateCalculationResult,
+} from "@/core/nutrition_care/domain/next/core/services/helpers/interfaces";
 import { GenerateUniqueId } from "@/core/shared/domain/common/GenerateUniqueID";
 import { EntityUniqueID } from "@/core/shared/domain/common/EntityUniqueId";
 
@@ -39,20 +53,27 @@ describe("TreatmentDateManagementService", () => {
       const treatmentId = mockIdGenerator.generate().val;
       const recommendationId = mockIdGenerator.generate().val;
 
-      const createRes = OnGoingTreatment.create({
-        code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-        startDate: startDate,
-        endDate: null,
-        nextActionDate: null,
-        recommendation: {
-          id: recommendationId,
-          code: MEDICINE_CODES.PARACETAMOL,
-          recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-          type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
-          duration: { type: DURATION_TYPE.DAYS, value: 7 },
-          frequency: { intervalUnit: FREQUENCY_TYPE.DAILY, intervalValue: 1, countInUnit: 2 },
+      const createRes = OnGoingTreatment.create(
+        {
+          code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+          startDate: startDate,
+          endDate: null,
+          nextActionDate: null,
+          recommendation: {
+            id: recommendationId,
+            code: MEDICINE_CODES.PARACETAMOL,
+            recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+            type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
+            duration: { type: DURATION_TYPE.DAYS, value: 7 },
+            frequency: {
+              intervalUnit: FREQUENCY_TYPE.DAILY,
+              intervalValue: 1,
+              countInUnit: 2,
+            },
+          },
         },
-      }, treatmentId);
+        treatmentId
+      );
 
       expect(createRes.isSuccess).toBe(true);
       const treatment = createRes.val;
@@ -62,7 +83,9 @@ describe("TreatmentDateManagementService", () => {
         shouldContinue: true,
         nextDate: expectedDate,
       };
-      mockDateCalculator.calculateInitialNextDate.mockReturnValue(calculationResult);
+      mockDateCalculator.calculateInitialNextDate.mockReturnValue(
+        calculationResult
+      );
 
       // Act
       const result = service.generateInitialTreatmentDate(treatment);
@@ -79,20 +102,27 @@ describe("TreatmentDateManagementService", () => {
       const treatmentId = mockIdGenerator.generate().val;
       const recommendationId = mockIdGenerator.generate().val;
 
-      const createRes = OnGoingTreatment.create({
-        code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-        startDate: startDate,
-        endDate: null,
-        nextActionDate: null,
-        recommendation: {
-          id: recommendationId,
-          code: MEDICINE_CODES.PARACETAMOL,
-          recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-          type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
-          duration: { type: DURATION_TYPE.DAYS, value: 0 },
-          frequency: { intervalUnit: FREQUENCY_TYPE.DAILY, intervalValue: 1, countInUnit: 1 },
+      const createRes = OnGoingTreatment.create(
+        {
+          code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+          startDate: startDate,
+          endDate: null,
+          nextActionDate: null,
+          recommendation: {
+            id: recommendationId,
+            code: MEDICINE_CODES.PARACETAMOL,
+            recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+            type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
+            duration: { type: DURATION_TYPE.DAYS, value: 0 },
+            frequency: {
+              intervalUnit: FREQUENCY_TYPE.DAILY,
+              intervalValue: 1,
+              countInUnit: 1,
+            },
+          },
         },
-      }, treatmentId);
+        treatmentId
+      );
 
       expect(createRes.isSuccess).toBe(true);
       const treatment = createRes.val;
@@ -101,7 +131,9 @@ describe("TreatmentDateManagementService", () => {
         shouldContinue: false,
         nextDate: null,
       };
-      mockDateCalculator.calculateInitialNextDate.mockReturnValue(calculationResult);
+      mockDateCalculator.calculateInitialNextDate.mockReturnValue(
+        calculationResult
+      );
 
       // Act
       const result = service.generateInitialTreatmentDate(treatment);
@@ -121,20 +153,27 @@ describe("TreatmentDateManagementService", () => {
       const treatmentId = mockIdGenerator.generate().val;
       const recommendationId = mockIdGenerator.generate().val;
 
-      const createRes = OnGoingTreatment.create({
-        code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-        startDate: "2024-01-01T08:00:00Z",
-        nextActionDate: "2024-01-01T20:00:00Z",
-        endDate: null,
-        recommendation: {
-          id: recommendationId,
-          code: MEDICINE_CODES.PARACETAMOL,
-          recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-          type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
-          duration: { type: DURATION_TYPE.DAYS, value: 7 },
-          frequency: { intervalUnit: FREQUENCY_TYPE.DAILY, intervalValue: 1, countInUnit: 2 },
+      const createRes = OnGoingTreatment.create(
+        {
+          code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+          startDate: "2024-01-01T08:00:00Z",
+          nextActionDate: "2024-01-01T20:00:00Z",
+          endDate: null,
+          recommendation: {
+            id: recommendationId,
+            code: MEDICINE_CODES.PARACETAMOL,
+            recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+            type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
+            duration: { type: DURATION_TYPE.DAYS, value: 7 },
+            frequency: {
+              intervalUnit: FREQUENCY_TYPE.DAILY,
+              intervalValue: 1,
+              countInUnit: 2,
+            },
+          },
         },
-      }, treatmentId);
+        treatmentId
+      );
 
       expect(createRes.isSuccess).toBe(true);
       const treatment = createRes.val;
@@ -147,13 +186,18 @@ describe("TreatmentDateManagementService", () => {
       mockDateCalculator.calculateNextDate.mockReturnValue(calculationResult);
 
       // Act
-      const result = service.updateTreatmentDateAfterExecution(treatment, executionDate);
+      const result = service.updateTreatmentDateAfterExecution(
+        treatment,
+        executionDate
+      );
 
       // Assert
       expect(result.isSuccess).toBe(true);
       expect(result.val.shouldContinue).toBe(true);
       expect(result.val.completed).toBe(false);
-      expect(treatment.getNextActionDate()).toEqual(expectedNextDate.toString());
+      expect(treatment.getNextActionDate()).toEqual(
+        expectedNextDate.toString()
+      );
     });
   });
 
@@ -163,19 +207,26 @@ describe("TreatmentDateManagementService", () => {
       const parameterId = mockIdGenerator.generate().val;
       const elementId = mockIdGenerator.generate().val;
 
-      const createRes = MonitoringParameter.create({
-        startDate: startDate,
-        endDate: null,
-        nextTaskDate: null,
-        element: {
-          id: elementId,
-          category: MONITORING_ELEMENT_CATEGORY.ANTHROPOMETRIC,
-          source: MONITORING_VALUE_SOURCE.CALCULATED,
-          code: "WEIGHT",
-          frequency: { intervalUnit: FREQUENCY_TYPE.WEEKLY, intervalValue: 1, countInUnit: 1 },
-          duration: { type: DURATION_TYPE.WHILE_IN_PHASE },
+      const createRes = MonitoringParameter.create(
+        {
+          startDate: startDate,
+          endDate: null,
+          nextTaskDate: null,
+          element: {
+            id: elementId,
+            category: MONITORING_ELEMENT_CATEGORY.ANTHROPOMETRIC,
+            source: MONITORING_VALUE_SOURCE.CALCULATED,
+            code: "WEIGHT",
+            frequency: {
+              intervalUnit: FREQUENCY_TYPE.WEEKLY,
+              intervalValue: 1,
+              countInUnit: 1,
+            },
+            duration: { type: DURATION_TYPE.WHILE_IN_PHASE },
+          },
         },
-      }, parameterId);
+        parameterId
+      );
 
       expect(createRes.isSuccess).toBe(true);
       const parameter = createRes.val;
@@ -185,7 +236,9 @@ describe("TreatmentDateManagementService", () => {
         shouldContinue: true,
         nextDate: expectedDate,
       };
-      mockDateCalculator.calculateInitialNextDate.mockReturnValue(calculationResult);
+      mockDateCalculator.calculateInitialNextDate.mockReturnValue(
+        calculationResult
+      );
 
       // Act
       const result = service.generateInitialMonitoringDate(parameter);
@@ -202,26 +255,54 @@ describe("TreatmentDateManagementService", () => {
     it("should return treatments due for execution", () => {
       // Arrange
       const today = DomainDateTime.now();
-      
+
       const treatmentDueId = mockIdGenerator.generate().val;
       const recommendationDueId = mockIdGenerator.generate().val;
-      const treatmentDueRes = OnGoingTreatment.create({
-        code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
-        startDate: today.toString(),
-        endDate: null,
-        nextActionDate: today.toString(),
-        recommendation: { id: recommendationDueId, code: MEDICINE_CODES.PARACETAMOL, recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1, type: RECOMMENDED_TREATMENT_TYPE.MEDICINE, duration: { type: DURATION_TYPE.DAYS, value: 7 }, frequency: { intervalUnit: FREQUENCY_TYPE.DAILY, intervalValue: 1, countInUnit: 1 } },
-      }, treatmentDueId);
+      const treatmentDueRes = OnGoingTreatment.create(
+        {
+          code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+          startDate: today.toString(),
+          endDate: null,
+          nextActionDate: today.toString(),
+          recommendation: {
+            id: recommendationDueId,
+            code: MEDICINE_CODES.PARACETAMOL,
+            recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
+            type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
+            duration: { type: DURATION_TYPE.DAYS, value: 7 },
+            frequency: {
+              intervalUnit: FREQUENCY_TYPE.DAILY,
+              intervalValue: 1,
+              countInUnit: 1,
+            },
+          },
+        },
+        treatmentDueId
+      );
 
       const treatmentNotDueId = mockIdGenerator.generate().val;
       const recommendationNotDueId = mockIdGenerator.generate().val;
-      const treatmentNotDueRes = OnGoingTreatment.create({
-        code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_2,
-        startDate: today.toString(),
-        endDate: null,
-        nextActionDate: today.addDays(1).toString(),
-        recommendation: { id: recommendationNotDueId, code: MEDICINE_CODES.PARACETAMOL, recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_2, type: RECOMMENDED_TREATMENT_TYPE.MEDICINE, duration: { type: DURATION_TYPE.DAYS, value: 7 }, frequency: { intervalUnit: FREQUENCY_TYPE.DAILY, intervalValue: 1, countInUnit: 1 } },
-      }, treatmentNotDueId);
+      const treatmentNotDueRes = OnGoingTreatment.create(
+        {
+          code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_2,
+          startDate: today.toString(),
+          endDate: null,
+          nextActionDate: today.addDays(1).toString(),
+          recommendation: {
+            id: recommendationNotDueId,
+            code: MEDICINE_CODES.PARACETAMOL,
+            recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_2,
+            type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
+            duration: { type: DURATION_TYPE.DAYS, value: 7 },
+            frequency: {
+              intervalUnit: FREQUENCY_TYPE.DAILY,
+              intervalValue: 1,
+              countInUnit: 1,
+            },
+          },
+        },
+        treatmentNotDueId
+      );
 
       expect(treatmentDueRes.isSuccess).toBe(true);
       expect(treatmentNotDueRes.isSuccess).toBe(true);

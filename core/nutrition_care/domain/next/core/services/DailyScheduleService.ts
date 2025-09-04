@@ -1,36 +1,49 @@
 import { DomainDateTime, formatError, Result } from "@/core/shared";
-import { OnGoingTreatment, MonitoringParameter, IDailyCareAction } from "../models";  
-import { IDailyScheduleService, ITreatmentDateManagementService } from "./interfaces";
+import {
+  OnGoingTreatment,
+  MonitoringParameter,
+  IDailyCareAction,
+} from "../models";
+import {
+  IDailyScheduleService,
+  ITreatmentDateManagementService,
+} from "./interfaces";
 
-export class DailyScheduleService implements IDailyScheduleService  {
-  constructor(private readonly treatmentDateManagementService: ITreatmentDateManagementService) {
-
-  }
+export class DailyScheduleService implements IDailyScheduleService {
+  constructor(
+    private readonly treatmentDateManagementService: ITreatmentDateManagementService
+  ) {}
 
   getTreatmentsDueForDate(
     treatments: OnGoingTreatment[],
     targetDate: DomainDateTime = DomainDateTime.now()
   ): OnGoingTreatment[] {
-    return this.treatmentDateManagementService.getTreatmentsDueForDate(treatments, targetDate);
+    return this.treatmentDateManagementService.getTreatmentsDueForDate(
+      treatments,
+      targetDate
+    );
   }
 
   getMonitoringParametersDueForDate(
     parameters: MonitoringParameter[],
     targetDate: DomainDateTime = DomainDateTime.now()
   ): MonitoringParameter[] {
-    return this.treatmentDateManagementService.getMonitoringParametersDueForDate(parameters, targetDate);
+    return this.treatmentDateManagementService.getMonitoringParametersDueForDate(
+      parameters,
+      targetDate
+    );
   }
-
 
   markTreatmentAsExecuted(
     treatment: OnGoingTreatment,
     executionDate: DomainDateTime = DomainDateTime.now()
   ): Result<{ shouldContinue: boolean; treatmentCompleted: boolean }> {
     try {
-      const updateResult = this.treatmentDateManagementService.updateTreatmentDateAfterExecution(
-        treatment,
-        executionDate
-      );
+      const updateResult =
+        this.treatmentDateManagementService.updateTreatmentDateAfterExecution(
+          treatment,
+          executionDate
+        );
       if (updateResult.isSuccess) {
         return Result.ok({
           shouldContinue: updateResult.val.shouldContinue,
@@ -39,20 +52,22 @@ export class DailyScheduleService implements IDailyScheduleService  {
       }
       return Result.fail(formatError(updateResult, DailyScheduleService.name));
     } catch (error) {
-      return Result.fail(`Failed to update treatment after execution: ${error}`);
+      return Result.fail(
+        `Failed to update treatment after execution: ${error}`
+      );
     }
   }
-
 
   markMonitoringParameterAsExecuted(
     parameter: MonitoringParameter,
     executionDate: DomainDateTime = DomainDateTime.now()
   ): Result<{ shouldContinue: boolean; monitoringEnded: boolean }> {
     try {
-      const updateResult = this.treatmentDateManagementService.updateMonitoringDateAfterExecution(
-        parameter,
-        executionDate
-      );
+      const updateResult =
+        this.treatmentDateManagementService.updateMonitoringDateAfterExecution(
+          parameter,
+          executionDate
+        );
       if (updateResult.isSuccess) {
         return Result.ok({
           shouldContinue: updateResult.val.shouldContinue,
@@ -61,7 +76,9 @@ export class DailyScheduleService implements IDailyScheduleService  {
       }
       return Result.fail(formatError(updateResult, DailyScheduleService.name));
     } catch (error) {
-      return Result.fail(`Failed to update monitoring parameter after execution: ${error}`);
+      return Result.fail(
+        `Failed to update monitoring parameter after execution: ${error}`
+      );
     }
   }
 
@@ -76,7 +93,10 @@ export class DailyScheduleService implements IDailyScheduleService  {
     totalTasks: number;
   } {
     const treatmentsDue = this.getTreatmentsDueForDate(treatments, targetDate);
-    const monitoringParametersDue = this.getMonitoringParametersDueForDate(parameters, targetDate);
+    const monitoringParametersDue = this.getMonitoringParametersDueForDate(
+      parameters,
+      targetDate
+    );
 
     return {
       treatmentsDue,

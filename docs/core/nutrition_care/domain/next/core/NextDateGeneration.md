@@ -9,6 +9,7 @@ Ce système permet de générer automatiquement les dates de prochaine action po
 ### 1. DateCalculatorService
 
 Service utilitaire qui calcule les prochaines dates basées sur :
+
 - **Frequency** : Définit à quelle fréquence l'action/tâche doit être exécutée
 - **Duration** : Définit combien de temps le traitement/monitoring doit durer
 
@@ -25,26 +26,26 @@ Service de haut niveau pour la planification quotidienne.
 ```typescript
 interface IFrequency {
   intervalUnit: FREQUENCY_TYPE; // "day" | "hours" | "week"
-  intervalValue: number;        // Valeur de l'intervalle
-  countInUnit: number;          // Nombre de fois dans l'unité
+  intervalValue: number; // Valeur de l'intervalle
+  countInUnit: number; // Nombre de fois dans l'unité
 }
 ```
 
 ### Exemples de Fréquence
 
-| Configuration | Description | Intervalle calculé |
-|---------------|-------------|-------------------|
-| `{intervalUnit: "day", intervalValue: 1, countInUnit: 3}` | 3 fois par jour | Toutes les 8 heures |
-| `{intervalUnit: "day", intervalValue: 2, countInUnit: 1}` | Tous les 2 jours | Toutes les 48 heures |
-| `{intervalUnit: "week", intervalValue: 1, countInUnit: 2}` | 2 fois par semaine | Tous les 3.5 jours |
-| `{intervalUnit: "hours", intervalValue: 6, countInUnit: 1}` | Toutes les 6 heures | Toutes les 6 heures |
+| Configuration                                               | Description         | Intervalle calculé   |
+| ----------------------------------------------------------- | ------------------- | -------------------- |
+| `{intervalUnit: "day", intervalValue: 1, countInUnit: 3}`   | 3 fois par jour     | Toutes les 8 heures  |
+| `{intervalUnit: "day", intervalValue: 2, countInUnit: 1}`   | Tous les 2 jours    | Toutes les 48 heures |
+| `{intervalUnit: "week", intervalValue: 1, countInUnit: 2}`  | 2 fois par semaine  | Tous les 3.5 jours   |
+| `{intervalUnit: "hours", intervalValue: 6, countInUnit: 1}` | Toutes les 6 heures | Toutes les 6 heures  |
 
 ## Structures de Durée
 
 ```typescript
 interface IDuration {
-  type: DURATION_TYPE;  // "days" | "hours" | "while_in_phase"
-  value?: number;       // Valeur numérique (optionnelle pour while_in_phase)
+  type: DURATION_TYPE; // "days" | "hours" | "while_in_phase"
+  value?: number; // Valeur numérique (optionnelle pour while_in_phase)
 }
 ```
 
@@ -65,7 +66,8 @@ treatment.generateInitialNextActionDate(); // Appelé automatiquement dans Treat
 
 // Mise à jour après exécution
 const executionDate = DomainDateTime.now();
-const shouldContinue = treatment.updateNextActionDateAfterExecution(executionDate);
+const shouldContinue =
+  treatment.updateNextActionDateAfterExecution(executionDate);
 
 // Régénération manuelle si nécessaire
 treatment.generateNextActionDate();
@@ -80,7 +82,8 @@ parameter.generateInitialNextTaskDate(); // Appelé automatiquement dans Monitor
 
 // Mise à jour après exécution
 const executionDate = DomainDateTime.now();
-const shouldContinue = parameter.updateNextTaskDateAfterExecution(executionDate);
+const shouldContinue =
+  parameter.updateNextTaskDateAfterExecution(executionDate);
 
 // Régénération manuelle si nécessaire
 parameter.generateNextTaskDate();
@@ -91,7 +94,8 @@ parameter.generateNextTaskDate();
 ```typescript
 // Obtenir ce qui doit être fait aujourd'hui
 const treatmentsDue = DailyScheduleService.getTreatmentsDueToday(treatments);
-const monitoringDue = DailyScheduleService.getMonitoringParametersDueToday(parameters);
+const monitoringDue =
+  DailyScheduleService.getMonitoringParametersDueToday(parameters);
 
 // Marquer comme exécuté
 const result = DailyScheduleService.markTreatmentAsExecuted(treatment);
@@ -105,18 +109,21 @@ if (result.isSuccess && result.val.treatmentCompleted) {
 ### Calcul de l'Intervalle
 
 L'intervalle entre chaque exécution est calculé comme suit :
+
 ```
 intervalInHours = (intervalValue * unitInHours) / countInUnit
 ```
 
 Où `unitInHours` est :
+
 - HOURSLY : 1
 - DAILY : 24
-- WEEKLY : 168 (24 * 7)
+- WEEKLY : 168 (24 \* 7)
 
 ### Vérification de Continuation
 
 Le système vérifie si le traitement/monitoring doit continuer en fonction :
+
 1. **WHILE_IN_PHASE** : Continue tant qu'il n'y a pas de date de fin
 2. **DAYS** : Continue tant que `diffInDays(startDate) < duration.value`
 3. **HOURS** : Continue tant que `diffInHours(startDate) < duration.value`
@@ -126,6 +133,7 @@ Le système vérifie si le traitement/monitoring doit continuer en fonction :
 ### Générateurs d'Actions Quotidiennes
 
 Les services `IDailyActionGeneratorService` et `IDailyTaskGeneratorService` peuvent maintenant :
+
 1. Utiliser `DailyScheduleService.getTreatmentsDueToday()` pour identifier les traitements à exécuter
 2. Après génération d'une action, appeler `DailyScheduleService.markTreatmentAsExecuted()`
 
@@ -144,6 +152,7 @@ Les services `IDailyActionGeneratorService` et `IDailyTaskGeneratorService` peuv
 ## Gestion de la Date d'Exécution
 
 Chaque entité stocke maintenant :
+
 - `nextActionDate`/`nextTaskDate` : Prochaine date prévue
 - `lastExecutionDate` : Dernière date d'exécution réelle
 
@@ -155,6 +164,7 @@ Chaque entité stocke maintenant :
 4. **Calcul suivant** : `updateAfterExecution()` calcule la prochaine date basée sur l'exécution réelle
 
 Cette approche permet :
+
 - **Précision** : Calcul basé sur l'exécution réelle, pas sur la date prévue
 - **Rattrapage** : Si une action est en retard, le calcul reste correct
 - **Traçabilité** : Historique des exécutions disponible
@@ -162,6 +172,7 @@ Cette approche permet :
 ## Architecture DDD
 
 Le système respecte les principes DDD :
+
 - **Entités** : Contiennent seulement la logique métier pure (validation, état)
 - **Services de domaine** : Gèrent la logique complexe de calcul des dates
 - **Helpers** : Services utilitaires sans état

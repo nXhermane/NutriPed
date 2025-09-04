@@ -13,7 +13,6 @@
     "format:check": "prettier --check .",
     "lint": "npx expo lint"
   },
-  
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@expo-google-fonts/poppins": "^0.3.1",

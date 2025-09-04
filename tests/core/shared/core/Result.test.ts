@@ -46,10 +46,7 @@ describe("Result", () => {
     });
 
     it("should return a failed result if one result is a failure", () => {
-      const results = [
-        Result.ok<string>("one"),
-        Result.fail<string>("error"),
-      ];
+      const results = [Result.ok<string>("one"), Result.fail<string>("error")];
       const combined = Result.combine(results as any);
       expect(combined.isFailure).toBe(true);
       expect(combined.err).toBe("error");

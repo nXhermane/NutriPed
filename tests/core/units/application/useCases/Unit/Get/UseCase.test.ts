@@ -1,18 +1,22 @@
-import { GetUnitUseCase } from '../../../../../../../core/units/application/useCases/Unit/Get/UseCase';
-import { Unit, UnitRepository, UnitType } from '../../../../../../../core/units/domain';
-import { ApplicationMapper } from '../../../../../../../core/shared';
-import { UnitDto } from '../../../../../../../core/units/application/dtos';
+import { GetUnitUseCase } from "../../../../../../../core/units/application/useCases/Unit/Get/UseCase";
+import {
+  Unit,
+  UnitRepository,
+  UnitType,
+} from "../../../../../../../core/units/domain";
+import { ApplicationMapper } from "../../../../../../../core/shared";
+import { UnitDto } from "../../../../../../../core/units/application/dtos";
 
 // Mock Unit entity
 const mockUnit = Unit.create(
   {
-    name: 'Kilogram',
-    code: 'kg',
+    name: "Kilogram",
+    code: "kg",
     conversionFactor: 1000,
-    baseUnitCode: 'g',
+    baseUnitCode: "g",
     type: UnitType.MASS,
   },
-  'test-id'
+  "test-id"
 ).val;
 
 // Mock UnitRepository
@@ -28,7 +32,7 @@ const mockUnitRepository: jest.Mocked<UnitRepository> = {
 
 // Mock UnitMapper
 const mockMapper: jest.Mocked<ApplicationMapper<Unit, UnitDto>> = {
-  toResponse: jest.fn((unit) => ({
+  toResponse: jest.fn(unit => ({
     id: unit.id,
     name: unit.getName(),
     code: unit.getCode(),
@@ -40,7 +44,7 @@ const mockMapper: jest.Mocked<ApplicationMapper<Unit, UnitDto>> = {
   })),
 };
 
-describe('GetUnitUseCase', () => {
+describe("GetUnitUseCase", () => {
   let useCase: GetUnitUseCase;
 
   beforeEach(() => {
@@ -48,37 +52,37 @@ describe('GetUnitUseCase', () => {
     useCase = new GetUnitUseCase(mockUnitRepository, mockMapper);
   });
 
-  it('should get a unit by ID successfully', async () => {
+  it("should get a unit by ID successfully", async () => {
     // Act
-    const result = await useCase.execute({ id: 'test-id' });
+    const result = await useCase.execute({ id: "test-id" });
 
     // Assert
     expect(result.isRight()).toBe(true);
     if (result.isRight()) {
       const value = result.value.val;
       expect(value).toHaveLength(1);
-      expect(value[0].id).toBe('test-id');
+      expect(value[0].id).toBe("test-id");
     }
-    expect(mockUnitRepository.getById).toHaveBeenCalledWith('test-id');
+    expect(mockUnitRepository.getById).toHaveBeenCalledWith("test-id");
     expect(mockMapper.toResponse).toHaveBeenCalled();
   });
 
-  it('should get a unit by code successfully', async () => {
+  it("should get a unit by code successfully", async () => {
     // Act
-    const result = await useCase.execute({ code: 'kg' });
+    const result = await useCase.execute({ code: "kg" });
 
     // Assert
     expect(result.isRight()).toBe(true);
     if (result.isRight()) {
       const value = result.value.val;
       expect(value).toHaveLength(1);
-      expect(value[0].code).toBe('kg');
+      expect(value[0].code).toBe("kg");
     }
     expect(mockUnitRepository.getByCode).toHaveBeenCalled();
     expect(mockMapper.toResponse).toHaveBeenCalled();
   });
 
-  it('should get all units successfully', async () => {
+  it("should get all units successfully", async () => {
     // Act
     const result = await useCase.execute({});
 
@@ -92,7 +96,7 @@ describe('GetUnitUseCase', () => {
     expect(mockMapper.toResponse).toHaveBeenCalled();
   });
 
-  it('should get units by type successfully', async () => {
+  it("should get units by type successfully", async () => {
     // Act
     await useCase.execute({ type: UnitType.MASS });
 

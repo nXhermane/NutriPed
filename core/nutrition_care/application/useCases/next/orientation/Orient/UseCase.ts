@@ -7,7 +7,8 @@ export class OrientUseCase implements UseCase<OrientRequest, OrientResponse> {
   constructor(private readonly orientationService: IOrientationService) {}
   async execute(request: OrientRequest): Promise<OrientResponse> {
     try {
-      const orientationResultRes = await this.orientationService.orient(request);
+      const orientationResultRes =
+        await this.orientationService.orient(request);
       if (orientationResultRes.isFailure) {
         return left(orientationResultRes);
       }

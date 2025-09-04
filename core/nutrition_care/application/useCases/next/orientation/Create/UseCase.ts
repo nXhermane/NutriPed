@@ -15,7 +15,10 @@ import {
 
 export class CreateOrientationReferenceUseCase
   implements
-    UseCase<CreateOrientationReferenceRequest, CreateOrientationReferenceResponse>
+    UseCase<
+      CreateOrientationReferenceRequest,
+      CreateOrientationReferenceResponse
+    >
 {
   constructor(
     private readonly idGenerator: GenerateUniqueId,
@@ -50,7 +53,7 @@ export class CreateOrientationReferenceUseCase
           )
         );
       }
-  orientationRefResult.val.created();
+      orientationRefResult.val.created();
       await this.repo.save(orientationRefResult.val);
 
       return right(Result.ok({ id: orientationRefResult.val.id }));

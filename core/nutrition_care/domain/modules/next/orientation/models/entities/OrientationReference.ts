@@ -55,7 +55,9 @@ export class OrientationReference extends Entity<IOrientationReference> {
     this.props.criteria = newCriteria;
   }
 
-  changeTreatmentPhase(newTreatmentPhase: SystemCode<CARE_PHASE_CODES> | undefined): void {
+  changeTreatmentPhase(
+    newTreatmentPhase: SystemCode<CARE_PHASE_CODES> | undefined
+  ): void {
     this.props.treatmentPhase = newTreatmentPhase;
   }
   public validate(): void {

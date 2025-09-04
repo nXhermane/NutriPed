@@ -46,3 +46,4 @@ suggest.ts
 DOCUMENTATION_TECHNIQUE.md
 medical_record_prototype.html
 note.txt
+.github/workflows/tests.yml
