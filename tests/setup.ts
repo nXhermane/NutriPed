@@ -1,5 +1,5 @@
 // Jest setup file
-import '@testing-library/jest-dom';
+import "@testing-library/jest-native";
 
 // Extend Jest matchers
 expect.extend({
@@ -12,7 +12,8 @@ expect.extend({
       };
     } else {
       return {
-        message: () => `expected ${received} to be a success Result, but it was a failure with error: ${received.err}`,
+        message: () =>
+          `expected ${received} to be a success Result, but it was a failure with error: ${received.err}`,
         pass: false,
       };
     }
@@ -26,7 +27,8 @@ expect.extend({
       };
     } else {
       return {
-        message: () => `expected ${received} to be a failure Result, but it was a success with value: ${received.val}`,
+        message: () =>
+          `expected ${received} to be a failure Result, but it was a success with value: ${received.val}`,
         pass: false,
       };
     }
@@ -40,7 +42,8 @@ expect.extend({
       };
     } else {
       return {
-        message: () => `expected ${received} to be a Right Either, but it was a Left with value: ${received.value}`,
+        message: () =>
+          `expected ${received} to be a Right Either, but it was a Left with value: ${received.value}`,
         pass: false,
       };
     }
@@ -54,7 +57,8 @@ expect.extend({
       };
     } else {
       return {
-        message: () => `expected ${received} to be a Left Either, but it was a Right with value: ${received.value}`,
+        message: () =>
+          `expected ${received} to be a Left Either, but it was a Right with value: ${received.value}`,
         pass: false,
       };
     }
@@ -75,4 +79,3 @@ global.console = {
 
 // Mock timers
 jest.useFakeTimers();
-

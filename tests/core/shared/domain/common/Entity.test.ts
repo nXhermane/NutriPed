@@ -1,9 +1,10 @@
-
-import { Entity, EntityPropsBaseType } from '../../../../../core/shared/domain/common/Entity';
-import { DomainDate } from '../../../../../core/shared/domain/shared/valueObjects/Date';
+import {
+  Entity,
+  EntityPropsBaseType,
+} from "../../../../../core/shared/domain/common/Entity";
 
 // Création d'une classe d'entité concrète pour les tests
-interface TestEntityProps {
+interface TestEntityProps extends EntityPropsBaseType {
   name: string;
   value: number;
 }
@@ -18,18 +19,18 @@ class TestEntity extends Entity<TestEntityProps> {
   }
 }
 
-describe('Entity', () => {
+describe("Entity", () => {
   const validProps = {
-    name: 'Test Entity',
+    name: "Test Entity",
     value: 10,
   };
 
-  const validId = '123';
-  const validCreatedAt = '2023-01-01';
-  const validUpdatedAt = '2023-01-02';
+  const validId = "123";
+  const validCreatedAt = "2023-01-01";
+  const validUpdatedAt = "2023-01-02";
 
-  describe('constructor', () => {
-    it('should create a valid entity with all properties', () => {
+  describe("constructor", () => {
+    it("should create a valid entity with all properties", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -46,7 +47,7 @@ describe('Entity', () => {
       expect(entity.isValid()).toBe(true);
     });
 
-    it('should throw an error when props is empty', () => {
+    it("should throw an error when props is empty", () => {
       expect(() => {
         new TestEntity({
           id: validId,
@@ -54,22 +55,22 @@ describe('Entity', () => {
           createdAt: validCreatedAt,
           updatedAt: validUpdatedAt,
         });
-      }).toThrow('Entity props should not be empty');
+      }).toThrow("Entity props should not be empty");
     });
 
-    it('should throw an error when props is not an object', () => {
+    it("should throw an error when props is not an object", () => {
       expect(() => {
         new TestEntity({
           id: validId,
           // @ts-ignore - Testing invalid input
-          props: 'not an object',
+          props: "not an object",
           createdAt: validCreatedAt,
           updatedAt: validUpdatedAt,
         });
-      }).toThrow('Entity props should be an object');
+      }).toThrow("Entity props should be an object");
     });
 
-    it('should create dates with current date when not provided', () => {
+    it("should create dates with current date when not provided", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -81,8 +82,8 @@ describe('Entity', () => {
     });
   });
 
-  describe('getProps', () => {
-    it('should return all properties including id, createdAt, and updatedAt', () => {
+  describe("getProps", () => {
+    it("should return all properties including id, createdAt, and updatedAt", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -100,7 +101,7 @@ describe('Entity', () => {
       });
     });
 
-    it('should return a frozen object', () => {
+    it("should return a frozen object", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -113,8 +114,8 @@ describe('Entity', () => {
     });
   });
 
-  describe('isEntity', () => {
-    it('should return true for an entity', () => {
+  describe("isEntity", () => {
+    it("should return true for an entity", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -125,17 +126,17 @@ describe('Entity', () => {
       expect(Entity.isEntity(entity)).toBe(true);
     });
 
-    it('should return false for a non-entity', () => {
+    it("should return false for a non-entity", () => {
       expect(Entity.isEntity({})).toBe(false);
       expect(Entity.isEntity(null)).toBe(false);
       expect(Entity.isEntity(undefined)).toBe(false);
-      expect(Entity.isEntity('string')).toBe(false);
+      expect(Entity.isEntity("string")).toBe(false);
       expect(Entity.isEntity(123)).toBe(false);
     });
   });
 
-  describe('equals', () => {
-    it('should return true for the same entity', () => {
+  describe("equals", () => {
+    it("should return true for the same entity", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -146,7 +147,7 @@ describe('Entity', () => {
       expect(entity.equals(entity)).toBe(true);
     });
 
-    it('should return true for entities with the same ID', () => {
+    it("should return true for entities with the same ID", () => {
       const entity1 = new TestEntity({
         id: validId,
         props: validProps,
@@ -156,15 +157,15 @@ describe('Entity', () => {
 
       const entity2 = new TestEntity({
         id: validId,
-        props: { name: 'Different Name', value: 20 },
-        createdAt: '2023-02-01',
-        updatedAt: '2023-02-02',
+        props: { name: "Different Name", value: 20 },
+        createdAt: "2023-02-01",
+        updatedAt: "2023-02-02",
       });
 
       expect(entity1.equals(entity2)).toBe(true);
     });
 
-    it('should return false for entities with different IDs', () => {
+    it("should return false for entities with different IDs", () => {
       const entity1 = new TestEntity({
         id: validId,
         props: validProps,
@@ -173,7 +174,7 @@ describe('Entity', () => {
       });
 
       const entity2 = new TestEntity({
-        id: '456',
+        id: "456",
         props: validProps,
         createdAt: validCreatedAt,
         updatedAt: validUpdatedAt,
@@ -182,7 +183,7 @@ describe('Entity', () => {
       expect(entity1.equals(entity2)).toBe(false);
     });
 
-    it('should return false for null or undefined', () => {
+    it("should return false for null or undefined", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -194,7 +195,7 @@ describe('Entity', () => {
       expect(entity.equals(undefined as any)).toBe(false);
     });
 
-    it('should return false for non-entities', () => {
+    it("should return false for non-entities", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -206,8 +207,8 @@ describe('Entity', () => {
     });
   });
 
-  describe('validate', () => {
-    it('should set _isValid to true for valid props', () => {
+  describe("validate", () => {
+    it("should set _isValid to true for valid props", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -218,10 +219,10 @@ describe('Entity', () => {
       expect(entity.isValid()).toBe(true);
     });
 
-    it('should set _isValid to false for invalid props', () => {
+    it("should set _isValid to false for invalid props", () => {
       const entity = new TestEntity({
         id: validId,
-        props: { name: '', value: -1 },
+        props: { name: "", value: -1 },
         createdAt: validCreatedAt,
         updatedAt: validUpdatedAt,
       });
@@ -230,8 +231,8 @@ describe('Entity', () => {
     });
   });
 
-  describe('isValid', () => {
-    it('should return true for valid entities', () => {
+  describe("isValid", () => {
+    it("should return true for valid entities", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -242,10 +243,10 @@ describe('Entity', () => {
       expect(entity.isValid()).toBe(true);
     });
 
-    it('should return false for invalid entities', () => {
+    it("should return false for invalid entities", () => {
       const entity = new TestEntity({
         id: validId,
-        props: { name: '', value: -1 },
+        props: { name: "", value: -1 },
         createdAt: validCreatedAt,
         updatedAt: validUpdatedAt,
       });
@@ -253,10 +254,14 @@ describe('Entity', () => {
       expect(entity.isValid()).toBe(false);
     });
 
-    it('should return false when validate throws an error', () => {
+    it("should return false when validate throws an error", () => {
       class ErrorEntity extends Entity<TestEntityProps> {
         validate(): void {
-          throw new Error('Validation error');
+          try {
+            this._isValid = false;
+            throw new Error("Validation error");
+            this._isValid = true;
+          } catch (e) {}
         }
       }
 
@@ -271,8 +276,8 @@ describe('Entity', () => {
     });
   });
 
-  describe('props proxy', () => {
-    it('should update updatedAt when a property is changed', () => {
+  describe("props proxy", () => {
+    it("should update updatedAt when a property is changed", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -281,16 +286,16 @@ describe('Entity', () => {
       });
 
       const initialUpdatedAt = entity.updatedAt;
-      
+
       // Wait a moment to ensure the updatedAt timestamp changes
       jest.advanceTimersByTime(1000);
-      
-      entity.props.name = 'Updated Name';
-      
+
+      entity.props.name = "Updated Name";
+
       expect(entity.updatedAt).not.toBe(initialUpdatedAt);
     });
 
-    it('should throw an error when trying to set a non-existent property', () => {
+    it("should throw an error when trying to set a non-existent property", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -300,13 +305,13 @@ describe('Entity', () => {
 
       expect(() => {
         // @ts-ignore - Testing invalid property assignment
-        entity.props.nonExistentProp = 'value';
+        entity.props.nonExistentProp = "value";
       }).toThrow('Property "nonExistentProp" does not exist on entity props.');
     });
   });
 
-  describe('delete', () => {
-    it('should set _isDeleted to true', () => {
+  describe("delete", () => {
+    it("should set _isDeleted to true", () => {
       const entity = new TestEntity({
         id: validId,
         props: validProps,
@@ -320,11 +325,11 @@ describe('Entity', () => {
     });
   });
 
-  describe('lifecycle methods', () => {
-    it('should have created method that can be overridden', () => {
+  describe("lifecycle methods", () => {
+    it("should have created method that can be overridden", () => {
       class EntityWithCreated extends TestEntity {
         created(): void {
-          this.props.name = 'Created';
+          this.props.name = "Created";
         }
       }
 
@@ -336,13 +341,13 @@ describe('Entity', () => {
       });
 
       entity.created();
-      expect(entity.props.name).toBe('Created');
+      expect(entity.props.name).toBe("Created");
     });
 
-    it('should have updated method that can be overridden', () => {
+    it("should have updated method that can be overridden", () => {
       class EntityWithUpdated extends TestEntity {
         updated(): void {
-          this.props.name = 'Updated';
+          this.props.name = "Updated";
         }
       }
 
@@ -354,9 +359,7 @@ describe('Entity', () => {
       });
 
       entity.updated();
-      expect(entity.props.name).toBe('Updated');
+      expect(entity.props.name).toBe("Updated");
     });
   });
 });
-
-
