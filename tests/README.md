@@ -39,6 +39,19 @@ Pour exécuter tous les tests :
 
 ```bash
 yarn test
+```
+
+Pour exécuter les tests avec couverture de code :
+
+```bash
+yarn test:coverage
+```
+
+Pour exécuter les tests d'un fichier spécifique :
+
+```bash
+yarn test -- -t "nom du test"
+```
 
 ## Utilitaires de Test
 
@@ -89,4 +102,3 @@ Exemple :
 expect(result).toBeSuccessResult();
 expect(either).toBeRight();
 ```
-
