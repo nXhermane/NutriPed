@@ -36,7 +36,7 @@ export interface CreateOnGoindTreatment {
   code: ValueOf<typeof TREATMENT_PLAN_IDS>;
   startDate?: string;
   endDate: string | null;
-  status: OnGoingTreatmentStatus;
+  status?: OnGoingTreatmentStatus;
   nextActionDate: string | null;
   recommendation: CreateOnGoingTreatmentRecommendation;
 }
@@ -146,7 +146,7 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
             startDate: startDateRes.val,
             endDate: endDateRes.val,
             nextActionDate: nextActionDateRes.val,
-            status: createProps.status,
+            status: createProps.status || OnGoingTreatmentStatus.ACTIVE,
             recommendation: recommendationRes.val,
           },
         })

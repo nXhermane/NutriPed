@@ -15,7 +15,7 @@ export interface ICarePlanApplicatorService {
   applyPlan(
     recommendation: CarePlanRecommendation,
     targetCarePhase: CarePhase
-  ): Result<void>;
+  ): Promise<Result<void>>;
 
   /**
    * Applique des ajustements à une phase de soins existante.
@@ -25,5 +25,5 @@ export interface ICarePlanApplicatorService {
   applyAjustments(
     ajustement: CarePlanAjustement,
     targetCarePhase: CarePhase
-  ): Result<void>;
+  ): Promise<Result<void>>;
 }

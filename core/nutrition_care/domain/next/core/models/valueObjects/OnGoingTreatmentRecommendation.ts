@@ -1,4 +1,8 @@
-import { MEDICINE_CODES, RECOMMENDED_TREATMENT_TYPE } from "@/core/constants";
+import {
+  MEDICINE_CODES,
+  RECOMMENDED_TREATMENT_TYPE,
+  TREATMENT_PLAN_IDS,
+} from "@/core/constants";
 import {
   Duration,
   Frequency,
@@ -16,9 +20,11 @@ import {
   SystemCode,
   ValueObject,
 } from "@/core/shared";
+import { ValueOf } from "@/utils";
 
 export interface IOnGoingTreatmentRecommendation {
   id: AggregateID;
+  recommendationCode: SystemCode<ValueOf<typeof TREATMENT_PLAN_IDS>>;
   type: RECOMMENDED_TREATMENT_TYPE;
   code: SystemCode<MilkType | MEDICINE_CODES>;
   duration: Duration;
@@ -27,6 +33,7 @@ export interface IOnGoingTreatmentRecommendation {
 }
 export interface CreateOnGoingTreatmentRecommendation {
   id: AggregateID;
+  recommendationCode: ValueOf<typeof TREATMENT_PLAN_IDS>;
   type: RECOMMENDED_TREATMENT_TYPE;
   code: MilkType | MEDICINE_CODES;
   duration: IDuration;
@@ -39,6 +46,9 @@ export class OnGoingTreatmentRecommendation extends ValueObject<IOnGoingTreatmen
   }
   getCode(): MilkType | MEDICINE_CODES {
     return this.props.code.unpack();
+  }
+  getRecommendatioCode(): ValueOf<typeof TREATMENT_PLAN_IDS> {
+    return this.props.recommendationCode.unpack();
   }
   getDuration(): IDuration {
     return this.props.duration.unpack();
@@ -61,9 +71,17 @@ export class OnGoingTreatmentRecommendation extends ValueObject<IOnGoingTreatmen
   ): Result<OnGoingTreatmentRecommendation> {
     try {
       const codeRes = SystemCode.create(createProps.code);
+      const recommendationCodeRes = SystemCode.create(
+        createProps.recommendationCode
+      );
       const frequencyRes = Frequency.create(createProps.frequency);
       const durationRes = Duration.create(createProps.duration);
-      const combinedRes = Result.combine([codeRes, frequencyRes, durationRes]);
+      const combinedRes = Result.combine([
+        codeRes,
+        frequencyRes,
+        durationRes,
+        recommendationCodeRes,
+      ]);
       if (combinedRes.isFailure) {
         return Result.fail(
           formatError(combinedRes, OnGoingTreatmentRecommendation.name)
@@ -72,6 +90,7 @@ export class OnGoingTreatmentRecommendation extends ValueObject<IOnGoingTreatmen
       const recommendation = new OnGoingTreatmentRecommendation({
         id: createProps.id,
         code: codeRes.val,
+        recommendationCode: recommendationCodeRes.val,
         type: createProps.type,
         duration: durationRes.val,
         frequency: frequencyRes.val,
