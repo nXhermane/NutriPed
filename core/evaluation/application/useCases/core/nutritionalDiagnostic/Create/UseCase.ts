@@ -49,7 +49,6 @@ export class CreateNutritionalDiagnosticUseCase
           },
         });
       if (nutritionalDiagnostic.isFailure) return left(nutritionalDiagnostic);
-      nutritionalDiagnostic.val.created();
       await this.repo.save(nutritionalDiagnostic.val);
       return right(Result.ok({ id: nutritionalDiagnostic.val.id }));
     } catch (e: unknown) {

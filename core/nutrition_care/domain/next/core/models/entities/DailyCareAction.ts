@@ -35,7 +35,7 @@ export interface IDailyCareAction extends EntityPropsBaseType {
   status: DailyCareActionStatus;
   type: DailyCareActionType;
   action: NutritionalAction | MedicalAction;
-  effectiveDate: DomainDateTime;
+  effectiveDate: DomainDateTime; // Ceci est exactement la meme date dans le nextActionDate de onGoingTreatment
 }
 export interface CreateDailyCareAction {
   treatmentId: AggregateID;

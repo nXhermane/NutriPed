@@ -24,7 +24,6 @@ export class CreateMilkUseCase
       if (milkRes.isFailure) return left(milkRes);
 
       const milk = milkRes.val;
-      milk.created();
       await this.repo.save(milk);
 
       return right(Result.ok({ id: newId }));

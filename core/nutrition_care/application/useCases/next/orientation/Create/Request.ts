@@ -6,4 +6,4 @@ export type CreateOrientationReferenceRequest = {
   code: string;
   criteria: CreateCriterion[];
   treatmentPhase: CARE_PHASE_CODES | undefined;
-}
+};

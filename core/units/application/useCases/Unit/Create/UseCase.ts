@@ -24,7 +24,6 @@ export class CreateUnitUseCase
       if (unitRes.isFailure) return left(unitRes);
       const exist = await this.repo.exist(unitRes.val.getProps().code);
       if (exist) return left(Result.fail("The unit with code already exist."));
-      unitRes.val.created();
       await this.repo.save(unitRes.val);
       return right(Result.ok({ id: unitId }));
     } catch (e: unknown) {

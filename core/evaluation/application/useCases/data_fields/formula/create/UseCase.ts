@@ -33,7 +33,6 @@ export class CreateFormulaFieldReferenceUseCase
       if (formulaFieldRes.isFailure) {
         return left(formulaFieldRes);
       }
-      formulaFieldRes.val.created();
       await this.repo.save(formulaFieldRes.val);
       return right(Result.ok({ id: newId }));
     } catch (e: unknown) {

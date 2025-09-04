@@ -36,7 +36,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 #  yarn 
-yarn.lock 
+# yarn.lock 
 adapter/config/auth/config.ts
 
 # React Component Preview

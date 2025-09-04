@@ -6,20 +6,16 @@ import {
   Result,
 } from "@/core/shared";
 import { IRecommendedTreatment } from "../../../../modules";
-import {
-  OnGoingTreatment,
-  OnGoingTreatmentStatus,
-} from "../../models";
+import { OnGoingTreatment, OnGoingTreatmentStatus } from "../../models";
 import { CarePhase } from "../../models/entities/CarePhase";
+import { ITreatmentDateManagementService } from "../interfaces";
+import { ITreatmentManager, TreatmentTransitionResult } from "./interfaces";
 
-export interface TreatmentTransitionResult {
-  newTreatments: OnGoingTreatment[];
-  reactivatedTreatments: OnGoingTreatment[];
-  stoppedTreatments: OnGoingTreatment[];
-}
-
-export class TreatmentManager {
-  constructor(private readonly idGenerator: GenerateUniqueId) {}
+export class TreatmentManager implements ITreatmentManager {
+  constructor(
+    private readonly idGenerator: GenerateUniqueId,
+    private readonly treatmentDateManagementService: ITreatmentDateManagementService
+  ) {}
 
   /**
    * Synchronise les traitements recommandés avec ceux en cours dans la phase de soins
@@ -45,10 +41,15 @@ export class TreatmentManager {
           const onGoingTreatment = mappedCurrentTreatments.get(treatment.id)!;
           if (onGoingTreatment.getStatus() === OnGoingTreatmentStatus.STOPPED) {
             onGoingTreatment.activeTreatment();
+            // Régénérer la prochaine date d'action lors de la réactivation
+            this.treatmentDateManagementService.regenerateTreatmentDate(
+              onGoingTreatment
+            );
             reactivatedTreatments.push(onGoingTreatment);
           }
         } else {
-          const newTreatmentRes = this.createOnGoingTreatmentFromRecommended(treatment);
+          const newTreatmentRes =
+            this.createOnGoingTreatmentFromRecommended(treatment);
           if (newTreatmentRes.isFailure) {
             return Result.fail(
               formatError(newTreatmentRes, TreatmentManager.name)
@@ -119,6 +120,7 @@ export class TreatmentManager {
           code: recommendedTreatment.code.unpack(),
           endDate: null,
           nextActionDate: null,
+          lastExecutionDate: null,
           recommendation: {
             id: recommendedTreatment.id,
             code: recommendedTreatment.treatmentCode.unpack(),
@@ -131,6 +133,14 @@ export class TreatmentManager {
         },
         this.idGenerator.generate().toValue()
       );
+
+      if (onGoingTreatmentRes.isSuccess) {
+        // Générer automatiquement la première date d'action
+        this.treatmentDateManagementService.generateInitialTreatmentDate(
+          onGoingTreatmentRes.val
+        );
+      }
+
       return onGoingTreatmentRes;
     } catch (e: unknown) {
       return handleError(e);

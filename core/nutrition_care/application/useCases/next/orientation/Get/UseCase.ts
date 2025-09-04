@@ -52,7 +52,9 @@ export class GetOrientationReferenceUseCase
         return left(Result.fail("The Orientation Ref not found."));
       }
 
-      return right(Result.ok(orientationRefs.map(entity => this.mapper.toResponse(entity))));
+      return right(
+        Result.ok(orientationRefs.map(entity => this.mapper.toResponse(entity)))
+      );
     } catch (e: unknown) {
       return left(handleError(e));
     }

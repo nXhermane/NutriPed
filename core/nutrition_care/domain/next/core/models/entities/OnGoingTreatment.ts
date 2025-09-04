@@ -17,6 +17,7 @@ import {
   IOnGoingTreatmentRecommendation,
   OnGoingTreatmentRecommendation,
 } from "../valueObjects";
+import { IDuration, IFrequency } from "@/core/nutrition_care/domain/modules";
 
 export enum OnGoingTreatmentStatus {
   ACTIVE = "active",
@@ -29,6 +30,7 @@ export interface IOnGoingTreatment extends EntityPropsBaseType {
   endDate: DomainDateTime | null;
   status: OnGoingTreatmentStatus;
   nextActionDate: DomainDateTime | null;
+  lastExecutionDate: DomainDateTime | null;
   recommendation: OnGoingTreatmentRecommendation;
 }
 
@@ -38,6 +40,7 @@ export interface CreateOnGoindTreatment {
   endDate: string | null;
   status?: OnGoingTreatmentStatus;
   nextActionDate: string | null;
+  lastExecutionDate?: string | null;
   recommendation: CreateOnGoingTreatmentRecommendation;
 }
 
@@ -54,6 +57,11 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
   getNextActionDate(): string | null {
     return this.props.nextActionDate
       ? this.props.nextActionDate.toString()
+      : null;
+  }
+  getLastExecutionDate(): string | null {
+    return this.props.lastExecutionDate
+      ? this.props.lastExecutionDate.toString()
       : null;
   }
   getStatus(): OnGoingTreatmentStatus {
@@ -84,16 +92,72 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
     this.validate();
   }
 
+  /**
+   * Définit la prochaine date d'action
+   * Cette méthode doit être appelée par un service de domaine
+   */
+  setNextActionDate(
+    nextActionDate: DomainDateTime | null,
+    shouldComplete: boolean = false
+  ): void {
+    this.props.nextActionDate = nextActionDate;
+
+    if (shouldComplete && this.props.status === OnGoingTreatmentStatus.ACTIVE) {
+      this.completedTreatment();
+    } else {
+      this.validate();
+    }
+  }
+
+  /**
+   * Enregistre l'exécution d'une action et met à jour lastExecutionDate
+   */
+  recordExecution(executionDate: DomainDateTime): void {
+    this.props.lastExecutionDate = executionDate;
+    this.validate();
+  }
+
+  /**
+   * Vérifie si le traitement est dû pour exécution à une date donnée
+   */
+  isDueForExecution(targetDate: DomainDateTime): boolean {
+    if (!this.props.nextActionDate) return false;
+    if (this.props.status !== OnGoingTreatmentStatus.ACTIVE) return false;
+
+    return (
+      targetDate.isSameDay(this.props.nextActionDate) ||
+      targetDate.isAfter(this.props.nextActionDate)
+    );
+  }
+
+  /**
+   * Obtient les données nécessaires pour le calcul de la prochaine date
+   */
+  getDateCalculationData(): {
+    startDate: DomainDateTime;
+    endDate: DomainDateTime | null;
+    frequency: IFrequency;
+    duration: IDuration;
+  } {
+    const recommendation = this.getRecommendation();
+    return {
+      startDate: this.props.startDate,
+      endDate: this.props.endDate,
+      frequency: recommendation.frequency.unpack(),
+      duration: recommendation.duration.unpack(),
+    };
+  }
+
   public validate(): void {
     this._isValid = false;
-    if (
-      Guard.isEmpty(this.props.endDate).succeeded &&
-      Guard.isEmpty(this.props.nextActionDate).succeeded
-    ) {
-      throw new ArgumentInvalidException(
-        "If the end date is empty, the next action date must be provided"
-      );
-    }
+    // if (
+    //   Guard.isEmpty(this.props.endDate).succeeded &&
+    //   Guard.isEmpty(this.props.nextActionDate).succeeded
+    // ) {
+    //   throw new ArgumentInvalidException(
+    //     "If the end date is empty, the next action date must be provided"
+    //   );
+    // }
     if (
       this.props.nextActionDate &&
       this.props.nextActionDate.isBefore(this.props.startDate)
@@ -125,6 +189,9 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
       const nextActionDateRes = createProps.nextActionDate
         ? DomainDateTime.create(createProps.nextActionDate)
         : Result.ok(null);
+      const lastExecutionDateRes = createProps.lastExecutionDate
+        ? DomainDateTime.create(createProps.lastExecutionDate)
+        : Result.ok(null);
       const recommendationRes = OnGoingTreatmentRecommendation.create(
         createProps.recommendation
       );
@@ -133,6 +200,7 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
         startDateRes,
         endDateRes,
         nextActionDateRes,
+        lastExecutionDateRes,
         recommendationRes,
       ]);
       if (combinedRes.isFailure) {
@@ -146,6 +214,7 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
             startDate: startDateRes.val,
             endDate: endDateRes.val,
             nextActionDate: nextActionDateRes.val,
+            lastExecutionDate: lastExecutionDateRes.val,
             status: createProps.status || OnGoingTreatmentStatus.ACTIVE,
             recommendation: recommendationRes.val,
           },

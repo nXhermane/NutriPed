@@ -18,7 +18,10 @@ import { OrientationReferenceDto } from "../../../../dtos/next/orientation";
 
 export class UpdateOrientationReferenceUseCase
   implements
-    UseCase<UpdateOrientationReferenceRequest, UpdateOrientationReferenceResponse>
+    UseCase<
+      UpdateOrientationReferenceRequest,
+      UpdateOrientationReferenceResponse
+    >
 {
   constructor(
     private readonly repo: OrientationReferenceRepository,

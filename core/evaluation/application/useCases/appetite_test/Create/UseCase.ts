@@ -33,7 +33,6 @@ export class CreateAppetiteTestUseCase
             `The appetite test reference with this code [${appetiteTestRes.val.getCode()}] already exist.`
           )
         );
-      appetiteTestRes.val.created();
       await this.repo.save(appetiteTestRes.val);
       return right(Result.ok({ id: appetiteTestRes.val.id }));
     } catch (e: unknown) {

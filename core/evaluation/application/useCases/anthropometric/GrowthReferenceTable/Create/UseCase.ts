@@ -44,7 +44,6 @@ export class CreateGrowthReferenceTableUseCase
           )
         );
 
-      growthRefTableRes.val.created();
       await this.repo.save(growthRefTableRes.val);
       return right(Result.ok({ id: growthRefTableId }));
     } catch (e) {
