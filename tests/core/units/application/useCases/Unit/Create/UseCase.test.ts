@@ -1,5 +1,9 @@
 import { CreateUnitUseCase } from "../../../../../../../core/units/application/useCases/Unit/Create/UseCase";
-import { GenerateUniqueId, Result } from "../../../../../../../core/shared";
+import {
+  EntityUniqueID,
+  GenerateUniqueId,
+  Result,
+} from "../../../../../../../core/shared";
 import {
   Unit,
   UnitRepository,
@@ -9,9 +13,7 @@ import { CreateUnitRequest } from "../../../../../../../core/units/application/u
 
 // Mock GenerateUniqueId
 const mockIdGenerator: GenerateUniqueId = {
-  generate: () => ({
-    toValue: () => "mock-id",
-  }),
+  generate: () => new EntityUniqueID("mock-id"),
 };
 
 // Mock UnitRepository
@@ -40,7 +42,7 @@ describe("CreateUnitUseCase", () => {
       code: "kg",
       conversionFactor: 1000,
       baseUnitCode: "g",
-      type: UnitType.MASS,
+      type: UnitType.WEIGHT,
     },
   };
 
@@ -73,7 +75,7 @@ describe("CreateUnitUseCase", () => {
     expect(result.isLeft()).toBe(true);
     if (result.isLeft()) {
       const error = result.value;
-      expect(error.err).toBe("The unit with code already exist.");
+      expect((error as any).err).toBe("The unit with code already exist.");
     }
     expect(mockUnitRepository.exist).toHaveBeenCalledTimes(1);
     expect(mockUnitRepository.save).not.toHaveBeenCalled();

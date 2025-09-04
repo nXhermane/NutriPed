@@ -29,7 +29,8 @@ export class GetUnitUseCase
         if (codeRes.isFailure) return left(codeRes);
         units.push(await this.repo.getByCode(codeRes.val));
       } else {
-        units.push(...(await this.repo.getAll(request.type)));
+        const _units = await this.repo.getAll(request.type);
+        units.push(..._units);
       }
       return right(Result.ok(units.map(this.mapper.toResponse)));
     } catch (e: unknown) {

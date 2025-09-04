@@ -14,7 +14,7 @@ const kgUnit = Unit.create(
     code: "kg",
     conversionFactor: 1000,
     baseUnitCode: "g",
-    type: UnitType.MASS,
+    type: UnitType.WEIGHT,
   },
   "kg-id"
 ).val;
@@ -24,7 +24,7 @@ const gUnit = Unit.create(
     code: "g",
     conversionFactor: 1,
     baseUnitCode: "g",
-    type: UnitType.MASS,
+    type: UnitType.WEIGHT,
   },
   "g-id"
 ).val;

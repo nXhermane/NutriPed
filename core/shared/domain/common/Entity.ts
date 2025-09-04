@@ -2,6 +2,7 @@ import { EntityUniqueID } from "./EntityUniqueId";
 import { Guard } from "../../core";
 import { DomainDate } from "./../shared/valueObjects/Date";
 import { ValueType } from "../../utils/types";
+import { DomainEvent } from "../events";
 export type AggregateID = string | number;
 
 export interface BaseEntityProps {
@@ -24,6 +25,7 @@ export abstract class Entity<EntityProps extends EntityPropsBaseType> {
   private _updatedAt: DomainDate;
   protected _isValid: boolean = false;
   protected _isDeleted: boolean = false;
+  protected _domainEvents: DomainEvent<object>[] = [];
   public readonly props: EntityProps;
   constructor({
     createdAt,
@@ -37,7 +39,7 @@ export abstract class Entity<EntityProps extends EntityPropsBaseType> {
     this._updatedAt = DomainDate.create(updatedAt).val;
     this.props = this.createProxy(props);
     this?.validate();
-    if(!createdAt) {
+    if (!createdAt) {
       this.created();
     }
   }

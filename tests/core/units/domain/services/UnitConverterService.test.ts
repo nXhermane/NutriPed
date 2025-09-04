@@ -11,7 +11,7 @@ describe("UnitConverterService", () => {
       code: "g",
       conversionFactor: 1,
       baseUnitCode: "g",
-      type: UnitType.MASS,
+      type: UnitType.WEIGHT,
     },
     "g-id"
   );
@@ -21,7 +21,7 @@ describe("UnitConverterService", () => {
       code: "kg",
       conversionFactor: 1000,
       baseUnitCode: "g",
-      type: UnitType.MASS,
+      type: UnitType.WEIGHT,
     },
     "kg-id"
   );
@@ -63,7 +63,7 @@ describe("UnitConverterService", () => {
     const value = 1; // 1 kg
     const result = unitConverterService.convert(value, kilogram, meter);
     expect(result.isFailure).toBe(true);
-    expect(result.error).toBe(
+    expect(result.err).toBe(
       "It's not possible to convert a unit with different base unit."
     );
   });

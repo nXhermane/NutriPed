@@ -5,7 +5,6 @@ import {
   Entity,
   EntityPropsBaseType,
   formatError,
-  Guard,
   handleError,
   Result,
 } from "@/core/shared";
@@ -116,15 +115,15 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
   }
   public validate(): void {
     this._isValid = false;
-    if (
-      Guard.isEmpty(this.props.endDate).succeeded &&
-      Guard.isEmpty(this.props.nextTaskDate).succeeded
-    ) {
-      // NOTE: cette note puisque peut etre plus tard je comprendrai plus. Ceci est mis ici puisque si jamais la date de fin == null ce la veut dire que nous sommes dans un while in phase. Mais si jamais on termine, on peut lui attribuer une valeur ou bien mettre le status ajout. donc si jamais c'est un while in phase le nextTaskDate ne doit jamais etre null a moins que ce soit deja la fin de la phase et que le next date aussi devrait etre null
-      throw new ArgumentInvalidException(
-        "On monitoring parameter, when end date is empty, the next date can't be empty."
-      );
-    }
+    // if (
+    //   Guard.isEmpty(this.props.endDate).succeeded &&
+    //   Guard.isEmpty(this.props.nextTaskDate).succeeded
+    // ) {
+    //   // NOTE: cette note puisque peut etre plus tard je comprendrai plus. Ceci est mis ici puisque si jamais la date de fin == null ce la veut dire que nous sommes dans un while in phase. Mais si jamais on termine, on peut lui attribuer une valeur ou bien mettre le status ajout. donc si jamais c'est un while in phase le nextTaskDate ne doit jamais etre null a moins que ce soit deja la fin de la phase et que le next date aussi devrait etre null
+    //   throw new ArgumentInvalidException(
+    //     "On monitoring parameter, when end date is empty, the next date can't be empty."
+    //   );
+    // }
     if (
       this.props.nextTaskDate &&
       this.props.nextTaskDate.isBefore(this.props.startDate)

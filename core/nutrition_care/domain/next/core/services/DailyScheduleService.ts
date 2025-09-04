@@ -1,8 +1,5 @@
 import { DomainDateTime, formatError, Result } from "@/core/shared";
-import {
-  OnGoingTreatment,
-  MonitoringParameter,
-} from "../models";
+import { OnGoingTreatment, MonitoringParameter } from "../models";
 import {
   IDailyScheduleService,
   ITreatmentDateManagementService,

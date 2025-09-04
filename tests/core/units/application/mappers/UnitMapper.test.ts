@@ -6,14 +6,13 @@ describe("UnitMapper", () => {
   const mapper = new UnitMapper();
 
   it("should correctly map a Unit entity to a UnitDto", () => {
-    // Arrange
     const unitResult = Unit.create(
       {
         name: "Kilogram",
         code: "kg",
         conversionFactor: 1000,
         baseUnitCode: "g",
-        type: UnitType.MASS,
+        type: UnitType.WEIGHT,
       },
       "test-id"
     );
@@ -33,7 +32,7 @@ describe("UnitMapper", () => {
     expect(unitDto.code).toBe("kg");
     expect(unitDto.baseUnitCode).toBe("g");
     expect(unitDto.conversionFactor).toBe(1000);
-    expect(unitDto.type).toBe(UnitType.MASS);
+    expect(unitDto.type).toBe(UnitType.WEIGHT);
     expect(unitDto.createdAt).toBe(unitEntity.createdAt);
     expect(unitDto.updatedAt).toBe(unitEntity.updatedAt);
   });

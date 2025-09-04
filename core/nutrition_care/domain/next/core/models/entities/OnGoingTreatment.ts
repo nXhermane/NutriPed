@@ -150,14 +150,14 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
 
   public validate(): void {
     this._isValid = false;
-    if (
-      Guard.isEmpty(this.props.endDate).succeeded &&
-      Guard.isEmpty(this.props.nextActionDate).succeeded
-    ) {
-      throw new ArgumentInvalidException(
-        "If the end date is empty, the next action date must be provided"
-      );
-    }
+    // if (
+    //   Guard.isEmpty(this.props.endDate).succeeded &&
+    //   Guard.isEmpty(this.props.nextActionDate).succeeded
+    // ) {
+    //   throw new ArgumentInvalidException(
+    //     "If the end date is empty, the next action date must be provided"
+    //   );
+    // }
     if (
       this.props.nextActionDate &&
       this.props.nextActionDate.isBefore(this.props.startDate)

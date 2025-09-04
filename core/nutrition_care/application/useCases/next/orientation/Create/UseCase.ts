@@ -45,7 +45,9 @@ export class CreateOrientationReferenceUseCase
         return left(orientationRefResult);
       }
 
-      const exist = await this.repo.exist(orientationRefResult.val.getProps().code);
+      const exist = await this.repo.exist(
+        orientationRefResult.val.getProps().code
+      );
       if (exist) {
         return left(
           Result.fail(

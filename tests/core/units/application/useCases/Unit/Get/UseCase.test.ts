@@ -14,7 +14,7 @@ const mockUnit = Unit.create(
     code: "kg",
     conversionFactor: 1000,
     baseUnitCode: "g",
-    type: UnitType.MASS,
+    type: UnitType.WEIGHT,
   },
   "test-id"
 ).val;
@@ -98,9 +98,9 @@ describe("GetUnitUseCase", () => {
 
   it("should get units by type successfully", async () => {
     // Act
-    await useCase.execute({ type: UnitType.MASS });
+    await useCase.execute({ type: UnitType.WEIGHT });
 
     // Assert
-    expect(mockUnitRepository.getAll).toHaveBeenCalledWith(UnitType.MASS);
+    expect(mockUnitRepository.getAll).toHaveBeenCalledWith(UnitType.WEIGHT);
   });
 });
