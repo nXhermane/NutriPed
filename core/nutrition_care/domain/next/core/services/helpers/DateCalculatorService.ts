@@ -1,23 +1,13 @@
 import { DomainDateTime } from "@/core/shared";
 import { DURATION_TYPE, FREQUENCY_TYPE } from "@/core/constants";
-import { IDuration, IFrequency } from "../../../modules";
+import { IDuration, IFrequency } from "@/core/nutrition_care/domain/modules";
+import {
+  IDateCalculatorService,
+  NextDateCalculationResult,
+} from "./interfaces";
 
-export interface NextDateCalculationResult {
-  nextDate: DomainDateTime;
-  shouldContinue: boolean;
-}
-
-export class DateCalculatorService {
-  /**
-   * Calcule la prochaine date d'action/tâche basée sur la fréquence et la durée
-   * @param startDate Date de début du traitement/monitoring
-   * @param currentDate Date actuelle (ou dernière date d'exécution)
-   * @param frequency Configuration de fréquence
-   * @param duration Configuration de durée
-   * @param endDate Date de fin optionnelle (pour les durées while_in_phase)
-   * @returns La prochaine date calculée et si on doit continuer la génération
-   */
-  static calculateNextDate(
+export class DateCalculatorService implements IDateCalculatorService {
+  calculateNextDate(
     startDate: DomainDateTime,
     currentDate: DomainDateTime,
     frequency: IFrequency,
@@ -62,7 +52,7 @@ export class DateCalculatorService {
   /**
    * Détermine si on doit continuer la génération basée sur la durée
    */
-  private static shouldContinueBasedOnDuration(
+  private shouldContinueBasedOnDuration(
     startDate: DomainDateTime,
     currentDate: DomainDateTime,
     duration: IDuration,
@@ -91,7 +81,7 @@ export class DateCalculatorService {
   /**
    * Calcule la prochaine date basée sur la fréquence
    */
-  private static calculateNextDateBasedOnFrequency(
+  private calculateNextDateBasedOnFrequency(
     currentDate: DomainDateTime,
     frequency: IFrequency
   ): DomainDateTime {
@@ -100,7 +90,7 @@ export class DateCalculatorService {
     // Calculer l'intervalle entre chaque occurrence
     // Si countInUnit = 2 et intervalValue = 1 day, alors intervalle = 12 heures
     // Si countInUnit = 1 et intervalValue = 2 days, alors intervalle = 2 jours
-    
+
     let intervalInHours: number;
 
     switch (intervalUnit) {
@@ -123,25 +113,37 @@ export class DateCalculatorService {
   /**
    * Calcule la première date d'action/tâche pour un nouveau traitement/monitoring
    */
-  static calculateInitialNextDate(
+  calculateInitialNextDate(
     startDate: DomainDateTime,
     frequency: IFrequency,
     duration: IDuration,
     endDate?: DomainDateTime | null
   ): NextDateCalculationResult {
-    return this.calculateNextDate(startDate, startDate, frequency, duration, endDate);
+    return this.calculateNextDate(
+      startDate,
+      startDate,
+      frequency,
+      duration,
+      endDate
+    );
   }
 
   /**
    * Met à jour la prochaine date après l'exécution d'une action/tâche
    */
-  static updateNextDateAfterExecution(
+  updateNextDateAfterExecution(
     startDate: DomainDateTime,
     lastExecutionDate: DomainDateTime,
     frequency: IFrequency,
     duration: IDuration,
     endDate?: DomainDateTime | null
   ): NextDateCalculationResult {
-    return this.calculateNextDate(startDate, lastExecutionDate, frequency, duration, endDate);
+    return this.calculateNextDate(
+      startDate,
+      lastExecutionDate,
+      frequency,
+      duration,
+      endDate
+    );
   }
 }

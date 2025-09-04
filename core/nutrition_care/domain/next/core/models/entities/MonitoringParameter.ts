@@ -14,7 +14,7 @@ import {
   IMonitoringParameterElement,
   MonitoringParameterElement,
 } from "../valueObjects";
-
+import { IDuration, IFrequency } from "@/core/nutrition_care/domain/modules";
 
 export interface IMonitoringParameter extends EntityPropsBaseType {
   startDate: DomainDateTime;
@@ -43,7 +43,9 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
     return this.props.nextTaskDate ? this.props.nextTaskDate.toString() : null;
   }
   getLastExecutionDate(): string | null {
-    return this.props.lastExecutionDate ? this.props.lastExecutionDate.toString() : null;
+    return this.props.lastExecutionDate
+      ? this.props.lastExecutionDate.toString()
+      : null;
   }
   getElement(): IMonitoringParameterElement {
     return this.props.element.unpack();
@@ -61,13 +63,16 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
    * Définit la prochaine date de tâche
    * Cette méthode doit être appelée par un service de domaine
    */
-  setNextTaskDate(nextTaskDate: DomainDateTime | null, shouldEnd: boolean = false): void {
+  setNextTaskDate(
+    nextTaskDate: DomainDateTime | null,
+    shouldEnd: boolean = false
+  ): void {
     this.props.nextTaskDate = nextTaskDate;
-    
+
     if (shouldEnd && this.props.endDate === null) {
       this.props.endDate = DomainDateTime.now();
     }
-    
+
     this.validate();
   }
 
@@ -85,9 +90,11 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
   isDueForExecution(targetDate: DomainDateTime): boolean {
     if (!this.props.nextTaskDate) return false;
     if (this.props.endDate !== null) return false; // Déjà terminé
-    
-    return targetDate.isSameDay(this.props.nextTaskDate) || 
-           targetDate.isAfter(this.props.nextTaskDate);
+
+    return (
+      targetDate.isSameDay(this.props.nextTaskDate) ||
+      targetDate.isAfter(this.props.nextTaskDate)
+    );
   }
 
   /**
@@ -96,15 +103,15 @@ export class MonitoringParameter extends Entity<IMonitoringParameter> {
   getDateCalculationData(): {
     startDate: DomainDateTime;
     endDate: DomainDateTime | null;
-    frequency: any;
-    duration: any;
+    frequency: IFrequency;
+    duration: IDuration;
   } {
     const element = this.getElement();
     return {
       startDate: this.props.startDate,
       endDate: this.props.endDate,
-      frequency: element.frequency,
-      duration: element.duration,
+      frequency: element.frequency.unpack(),
+      duration: element.duration.unpack(),
     };
   }
   public validate(): void {

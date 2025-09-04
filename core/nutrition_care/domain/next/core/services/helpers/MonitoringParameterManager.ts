@@ -6,19 +6,22 @@ import {
   Result,
 } from "@/core/shared";
 import { IMonitoringElement } from "../../../../modules";
-import { MonitoringParameter } from "../../models/entities/MonitoringParameter";
-import { CreateMonitoringParameterElement } from "../../models/valueObjects/MonitoringParameterElementData";
-import { CarePhase } from "../../models/entities/CarePhase";
-import { TreatmentDateManagementService } from "../TreatmentDateManagementService";
+import {
+  MonitoringParameter,
+  CreateMonitoringParameterElement,
+  CarePhase,
+} from "../../models";
+import { ITreatmentDateManagementService } from "../interfaces";
+import {
+  IMonitoringParameterManager,
+  MonitoringParameterTransitionResult,
+} from "./interfaces";
 
-export interface MonitoringParameterTransitionResult {
-  newParameters: MonitoringParameter[];
-  reactivatedParameters: MonitoringParameter[];
-  endedParameters: MonitoringParameter[];
-}
-
-export class MonitoringParameterManager {
-  constructor(private readonly idGenerator: GenerateUniqueId) {}
+export class MonitoringParameterManager implements IMonitoringParameterManager {
+  constructor(
+    private readonly idGenerator: GenerateUniqueId,
+    private readonly treatmentDateManagementService: ITreatmentDateManagementService
+  ) {}
 
   /**
    * Synchronise les éléments de monitoring recommandés avec les paramètres en cours
@@ -43,11 +46,14 @@ export class MonitoringParameterManager {
           if (parameter.getEndDate() !== null) {
             parameter.changeEndDate(null);
             // Régénérer la prochaine date de tâche lors de la réactivation
-            TreatmentDateManagementService.regenerateMonitoringDate(parameter);
+            this.treatmentDateManagementService.regenerateMonitoringDate(
+              parameter
+            );
             reactivatedParameters.push(parameter);
           }
         } else {
-          const newParameterRes = this.createMonitoringParameterFromElement(element);
+          const newParameterRes =
+            this.createMonitoringParameterFromElement(element);
           if (newParameterRes.isFailure) {
             return Result.fail(
               formatError(newParameterRes, MonitoringParameterManager.name)
@@ -132,7 +138,9 @@ export class MonitoringParameterManager {
 
       if (monitoringRes.isSuccess) {
         // Générer automatiquement la première date de tâche
-        TreatmentDateManagementService.generateInitialMonitoringDate(monitoringRes.val);
+        this.treatmentDateManagementService.generateInitialMonitoringDate(
+          monitoringRes.val
+        );
       }
 
       return monitoringRes;
