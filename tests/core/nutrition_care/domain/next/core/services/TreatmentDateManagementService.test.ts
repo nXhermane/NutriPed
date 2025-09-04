@@ -233,7 +233,6 @@ describe("TreatmentDateManagementService", () => {
         },
         parameterId
       );
-      console.log(createRes);
       expect(createRes.isSuccess).toBe(true);
       const parameter = createRes.val;
 

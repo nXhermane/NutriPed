@@ -87,11 +87,6 @@ You can run the application on different platforms using the following scripts:
   yarn ios
   ```
 
-- **To run on the web:**
-  ```bash
-  yarn web
-  ```
-
 ## Usage Example
 
 1.  **Launch the application** and navigate to the patients screen.
@@ -101,4 +96,5 @@ You can run the application on different platforms using the following scripts:
     - Enter anthropometric measurements.
     - Document any relevant clinical signs.
     - Input biological test results if available.
+
 5.  **Generate the Diagnostic:** Trigger the nutritional assessment. The application will process the data and present a detailed diagnostic report, including Z-scores and classifications.
