@@ -1,4 +1,4 @@
-import { Result } from '../../core/shared/core/Result';
+import { Result } from "../../core/shared/core/Result";
 
 /**
  * Factory pour créer des mocks pour les tests unitaires
@@ -58,4 +58,3 @@ export class MockFactory {
     return Result.fail<T>(error);
   }
 }
-

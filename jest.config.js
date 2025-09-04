@@ -27,22 +27,22 @@ module.exports = {
   transformIgnorePatterns: [
     "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)",
   ],
-  
+
   // Configuration modifiée pour exclure les fichiers utilitaires
   testMatch: [
     "**/tests/**/*.test.ts?(x)",
     "**/tests/**/*.spec.ts?(x)",
-    "**/?(*.)+(spec|test).ts?(x)"
+    "**/?(*.)+(spec|test).ts?(x)",
   ],
-  
+
   // Ignorer les fichiers utilitaires et de setup
   testPathIgnorePatterns: [
     "/node_modules/",
     "/tests/utils/",
     "/tests/__helpers__/",
-    "/tests/setup.ts"
+    "/tests/setup.ts",
   ],
-  
+
   collectCoverageFrom: [
     "core/**/*.{ts,tsx}",
     "!core/**/*.d.ts",
@@ -50,19 +50,19 @@ module.exports = {
     "!core/**/*.types.ts",
   ],
   coveragePathIgnorePatterns: [
-    "/node_modules/", 
+    "/node_modules/",
     "/tests/",
     "/tests/utils/",
-    "/tests/__helpers__/"
+    "/tests/__helpers__/",
   ],
   coverageDirectory: "coverage",
   setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
   // Formats de rapport de coverage
   coverageReporters: [
-    "text",        // Affichage dans le terminal
-    "html",        // Rapport HTML détaillé
-    "lcov",        // Pour les outils CI/CD
-    "clover"       // Format XML
+    "text", // Affichage dans le terminal
+    "html", // Rapport HTML détaillé
+    "lcov", // Pour les outils CI/CD
+    "clover", // Format XML
   ],
   globals: {
     "ts-jest": {

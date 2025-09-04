@@ -19,7 +19,6 @@ describe("Unit Domain Entity", () => {
   // Test 1: Happy Path
   it("should create a Unit successfully with valid properties", () => {
     const unitResult = Unit.create(validProps, id);
-    console.log(unitResult);
     expect(unitResult.isSuccess).toBe(true);
     const unit = unitResult.val;
     expect(unit).toBeInstanceOf(Unit);

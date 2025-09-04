@@ -10,7 +10,6 @@ It allows for the detailed tracking of a patient's anthropometric, clinical, and
 
 ## ✨ Main Features
 
-
 - **Patient Management:** Securely create, store, and manage patient records, including demographic information, parental details, and contact information.
 - **Comprehensive Data Collection:**
   - **Anthropometry:** Record measurements like weight, height, head circumference, and MUAC (Mid-Upper Arm Circumference).
@@ -41,17 +40,14 @@ Nutriped is built with a modern and scalable technology stack, centered around a
 - **Database:** Drizzle ORM with Expo-SQLite for the local database.
 - **Data Validation:** Zod for schema definition and validation.
 
-
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 
 - Node.js (LTS version recommended)
 - npm or yarn
 - Expo CLI
 - An Android or iOS emulator/device for running the application.
-
 
 ### Installation
 
@@ -70,7 +66,6 @@ Nutriped is built with a modern and scalable technology stack, centered around a
 ### Running the Application
 
 You can run the application on different platforms using the following scripts:
-
 
 - **To start the development server:**
 
@@ -92,14 +87,12 @@ You can run the application on different platforms using the following scripts:
   yarn ios
   ```
 
-
 ## Usage Example
 
 1.  **Launch the application** and navigate to the patients screen.
 2.  **Create a new patient** by entering their demographic details (name, birthday, gender, etc.).
 3.  **Select the patient** to view their medical record.
 4.  **Add new data** by creating an evaluation entry:
-
     - Enter anthropometric measurements.
     - Document any relevant clinical signs.
     - Input biological test results if available.

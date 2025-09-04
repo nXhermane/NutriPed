@@ -21,7 +21,6 @@ describe("DomainDate", () => {
   });
 
   describe("validate", () => {
-
     it("should throw InvalidArgumentFormatError when date format is invalid", () => {
       expect(() => {
         new DomainDate("invalid-date");

@@ -62,9 +62,7 @@ Les builders permettent de créer facilement des objets de test avec des valeurs
 Exemple :
 
 ```typescript
-const domainDate = new DateBuilder()
-  .withDate('2023-01-01')
-  .build();
+const domainDate = new DateBuilder().withDate("2023-01-01").build();
 ```
 
 ### MockFactory
