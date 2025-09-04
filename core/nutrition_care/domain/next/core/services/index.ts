@@ -1,5 +1,5 @@
 export * from "./CareSessionVariableGeneratorService";
 export * from "./helpers";
 export * from "./interfaces";
-export * from "./NextDateUpdateService";
+export * from "./TreatmentDateManagementService";
 export * from "./DailyScheduleService";

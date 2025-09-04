@@ -1,4 +1,4 @@
-import { DomainDateTime, AggregateID } from "@/core/shared";
+import { DomainDateTime, AggregateID, GenerateUniqueId } from "@/core/shared";
 import { DURATION_TYPE, FREQUENCY_TYPE, RECOMMENDED_TREATMENT_TYPE, MEDICINE_CODES, MONITORING_ELEMENT_CATEGORY, MONITORING_VALUE_SOURCE, TREATMENT_PLAN_IDS } from "@/core/constants";
 import { OnGoingTreatment, MonitoringParameter } from "../models";
 import { DailyScheduleService, NextDateUpdateService } from "../services";
@@ -11,13 +11,13 @@ export class NextDateGenerationExample {
   /**
    * Exemple 1: Traitement quotidien (2 fois par jour pendant 7 jours)
    */
-  static async exampleDailyTreatment(): Promise<void> {
+  static async exampleDailyTreatment(idGenerator: GenerateUniqueId): Promise<void> {
     const treatmentRes = OnGoingTreatment.create({
       code: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
       endDate: null,
       nextActionDate: null,
       recommendation: {
-        id: AggregateID.generate(),
+        id: idGenerator.generate().toValue(),
         code: MEDICINE_CODES.PARACETAMOL,
         recommendationCode: TREATMENT_PLAN_IDS.TREATMENT_PLAN_1,
         type: RECOMMENDED_TREATMENT_TYPE.MEDICINE,
@@ -31,7 +31,7 @@ export class NextDateGenerationExample {
           countInUnit: 2, // 2 fois par jour
         },
       },
-    }, AggregateID.generate());
+    }, idGenerator.generate().toValue());
 
     if (treatmentRes.isSuccess) {
       const treatment = treatmentRes.val;
@@ -52,12 +52,12 @@ export class NextDateGenerationExample {
   /**
    * Exemple 2: Monitoring hebdomadaire (1 fois par semaine pendant la phase)
    */
-  static async exampleWeeklyMonitoring(): Promise<void> {
+  static async exampleWeeklyMonitoring(idGenerator: GenerateUniqueId): Promise<void> {
     const parameterRes = MonitoringParameter.create({
       endDate: null,
       nextTaskDate: null,
       element: {
-        id: AggregateID.generate(),
+        id: idGenerator.generate().toValue(),
         category: MONITORING_ELEMENT_CATEGORY.ANTHROPOMETRIC,
         source: MONITORING_VALUE_SOURCE.CALCULATED,
         code: "WEIGHT",
@@ -70,7 +70,7 @@ export class NextDateGenerationExample {
           type: DURATION_TYPE.WHILE_IN_PHASE, // pendant toute la phase
         },
       },
-    }, AggregateID.generate());
+    }, idGenerator.generate().toValue());
 
     if (parameterRes.isSuccess) {
       const parameter = parameterRes.val;

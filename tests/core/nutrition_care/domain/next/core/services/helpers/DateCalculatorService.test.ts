@@ -1,10 +1,10 @@
-import { DomainDateTime } from "@/core/shared";
-import { DURATION_TYPE, FREQUENCY_TYPE } from "@/core/constants";
-import { DateCalculatorService } from "../DateCalculatorService";
+import { DomainDateTime } from "../../../../../../../core/shared";
+import { DURATION_TYPE, FREQUENCY_TYPE } from "../../../../../../../core/constants";
+import { DateCalculatorService } from "../../../../../../../core/nutrition_care/domain/next/core/services/helpers/DateCalculatorService";
 
 describe("DateCalculatorService", () => {
   describe("calculateNextDate", () => {
-    it("should calculate next date for daily frequency", () => {
+    it("should calculate next date for daily frequency with multiple doses", () => {
       const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
       const currentDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
       
@@ -32,6 +32,34 @@ describe("DateCalculatorService", () => {
       expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
     });
 
+    it("should calculate next date for every two days", () => {
+      const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
+      const currentDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
+      
+      const frequency = {
+        intervalUnit: FREQUENCY_TYPE.DAILY,
+        intervalValue: 2,
+        countInUnit: 1, // Une fois tous les 2 jours
+      };
+      
+      const duration = {
+        type: DURATION_TYPE.DAYS,
+        value: 10,
+      };
+
+      const result = DateCalculatorService.calculateNextDate(
+        startDate,
+        currentDate,
+        frequency,
+        duration
+      );
+
+      expect(result.shouldContinue).toBe(true);
+      // Prochaine exécution dans 48 heures (2 jours)
+      const expectedNext = currentDate.addHours(48);
+      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+    });
+
     it("should handle while_in_phase duration", () => {
       const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
       const currentDate = DomainDateTime.create("2024-01-05T08:00:00Z").val;
@@ -54,8 +82,8 @@ describe("DateCalculatorService", () => {
       );
 
       expect(result.shouldContinue).toBe(true);
-      // Prochaine exécution dans 1 semaine
-      const expectedNext = currentDate.addHours(24 * 7);
+      // Prochaine exécution dans 1 semaine (168 heures)
+      const expectedNext = currentDate.addHours(168);
       expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
     });
 
@@ -110,6 +138,59 @@ describe("DateCalculatorService", () => {
       const expectedNext = currentDate.addHours(6);
       expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
     });
+
+    it("should handle weekly frequency with multiple times per week", () => {
+      const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
+      const currentDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
+      
+      const frequency = {
+        intervalUnit: FREQUENCY_TYPE.WEEKLY,
+        intervalValue: 1,
+        countInUnit: 3, // 3 fois par semaine
+      };
+      
+      const duration = {
+        type: DURATION_TYPE.WHILE_IN_PHASE,
+      };
+
+      const result = DateCalculatorService.calculateNextDate(
+        startDate,
+        currentDate,
+        frequency,
+        duration
+      );
+
+      expect(result.shouldContinue).toBe(true);
+      // Prochaine exécution dans 56 heures (168h / 3 = 56h)
+      const expectedNext = currentDate.addHours(56);
+      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+    });
+
+    it("should stop while_in_phase when end date is provided", () => {
+      const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
+      const currentDate = DomainDateTime.create("2024-01-05T08:00:00Z").val;
+      const endDate = DomainDateTime.create("2024-01-04T08:00:00Z").val; // Déjà terminé
+      
+      const frequency = {
+        intervalUnit: FREQUENCY_TYPE.DAILY,
+        intervalValue: 1,
+        countInUnit: 1,
+      };
+      
+      const duration = {
+        type: DURATION_TYPE.WHILE_IN_PHASE,
+      };
+
+      const result = DateCalculatorService.calculateNextDate(
+        startDate,
+        currentDate,
+        frequency,
+        duration,
+        endDate
+      );
+
+      expect(result.shouldContinue).toBe(false);
+    });
   });
 
   describe("calculateInitialNextDate", () => {
@@ -136,6 +217,29 @@ describe("DateCalculatorService", () => {
       expect(result.shouldContinue).toBe(true);
       const expectedNext = startDate.addHours(24); // Demain à la même heure
       expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+    });
+
+    it("should handle zero duration correctly", () => {
+      const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
+      
+      const frequency = {
+        intervalUnit: FREQUENCY_TYPE.DAILY,
+        intervalValue: 1,
+        countInUnit: 1,
+      };
+      
+      const duration = {
+        type: DURATION_TYPE.DAYS,
+        value: 0, // Durée zéro
+      };
+
+      const result = DateCalculatorService.calculateInitialNextDate(
+        startDate,
+        frequency,
+        duration
+      );
+
+      expect(result.shouldContinue).toBe(false);
     });
   });
 });

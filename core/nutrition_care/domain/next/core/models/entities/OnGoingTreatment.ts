@@ -17,7 +17,7 @@ import {
   IOnGoingTreatmentRecommendation,
   OnGoingTreatmentRecommendation,
 } from "../valueObjects";
-import { DateCalculatorService } from "../../services/helpers/DateCalculatorService";
+
 
 export enum OnGoingTreatmentStatus {
   ACTIVE = "active",
@@ -30,6 +30,7 @@ export interface IOnGoingTreatment extends EntityPropsBaseType {
   endDate: DomainDateTime | null;
   status: OnGoingTreatmentStatus;
   nextActionDate: DomainDateTime | null;
+  lastExecutionDate: DomainDateTime | null;
   recommendation: OnGoingTreatmentRecommendation;
 }
 
@@ -39,6 +40,7 @@ export interface CreateOnGoindTreatment {
   endDate: string | null;
   status?: OnGoingTreatmentStatus;
   nextActionDate: string | null;
+  lastExecutionDate?: string | null;
   recommendation: CreateOnGoingTreatmentRecommendation;
 }
 
@@ -55,6 +57,11 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
   getNextActionDate(): string | null {
     return this.props.nextActionDate
       ? this.props.nextActionDate.toString()
+      : null;
+  }
+  getLastExecutionDate(): string | null {
+    return this.props.lastExecutionDate
+      ? this.props.lastExecutionDate.toString()
       : null;
   }
   getStatus(): OnGoingTreatmentStatus {
@@ -86,71 +93,54 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
   }
 
   /**
-   * Génère automatiquement la prochaine date d'action basée sur la fréquence et la durée
-   * @param lastExecutionDate Date de dernière exécution (optionnelle, utilise startDate si non fournie)
-   * @returns true si une nouvelle date a été générée, false si le traitement doit se terminer
+   * Définit la prochaine date d'action
+   * Cette méthode doit être appelée par un service de domaine
    */
-  generateNextActionDate(lastExecutionDate?: DomainDateTime): boolean {
-    const recommendation = this.getRecommendation();
-    const frequency = recommendation.frequency;
-    const duration = recommendation.duration;
+  setNextActionDate(nextActionDate: DomainDateTime | null, shouldComplete: boolean = false): void {
+    this.props.nextActionDate = nextActionDate;
     
-    const baseDate = lastExecutionDate || this.props.startDate;
-    
-    const result = DateCalculatorService.calculateNextDate(
-      this.props.startDate,
-      baseDate,
-      frequency,
-      duration,
-      this.props.endDate
-    );
-
-    if (result.shouldContinue) {
-      this.props.nextActionDate = result.nextDate;
+    if (shouldComplete && this.props.status === OnGoingTreatmentStatus.ACTIVE) {
+      this.completedTreatment();
     } else {
-      this.props.nextActionDate = null;
-      // Si la durée est terminée, marquer le traitement comme complété
-      if (this.props.status === OnGoingTreatmentStatus.ACTIVE) {
-        this.completedTreatment();
-      }
+      this.validate();
     }
-
-    this.validate();
-    return result.shouldContinue;
   }
 
   /**
-   * Génère la date d'action initiale lors de la création du traitement
+   * Enregistre l'exécution d'une action et met à jour lastExecutionDate
    */
-  generateInitialNextActionDate(): boolean {
-    const recommendation = this.getRecommendation();
-    const frequency = recommendation.frequency;
-    const duration = recommendation.duration;
-
-    const result = DateCalculatorService.calculateInitialNextDate(
-      this.props.startDate,
-      frequency,
-      duration,
-      this.props.endDate
-    );
-
-    if (result.shouldContinue) {
-      this.props.nextActionDate = result.nextDate;
-    } else {
-      this.props.nextActionDate = null;
-    }
-
+  recordExecution(executionDate: DomainDateTime): void {
+    this.props.lastExecutionDate = executionDate;
     this.validate();
-    return result.shouldContinue;
   }
 
   /**
-   * Met à jour la prochaine date après l'exécution d'une action
-   * @param executionDate Date d'exécution de l'action
-   * @returns true si le traitement doit continuer, false sinon
+   * Vérifie si le traitement est dû pour exécution à une date donnée
    */
-  updateNextActionDateAfterExecution(executionDate: DomainDateTime): boolean {
-    return this.generateNextActionDate(executionDate);
+  isDueForExecution(targetDate: DomainDateTime): boolean {
+    if (!this.props.nextActionDate) return false;
+    if (this.props.status !== OnGoingTreatmentStatus.ACTIVE) return false;
+    
+    return targetDate.isSameDay(this.props.nextActionDate) || 
+           targetDate.isAfter(this.props.nextActionDate);
+  }
+
+  /**
+   * Obtient les données nécessaires pour le calcul de la prochaine date
+   */
+  getDateCalculationData(): {
+    startDate: DomainDateTime;
+    endDate: DomainDateTime | null;
+    frequency: any;
+    duration: any;
+  } {
+    const recommendation = this.getRecommendation();
+    return {
+      startDate: this.props.startDate,
+      endDate: this.props.endDate,
+      frequency: recommendation.frequency,
+      duration: recommendation.duration,
+    };
   }
 
   public validate(): void {
@@ -191,8 +181,11 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
       const endDateRes = createProps.endDate
         ? DomainDateTime.create(createProps.endDate)
         : Result.ok(null);
-      const nextActionDateRes = createProps.nextActionDate
+              const nextActionDateRes = createProps.nextActionDate
         ? DomainDateTime.create(createProps.nextActionDate)
+        : Result.ok(null);
+      const lastExecutionDateRes = createProps.lastExecutionDate
+        ? DomainDateTime.create(createProps.lastExecutionDate)
         : Result.ok(null);
       const recommendationRes = OnGoingTreatmentRecommendation.create(
         createProps.recommendation
@@ -202,6 +195,7 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
         startDateRes,
         endDateRes,
         nextActionDateRes,
+        lastExecutionDateRes,
         recommendationRes,
       ]);
       if (combinedRes.isFailure) {
@@ -215,6 +209,7 @@ export class OnGoingTreatment extends Entity<IOnGoingTreatment> {
             startDate: startDateRes.val,
             endDate: endDateRes.val,
             nextActionDate: nextActionDateRes.val,
+            lastExecutionDate: lastExecutionDateRes.val,
             status: createProps.status || OnGoingTreatmentStatus.ACTIVE,
             recommendation: recommendationRes.val,
           },

@@ -141,10 +141,36 @@ Les services `IDailyActionGeneratorService` et `IDailyTaskGeneratorService` peuv
 3. **Réactivation** : Les dates sont régénérées automatiquement lors de la réactivation
 4. **WHILE_IN_PHASE** : Continue indéfiniment jusqu'à ce qu'une `endDate` soit définie manuellement
 
+## Gestion de la Date d'Exécution
+
+Chaque entité stocke maintenant :
+- `nextActionDate`/`nextTaskDate` : Prochaine date prévue
+- `lastExecutionDate` : Dernière date d'exécution réelle
+
+### Flux d'Exécution
+
+1. **Identification** : `isDueForExecution()` vérifie si l'action/tâche est due
+2. **Exécution** : Le service génère l'action/tâche quotidienne
+3. **Enregistrement** : `recordExecution()` enregistre la date d'exécution réelle
+4. **Calcul suivant** : `updateAfterExecution()` calcule la prochaine date basée sur l'exécution réelle
+
+Cette approche permet :
+- **Précision** : Calcul basé sur l'exécution réelle, pas sur la date prévue
+- **Rattrapage** : Si une action est en retard, le calcul reste correct
+- **Traçabilité** : Historique des exécutions disponible
+
+## Architecture DDD
+
+Le système respecte les principes DDD :
+- **Entités** : Contiennent seulement la logique métier pure (validation, état)
+- **Services de domaine** : Gèrent la logique complexe de calcul des dates
+- **Helpers** : Services utilitaires sans état
+
 ## Avantages
 
 1. **Automatisation** : Plus besoin de calculer manuellement les prochaines dates
 2. **Cohérence** : Logique centralisée et uniforme
 3. **Flexibilité** : Support de multiples patterns de fréquence et durée
-4. **Maintenabilité** : Séparation claire des responsabilités
+4. **Maintenabilité** : Séparation claire des responsabilités selon DDD
 5. **Performance** : Les services quotidiens peuvent rapidement identifier ce qui doit être exécuté
+6. **Précision** : Calcul basé sur les dates d'exécution réelles

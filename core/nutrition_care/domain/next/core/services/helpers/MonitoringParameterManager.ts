@@ -9,6 +9,7 @@ import { IMonitoringElement } from "../../../../modules";
 import { MonitoringParameter } from "../../models/entities/MonitoringParameter";
 import { CreateMonitoringParameterElement } from "../../models/valueObjects/MonitoringParameterElementData";
 import { CarePhase } from "../../models/entities/CarePhase";
+import { TreatmentDateManagementService } from "../TreatmentDateManagementService";
 
 export interface MonitoringParameterTransitionResult {
   newParameters: MonitoringParameter[];
@@ -42,7 +43,7 @@ export class MonitoringParameterManager {
           if (parameter.getEndDate() !== null) {
             parameter.changeEndDate(null);
             // Régénérer la prochaine date de tâche lors de la réactivation
-            parameter.generateNextTaskDate();
+            TreatmentDateManagementService.regenerateMonitoringDate(parameter);
             reactivatedParameters.push(parameter);
           }
         } else {
@@ -116,6 +117,7 @@ export class MonitoringParameterManager {
         {
           endDate: null,
           nextTaskDate: null,
+          lastExecutionDate: null,
           element: {
             id: element.id,
             category: element.category,
@@ -130,7 +132,7 @@ export class MonitoringParameterManager {
 
       if (monitoringRes.isSuccess) {
         // Générer automatiquement la première date de tâche
-        monitoringRes.val.generateInitialNextTaskDate();
+        TreatmentDateManagementService.generateInitialMonitoringDate(monitoringRes.val);
       }
 
       return monitoringRes;

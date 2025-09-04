@@ -11,6 +11,7 @@ import {
   OnGoingTreatmentStatus,
 } from "../../models";
 import { CarePhase } from "../../models/entities/CarePhase";
+import { TreatmentDateManagementService } from "../TreatmentDateManagementService";
 
 export interface TreatmentTransitionResult {
   newTreatments: OnGoingTreatment[];
@@ -46,7 +47,7 @@ export class TreatmentManager {
           if (onGoingTreatment.getStatus() === OnGoingTreatmentStatus.STOPPED) {
             onGoingTreatment.activeTreatment();
             // Régénérer la prochaine date d'action lors de la réactivation
-            onGoingTreatment.generateNextActionDate();
+            TreatmentDateManagementService.regenerateTreatmentDate(onGoingTreatment);
             reactivatedTreatments.push(onGoingTreatment);
           }
         } else {
@@ -121,6 +122,7 @@ export class TreatmentManager {
           code: recommendedTreatment.code.unpack(),
           endDate: null,
           nextActionDate: null,
+          lastExecutionDate: null,
           recommendation: {
             id: recommendedTreatment.id,
             code: recommendedTreatment.treatmentCode.unpack(),
@@ -136,7 +138,7 @@ export class TreatmentManager {
 
       if (onGoingTreatmentRes.isSuccess) {
         // Générer automatiquement la première date d'action
-        onGoingTreatmentRes.val.generateInitialNextActionDate();
+        TreatmentDateManagementService.generateInitialTreatmentDate(onGoingTreatmentRes.val);
       }
 
       return onGoingTreatmentRes;

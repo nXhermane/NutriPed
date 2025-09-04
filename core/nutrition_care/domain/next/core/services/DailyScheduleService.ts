@@ -1,6 +1,6 @@
 import { DomainDateTime, Result } from "@/core/shared";
 import { OnGoingTreatment, MonitoringParameter } from "../models";
-import { NextDateUpdateService } from "./NextDateUpdateService";
+import { TreatmentDateManagementService } from "./TreatmentDateManagementService";
 
 /**
  * Service pour gérer la planification quotidienne des actions et tâches
@@ -16,7 +16,7 @@ export class DailyScheduleService {
     treatments: OnGoingTreatment[],
     targetDate: DomainDateTime = DomainDateTime.now()
   ): OnGoingTreatment[] {
-    return NextDateUpdateService.getTreatmentsDueForDate(treatments, targetDate);
+    return TreatmentDateManagementService.getTreatmentsDueForDate(treatments, targetDate);
   }
 
   /**
@@ -29,7 +29,7 @@ export class DailyScheduleService {
     parameters: MonitoringParameter[],
     targetDate: DomainDateTime = DomainDateTime.now()
   ): MonitoringParameter[] {
-    return NextDateUpdateService.getMonitoringParametersDueForDate(parameters, targetDate);
+    return TreatmentDateManagementService.getMonitoringParametersDueForDate(parameters, targetDate);
   }
 
   /**
@@ -43,11 +43,17 @@ export class DailyScheduleService {
     executionDate: DomainDateTime = DomainDateTime.now()
   ): Result<{ shouldContinue: boolean; treatmentCompleted: boolean }> {
     try {
-      const updateResult = NextDateUpdateService.updateTreatmentAfterExecution(
+      const updateResult = TreatmentDateManagementService.updateTreatmentDateAfterExecution(
         treatment,
         executionDate
       );
-      return Result.ok(updateResult);
+      if (updateResult.isSuccess) {
+        return Result.ok({
+          shouldContinue: updateResult.val.shouldContinue,
+          treatmentCompleted: updateResult.val.completed,
+        });
+      }
+      return Result.fail(updateResult.error);
     } catch (error) {
       return Result.fail(`Failed to update treatment after execution: ${error}`);
     }
@@ -64,11 +70,17 @@ export class DailyScheduleService {
     executionDate: DomainDateTime = DomainDateTime.now()
   ): Result<{ shouldContinue: boolean; monitoringEnded: boolean }> {
     try {
-      const updateResult = NextDateUpdateService.updateMonitoringParameterAfterExecution(
+      const updateResult = TreatmentDateManagementService.updateMonitoringDateAfterExecution(
         parameter,
         executionDate
       );
-      return Result.ok(updateResult);
+      if (updateResult.isSuccess) {
+        return Result.ok({
+          shouldContinue: updateResult.val.shouldContinue,
+          monitoringEnded: updateResult.val.completed,
+        });
+      }
+      return Result.fail(updateResult.error);
     } catch (error) {
       return Result.fail(`Failed to update monitoring parameter after execution: ${error}`);
     }
