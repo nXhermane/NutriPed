@@ -38,20 +38,7 @@ tests/
 Pour exécuter tous les tests :
 
 ```bash
-npm test
-```
-
-Pour exécuter les tests avec couverture de code :
-
-```bash
-npm run test:coverage
-```
-
-Pour exécuter les tests d'un fichier spécifique :
-
-```bash
-npm test -- -t "nom du test"
-```
+yarn test
 
 ## Utilitaires de Test
 
