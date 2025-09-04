@@ -1,11 +1,12 @@
 import { Loading } from "@/components/custom";
 import { FadeInCardX } from "@/components/custom/motion";
 import { SessionEmpty } from "@/components/pages/home/shared/SessionEmpty";
-import { DailyMedicalRecordDataComponent } from "@/components/pages/patient_detail";
+import { DailyMedicalRecordDataComponent } from "@/components/pages/patient_detail/components";
 import { InitPatientRootSecure } from "@/components/pages/patient_detail/components/InitPatient";
 import { FilterChips, StackScreenHeader } from "@/components/pages/shared";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
+import { useToast } from "@/src/context";
 import {
   useMedicalRecord,
   useOrdoredMedicalRecordDataByDay,
@@ -17,17 +18,18 @@ import {
   startOfMonth,
   startOfWeek,
 } from "@/utils";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FlatList } from "react-native";
 
 const Monitoring = () => {
   const { data, error, onLoading } = useMedicalRecord();
+  const toast = useToast();
   const ordoredMedicalRecordData = useOrdoredMedicalRecordDataByDay(data);
   const [filterTag, setFilterTag] = useState<
     "all" | "today" | "thisWeek" | "thisMonth"
   >("all");
   const filteredList = useMemo(() => {
-    if (ordoredMedicalRecordData.length == 0) return [];
+    if (ordoredMedicalRecordData.length === 0) return [];
     if (filterTag === "all") return ordoredMedicalRecordData;
     return ordoredMedicalRecordData.filter(value => {
       const now = new Date();
@@ -50,6 +52,15 @@ const Monitoring = () => {
       }
     });
   }, [ordoredMedicalRecordData, filterTag]);
+  useEffect(() => {
+    if (error) {
+      toast.show(
+        "Error",
+        "Erreur de chargement du dossier medicale",
+        `Une Erreur technique s'est produite. Veillez ressayer. ${error}`
+      );
+    }
+  }, [error, toast]);
   if (onLoading) return <Loading />;
 
   return (

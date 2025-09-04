@@ -2,7 +2,7 @@ import { CLINICAL_SIGNS } from "@/core/constants";
 import {
   AggregateID,
   ArgumentOutOfRangeException,
-  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -15,7 +15,7 @@ export interface IClinicalSignDataRecord extends EntityPropsBaseType {
   code: SystemCode;
   data: { [key: string]: any };
   isPresent: boolean;
-  recordedAt: DomainDate;
+  recordedAt: DomainDateTime;
 }
 
 export interface CreateClinicalSignDataRecord {
@@ -64,8 +64,8 @@ export class ClinicalSingDataRecord extends Entity<IClinicalSignDataRecord> {
     try {
       const codeRes = SystemCode.create(createProps.code);
       const recordedAt = createProps.recordedAt
-        ? DomainDate.create(createProps.recordedAt)
-        : DomainDate.create();
+        ? DomainDateTime.create(createProps.recordedAt)
+        : DomainDateTime.create();
       if (codeRes.isFailure)
         return Result.fail(formatError(codeRes, ClinicalSingDataRecord.name));
       return Result.ok(

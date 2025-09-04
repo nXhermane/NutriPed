@@ -1,9 +1,16 @@
 import {
   AnthropometricDataContext,
-  DataFieldResponseType,
+  DataFieldResponseValue,
+  TakenAmountInSachet,
+  TakenAmountOfPot,
 } from "@core/medical_record";
 import { EntityPersistenceDto } from "../../../shared";
 import { AggregateID } from "@/core/shared";
+import {
+  APPETITE_TEST_PRODUCT_TYPE,
+  CARE_PHASE_CODES,
+  DATA_FIELD_CODE_TYPE,
+} from "@/core/constants";
 
 export interface AnthropometricDataPersistenceDto {
   id: AggregateID;
@@ -25,7 +32,6 @@ export interface BiologicalDataPersistenceDto {
 export interface ClinicalDataPersistenceDto {
   id: AggregateID;
   code: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>;
   isPresent: boolean;
   recordedAt: string;
@@ -38,11 +44,23 @@ export interface ComplicationDataPersistenceDto {
   isPresent: boolean;
 }
 export interface DataFieldResponsePersistenceDto {
+  id: AggregateID;
+  recordAt: string;
+  code: DATA_FIELD_CODE_TYPE;
+  data: DataFieldResponseValue;
+}
+export interface AppetiteTestRecordPersistenceDto {
+  id: AggregateID;
+  amount: TakenAmountOfPot | TakenAmountInSachet;
+  productType: APPETITE_TEST_PRODUCT_TYPE;
+  fieldResponses: Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue>;
+  recordAt: string;
+}
+export interface OrientationRecordPersistenceDto {
+  id: AggregateID;
   code: string;
+  treatmentPhase: CARE_PHASE_CODES | null;
   recordedAt: string;
-  value: number | string | boolean;
-  unit?: string;
-  type: DataFieldResponseType;
 }
 export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
   patientId: AggregateID;
@@ -51,4 +69,6 @@ export interface MedicalRecordPersistenceDto extends EntityPersistenceDto {
   clinicalData: ClinicalDataPersistenceDto[];
   complications: ComplicationDataPersistenceDto[];
   dataFieldsResponse: DataFieldResponsePersistenceDto[];
+  appetiteTests: AppetiteTestRecordPersistenceDto[];
+  orientationRecords: OrientationRecordPersistenceDto[];
 }

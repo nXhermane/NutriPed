@@ -1,3 +1,4 @@
+
 import { Result } from '../../../../core/shared/core/Result';
 
 describe('Result', () => {

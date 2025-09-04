@@ -34,7 +34,6 @@ export class CreateIndicatorUseCase
           )
         );
 
-      indicator.val.created();
       await this.indicatorRepo.save(indicator.val);
       return right(Result.ok({ id: indicatorId }));
     } catch (e: unknown) {

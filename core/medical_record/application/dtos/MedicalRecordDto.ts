@@ -1,9 +1,11 @@
 import { AggregateID } from "@shared";
 import {
   CreateAnthropometricRecord,
+  CreateAppetiteTestRecord,
   CreateBiologicalValueRecord,
   CreateClinicalSignDataRecord,
   CreateComplicationDataRecord,
+  CreateOrientationRecord,
 } from "../../domain/models/entities";
 import { CreateDataFieldResponse } from "../../domain";
 
@@ -22,8 +24,19 @@ export interface MedicalRecordDto {
     recordedAt: string;
     id: AggregateID;
   })[];
-  dataFieldResponse: (CreateDataFieldResponse & { recordedAt: string })[];
+  dataFieldResponse: (Omit<CreateDataFieldResponse, "recordAt"> & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
+  appetiteTests: (Omit<CreateAppetiteTestRecord, "recordAt"> & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
   complicationData: (CreateComplicationDataRecord & {
+    recordedAt: string;
+    id: AggregateID;
+  })[];
+  orientationRecords: (CreateOrientationRecord & {
     recordedAt: string;
     id: AggregateID;
   })[];

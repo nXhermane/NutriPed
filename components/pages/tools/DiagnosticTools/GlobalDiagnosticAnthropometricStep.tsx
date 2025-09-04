@@ -13,7 +13,7 @@ export interface GlobalDiagnosticAnthropometricStepProps {}
 export const GlobalDiagnosticAnthropometricStep: React.FC<
   GlobalDiagnosticAnthropometricStepProps
 > = ({}) => {
-  const { onNext, onPrev, setError, setData, data } = useWizardStep();
+  const { onNext, setError, setData, data } = useWizardStep();
   const formRef =
     useRef<FormHandler<typeof AnthropometricCalculatorFormSchema>>(null);
 

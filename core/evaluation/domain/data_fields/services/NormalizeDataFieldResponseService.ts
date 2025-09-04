@@ -45,6 +45,55 @@ export class NormalizeDataFieldResponseService
       return handleError(e);
     }
   }
+  async normalizeAndFillDefaults(
+    dataFieldResponse: DataFieldResponse[]
+  ): Promise<Result<Record<DATA_FIELD_CODE_TYPE, number | string>>> {
+    try {
+      const codeMap = new Set(dataFieldResponse.map(field => field.getCode()));
+      const unincludedDataFieldResponseRes =
+        await this.getOnlyUnincludedFields(codeMap);
+      if (unincludedDataFieldResponseRes.isFailure) {
+        return Result.fail(
+          formatError(
+            unincludedDataFieldResponseRes,
+            NormalizeDataFieldResponseService.name
+          )
+        );
+      }
+      const fields = [
+        ...dataFieldResponse,
+        ...unincludedDataFieldResponseRes.val,
+      ];
+      return this.normalize(fields);
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
+  private async getOnlyUnincludedFields(
+    codeMap: Set<string>
+  ): Promise<Result<DataFieldResponse[]>> {
+    try {
+      const fields = await this.dataFieldRepo.getAll();
+      const filteredFields = fields.filter(
+        field => !codeMap.has(field.getCode())
+      );
+      const fieldResponses = filteredFields.map(field => {
+        return DataFieldResponse.create({
+          code: field.getCode(),
+          value: field.getValue(),
+        });
+      });
+      const combinedRes = Result.combine(fieldResponses);
+      if (combinedRes.isFailure) {
+        return Result.fail(
+          formatError(combinedRes, NormalizeDataFieldResponseService.name)
+        );
+      }
+      return Result.ok(fieldResponses.map(field => field.val));
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
   private async normaliseDataFieldResponse(
     dataFieldResponse: DataFieldResponse
   ): Promise<Result<{ code: DATA_FIELD_CODE_TYPE; value: string | number }>> {

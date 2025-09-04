@@ -7,6 +7,9 @@ import {
   AddDataToMedicalRecordRequest,
   DeleteDataFromMedicalRecordRequest,
   GetNormalizedAnthropometricDataRequest,
+  GetLatestValuesUntilDateRequest,
+  GetLatestValuesUntilDateResponse,
+  GetLastestValuesUnitlDateDto,
 } from "../../useCases";
 import { MedicalRecordDto } from "../../dtos";
 import { CreateAnthropometricRecord } from "./../../../domain";
@@ -41,4 +44,7 @@ export interface IMedicalRecordService {
       >
     | Message
   >;
+  getLatestValuesUntilDate(
+    req: GetLatestValuesUntilDateRequest
+  ): Promise<AppServiceResponse<GetLastestValuesUnitlDateDto> | Message>;
 }

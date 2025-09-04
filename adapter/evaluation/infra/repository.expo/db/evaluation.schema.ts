@@ -1,4 +1,6 @@
 import {
+  APPETITE_TEST_PRODUCT_TYPE,
+  APPETITE_TEST_SACHET_FRACTION_PARTITION,
   BiochemicalRangeStatus,
   ClinicalDataType,
   GrowthIndicatorRange,
@@ -6,7 +8,7 @@ import {
   GrowthStandard,
   StandardShape,
 } from "@core/constants";
-import { Sex } from "@shared";
+import { IFormula, Sex } from "@shared";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { NutritionalAssessmentResultPersistenceDto } from "../../dtos";
 
@@ -324,7 +326,7 @@ export const nutritional_diagnostics = sqliteTable("nutritional_diagnostics", {
   result: text("nutritional_diagnostic_results_id", { length: 50 }),
   date: text("nutritional_diagnostic_date", { length: 50 }).notNull(),
   notes: text("nutritional_diagnostic_notes", { mode: "json" })
-    .$type<string[]>()
+    .$type<{ date: string; content: string }[]>()
     .notNull(),
   atInit: integer("nutritional_diagnostic_at_init", {
     mode: "boolean",
@@ -376,6 +378,27 @@ export const data_field_references = sqliteTable("data_field_references", {
   createdAt: text("createdAt", { length: 50 }).notNull(),
   updatedAt: text("updatedAt", { length: 50 }).notNull(),
 });
+
+/**
+ * @version v0.0.1-next
+ **/
+export const formula_field_references = sqliteTable(
+  "formula_field_references",
+  {
+    id: text("field_id").primaryKey(),
+    code: text("field_code", { length: 50 }).notNull(),
+    formula: text("field_formula", { mode: "json" })
+      .$type<{
+        formula: IFormula;
+        description: string;
+        variablesExplanation: Record<string, string>;
+      }>()
+      .notNull(),
+    createdAt: text("createdAt", { length: 50 }).notNull(),
+    updatedAt: text("updatedAt", { length: 50 }).notNull(),
+  }
+);
+
 /**
  * @version v0.0.1-next
  **/
@@ -403,3 +426,28 @@ export const next_clinical_sign_references = sqliteTable(
 /**
  * @version v0.0.1-next
  **/
+export const next_appetite_test_references = sqliteTable(
+  "next_appetite_test_references",
+  {
+    id: text("appetite_test_reference_id").primaryKey(),
+    createdAt: text("created_at", { length: 50 }).notNull(),
+    updatedAt: text("updated_at", { length: 50 }).notNull(),
+    name: text("name", { length: 255 }).notNull(),
+    code: text("code", { length: 255 }).notNull(),
+    productType: text("product_type", { mode: "json" }).$type<
+      APPETITE_TEST_PRODUCT_TYPE[]
+    >(),
+    appetiteTestTable: text("appetite_test_table", { mode: "json" })
+      .$type<
+        {
+          weightRange: [number, number];
+          sachetRange: [
+            APPETITE_TEST_SACHET_FRACTION_PARTITION,
+            APPETITE_TEST_SACHET_FRACTION_PARTITION,
+          ];
+          potRange: [number, number];
+        }[]
+      >()
+      .notNull(),
+  }
+);

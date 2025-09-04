@@ -1,4 +1,3 @@
-import { is } from "drizzle-orm";
 import * as Notifications from "expo-notifications";
 export const NOTIFICATION_CONFIG = {
   CHANNEL: {

@@ -1,4 +1,8 @@
-import { CreateDataFieldResponse } from "./../../../../domain";
+import { CARE_PHASE_CODES } from "@/core/constants";
+import {
+  CreateAppetiteTestRecord,
+  CreateDataFieldResponse,
+} from "./../../../../domain";
 import { AggregateID } from "@shared";
 
 export type UpdateMedicalRecordRequest = {
@@ -14,6 +18,20 @@ export type UpdateMedicalRecordRequest = {
       measurement: { value: number; unit: string };
     }[];
     complicationData: { id: AggregateID; isPresent: boolean }[];
-    dataFieldResponses: CreateDataFieldResponse[];
+    dataFieldResponses: { id: AggregateID; data: CreateDataFieldResponse }[];
+    appetiteTests: {
+      id: AggregateID;
+      data: {
+        amount: CreateAppetiteTestRecord["amount"];
+        productType: CreateAppetiteTestRecord["productType"];
+      };
+    }[];
+    orientationRecords: {
+      id: AggregateID;
+      data: {
+        code?: string;
+        treatmentPhase?: CARE_PHASE_CODES;
+      };
+    }[];
   }>;
 };

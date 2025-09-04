@@ -48,8 +48,8 @@ export class NutritionalDiagnostic extends AggregateRoot<INutritionalDiagnostic>
   }
   addNotes(...notes: { date: string; content: string }[]) {
     notes.forEach(note => {
-      const findedIndex = this.props.notes.findIndex(n => n.date == note.date);
-      if (findedIndex == -1) this.props.notes.push(note);
+      const findedIndex = this.props.notes.findIndex(n => n.date === note.date);
+      if (findedIndex === -1) this.props.notes.push(note);
       else this.props.notes[findedIndex] = note;
     });
     this.validate();

@@ -8,11 +8,7 @@ import {
 } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { useUI } from "@/src/context";
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, { useRef } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import colors from "tailwindcss/colors";

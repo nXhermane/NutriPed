@@ -381,14 +381,22 @@ export const FormField = <T,>({
         return (
           <React.Fragment>
             <Input className="h-v-10 rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c">
-              <InputField
-                type={"text"}
-                placeholderClassName={
-                  "text-base font-body text-typography-primary_light"
-                }
-                placeholder={field.placeholder}
-                value={(value as string) || field.default}
-              />
+              <InputSlot
+                className="flex-1"
+                onPress={() => {
+                  setVisible(!visible);
+                }}
+              >
+                <InputField
+                  className="w-[100%] flex-1"
+                  type={"text"}
+                  placeholderClassName={
+                    "text-base font-body text-typography-primary_light"
+                  }
+                  placeholder={field.placeholder}
+                  value={(value as string) || field.default}
+                />
+              </InputSlot>
               <InputSlot
                 onPress={() => setVisible(!visible)}
                 className={"mr-2"}

@@ -1,10 +1,12 @@
 import {
   AnthropometricRecord,
+  AppetiteTestRecord,
   BiologicalValueRecord,
   ClinicalSingDataRecord,
   ComplicationDataRecord,
   DataFieldResponse,
   MedicalRecord,
+  OrientationRecord,
 } from "@core/medical_record";
 import {
   InfrastructureMapper,
@@ -53,12 +55,26 @@ export class MedicalRecordInfraMapper
         isPresent: complication.getIsPresent(),
         recordedAt: complication.getRecordAt(),
       })),
-      dataFieldsResponse: entity.getDataFields().map(valObj => ({
-        code: valObj.code.unpack(),
-        recordedAt: valObj.recodedAt.unpack(),
-        type: valObj.type,
-        value: valObj.value,
-        unit: valObj.unit?.unpack(),
+      dataFieldsResponse: entity.getDataFields().map(field => ({
+        code: field.code.unpack(),
+        id: field.id,
+        data: field.data,
+        recordAt: field.recordAt.unpack(),
+      })),
+      appetiteTests: entity.getAppetiteTest().map(test => ({
+        id: test.id,
+        amount: test.amount,
+        productType: test.productType,
+        fieldResponses: test.fieldResponses,
+        recordAt: test.recordAt.unpack(),
+      })),
+      orientationRecords: entity.getOrientationRecord().map(record => ({
+        id: record.id,
+        code: record.code.unpack(),
+        treatmentPhase: record.treatmentPhase
+          ? record.treatmentPhase.unpack()
+          : null,
+        recordedAt: record.recordedAt.unpack(),
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -87,8 +103,17 @@ export class MedicalRecordInfraMapper
     );
 
     // Convert dataFields
-    const dataFieldsResults = record.dataFieldsResponse.map(
-      DataFieldResponse.create
+    const dataFieldsResults = record.dataFieldsResponse.map(field =>
+      DataFieldResponse.create(field, field.id)
+    );
+
+    // Convert Appetite Tests
+    const appetiteTestResults = record.appetiteTests.map(test =>
+      AppetiteTestRecord.create(test, test.id)
+    );
+    // Convert Orientation Records
+    const orientationRecordResults = record.orientationRecords.map(record =>
+      OrientationRecord.create(record, record.id)
     );
 
     // Combine all results
@@ -98,6 +123,8 @@ export class MedicalRecordInfraMapper
       ...clinicalDataResults,
       ...complicationResults,
       ...dataFieldsResults,
+      ...appetiteTestResults,
+      ...orientationRecordResults,
     ]);
 
     if (combinedRes.isFailure) {
@@ -118,6 +145,8 @@ export class MedicalRecordInfraMapper
         complications: complicationResults.map(r => r.val),
         complicationData: complicationResults.map(r => r.val),
         dataFieldsResponse: dataFieldsResults.map(r => r.val),
+        appetiteTests: appetiteTestResults.map(r => r.val),
+        orienationResults: orientationRecordResults.map(r => r.val),
       },
     });
   }

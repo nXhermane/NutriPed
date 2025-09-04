@@ -1,5 +1,5 @@
 import { formatError, handleError, Result } from "@shared";
-import { EvaluationContext } from "../../common";
+import { EvaluationContext, UnitAcl } from "../../common";
 import { AnthropometricVariableObject } from "../common";
 import {
   AnthropEntry,
@@ -9,7 +9,7 @@ import {
   GrowthIndicatorValue,
 } from "../models";
 import { IAnthropometricVariableGeneratorService } from "../ports/primary/services/AnthropometricVariableGeneratorService";
-import { AnthropometricMeasureRepository, UnitAcl } from "../ports";
+import { AnthropometricMeasureRepository } from "../ports";
 
 export class AnthropometricVariableGeneratorService
   implements IAnthropometricVariableGeneratorService

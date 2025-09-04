@@ -42,7 +42,6 @@ export class GrowthReferenceChartInfraMapper
           GrowthReferenceChartInfraMapper.name
         )
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { createdAt, updatedAt, id, ...otherProps } =
       growthReferenceChartRes.val.getProps();
     return new GrowthReferenceChart({

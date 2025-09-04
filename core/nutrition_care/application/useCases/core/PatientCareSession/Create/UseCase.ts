@@ -55,7 +55,6 @@ export class CreatePatientCareSessionUseCase
       if (patientCareSessionRes.isFailure) return left(patientCareSessionRes);
 
       const patientCareSession = patientCareSessionRes.val;
-      patientCareSession.created();
       await this.repo.save(patientCareSession);
 
       return right(Result.ok({ id: patientCareSession.id }));
@@ -71,6 +70,13 @@ export class CreatePatientCareSessionUseCase
     });
   }
   private async patientExist(patientId: AggregateID): Promise<boolean> {
-    return !!(await this.patientAcl.getPatientInfo(patientId));
+    const patientInfoRes = await this.patientAcl.getPatientInfo(patientId);
+    if (patientInfoRes.isFailure) {
+      return false;
+    }
+    if (patientInfoRes.val === null) {
+      return false;
+    }
+    return true;
   }
 }

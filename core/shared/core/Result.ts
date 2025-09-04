@@ -58,6 +58,9 @@ export class Result<T> {
       const result = func();
       return Result.ok<U>(result);
     } catch (e: unknown) {
+      if (e instanceof Error) {
+        return Result.fail<U>(e.message);
+      }
       return Result.fail<U>(e as string);
     }
   }

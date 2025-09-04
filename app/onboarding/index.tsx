@@ -1,26 +1,24 @@
 import { AppLogo } from "@/components/custom";
+import { PublicRoute } from "@/components/pages/shared";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
+import { Divider } from "@/components/ui/divider";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
+import { Image } from "@/components/ui/image";
+import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { isMobile, rnS, rnVs } from "@/scaling";
 import { AppConstants } from "@/src/constants";
 import { useGoogleAuth, useToast } from "@/src/context";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import { VStack } from "@/components/ui/vstack";
+import React, { useRef, useState } from "react";
+import { Image as RNImage, useColorScheme } from "react-native";
 import Swiper from "react-native-web-swiper";
-import { Divider } from "@/components/ui/divider";
-import { useColorScheme, Image as RNImage } from "react-native";
-import { isMobile, rnS, rnVs } from "@/scaling";
-import { Pressable } from "@/components/ui/pressable";
-import { PublicRoute } from "@/components/pages/shared";
-import { Image } from "@/components/ui/image";
 
 export default function Layout() {
-  const { user } = useGoogleAuth();
-  const router = useRouter();
   const swiperRef = useRef<Swiper>(null);
   const [hideNextBtn, setHideNextBtn] = useState<boolean>(false);
 
@@ -161,7 +159,6 @@ const OnBoardingLoginScreen = () => {
   const { login } = useGoogleAuth();
   const [onLogin, setOnLogin] = useState<boolean>(false);
   const router = useRouter();
-  const colorScheme = useColorScheme();
   const toast = useToast();
 
   const handleLogin = () => {
@@ -316,7 +313,7 @@ const OnBoardingSecondScreen = () => {
 };
 const OnBoardingThirdScreen = () => {
   const imageSource =
-    useColorScheme() == "dark"
+    useColorScheme() === "dark"
       ? require("./../../assets/images/onboarding/child_growth_monitoring_illustration.dark.png")
       : require("./../../assets/images/onboarding/child_growth_monitoring_illustration.light.png");
   return (

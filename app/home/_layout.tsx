@@ -87,6 +87,7 @@ const CustomTabButtonIcon: React.FC<CustomTabButtonIconProps> = ({
   name,
   isFocused = false,
 }) => {
+  // eslint-disable-next-line import/namespace
   const LucideIcon = icons[name];
   return (
     <Icon

@@ -1,3 +1,4 @@
+
 import { Entity, EntityPropsBaseType } from '../../../../../core/shared/domain/common/Entity';
 import { DomainDate } from '../../../../../core/shared/domain/shared/valueObjects/Date';
 
@@ -357,4 +358,5 @@ describe('Entity', () => {
     });
   });
 });
+
 

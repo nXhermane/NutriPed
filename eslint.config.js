@@ -7,5 +7,8 @@ module.exports = defineConfig([
   eslintPluginPrettierRecommended,
   {
     ignores: ["dist/*", "node_modules/*"],
+    rules: {
+      // "import/namespaces": ["error", { allowComputed: true }],
+    },
   },
 ]);

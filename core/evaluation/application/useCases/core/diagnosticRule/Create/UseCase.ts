@@ -43,7 +43,6 @@ export class CreateDiagnosticRuleUseCase
           )
         );
 
-      diagnosticRuleRes.val.created();
       await this.diagnosticRuleRepo.save(diagnosticRuleRes.val);
       return right(Result.ok({ id: newId }));
     } catch (e: unknown) {

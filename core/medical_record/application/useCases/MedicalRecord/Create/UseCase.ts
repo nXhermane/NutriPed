@@ -38,7 +38,6 @@ export class CreateMedicalRecordUseCase
         newId
       );
       if (medicalRecordRes.isFailure) return left(medicalRecordRes);
-      medicalRecordRes.val.created();
       await this.repo.save(medicalRecordRes.val);
       return right(Result.ok({ id: newId }));
     } catch (e: unknown) {

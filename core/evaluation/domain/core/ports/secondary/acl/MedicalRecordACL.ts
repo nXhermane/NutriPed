@@ -1,7 +1,10 @@
-import { ClinicalData } from "../../../../clinical";
-import { AnthropometricData } from "../../../../anthropometry";
-import { BiologicalTestResult } from "../../../../biological";
-import { AggregateID, Result } from "@/core/shared";
+import {
+  APPETITE_TEST_PRODUCT_TYPE,
+  DATA_FIELD_CODE_TYPE,
+} from "@/core/constants";
+import { DataFieldResponseValue } from "@/core/evaluation/domain/data_fields";
+import { TakenAmountInSachet, TakenAmountOfPot } from "@/core/medical_record";
+import { AggregateID, DomainDateTime, Result } from "@/core/shared";
 
 export interface PatientData {
   anthroData: { code: string; value: number; unit: string }[];
@@ -11,10 +14,26 @@ export interface PatientData {
     data: Record<string, any>;
   }[];
   biologicalData: { code: string; value: number; unit: string }[];
+  dataFieldData: { code: DATA_FIELD_CODE_TYPE; data: DataFieldResponseValue }[];
 }
+
+export type AclAppetiteTestData = {
+  id: AggregateID;
+  amount: TakenAmountInSachet | TakenAmountOfPot;
+  productType: APPETITE_TEST_PRODUCT_TYPE;
+  fieldResponses: Record<DATA_FIELD_CODE_TYPE, DataFieldResponseValue>;
+  recordedAt: string;
+};
 
 export interface MedicalRecordACL {
   getPatientData(data: {
     patientId: AggregateID;
+  }): Promise<Result<PatientData>>;
+  getAllAppetiteTestData(data: {
+    patientId: AggregateID;
+  }): Promise<Result<AclAppetiteTestData[]>>;
+  getPatientDataBefore(data: {
+    patientId: AggregateID;
+    date: DomainDateTime;
   }): Promise<Result<PatientData>>;
 }

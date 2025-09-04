@@ -63,6 +63,12 @@ export interface PediatricAppContextType {
     nextNutritionalRiskFactors: ReturnType<
       typeof DiagnosticContext.prototype.getNextNutritionalRiskFactorService
     >;
+    appetiteTest: ReturnType<
+      typeof DiagnosticContext.prototype.getAppetiteTest
+    >;
+    patientOrchestrator: ReturnType<
+      typeof DiagnosticContext.prototype.getPatientOrchestrator
+    >;
   };
 
   // Services from MedicalRecord BC

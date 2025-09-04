@@ -16,7 +16,6 @@ import { formatError, handleError, Result } from "@shared";
 import { ValidateResult } from "../../common";
 import {
   ClinicalData,
-  ClinicalDataType,
   ClinicalSign,
   ClinicalSignReference,
   IClinicalSignReference,
@@ -26,6 +25,7 @@ import {
   IClinicalValidationService,
 } from "../ports";
 import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
+import { ClinicalDataType } from "@/core/constants";
 
 export class ClinicalValidationService implements IClinicalValidationService {
   constructor(

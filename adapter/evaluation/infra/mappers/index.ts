@@ -10,4 +10,6 @@ export * from "./NutritionalDiagnosticMapper";
 export * from "./NutritionalRiskFactorMapper";
 export * from "./PatientDiagnosticDataMapper";
 export * from "./DataFieldReferenceMapper";
+export * from "./FormulaFieldReferenceInfraMapper";
 export * from "./next";
+export * from "./AppetiteTestMapper";

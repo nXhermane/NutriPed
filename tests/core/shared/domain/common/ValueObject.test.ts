@@ -1,3 +1,4 @@
+
 import { ValueObject, DomainPrimitive } from '../../../../../core/shared/domain/common/ValueObject';
 import { ArgumentNotProvidedException } from '../../../../../core/shared/exceptions';
 
@@ -167,4 +168,5 @@ describe('ValueObject', () => {
     });
   });
 });
+
 

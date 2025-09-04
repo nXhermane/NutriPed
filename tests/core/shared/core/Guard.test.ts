@@ -1,3 +1,4 @@
+
 import { Guard } from '../../../../core/shared/core/Guard';
 
 describe('Guard', () => {
@@ -125,6 +126,7 @@ describe('Guard', () => {
     });
   });
 
+
   describe('againstNullOrUndefinedBulk', () => {
     it('should return succeeded=false if any argument is null or undefined', () => {
       const args = [
@@ -142,6 +144,7 @@ describe('Guard', () => {
         { argument: 'value1', argumentName: 'arg1' },
         { argument: 0, argumentName: 'arg2' },
         { argument: false, argumentName: 'arg3' },
+
       ];
       const result = Guard.againstNullOrUndefinedBulk(args);
       expect(result.succeeded).toBe(true);
