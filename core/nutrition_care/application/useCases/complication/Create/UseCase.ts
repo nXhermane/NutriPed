@@ -37,7 +37,6 @@ export class CreateComplicationUseCase
         );
 
       // Optionally register the creation timestamp or perform any side effects
-      complication.created();
       await this.repo.save(complication);
       return right(Result.ok({ id: complication.id }));
     } catch (error: unknown) {

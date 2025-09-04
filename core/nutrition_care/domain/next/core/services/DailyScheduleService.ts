@@ -2,7 +2,6 @@ import { DomainDateTime, formatError, Result } from "@/core/shared";
 import {
   OnGoingTreatment,
   MonitoringParameter,
-  IDailyCareAction,
 } from "../models";
 import {
   IDailyScheduleService,

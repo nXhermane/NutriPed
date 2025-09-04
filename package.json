@@ -2,6 +2,7 @@
   "name": "nutriped",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "start": "expo start",
     "android": "DARK_MODE=media expo start --android",

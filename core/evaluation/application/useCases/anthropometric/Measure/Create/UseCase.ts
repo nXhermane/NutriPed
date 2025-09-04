@@ -44,7 +44,6 @@ export class CreateAnthropometricMeasureUseCase
           )
         );
 
-      anthropometricMeasure.val.created();
       await this.anthropometricRepo.save(anthropometricMeasure.val);
       return right(Result.ok({ id: measureId }));
     } catch (e: unknown) {

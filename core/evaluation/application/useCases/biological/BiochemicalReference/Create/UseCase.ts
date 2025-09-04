@@ -44,7 +44,6 @@ export class CreateBiochemicalReferenceUseCase
           )
         );
 
-      biochemicalRefRes.val.created();
       await this.repo.save(biochemicalRefRes.val);
       return right(Result.ok({ id: biochemicalRefId }));
     } catch (e: unknown) {

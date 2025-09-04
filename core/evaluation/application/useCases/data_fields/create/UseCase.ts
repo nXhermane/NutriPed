@@ -28,7 +28,6 @@ export class CreateDataFieldRefUseCase
       const newFieldId = this.generateId.generate().toValue();
       const fieldRefRes = DataFieldReference.create(request, newFieldId);
       if (fieldRefRes.isFailure) return left(fieldRefRes);
-      fieldRefRes.val.created();
       await this.repo.save(fieldRefRes.val);
       return right(Result.ok({ id: newFieldId }));
     } catch (e: unknown) {

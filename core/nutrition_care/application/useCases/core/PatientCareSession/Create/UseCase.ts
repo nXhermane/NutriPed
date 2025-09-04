@@ -55,7 +55,6 @@ export class CreatePatientCareSessionUseCase
       if (patientCareSessionRes.isFailure) return left(patientCareSessionRes);
 
       const patientCareSession = patientCareSessionRes.val;
-      patientCareSession.created();
       await this.repo.save(patientCareSession);
 
       return right(Result.ok({ id: patientCareSession.id }));

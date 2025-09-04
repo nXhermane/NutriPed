@@ -37,7 +37,6 @@ export class CreateMedicineUseCase
           )
         );
 
-      medicine.created();
       await this.repo.save(medicine);
       return right(Result.ok({ id: newId }));
     } catch (e: unknown) {

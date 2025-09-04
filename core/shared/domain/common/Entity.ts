@@ -37,6 +37,9 @@ export abstract class Entity<EntityProps extends EntityPropsBaseType> {
     this._updatedAt = DomainDate.create(updatedAt).val;
     this.props = this.createProxy(props);
     this?.validate();
+    if(!createdAt) {
+      this.created();
+    }
   }
   private handler(): ProxyHandler<EntityProps> {
     const handler: ProxyHandler<EntityProps> = {

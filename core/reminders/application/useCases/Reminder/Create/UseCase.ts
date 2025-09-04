@@ -27,7 +27,6 @@ export class CreateReminderUseCase
       const reminderRes = Reminder.create(request, newId.toValue());
       if (reminderRes.isFailure) return left(reminderRes);
       const reminder = reminderRes.val;
-      reminder.created();
       await this.repo.save(reminder);
       return right(Result.ok({ id: newId.toValue() }));
     } catch (e: unknown) {

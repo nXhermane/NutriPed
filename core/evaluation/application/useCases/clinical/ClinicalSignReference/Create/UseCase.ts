@@ -44,7 +44,6 @@ export class CreateClinicalSignReferenceUseCase
           )
         );
 
-      clinicalSignRefResult.val.created();
       await this.repo.save(clinicalSignRefResult.val);
       return right(Result.ok({ id: clinicalSignRefId }));
     } catch (e: unknown) {

@@ -22,7 +22,6 @@ export class CreatePatientUseCase
       const patientId = this.idGenerator.generate().toValue();
       const patientRes = Patient.create(request.data, patientId);
       if (patientRes.isFailure) return left(patientRes);
-      patientRes.val.created();
       await this.repo.save(patientRes.val);
       return right(Result.ok({ id: patientId }));
     } catch (e: unknown) {

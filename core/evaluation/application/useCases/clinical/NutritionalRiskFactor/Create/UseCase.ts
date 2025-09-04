@@ -41,7 +41,6 @@ export class CreateNutritionalRiskFactorUseCase
       );
       if (nutritionalRiskFactorRes.isFailure)
         return left(nutritionalRiskFactorRes);
-      nutritionalRiskFactorRes.val.created();
       await this.nutritionalRiskFactorRepo.save(nutritionalRiskFactorRes.val);
       return right(Result.ok({ id: nutritionalRiskId }));
     } catch (e: unknown) {
