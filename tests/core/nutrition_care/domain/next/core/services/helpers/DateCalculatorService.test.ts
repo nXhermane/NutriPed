@@ -1,8 +1,10 @@
-import { DomainDateTime } from "../../../../../../../core/shared";
-import { DURATION_TYPE, FREQUENCY_TYPE } from "../../../../../../../core/constants";
-import { DateCalculatorService } from "../../../../../../../core/nutrition_care/domain/next/core/services/helpers/DateCalculatorService";
+import { DomainDateTime } from "@/core/shared";
+import { DURATION_TYPE, FREQUENCY_TYPE } from "@/core/constants";
+import { DateCalculatorService } from "@/core/nutrition_care/domain/next/core/services/helpers/DateCalculatorService";
 
 describe("DateCalculatorService", () => {
+  const service = new DateCalculatorService();
+
   describe("calculateNextDate", () => {
     it("should calculate next date for daily frequency with multiple doses", () => {
       const startDate = DomainDateTime.create("2024-01-01T08:00:00Z").val;
@@ -19,7 +21,7 @@ describe("DateCalculatorService", () => {
         value: 7,
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -29,7 +31,7 @@ describe("DateCalculatorService", () => {
       expect(result.shouldContinue).toBe(true);
       // Prochaine exécution dans 12 heures (24h / 2 = 12h)
       const expectedNext = currentDate.addHours(12);
-      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+      expect(result.nextDate!.isSameDateTime(expectedNext)).toBe(true);
     });
 
     it("should calculate next date for every two days", () => {
@@ -47,7 +49,7 @@ describe("DateCalculatorService", () => {
         value: 10,
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -57,7 +59,7 @@ describe("DateCalculatorService", () => {
       expect(result.shouldContinue).toBe(true);
       // Prochaine exécution dans 48 heures (2 jours)
       const expectedNext = currentDate.addHours(48);
-      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+      expect(result.nextDate!.isSameDateTime(expectedNext)).toBe(true);
     });
 
     it("should handle while_in_phase duration", () => {
@@ -74,7 +76,7 @@ describe("DateCalculatorService", () => {
         type: DURATION_TYPE.WHILE_IN_PHASE,
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -84,7 +86,7 @@ describe("DateCalculatorService", () => {
       expect(result.shouldContinue).toBe(true);
       // Prochaine exécution dans 1 semaine (168 heures)
       const expectedNext = currentDate.addHours(168);
-      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+      expect(result.nextDate!.isSameDateTime(expectedNext)).toBe(true);
     });
 
     it("should stop when duration is exceeded", () => {
@@ -102,7 +104,7 @@ describe("DateCalculatorService", () => {
         value: 7, // 7 jours seulement
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -127,7 +129,7 @@ describe("DateCalculatorService", () => {
         value: 24, // 24 heures
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -136,7 +138,7 @@ describe("DateCalculatorService", () => {
 
       expect(result.shouldContinue).toBe(true);
       const expectedNext = currentDate.addHours(6);
-      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+      expect(result.nextDate!.isSameDateTime(expectedNext)).toBe(true);
     });
 
     it("should handle weekly frequency with multiple times per week", () => {
@@ -153,7 +155,7 @@ describe("DateCalculatorService", () => {
         type: DURATION_TYPE.WHILE_IN_PHASE,
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -163,7 +165,7 @@ describe("DateCalculatorService", () => {
       expect(result.shouldContinue).toBe(true);
       // Prochaine exécution dans 56 heures (168h / 3 = 56h)
       const expectedNext = currentDate.addHours(56);
-      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+      expect(result.nextDate!.isSameDateTime(expectedNext)).toBe(true);
     });
 
     it("should stop while_in_phase when end date is provided", () => {
@@ -181,7 +183,7 @@ describe("DateCalculatorService", () => {
         type: DURATION_TYPE.WHILE_IN_PHASE,
       };
 
-      const result = DateCalculatorService.calculateNextDate(
+      const result = service.calculateNextDate(
         startDate,
         currentDate,
         frequency,
@@ -208,7 +210,7 @@ describe("DateCalculatorService", () => {
         value: 5,
       };
 
-      const result = DateCalculatorService.calculateInitialNextDate(
+      const result = service.calculateInitialNextDate(
         startDate,
         frequency,
         duration
@@ -216,7 +218,7 @@ describe("DateCalculatorService", () => {
 
       expect(result.shouldContinue).toBe(true);
       const expectedNext = startDate.addHours(24); // Demain à la même heure
-      expect(result.nextDate.isSameDateTime(expectedNext)).toBe(true);
+      expect(result.nextDate!.isSameDateTime(expectedNext)).toBe(true);
     });
 
     it("should handle zero duration correctly", () => {
@@ -233,7 +235,7 @@ describe("DateCalculatorService", () => {
         value: 0, // Durée zéro
       };
 
-      const result = DateCalculatorService.calculateInitialNextDate(
+      const result = service.calculateInitialNextDate(
         startDate,
         frequency,
         duration
