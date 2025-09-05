@@ -5,3 +5,4 @@ export * from "./DailyPlanGeneratorService";
 export * from "./CareSessionVariableGeneratorService";
 export * from "./TreatmentDateManagementService";
 export * from "./DailyScheduleService";
+export * from "./PatientCarePhaseManagerService";

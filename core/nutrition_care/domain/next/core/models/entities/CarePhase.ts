@@ -38,9 +38,9 @@ export interface ICarePhase extends EntityPropsBaseType {
 
 export interface CreateCarePhase {
   code: CARE_PHASE_CODES;
-  status: CarePhaseStatus;
+  status?: CarePhaseStatus;
   startDate?: string;
-  endDate: string | null;
+  endDate?: string | null;
   monitoringParameters: (CreateMonitoringParameter & { id: AggregateID })[];
   onGoingTreatments: (CreateOnGoindTreatment & { id: AggregateID })[];
 }
@@ -170,7 +170,7 @@ export class CarePhase extends Entity<ICarePhase> {
             endDate: endDateRes.val,
             monitoringParameters: monitoringParameterRes.map(res => res.val),
             onGoingTreatments: onGoingTreatmentRes.map(res => res.val),
-            status: createProps.status,
+            status: createProps.status || CarePhaseStatus.IN_PROGRESS,
           },
         })
       );

@@ -15,21 +15,6 @@ export class RecommendedTreatmentService
     }
   ) {}
 
-  async getByTreatmentCode(
-    treatmentCode: MilkType | MEDICINE_CODES
-  ): Promise<Result<IRecommendedTreatment & { id: AggregateID }>> {
-    try {
-      // TODO: Implémenter la logique pour récupérer par treatmentCode
-      // Pour l'instant, on retourne une erreur car cette méthode nécessite
-      // une implémentation spécifique dans le repository
-      return Result.fail("getByTreatmentCode not implemented yet");
-    } catch (e: unknown) {
-      return Result.fail(
-        `Failed to get recommended treatment by treatment code: ${e}`
-      );
-    }
-  }
-
   async getByRecommendationCode(
     recommendationCode: ValueOf<typeof TREATMENT_PLAN_IDS>
   ): Promise<Result<IRecommendedTreatment & { id: string }>> {

@@ -1,14 +1,5 @@
-import {
-  formatError,
-  GenerateUniqueId,
-  handleError,
-  Result,
-} from "@/core/shared";
-import {
-  CarePlanRecommendation,
-  CarePlanAjustement,
-  RecommendedTreatmentService,
-} from "../../../modules";
+import { formatError, handleError, Result } from "@/core/shared";
+import { CarePlanRecommendation, CarePlanAjustement } from "../../../modules";
 import { CarePhase } from "../models";
 import { ICarePlanApplicatorService } from "./interfaces";
 import {
@@ -19,8 +10,6 @@ import {
 
 export class CarePlanApplicatorService implements ICarePlanApplicatorService {
   constructor(
-    private readonly idGenerator: GenerateUniqueId,
-    private readonly recommendedTreatmentService: RecommendedTreatmentService,
     private readonly treatmentManager: ITreatmentManager,
     private readonly monitoringParameterManager: IMonitoringParameterManager,
     private readonly triggerExecutor: ITriggerExecutor

@@ -6,7 +6,7 @@ import {
   Result,
   SystemCode,
 } from "@/core/shared";
-import { CarePhase, DailyCareRecord } from "../models";
+import { CarePhase } from "../models";
 import { ICareSessionVariableGeneratorService } from "./interfaces";
 import {
   ConsecutiveVariableType,
@@ -30,15 +30,25 @@ export class CareSessionVariableGeneratorService
     private readonly computedVariablePerformerAcl: IComputedVariablePerformerACL,
     private readonly medicalRecordVariableTransformerAcl: MedicalRecordVariableTransformerAcl
   ) {}
-  async generate(
+  async generateIntialVariables(
+    patientId: AggregateID,
+    targetDate: DomainDateTime
+  ): Promise<Result<Record<string, string | number>>> {
+    try {
+      return this.generateVariableByDate(patientId, targetDate);
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+  async generateEvaluationVariables(
     patientId: AggregateID,
     currentCarePhase: CarePhase,
-    currentDailyRecord: DailyCareRecord
+    targetDate: DomainDateTime
   ): Promise<Result<Record<string, number | string>>> {
     try {
       const dynamicVariablesRes = this.generateDynamicCareSessionVariable(
         currentCarePhase,
-        currentDailyRecord
+        targetDate
       );
 
       if (dynamicVariablesRes.isFailure) {
@@ -54,7 +64,7 @@ export class CareSessionVariableGeneratorService
         await this.generateAdmissionAndCurrentDayVariable(
           patientId,
           currentCarePhase.getProps().startDate,
-          currentDailyRecord.getProps().date
+          targetDate
         );
 
       if (admissionAndCurrentDayRes.isFailure) {
@@ -68,7 +78,7 @@ export class CareSessionVariableGeneratorService
 
       const lastTwoDaysRes = await this.getRecordLastTwoDays(
         patientId,
-        currentDailyRecord.getProps().date
+        targetDate
       );
 
       if (lastTwoDaysRes.isFailure) {
@@ -264,10 +274,10 @@ export class CareSessionVariableGeneratorService
   }
   private generateDynamicCareSessionVariable(
     carePhase: CarePhase,
-    currentDailyJournal: DailyCareRecord
+    tragetDate: DomainDateTime
   ): Result<Record<string, number | string>> {
     try {
-      return this.createActivePhaseResult(carePhase, currentDailyJournal);
+      return this.createActivePhaseResult(carePhase, tragetDate);
     } catch (e: unknown) {
       return handleError(e);
     }
@@ -293,11 +303,11 @@ export class CareSessionVariableGeneratorService
    */
   private createActivePhaseResult(
     careSession: CarePhase,
-    currentDailyJournal: DailyCareRecord
+    tragetDate: DomainDateTime
   ): Result<Record<string, number | string>> {
     const daysInPhase = this.calculateDaysInPhase(
       careSession.getProps().startDate,
-      currentDailyJournal.getProps().date
+      tragetDate
     );
 
     return Result.ok({
