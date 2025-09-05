@@ -34,11 +34,13 @@ export class PatientRepositoryExpoImpl
 ### 2.1. Héritage de `EntityBaseRepositoryExpo`
 
 La classe étend `EntityBaseRepositoryExpo` en lui fournissant les types spécifiques dont elle a besoin :
+
 - `Patient`: L'entité de domaine à gérer.
 - `PatientPersistenceDto`: Le DTO de persistance, qui représente la structure des données dans la table de la base de données.
 - `typeof patients`: Le schéma de la table Drizzle, qui définit les colonnes et les types de la table `patients`.
 
 Grâce à cet héritage, `PatientRepositoryExpoImpl` obtient instantanément des implémentations fonctionnelles pour :
+
 - `getById(id)`
 - `getAll()`
 - `save(entity)`

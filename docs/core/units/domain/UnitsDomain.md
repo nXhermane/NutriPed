@@ -18,15 +18,16 @@ L'entité `Unit` est la **Racine d'Agrégat** du module. Elle représente une un
 
 La manière dont une `Unit` est modélisée est la clé de tout le système de conversion.
 
-| Propriété | Type | Exemple | Description |
-| --- | --- | --- | --- |
-| `name` | `string` | `"Gramme"` | Le nom lisible de l'unité. |
-| `code` | `SystemCode`| `"g"` | Le code système unique pour l'unité. |
-| `type` | `UnitType` | `"Mass"` | La catégorie de mesure (Masse, Longueur, Volume, etc.). |
-| `baseUnitCode` | `SystemCode`| `"kg"` | Le code de l'unité de **base** pour ce type de mesure. |
-| `conversionFactor`| `number` | `0.001` | Le facteur pour convertir cette unité vers son unité de base. |
+| Propriété          | Type         | Exemple    | Description                                                   |
+| ------------------ | ------------ | ---------- | ------------------------------------------------------------- |
+| `name`             | `string`     | `"Gramme"` | Le nom lisible de l'unité.                                    |
+| `code`             | `SystemCode` | `"g"`      | Le code système unique pour l'unité.                          |
+| `type`             | `UnitType`   | `"Mass"`   | La catégorie de mesure (Masse, Longueur, Volume, etc.).       |
+| `baseUnitCode`     | `SystemCode` | `"kg"`     | Le code de l'unité de **base** pour ce type de mesure.        |
+| `conversionFactor` | `number`     | `0.001`    | Le facteur pour convertir cette unité vers son unité de base. |
 
 **Le mécanisme est le suivant :**
+
 - Pour chaque type de mesure (Masse, Longueur...), une unité est désignée comme étant l'unité de **base**. Pour la masse, c'est le kilogramme (`kg`). Pour la longueur, ce pourrait être le mètre (`m`).
 - Chaque autre unité de ce type définit son `conversionFactor` par rapport à cette unité de base.
 - Exemple : Pour l'unité "Gramme" (`g`), le `baseUnitCode` est `"kg"` et le `conversionFactor` est `0.001`, car `1g = 0.001kg`.
@@ -41,6 +42,7 @@ Ce modèle permet de convertir n'importe quelle unité vers n'importe quelle aut
 Ce service contient la logique métier pour effectuer les conversions.
 
 **Fichier Source:** `services/UnitConverterService.ts`
+
 ```typescript
 export class UnitConverterService implements IUnitConverterService {
   convert(value: number, from: Unit, to: Unit): Result<number> {

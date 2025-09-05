@@ -7,6 +7,7 @@
 `Guard` est une classe statique utilitaire qui fournit un ensemble de méthodes pour la validation de données et la vérification de préconditions. Ces méthodes, souvent appelées "clauses de garde" (guard clauses), permettent de s'assurer que les données respectent certaines règles avant d'être utilisées.
 
 L'utilisation de la classe `Guard` permet de :
+
 - **Échouer Rapidement (Fail Fast) :** Arrêter une opération dès qu'une condition invalide est détectée.
 - **Rendre le Code Plus Lisible :** Éviter les structures `if/else` imbriquées en validant les entrées au début d'une méthode.
 - **Centraliser la Logique de Validation Commune :** Réutiliser des vérifications standards (null, vide, plage numérique, etc.) à travers toute l'application.
@@ -21,6 +22,7 @@ export interface IGuardResult {
   message?: string;
 }
 ```
+
 - `succeeded`: Un booléen qui est `true` si la condition de la garde est respectée, et `false` sinon.
 - `message`: Un message d'erreur optionnel décrivant l'échec de la validation.
 
@@ -70,9 +72,9 @@ La classe `Guard` est particulièrement utile dans les constructeurs ou les mét
 Voici comment on pourrait créer un `ValueObject` `Age` qui doit être un nombre entre 0 et 120.
 
 ```typescript
-import { Guard, IGuardResult } from '@core/shared/core/Guard';
-import { Result } from '@core/shared/core/Result';
-import { ValueObject } from '@core/shared/domain/common';
+import { Guard, IGuardResult } from "@core/shared/core/Guard";
+import { Result } from "@core/shared/core/Result";
+import { ValueObject } from "@core/shared/domain/common";
 
 export class Age extends ValueObject<number> {
   private constructor(props: { _value: number }) {
@@ -87,9 +89,9 @@ export class Age extends ValueObject<number> {
   public static create(age: number): Result<Age> {
     // 1. On crée une liste de toutes les vérifications à effectuer
     const guardResults: IGuardResult[] = [
-      Guard.againstNullOrUndefined(age, 'age'),
+      Guard.againstNullOrUndefined(age, "age"),
       Guard.isNumber(age),
-      Guard.inRange(age, 0, 120, 'age')
+      Guard.inRange(age, 0, 120, "age"),
     ];
 
     // 2. On combine les résultats
@@ -109,4 +111,5 @@ export class Age extends ValueObject<number> {
 const validAge = Age.create(25); // Result.ok<Age>
 const invalidAge = Age.create(150); // Result.fail<Age> avec le message de inRange
 ```
+
 Cet exemple montre comment `Guard.combine` permet de créer un flux de validation propre et déclaratif.

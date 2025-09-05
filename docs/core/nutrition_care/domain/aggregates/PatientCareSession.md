@@ -12,20 +12,21 @@ Cet agrégat est le chef d'orchestre du suivi d'un patient. Il ne se contente pa
 
 La structure de l'agrégat est une composition de plusieurs entités et objets-valeur qui, ensemble, décrivent l'intégralité de la session de soins.
 
-| Propriété | Type | Description |
-| --- | --- | --- |
-| `patientId` | `AggregateID` | La référence à l'agrégat `Patient` concerné. |
-| `orientation` | `OrientationResult` | Le diagnostic ou la décision d'orientation qui a initié cette session de soins. |
-| `carePhases` | `CarePhase[]` | La liste des **phases de soins** prévues (ex: "Phase de Stabilisation", "Phase de Réhabilitation"). |
-| `currentPhase` | `CarePhase` | La phase de soins dans laquelle le patient se trouve actuellement. |
-| `currentState` | `PatientCurrentState` | Une entité qui maintient un **instantané des dernières données connues** du patient (poids, signes cliniques, etc.), mis à jour en temps réel. |
-| `dailyJournals`| `DailyCareJournal[]` | L'historique des journaux quotidiens. |
-| `currentDailyJournal`| `DailyCareJournal`| Le journal pour la **journée en cours**, où toutes les nouvelles données sont enregistrées. |
-| `status` | `PatientCareSessionStatus`| Le statut global de la session (`NOT_READY`, `IN_PROGRESS`, `COMPLETED`). |
+| Propriété             | Type                       | Description                                                                                                                                    |
+| --------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patientId`           | `AggregateID`              | La référence à l'agrégat `Patient` concerné.                                                                                                   |
+| `orientation`         | `OrientationResult`        | Le diagnostic ou la décision d'orientation qui a initié cette session de soins.                                                                |
+| `carePhases`          | `CarePhase[]`              | La liste des **phases de soins** prévues (ex: "Phase de Stabilisation", "Phase de Réhabilitation").                                            |
+| `currentPhase`        | `CarePhase`                | La phase de soins dans laquelle le patient se trouve actuellement.                                                                             |
+| `currentState`        | `PatientCurrentState`      | Une entité qui maintient un **instantané des dernières données connues** du patient (poids, signes cliniques, etc.), mis à jour en temps réel. |
+| `dailyJournals`       | `DailyCareJournal[]`       | L'historique des journaux quotidiens.                                                                                                          |
+| `currentDailyJournal` | `DailyCareJournal`         | Le journal pour la **journée en cours**, où toutes les nouvelles données sont enregistrées.                                                    |
+| `status`              | `PatientCareSessionStatus` | Le statut global de la session (`NOT_READY`, `IN_PROGRESS`, `COMPLETED`).                                                                      |
 
 ## 3. Le Patron de Conception du "Journal Quotidien"
 
 Le fonctionnement de cet agrégat est centré sur le concept de journal quotidien.
+
 1.  **Initialisation Quotidienne :** Au début de chaque journée, un `DailyCareJournal` vide doit être créé et ajouté à l'agrégat via `addDailyJournal`.
 2.  **Enregistrement des Événements :** Tout au long de la journée, les cliniciens utilisent des méthodes comme `addMonitoringValueToJournal` ou `addActionToJournal` pour enregistrer chaque action (un traitement administré) et chaque observation (une nouvelle mesure, un nouveau signe clinique).
 3.  **Mise à Jour de l'État :** Lorsqu'une nouvelle donnée est ajoutée au journal, l'agrégat met également à jour l'entité `currentState`. Par exemple, si une nouvelle mesure de poids est ajoutée au journal, la valeur du poids dans `currentState` est également mise à jour. Cela permet d'avoir à tout moment un aperçu de l'état le plus récent du patient.

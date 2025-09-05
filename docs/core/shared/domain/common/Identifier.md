@@ -33,15 +33,19 @@ export class Identifier<T> {
 ## 3. Méthodes Clés
 
 ### `equals(id?: Identifier<T>): boolean`
+
 Effectue une comparaison sécurisée. Elle vérifie que :
+
 1. L'objet `id` à comparer n'est pas `null` ou `undefined`.
 2. L'objet `id` est bien une instance de la même classe d'identifiant.
 3. Les valeurs sous-jacentes des deux identifiants sont égales.
 
 ### `toValue(): T`
+
 Retourne la valeur brute (primitive) de l'identifiant.
 
 ### `toString(): string`
+
 Retourne la représentation en chaîne de caractères de la valeur de l'identifiant.
 
 ## 4. Exemple d'Utilisation
@@ -49,7 +53,7 @@ Retourne la représentation en chaîne de caractères de la valeur de l'identifi
 Voici comment on pourrait créer un identifiant spécifique pour un `Patient`.
 
 ```typescript
-import { Identifier } from '@core/shared/domain/common';
+import { Identifier } from "@core/shared/domain/common";
 
 // On crée une classe spécifique pour l'ID du Patient
 // On ne lui ajoute aucune logique, on hérite simplement de Identifier
@@ -60,9 +64,9 @@ export class PatientId extends Identifier<string> {
 }
 
 // Utilisation
-const id1 = new PatientId('patient-123');
-const id2 = new PatientId('patient-123');
-const id3 = new PatientId('patient-456');
+const id1 = new PatientId("patient-123");
+const id2 = new PatientId("patient-123");
+const id3 = new PatientId("patient-456");
 
 // Un autre type d'ID
 class ProductId extends Identifier<string> {
@@ -70,8 +74,7 @@ class ProductId extends Identifier<string> {
     super(value);
   }
 }
-const productId = new ProductId('product-abc');
-
+const productId = new ProductId("product-abc");
 
 console.log(id1.equals(id2)); // true
 console.log(id1.equals(id3)); // false
@@ -79,4 +82,5 @@ console.log(id1.equals(id3)); // false
 // Le code suivant produirait une erreur de typage, ce qui est le but !
 // let somePatientId: PatientId = productId; // Error: Type 'ProductId' is not assignable to type 'PatientId'.
 ```
+
 En utilisant cette classe, on rend le code du domaine plus expressif, plus sûr et moins sujet aux erreurs.

@@ -13,6 +13,7 @@ export class RepositoryNotFoundException extends ExceptionBase {
   code: string = NOT_FOUND;
 }
 ```
+
 - **Hérite de :** `ExceptionBase`
 - **Code d'erreur :** `NOT_FOUND`
 
@@ -43,10 +44,12 @@ export class RepositoryInternalError extends ExceptionBase {
   code: string = INTERNAL_REPO_ERROR;
 }
 ```
+
 - **Hérite de :** `ExceptionBase`
 - **Code d'erreur :** `INTERNAL_REPO_ERROR`
 
 **Cas d'utilisation typiques :**
+
 - Un problème de connexion à la base de données.
 - Une requête SQL malformée.
 - Un échec lors de la transaction de sauvegarde.
@@ -70,4 +73,5 @@ public async save(entity: Patient): Promise<void> {
   }
 }
 ```
+
 Encapsuler l'erreur originale dans `cause` est une bonne pratique car cela préserve la pile d'appels et le contexte de l'erreur initiale, ce qui est très utile pour le débogage.

@@ -39,7 +39,7 @@ Voici comment le type `Paginated` serait utilisé dans l'interface d'un reposito
 
     ```typescript
     // Dans core/patient/domain/ports/IPatientRepository.ts
-    import { Paginated } from '@core/shared/infrastructure';
+    import { Paginated } from "@core/shared/infrastructure";
 
     export interface IPatientRepository extends Repository<Patient> {
       // ... autres méthodes
@@ -57,7 +57,7 @@ Voici comment le type `Paginated` serait utilisé dans l'interface d'un reposito
     // On veut la deuxième page, avec 20 patients par page
     const paginationParams: Paginated = {
       page: 2,
-      pageSize: 20
+      pageSize: 20,
     };
 
     const patients = await this.patientRepo.findAll(paginationParams);

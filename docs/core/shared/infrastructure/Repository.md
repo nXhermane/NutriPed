@@ -27,14 +27,14 @@ export interface Repository<DomainEntity extends Entity<EntityPropsBaseType>> {
 - **`Repository<DomainEntity>`** : L'interface est générique et est typée avec l'`Entity` (ou plus spécifiquement, l'[AggregateRoot](../domain/common/AggregateRoot.md)) qu'elle est censée gérer.
 
 - **Méthodes Fondamentales :** Elle définit trois méthodes de base pour les opérations CRUD (Create, Read, Update, Delete) :
-    - **`getById(id: AggregateID): Promise<DomainEntity>`**
-      Récupère une entité par son identifiant unique. Elle doit retourner une `Promise` qui se résout avec l'entité trouvée. Si l'entité n'est pas trouvée, l'implémentation doit lever une exception (typiquement une `NotFoundException`).
+  - **`getById(id: AggregateID): Promise<DomainEntity>`**
+    Récupère une entité par son identifiant unique. Elle doit retourner une `Promise` qui se résout avec l'entité trouvée. Si l'entité n'est pas trouvée, l'implémentation doit lever une exception (typiquement une `NotFoundException`).
 
-    - **`save(entity: DomainEntity): Promise<void>`**
-      Persiste une entité. Cette méthode doit gérer à la fois la **création** d'une nouvelle entité et la **mise à jour** d'une entité existante (logique "upsert").
+  - **`save(entity: DomainEntity): Promise<void>`**
+    Persiste une entité. Cette méthode doit gérer à la fois la **création** d'une nouvelle entité et la **mise à jour** d'une entité existante (logique "upsert").
 
-    - **`delete(id: AggregateID): Promise<void>`**
-      Supprime une entité de la persistance en utilisant son identifiant.
+  - **`delete(id: AggregateID): Promise<void>`**
+    Supprime une entité de la persistance en utilisant son identifiant.
 
 ## 3. Contrat vs Implémentation
 
@@ -51,9 +51,9 @@ En général, on ne dépend pas directement de l'interface `Repository` de base.
 
     ```typescript
     // Dans core/patient/domain/ports/IPatientRepository.ts
-    import { Repository } from '@core/shared/infrastructure';
-    import { Patient } from '../Patient';
-    import { Result } from '@core/shared/core';
+    import { Repository } from "@core/shared/infrastructure";
+    import { Patient } from "../Patient";
+    import { Result } from "@core/shared/core";
 
     export interface IPatientRepository extends Repository<Patient> {
       // Ajout d'une méthode de recherche spécifique au patient
@@ -87,7 +87,7 @@ En général, on ne dépend pas directement de l'interface `Repository` de base.
 
     ```typescript
     // Dans adapter/patient/infra/repository.expo/PatientRepository.ts
-    import { IPatientRepository } from '@core/patient/domain/ports';
+    import { IPatientRepository } from "@core/patient/domain/ports";
 
     export class PatientRepositoryExpo implements IPatientRepository {
       public async getById(id: AggregateID): Promise<Patient> {

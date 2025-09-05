@@ -34,15 +34,18 @@ La classe `Message` peut être utilisée pour enrichir les réponses des service
 Imaginons un cas d'utilisation qui met à jour un patient mais qui veut aussi retourner un message d'information.
 
 ```typescript
-import { Message } from '@core/shared/application';
-import { Result } from '@core/shared/core';
+import { Message } from "@core/shared/application";
+import { Result } from "@core/shared/core";
 
 // La réponse pourrait être un Result contenant un Message
 type UpdatePatientResponse = Result<Message>;
 
-class UpdatePatientUseCase implements UseCase<UpdatePatientDTO, UpdatePatientResponse> {
-  public async execute(request: UpdatePatientDTO): Promise<UpdatePatientResponse> {
-
+class UpdatePatientUseCase
+  implements UseCase<UpdatePatientDTO, UpdatePatientResponse>
+{
+  public async execute(
+    request: UpdatePatientDTO
+  ): Promise<UpdatePatientResponse> {
     // ... logique de mise à jour du patient ...
     // La mise à jour a réussi.
 
@@ -55,7 +58,6 @@ class UpdatePatientUseCase implements UseCase<UpdatePatientDTO, UpdatePatientRes
     return Result.ok<Message>(successMessage);
   }
 }
-
 
 // Utilisation côté client (UI)
 const result = await updatePatientUseCase.execute(dto);

@@ -22,8 +22,8 @@ export abstract class ExceptionBase extends Error {
 
   constructor(
     readonly message: string,
-    readonly cause?: Error,      // Pour encapsuler une autre erreur
-    readonly metadata?: unknown  // Pour des données de contexte supplémentaires
+    readonly cause?: Error, // Pour encapsuler une autre erreur
+    readonly metadata?: unknown // Pour des données de contexte supplémentaires
   ) {
     super(message);
   }
@@ -33,6 +33,7 @@ export abstract class ExceptionBase extends Error {
 ```
 
 **Caractéristiques Clés :**
+
 - **`code`**: Chaque exception concrète doit définir un code unique (ex: `NOT_FOUND`). Cela permet d'identifier l'erreur de manière programmatique.
 - **`cause`**: Permet d'encapsuler l'erreur originale, préservant ainsi la pile d'appels complète.
 - **`metadata`**: Un champ flexible pour ajouter des informations de débogage (par exemple, les arguments de la méthode qui a échoué).
@@ -44,14 +45,14 @@ Le fichier `exceptions.ts` définit une liste complète d'exceptions sémantique
 
 **Exemples d'Exceptions :**
 
-| Classe | Code | Quand l'utiliser ? |
-| --- | --- | --- |
-| `ArgumentInvalidException` | `ARGUMENT_INVALID` | Un argument a un format incorrect. |
-| `ArgumentNotProvidedException`| `ARGUMENT_NOT_PROVIDED`| Un argument requis est `null` ou `undefined`. |
-| `NotFoundException` | `NOT_FOUND` | Une entité n'a pas pu être trouvée dans la base de données. |
-| `ConflictException` | `CONFLICT` | Une tentative de création d'une ressource qui existe déjà. |
-| `IllegalStateException` | `ILLEGAL_DOMAIN_STATUS` | Une action est tentée sur un objet qui n'est pas dans le bon état (ex: modifier une commande annulée). |
-| `InfraMapToDomainError` | `INFRA_MAP_FAILED` | Le mapping entre un DTO de persistance et une entité de domaine a échoué. |
+| Classe                         | Code                    | Quand l'utiliser ?                                                                                     |
+| ------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------ |
+| `ArgumentInvalidException`     | `ARGUMENT_INVALID`      | Un argument a un format incorrect.                                                                     |
+| `ArgumentNotProvidedException` | `ARGUMENT_NOT_PROVIDED` | Un argument requis est `null` ou `undefined`.                                                          |
+| `NotFoundException`            | `NOT_FOUND`             | Une entité n'a pas pu être trouvée dans la base de données.                                            |
+| `ConflictException`            | `CONFLICT`              | Une tentative de création d'une ressource qui existe déjà.                                             |
+| `IllegalStateException`        | `ILLEGAL_DOMAIN_STATUS` | Une action est tentée sur un objet qui n'est pas dans le bon état (ex: modifier une commande annulée). |
+| `InfraMapToDomainError`        | `INFRA_MAP_FAILED`      | Le mapping entre un DTO de persistance et une entité de domaine a échoué.                              |
 
 ## 4. Le Pont entre Exceptions et `Result` : `handleError`
 
@@ -101,4 +102,5 @@ export class Email extends ValueObject<string> {
   }
 }
 ```
+
 Cette stratégie combine la puissance des exceptions pour la validation interne avec la sécurité et la clarté de l'objet `Result` pour les API publiques du domaine.

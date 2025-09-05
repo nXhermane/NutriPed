@@ -10,26 +10,26 @@ Chaque Value Object encapsule ses propres règles de validation, s'assurant que 
 
 ## 2. Liste des Value Objects Partagés
 
-| Classe | Description | Type de Donnée |
-| --- | --- | --- |
-| `Address` | Représente une adresse physique. | `string` |
-| `BirthDay` | Représente une date de naissance, avec des validations spécifiques. | `string` (date) |
-| `Condition` | Représente une condition (règle) avec un champ, un opérateur et une valeur. | `{ field, operator, value }` |
-| `Contact` | Représente des informations de contact (email, téléphone). | `{ email, phone }` |
-| `Criterion` | Représente un critère de décision ou de filtrage. | `{ name, value, operator }` |
-| `Date` | Représente une date (jour, mois, année). | `Date` (objet natif) |
-| `DateFrame` | Représente une période avec une date de début et de fin. | `{ start, end }` |
-| `DateTime` | Représente une date et une heure. | `string` (datetime) |
-| `DomainDateTime`| Représente une date et une heure avec une logique de domaine riche. | `Date` (objet natif) |
-| `Duration` | Représente une durée (ex: 7 jours). | `{ type, value }` |
-| `Email` | Représente une adresse email et valide son format. | `string` |
-| `Formula` | Représente une formule mathématique ou logique. | `string` |
-| `FullName` | Représente un nom complet et permet d'en extraire le prénom/nom. | `string` |
-| `Gender` | Représente le genre (ex: 'Male', 'Female'). | `string` |
-| `PhoneNumber` | Représente un numéro de téléphone et valide son format. | `string` |
-| `SystemCode` | Représente un code système standardisé. | `string` |
-| `Time` | Représente une heure (heures, minutes). | `string` |
-| `UnitCode` | Représente un code d'unité de mesure (ex: 'kg', 'cm'). | `string` |
+| Classe           | Description                                                                 | Type de Donnée               |
+| ---------------- | --------------------------------------------------------------------------- | ---------------------------- |
+| `Address`        | Représente une adresse physique.                                            | `string`                     |
+| `BirthDay`       | Représente une date de naissance, avec des validations spécifiques.         | `string` (date)              |
+| `Condition`      | Représente une condition (règle) avec un champ, un opérateur et une valeur. | `{ field, operator, value }` |
+| `Contact`        | Représente des informations de contact (email, téléphone).                  | `{ email, phone }`           |
+| `Criterion`      | Représente un critère de décision ou de filtrage.                           | `{ name, value, operator }`  |
+| `Date`           | Représente une date (jour, mois, année).                                    | `Date` (objet natif)         |
+| `DateFrame`      | Représente une période avec une date de début et de fin.                    | `{ start, end }`             |
+| `DateTime`       | Représente une date et une heure.                                           | `string` (datetime)          |
+| `DomainDateTime` | Représente une date et une heure avec une logique de domaine riche.         | `Date` (objet natif)         |
+| `Duration`       | Représente une durée (ex: 7 jours).                                         | `{ type, value }`            |
+| `Email`          | Représente une adresse email et valide son format.                          | `string`                     |
+| `Formula`        | Représente une formule mathématique ou logique.                             | `string`                     |
+| `FullName`       | Représente un nom complet et permet d'en extraire le prénom/nom.            | `string`                     |
+| `Gender`         | Représente le genre (ex: 'Male', 'Female').                                 | `string`                     |
+| `PhoneNumber`    | Représente un numéro de téléphone et valide son format.                     | `string`                     |
+| `SystemCode`     | Représente un code système standardisé.                                     | `string`                     |
+| `Time`           | Représente une heure (heures, minutes).                                     | `string`                     |
+| `UnitCode`       | Représente un code d'unité de mesure (ex: 'kg', 'cm').                      | `string`                     |
 
 ## 3. Exemples Détaillés
 
@@ -40,6 +40,7 @@ Voici le code source de deux de ces Value Objects pour illustrer comment ils son
 `Email.ts` est un exemple parfait de Value Object qui encapsule une seule valeur (`string`) et lui ajoute une logique de validation.
 
 **Fichier Source:** `core/shared/domain/shared/valueObjects/Email.ts`
+
 ```typescript
 import { ValueObject, ValueObjectProps } from "./../../common";
 import { InvalidArgumentFormatError, handleError } from "./../../../exceptions";
@@ -73,6 +74,7 @@ export class Email extends ValueObject<string> {
   }
 }
 ```
+
 **Logique clé :** La méthode `validate` utilise une expression régulière pour s'assurer que la chaîne de caractères fournie correspond bien à un format d'email valide avant de permettre la création de l'objet.
 
 ---
@@ -82,6 +84,7 @@ export class Email extends ValueObject<string> {
 `FullName.ts` montre comment un Value Object peut non seulement valider des données, mais aussi encapsuler une logique métier utile. Il est stocké comme une seule chaîne, mais fournit des `getters` pour accéder facilement au prénom et au nom de famille.
 
 **Fichier Source:** `core/shared/domain/shared/valueObjects/FullName.ts`
+
 ```typescript
 import { ValueObject } from "../../common";
 import { Guard, Result } from "../../../core";
@@ -126,4 +129,5 @@ export class FullName extends ValueObject<string> {
   }
 }
 ```
+
 **Logique clé :** Les `getters` `lastName` et `firstName` contiennent la logique pour découper la chaîne de caractères du nom complet. Si cette logique devait changer (par exemple, pour gérer les noms composés), la modification ne devrait être faite qu'à un seul endroit : à l'intérieur de ce Value Object.

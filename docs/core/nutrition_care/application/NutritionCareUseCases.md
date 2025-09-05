@@ -37,18 +37,22 @@ Ces cas d'utilisation gèrent le cycle de vie de l'agrégat principal [PatientCa
 Ces cas d'utilisation fournissent une logique plus spécifique liée aux différents aspects du plan de soins.
 
 ### `medicines/`
+
 - **`GetMedicineDosage`**
   - **Objectif :** Calculer le dosage correct d'un médicament en fonction des caractéristiques du patient (poids, âge).
 
 ### `milk/`
+
 - **`SuggestMilk`**
   - **Objectif :** Suggérer le type de lait thérapeutique (ex: F-75, F-100) et le volume à administrer, en se basant sur la phase de soins actuelle et l'état du patient.
 
 ### `appetiteTest/`
+
 - **`EvaluateAppetite`**
   - **Objectif :** Analyser les résultats d'un test d'appétit pour déterminer si le patient peut passer à la phase de soins suivante.
 
 ### `orientations/`
+
 - **`Orient`**
   - **Objectif :** Similaire à `OrientPatient`, mais peut-être utilisé pour ré-orienter un patient en cours de traitement si son état change.
 

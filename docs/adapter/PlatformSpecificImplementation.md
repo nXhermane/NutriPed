@@ -5,6 +5,7 @@
 Ce projet est conçu pour fonctionner sur plusieurs plateformes, principalement **native** (via Expo pour iOS et Android) et **web**. Cependant, certaines fonctionnalités de bas niveau, en particulier celles qui interagissent avec le système d'exploitation ou le matériel, nécessitent des implémentations différentes pour chaque plateforme.
 
 Par exemple :
+
 - **Persistance des données :** L'application native utilise **Expo SQLite**, tandis que l'application web pourrait utiliser **IndexedDB**.
 - **Authentification :** Le flux d'authentification Google est différent pour une application native et une application web.
 - **Notifications :** Les API pour les notifications push sont spécifiques à chaque plateforme.
@@ -23,6 +24,7 @@ Lorsqu'un service ou un composant nécessite des implémentations différentes, 
 ### Exemple avec le `DatabaseEngine`
 
 Le service [DatabaseEngine](./services/DatabaseEngine.md) est un parfait exemple :
+
 - `IDatabaseEngine.ts`: L'interface (le contrat), qui est agnostique de la plateforme.
 - `engine.native.ts`: L'implémentation qui utilise `expo-sqlite`.
 - `engine.web.ts`: (Hypothétique) Une implémentation qui utiliserait `IndexedDB`.
@@ -35,12 +37,12 @@ Le fichier central (`engine.ts` dans notre exemple) est généralement très sim
 ```typescript
 // Exemple conceptuel de engine.ts
 
-import { Platform } from 'react-native';
-import NativeEngine from './engine.native';
-import WebEngine from './engine.web';
+import { Platform } from "react-native";
+import NativeEngine from "./engine.native";
+import WebEngine from "./engine.web";
 
 // On exporte la classe appropriée en fonction de la plateforme
-const DatabaseEngine = Platform.OS === 'web' ? WebEngine : NativeEngine;
+const DatabaseEngine = Platform.OS === "web" ? WebEngine : NativeEngine;
 
 export default DatabaseEngine;
 ```

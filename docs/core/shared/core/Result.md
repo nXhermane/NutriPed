@@ -11,6 +11,7 @@ Ce fichier fournit deux patrons de conception pour la gestion des opérations qu
 ### 1.1. Comment ça marche ?
 
 Un objet `Result` a deux états possibles :
+
 - `isSuccess = true` et `isFailure = false`
 - `isSuccess = false` et `isFailure = true`
 
@@ -21,6 +22,7 @@ Plutôt que de faire un `return` ou de `throw new Error()`, une méthode retourn
 La création se fait via deux méthodes statiques :
 
 - **`Result.ok<U>(value?: U): Result<U>`** : Crée un `Result` de succès.
+
   ```typescript
   // Retourne un Result<number> en cas de succès
   function divide(a: number, b: number): Result<number> {
@@ -85,6 +87,7 @@ if (result.isFailure) {
 ## 2. Le Type `Either<L, R>`
 
 `Either` est un type issu de la programmation fonctionnelle. Il représente une valeur qui peut être de l'un des deux types possibles : `Left` ou `Right`. Par convention :
+
 - **`Right`** est utilisé pour le cas de succès.
 - **`Left`** est utilisé pour le cas d'erreur.
 
@@ -101,7 +104,7 @@ C'est une alternative à `Result`, souvent considérée comme plus pure d'un poi
 La création se fait via les fonctions `left` et `right`.
 
 ```typescript
-import { Either, left, right } from '@core/shared/core';
+import { Either, left, right } from "@core/shared/core";
 
 function parseJson(input: string): Either<Error, object> {
   try {
@@ -124,4 +127,5 @@ if (result.isLeft()) {
   console.error(result.value.message);
 }
 ```
+
 Les méthodes `isRight()` et `isLeft()` sont des "type guards" qui permettent à TypeScript de savoir quel type se trouve dans `result.value`.

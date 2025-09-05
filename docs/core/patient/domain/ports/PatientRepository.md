@@ -4,7 +4,7 @@
 
 ## 1. Vue d'Ensemble
 
-L'interface `PatientRepository` définit le **contrat** (le "Port" en architecture hexagonale) pour la persistance des agrégats [Patient](../aggregates/Patient.md). Elle décrit toutes les opérations de lecture et d'écriture que la couche applicative peut effectuer sur les entités `Patient`, sans spécifier *comment* ces opérations sont réalisées.
+L'interface `PatientRepository` définit le **contrat** (le "Port" en architecture hexagonale) pour la persistance des agrégats [Patient](../aggregates/Patient.md). Elle décrit toutes les opérations de lecture et d'écriture que la couche applicative peut effectuer sur les entités `Patient`, sans spécifier _comment_ ces opérations sont réalisées.
 
 Le fait de définir cette interface dans le domaine permet de respecter le **Principe d'Inversion des Dépendances** : le domaine ne dépend pas de l'infrastructure ; c'est l'infrastructure qui dépendra de cette interface définie par le domaine.
 

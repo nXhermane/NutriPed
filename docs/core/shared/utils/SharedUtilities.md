@@ -41,7 +41,7 @@ C'est un outil très puissant pour le domaine médical de l'application, car il 
 - **`evaluateCondition(condition: string, obj?: object): any`**
   Évalue une expression (la `condition`). Le paramètre `obj` est un objet clé-valeur fournissant les variables à utiliser dans l'expression.
 
-  *Exemple :* `evaluateCondition("age > 5 && weight < 20", { age: 6, weight: 18 })` retournerait `true`.
+  _Exemple :_ `evaluateCondition("age > 5 && weight < 20", { age: 6, weight: 18 })` retournerait `true`.
 
 - **`catchEvaluationError(callback: () => any): object`**
   Une fonction de plus haut niveau qui exécute un appel à `evaluateCondition` dans un bloc `try...catch` et retourne un objet de résultat structuré, permettant de gérer les erreurs de syntaxe dans la formule ou les variables manquantes.

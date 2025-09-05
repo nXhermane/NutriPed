@@ -5,6 +5,7 @@
 La couche de présentation est responsable de tout ce que l'utilisateur voit et avec quoi il interagit. Elle est construite en utilisant **React Native** et est structurée autour de trois répertoires principaux : `app`, `components`, et `src`.
 
 Son rôle est de :
+
 - Afficher les données à l'utilisateur.
 - Capturer les entrées de l'utilisateur.
 - Appeler les [Cas d'Utilisation](../../core/shared/application/UseCase.md) appropriés pour déclencher la logique métier.
@@ -17,6 +18,7 @@ Son rôle est de :
 L'application utilise **Expo Router** pour gérer la navigation. Il s'agit d'un système de routage basé sur le système de fichiers : la structure des dossiers et des fichiers à l'intérieur du répertoire `app/` définit directement les routes de l'application.
 
 ### Conventions de Nommage :
+
 - **`index.tsx`**: Fichier qui correspond à la route de base d'un répertoire. Par exemple, `app/home/index.tsx` est l'écran pour la route `/home`.
 - **`_layout.tsx`**: Un fichier spécial qui définit une mise en page partagée pour toutes les routes d'un même répertoire. Il est souvent utilisé pour ajouter un en-tête, un pied de page, ou une barre d'onglets.
 - **Groupes de Routes `(dossier)/`**: Les dossiers entourés de parenthèses (ex: `(screens)`) permettent d'organiser les routes et de leur appliquer une mise en page commune via un `_layout.tsx`, sans que le nom du dossier n'apparaisse dans l'URL.

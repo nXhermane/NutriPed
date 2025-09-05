@@ -22,25 +22,31 @@ Pour fonctionner, la classe de base a besoin de plusieurs dépendances injectée
 ## 3. Implémentation des Méthodes du Repository
 
 ### `save(entity)`
+
 Implémente une logique de **"upsert"** :
+
 1.  Utilise la méthode protégée `_exist()` pour vérifier si une entité avec le même ID existe déjà.
 2.  Si elle n'existe pas, elle effectue une requête `db.insert(...)`.
 3.  Si elle existe, elle effectue une requête `db.update(...)`.
 4.  **Publication d'événements :** Après la sauvegarde, si l'entité est une `AggregateRoot`, elle récupère les événements de domaine en attente (`entity.getDomainEvents()`) et les publie immédiatement sur l'event bus.
 
 ### `getById(id)`
+
 1.  Utilise `db.select().from(this.table).where(eq(this.table.id, id))` pour trouver l'enregistrement.
 2.  Si aucun enregistrement n'est trouvé, elle lève une `RepositoryNotFoundError`.
 3.  Si un enregistrement est trouvé, elle utilise le `mapper` pour le convertir en une entité de domaine (`this.mapper.toDomain(...)`) avant de la retourner.
 
 ### `getAll()`
+
 1.  Utilise `db.select().from(this.table).all()` pour récupérer tous les enregistrements de la table.
 2.  Elle mappe ensuite chaque enregistrement de persistance en une entité de domaine.
 
 ### `delete(id)`
+
 1.  Utilise `db.delete(this.table).where(eq(this.table.id, id))` pour supprimer l'enregistrement.
 
 ### `remove(entity)`
+
 1.  Appelle `this.delete(entity.id)`.
 2.  **Publication d'événements :** Publie les événements de domaine de l'agrégat (par exemple, un `PatientDeletedEvent`) après la suppression.
 
@@ -74,4 +80,5 @@ export class PatientRepositoryExpoImpl
   // Les méthodes getAll, save, getById, delete sont héritées directement !
 }
 ```
+
 Ce patron de conception réduit considérablement le code répétitif et garantit que tous les repositories de l'application suivent une approche cohérente et robuste pour la persistance des données et la publication d'événements.

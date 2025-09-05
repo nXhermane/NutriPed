@@ -7,6 +7,7 @@
 Le patron de conception **Factory** (Fabrique) est utilisé en Domain-Driven Design pour encapsuler la logique de création d'objets, en particulier des objets complexes comme les [Entities](./Entity.md) et les [Aggregate Roots](./AggregateRoot.md).
 
 L'objectif est de séparer la responsabilité de la création d'un objet de l'objet lui-même. C'est utile lorsque :
+
 - Le processus de création est complexe et ne se résume pas à un simple appel de constructeur.
 - La création nécessite des dépendances que l'on ne souhaite pas injecter dans l'objet de domaine lui-même (par exemple, un service pour générer un ID unique, ou un repository pour vérifier une condition).
 - On veut s'assurer que l'objet est toujours créé dans un état cohérent et valide.
@@ -27,8 +28,8 @@ export interface Factory<
 ```
 
 - **`Factory<Props, T>`** : L'interface est générique avec deux types :
-    - `Props` : Le type des données nécessaires à la création de l'objet.
-    - `T` : Le type de l'`Entity` qui sera retournée par la fabrique.
+  - `Props` : Le type des données nécessaires à la création de l'objet.
+  - `T` : Le type de l'`Entity` qui sera retournée par la fabrique.
 
 - **`create(props: Props)`** : La seule méthode de l'interface. Elle prend les `props` en argument et retourne le résultat de la création.
 
@@ -52,7 +53,9 @@ interface IUserRepository {
 }
 
 // L'entité User
-class User extends AggregateRoot<UserProps> { /* ... */ }
+class User extends AggregateRoot<UserProps> {
+  /* ... */
+}
 
 // La Factory concrète qui implémente l'interface
 class UserFactory implements Factory<UserProps, User> {
@@ -72,8 +75,8 @@ class UserFactory implements Factory<UserProps, User> {
 
     // 3. Créer l'entité (par exemple, via une méthode statique)
     const user = User.create({
-        id: generateNewId(), // On pourrait aussi utiliser un service pour ça
-        props: props,
+      id: generateNewId(), // On pourrait aussi utiliser un service pour ça
+      props: props,
     });
 
     // 4. Retourner un succès explicite
@@ -83,6 +86,7 @@ class UserFactory implements Factory<UserProps, User> {
 ```
 
 Dans cet exemple :
+
 - La complexité de la vérification de l'email est sortie de l'entité `User` elle-même.
 - La `UserFactory` orchestre la création, en utilisant des dépendances d'infrastructure (`IUserRepository`).
 - Le résultat est retourné de manière asynchrone et sécurisée grâce à `Promise<Result<User>>`.

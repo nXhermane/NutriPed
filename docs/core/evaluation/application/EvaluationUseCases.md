@@ -41,19 +41,26 @@ Ce sont les cas d'utilisation centraux qui gèrent le cycle de vie d'une évalua
 Chaque sous-domaine a ses propres cas d'utilisation pour gérer ses données spécifiques et effectuer des calculs intermédiaires.
 
 ### `anthropometric/`
+
 Contient les cas d'utilisation pour les calculs liés à l'anthropométrie.
+
 - **`CalculateGrowthIndicatorValue` :** Calcule la valeur d'un indicateur de croissance spécifique (ex: Poids/Taille) et son Z-Score.
 - **`NormalizeAnthropometricData` :** Valide et standardise les mesures anthropométriques brutes.
 
 ### `clinical/`
+
 Contient les cas d'utilisation pour l'analyse des signes cliniques.
+
 - **`MakeClinicalAnalysis` :** Analyse un ensemble de signes cliniques pour produire une interprétation (ex: "Signes de carence en vitamine A").
 
 ### `biological/`
+
 Contient les cas d'utilisation pour l'interprétation des données de laboratoire.
+
 - **`MakeBiologicalInterpretation` :** Compare les résultats des tests biologiques aux plages de référence pour déterminer s'ils sont normaux, bas ou élevés.
 
 ### `appetite_test/`
+
 - **`EvaluateAppetite` :** Détermine si un test d'appétit est réussi ou échoué en fonction de la quantité de nourriture consommée.
 
 ---

@@ -29,7 +29,7 @@ import { EntityUniqueID } from "./EntityUniqueId";
 export abstract class Entity<EntityProps> {
   private readonly _id: EntityUniqueID;
 
-  constructor({ id, /* ... */ }: CreateEntityProps<EntityProps>) {
+  constructor({ id /* ... */ }: CreateEntityProps<EntityProps>) {
     this._id = new EntityUniqueID(id);
     // ...
   }

@@ -21,11 +21,13 @@ Le fichier `DomainEvent.ts` agit comme une façade ou un point d'intégration ce
 Voici les principaux types et classes ré-exportés depuis `domain-eventrix` :
 
 ### `DomainEvent<Data>`
+
 C'est la classe de base que tous les événements de domaine concrets doivent étendre. Elle contient des métadonnées comme l'ID de l'événement, la date de création, etc. Le type générique `Data` représente la charge utile (payload) de l'événement.
 
 **Exemple d'un événement concret :**
+
 ```typescript
-import { DomainEvent } from '@core/shared/domain/events';
+import { DomainEvent } from "@core/shared/domain/events";
 
 // Définition de la charge utile de l'événement
 interface PatientCreatedData {
@@ -38,18 +40,24 @@ export class PatientCreatedEvent extends DomainEvent<PatientCreatedData> {}
 ```
 
 ### `EventHandler<Data, T>`
+
 C'est une interface qui définit un "gestionnaire" d'événement. C'est une classe qui contient la logique à exécuter en réponse à un événement.
 
 ### `bindEventHandler`
+
 Un décorateur (ou une fonction similaire) utilisé pour lier une classe `EventHandler` à un `DomainEvent` spécifique. C'est ce qui permet au système de savoir quel handler appeler pour quel événement.
 
 **Exemple d'un handler :**
+
 ```typescript
 @bindEventHandler(PatientCreatedEvent)
-export class SendWelcomeEmailOnPatientCreated implements EventHandler<PatientCreatedData, PatientCreatedEvent> {
-
+export class SendWelcomeEmailOnPatientCreated
+  implements EventHandler<PatientCreatedData, PatientCreatedEvent>
+{
   public handle(event: PatientCreatedEvent): void {
-    console.log(`Sending welcome email to patient ${event.data.name} (ID: ${event.data.patientId})`);
+    console.log(
+      `Sending welcome email to patient ${event.data.name} (ID: ${event.data.patientId})`
+    );
     // Logique d'envoi d'email...
   }
 }
@@ -68,6 +76,7 @@ export interface IEventBus {
 ```
 
 ### Méthodes principales de l'`IEventBus` :
+
 - `publish(event)` : Publie un événement sur le bus. L'événement n'est pas nécessairement traité immédiatement.
 - `publishAndDispatchImmediate(event)` : Publie un événement et demande son traitement immédiat et asynchrone.
 - `subscribe(handler)` : Abonne un `EventHandler` au bus pour qu'il puisse recevoir les événements auxquels il est lié.

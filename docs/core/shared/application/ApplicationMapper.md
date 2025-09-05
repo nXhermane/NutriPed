@@ -11,6 +11,7 @@ L'interface `ApplicationMapper` définit un contrat spécifique pour un type de 
 ## 2. Rôle et Objectif
 
 L'objectif principal de l'`ApplicationMapper` est de créer une "barrière" protectrice autour du domaine.
+
 - **Exposition Sélective :** Il permet de n'exposer que les données nécessaires à l'extérieur, en cachant les détails d'implémentation, l'état interne complexe et les méthodes de l'objet de domaine.
 - **Prévention des Fuites d'Abstraction :** Il empêche le modèle de domaine de "fuiter" dans les couches externes. L'interface utilisateur n'a pas besoin de connaître les `ValueObjects` ou les règles de validation complexes d'une entité.
 - **Formatage des Données :** Il peut être utilisé pour formater les données dans un format pratique pour l'affichage (par exemple, convertir un objet `Date` en une chaîne de caractères lisible).
@@ -27,9 +28,10 @@ export interface ApplicationMapper<
   toResponse(entity: DomainEntity): Dto;
 }
 ```
+
 - **`ApplicationMapper<DomainEntity, Dto>`** : L'interface est générique :
-    - `DomainEntity` : Le type de l'objet de domaine source (une `Entity` ou un `ValueObject`).
-    - `Dto` : Le type de l'objet de transfert de données (DTO) de destination.
+  - `DomainEntity` : Le type de l'objet de domaine source (une `Entity` ou un `ValueObject`).
+  - `Dto` : Le type de l'objet de transfert de données (DTO) de destination.
 
 - **`toResponse(entity: DomainEntity): Dto`** : La seule méthode de l'interface. Elle prend une instance de l'objet de domaine et retourne le DTO correspondant.
 
@@ -49,19 +51,22 @@ export interface PatientResponseDTO {
 
 // L'entité de domaine, avec sa logique et ses Value Objects
 export class Patient extends AggregateRoot<PatientProps> {
-  get name(): FullName { return this.props.name; }
-  get birthDate(): BirthDate { return this.props.birthDate; }
+  get name(): FullName {
+    return this.props.name;
+  }
+  get birthDate(): BirthDate {
+    return this.props.birthDate;
+  }
   // ... autres logiques
 }
 
-
 // L'implémentation du Mapper
-import { ApplicationMapper } from '@core/shared/application';
+import { ApplicationMapper } from "@core/shared/application";
 
-export class PatientMapper implements ApplicationMapper<Patient, PatientResponseDTO> {
-
+export class PatientMapper
+  implements ApplicationMapper<Patient, PatientResponseDTO>
+{
   public toResponse(entity: Patient): PatientResponseDTO {
-
     // Calcule l'âge à partir de la date de naissance
     const ageInYears = entity.birthDate.calculateAgeInYears();
 
@@ -69,7 +74,7 @@ export class PatientMapper implements ApplicationMapper<Patient, PatientResponse
     const patientDto: PatientResponseDTO = {
       id: entity.id.toValue(),
       fullName: entity.name.fullName, // Extrait la valeur du ValueObject
-      age: ageInYears
+      age: ageInYears,
     };
 
     return patientDto;
@@ -78,6 +83,7 @@ export class PatientMapper implements ApplicationMapper<Patient, PatientResponse
 ```
 
 Dans cet exemple, le `PatientMapper` :
+
 - Prend une entité `Patient` complexe.
 - Appelle la logique de l'entité (`calculateAgeInYears`).
 - "Déballe" les `ValueObjects` (`entity.id.toValue()`, `entity.name.fullName`).
