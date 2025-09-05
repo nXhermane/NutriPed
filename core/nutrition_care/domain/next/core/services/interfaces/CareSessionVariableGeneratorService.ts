@@ -16,4 +16,15 @@ export interface ICareSessionVariableGeneratorService {
     currentCarePhase: CarePhase,
     targetDate: DomainDateTime
   ): Promise<Result<Record<string, number | string>>>;
+  /**
+   * @method generateActionGenerationContextVariables - Cette methode genere l'ensemble des variables dont le context de generation des actions quotidiennes auront besoins.
+   * @param patientId - l'identifiant unique du patient pour pouvoir identifier son dossier médicale.
+   * @param currentCarePhase - le plan de traitement en cours (ou la phase de traitement en cours).
+   * @param targetDate - c'est la date pour lequel nous voulons générer le context
+   */
+  generateActionGenerationContextVariables(
+    patientId: AggregateID,
+    currentCarePhase: CarePhase,
+    targetDate: DomainDateTime
+  ): Promise<Result<Record<string, number | string>>>;
 }

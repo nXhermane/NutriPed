@@ -141,7 +141,40 @@ export class CareSessionVariableGeneratorService
       return handleError(e);
     }
   }
-
+  async generateActionGenerationContextVariables(
+    patientId: AggregateID,
+    currentCarePhase: CarePhase,
+    targetDate: DomainDateTime
+  ): Promise<Result<Record<string, number | string>>> {
+    try {
+      const dynamicVariablesRes = this.generateDynamicCareSessionVariable(
+        currentCarePhase,
+        targetDate
+      );
+      const admissionAndCurrentDayRes =
+        await this.generateAdmissionAndCurrentDayVariable(
+          patientId,
+          currentCarePhase.getProps().startDate,
+          targetDate
+        );
+      const combinedRes = Result.combine([
+        dynamicVariablesRes,
+        admissionAndCurrentDayRes,
+      ]);
+      if (combinedRes.isFailure) {
+        return Result.fail(
+          formatError(combinedRes, CareSessionVariableGeneratorService.name)
+        );
+      }
+      const combinedVariables = {
+        ...dynamicVariablesRes.val,
+        ...admissionAndCurrentDayRes.val,
+      };
+      return Result.ok(combinedVariables);
+    } catch (e) {
+      return handleError(e);
+    }
+  }
   private async generateComputedVariables(
     carePhase: CarePhase,
     context: Record<string, string | number>
