@@ -110,7 +110,7 @@ export class Reminder extends AggregateRoot<IReminder> {
   }
 
   public removeAction(action: ReminderAction): void {
-    this.props.actions = this.props.actions.filter(a => a !== action);
+    this.props.actions = this.props.actions.filter(a => a.unpack().description !== action.unpack().description);
   }
 
   public changeActions(actions: ReminderAction[]): void {
