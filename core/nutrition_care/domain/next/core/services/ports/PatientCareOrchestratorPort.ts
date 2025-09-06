@@ -1,6 +1,6 @@
 import { AggregateID, DomainDateTime, GenerateUniqueId } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { DailyMonitoringTask, DailyCareAction, PatientCareSession, UserResponse, DailyCareRecord, DailyCareRecordStatus } from "../../models";
+import { DailyMonitoringTask, DailyCareAction, PatientCareSession, UserResponse, DailyCareRecord, DailyCareRecordStatus, Message } from "../../models";
 import { IPatientCareOrchestratorPort } from "../../ports/primary/IPatientCareOrchestratorPort";
 import { IPatientCareOrchestratorService, OrchestratorOperation, OrchestratorResult } from "../interfaces";
 import { PatientCareSessionRepository } from "../../ports";
@@ -148,7 +148,7 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
     });
   }
 
-  async getPendingMessages(sessionId: AggregateID): Promise<any[]> {
+  async getPendingMessages(sessionId: AggregateID): Promise<Message[]> {
     const session = await this.getPatientCareSession(sessionId);
     return session.getPendingMessages();
   }
@@ -175,14 +175,15 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
     }
 
     return {
-      session,
-      currentRecord,
+      session,// ceci n'est pas important n'on plus
+      currentRecord,// ceic n'est pas important 
       pendingItems,
       completionStatus,
       nextActions: this.determineNextActions(session)
     };
   }
 
+  // TODO:Eliminer cette methode plus tard 
   async getSessionHistory(
     sessionId: AggregateID,
     limit: number = 10

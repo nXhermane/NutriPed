@@ -24,7 +24,6 @@ export class CreatePatientCareSessionUseCase
       const session = await this.orchestratorPort.initializePatientCareSession(
         request.patientId,
         request.phaseCode,
-        request.patientVariables
       );
 
       return right(Result.ok({ sessionId: session.id }));
