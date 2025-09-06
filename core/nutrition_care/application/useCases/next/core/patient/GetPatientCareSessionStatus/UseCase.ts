@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,28 +7,33 @@ import {
 } from "@shared";
 import { GetPatientCareSessionStatusRequest } from "./Request";
 import { GetPatientCareSessionStatusResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
-
+import { DailyCareAction } from "@/core/nutrition_care/domain/next";
+import { NextCore } from "@/core/nutrition_care/domain";
 export class GetPatientCareSessionStatusUseCase
   implements
-    UseCase<GetPatientCareSessionStatusRequest, GetPatientCareSessionStatusResponse>
-{
+  UseCase<GetPatientCareSessionStatusRequest, GetPatientCareSessionStatusResponse> {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
-  ) {}
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
+  ) { }
 
   async execute(
     request: GetPatientCareSessionStatusRequest
   ): Promise<GetPatientCareSessionStatusResponse> {
     try {
-      const status = await this.orchestratorPort.getSessionStatus(request.sessionId);
+      const statusRes = await this.orchestratorPort.getSessionStatus(request.sessionId);
+      if (statusRes.isFailure) {
+        return left(statusRes);
+      }
+      const status = statusRes.val;
 
       return right(Result.ok({
         sessionId: request.sessionId,
         completionStatus: status.completionStatus,
-        pendingItems: status.pendingItems,
-        nextActions: status.nextActions?.map(action => action.toString()),
-        currentRecord: status.currentRecord
+        pendingItems: status.pendingItems?.map(item => ({
+          id: item.id,
+          type: item instanceof DailyCareAction ? 'action' : 'task'
+        })) || [],
+        nextActions: status.nextActions || []
       }));
     } catch (e: unknown) {
       return left(handleError(e));

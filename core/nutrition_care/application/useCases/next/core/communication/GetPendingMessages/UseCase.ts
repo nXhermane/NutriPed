@@ -1,5 +1,5 @@
 import {
-  AggregateID,
+  ApplicationMapper,
   handleError,
   left,
   Result,
@@ -8,22 +8,26 @@ import {
 } from "@shared";
 import { GetPendingMessagesRequest } from "./Request";
 import { GetPendingMessagesResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
+import { MessageDto } from "@/core/nutrition_care/application/dtos/next/core";
 
 export class GetPendingMessagesUseCase
   implements
-    UseCase<GetPendingMessagesRequest, GetPendingMessagesResponse>
-{
+  UseCase<GetPendingMessagesRequest, GetPendingMessagesResponse> {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
-  ) {}
+    private readonly messageMapper: ApplicationMapper<NextCore.Message, MessageDto>,
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
+  ) { }
 
   async execute(
     request: GetPendingMessagesRequest
   ): Promise<GetPendingMessagesResponse> {
     try {
-      const messages = await this.orchestratorPort.getPendingMessages(request.sessionId);
-
+      const messageRes = await this.orchestratorPort.getPendingMessages(request.sessionId);
+      if (messageRes.isFailure) {
+        return left(messageRes);
+      }
+      const messages = messageRes.val.map(message => this.messageMapper.toResponse(message));
       return right(Result.ok({
         sessionId: request.sessionId,
         messages,

@@ -22,11 +22,14 @@ export class CompleteTaskUseCase
     request: CompleteTaskRequest
   ): Promise<CompleteTaskResponse> {
     try {
-      const result = await this.orchestratorPort.completeTask(
+      const resultRes = await this.orchestratorPort.completeTask(
         request.sessionId,
         request.taskId
       );
-
+      if(resultRes.isFailure) {
+        return left(resultRes);
+      }
+      const result = resultRes.val;
       return right(Result.ok({
         sessionId: request.sessionId,
         taskId: request.taskId,

@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,22 +7,25 @@ import {
 } from "@shared";
 import { MarkRecordIncompleteRequest } from "./Request";
 import { MarkRecordIncompleteResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export class MarkRecordIncompleteUseCase
   implements
     UseCase<MarkRecordIncompleteRequest, MarkRecordIncompleteResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: MarkRecordIncompleteRequest
   ): Promise<MarkRecordIncompleteResponse> {
     try {
-      const result = await this.orchestratorPort.markRecordIncomplete(request.sessionId);
-
+      const resultRes = await this.orchestratorPort.markRecordIncomplete(request.sessionId);
+      if(resultRes.isFailure) {
+        return left(resultRes);
+      }
+      const result = resultRes.val;
       return right(Result.ok({
         sessionId: request.sessionId,
         success: result.success,

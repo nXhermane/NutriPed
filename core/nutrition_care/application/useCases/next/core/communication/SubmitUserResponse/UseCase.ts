@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,26 +7,30 @@ import {
 } from "@shared";
 import { SubmitUserResponseRequest } from "./Request";
 import { SubmitUserResponseResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export class SubmitUserResponseUseCase
   implements
     UseCase<SubmitUserResponseRequest, SubmitUserResponseResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: SubmitUserResponseRequest
   ): Promise<SubmitUserResponseResponse> {
     try {
-      const result = await this.orchestratorPort.handleUserResponse(
+      const resultRes = await this.orchestratorPort.handleUserResponse(
         request.sessionId,
         request.messageId,
         request.response,
         request.decisionData
       );
+      if(resultRes.isFailure) {
+        return left(resultRes)
+      }
+      const result = resultRes.val;
 
       return right(Result.ok({
         sessionId: request.sessionId,

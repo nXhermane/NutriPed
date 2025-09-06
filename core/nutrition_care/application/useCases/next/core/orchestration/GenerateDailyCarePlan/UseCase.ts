@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,31 +7,36 @@ import {
 } from "@shared";
 import { GenerateDailyCarePlanRequest } from "./Request";
 import { GenerateDailyCarePlanResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
-import { OrchestratorOperation } from "../../../../../../domain/next/core/services/interfaces";
 import { DomainDateTime } from "@shared";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export class GenerateDailyCarePlanUseCase
   implements
     UseCase<GenerateDailyCarePlanRequest, GenerateDailyCarePlanResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: GenerateDailyCarePlanRequest
   ): Promise<GenerateDailyCarePlanResponse> {
     try {
-      const session = await this.orchestratorPort.getPatientCareSession(request.sessionId);
-
-      const result = await this.orchestratorPort.orchestrate(
-        session,
-        OrchestratorOperation.GENERATE_DAILY_PLAN,
+      const sessionRes = await this.orchestratorPort.getPatientCareSession(request.sessionId);
+      if(sessionRes.isFailure) {
+        return left(sessionRes);
+      }
+      const resultRes = await this.orchestratorPort.orchestrate(
+        sessionRes.val,
+        NextCore.OrchestratorOperation.GENERATE_DAILY_PLAN,
         {
           targetDate: request.targetDate ? DomainDateTime.create(request.targetDate).val : undefined
         }
       );
+      if(resultRes.isFailure) {
+        return left(resultRes);
+      }
+      const result = resultRes.val;
 
       return right(Result.ok({
         sessionId: request.sessionId,

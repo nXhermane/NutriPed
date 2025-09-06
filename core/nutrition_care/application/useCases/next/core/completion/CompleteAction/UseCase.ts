@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,25 +7,29 @@ import {
 } from "@shared";
 import { CompleteActionRequest } from "./Request";
 import { CompleteActionResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
+
 
 export class CompleteActionUseCase
   implements
     UseCase<CompleteActionRequest, CompleteActionResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: CompleteActionRequest
   ): Promise<CompleteActionResponse> {
     try {
-      const result = await this.orchestratorPort.completeAction(
+      const resultRes = await this.orchestratorPort.completeAction(
         request.sessionId,
         request.actionId
       );
-
+      if(resultRes.isFailure) {
+        return left(resultRes)
+      }
+      const result = resultRes.val;
       return right(Result.ok({
         sessionId: request.sessionId,
         actionId: request.actionId,

@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,31 +7,32 @@ import {
 } from "@shared";
 import { SynchronizePatientStateRequest } from "./Request";
 import { SynchronizePatientStateResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
-import { OrchestratorOperation } from "../../../../../../domain/next/core/services/interfaces";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export class SynchronizePatientStateUseCase
   implements
     UseCase<SynchronizePatientStateRequest, SynchronizePatientStateResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: SynchronizePatientStateRequest
   ): Promise<SynchronizePatientStateResponse> {
     try {
-      const session = await this.orchestratorPort.getPatientCareSession(request.sessionId);
-
-      const result = await this.orchestratorPort.orchestrate(
-        session,
-        OrchestratorOperation.SYNCHRONIZE_STATE,
+      const sessionRes = await this.orchestratorPort.getPatientCareSession(request.sessionId);
+      if(sessionRes.isFailure) {
+        return left(sessionRes);
+      }
+      const resultRes = await this.orchestratorPort.orchestrate(
+        sessionRes.val,
+        NextCore.OrchestratorOperation.SYNCHRONIZE_STATE,
         {
           patientVariables: request.patientVariables
         }
       );
-
+      const result = resultRes.val;
       return right(Result.ok({
         sessionId: request.sessionId,
         success: result.success,

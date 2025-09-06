@@ -7,26 +7,30 @@ import {
 } from "@shared";
 import { CreatePatientCareSessionRequest } from "./Request";
 import { CreatePatientCareSessionResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
+
 
 export class CreatePatientCareSessionUseCase
   implements
     UseCase<CreatePatientCareSessionRequest, CreatePatientCareSessionResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort:NextCore. IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: CreatePatientCareSessionRequest
   ): Promise<CreatePatientCareSessionResponse> {
     try {
-      const session = await this.orchestratorPort.initializePatientCareSession(
+      const sessionRes = await this.orchestratorPort.initializePatientCareSession(
         request.patientId,
         request.phaseCode,
       );
+      if(sessionRes.isFailure) {
+        return left(sessionRes);
+      }
 
-      return right(Result.ok({ sessionId: session.id }));
+      return right(Result.ok({ sessionId: sessionRes.val.id }));
     } catch (e: unknown) {
       return left(handleError(e));
     }

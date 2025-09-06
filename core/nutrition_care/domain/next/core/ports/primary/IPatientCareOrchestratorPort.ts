@@ -1,6 +1,6 @@
 import { AggregateID, Result } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { Message, PatientCareSession } from "../../models";
+import { DailyMonitoringTask, DailyCareAction, DailyCareRecord, DailyCareRecordStatus, Message, PatientCareSession } from "../../models";
 import { ContinuousEvaluationContext, OrchestratorContext, OrchestratorOperation, OrchestratorResult } from "../../services";
 
 /**
@@ -161,9 +161,9 @@ export interface IPatientCareOrchestratorPort {
    */
   getSessionStatus(sessionId: AggregateID): Promise<Result<{
     session: PatientCareSession;
-    currentRecord?: any;
-    pendingItems?: any[];
-    completionStatus?: string;
+    currentRecord: DailyCareRecord | null;
+    pendingItems?: (DailyCareAction | DailyMonitoringTask)[];
+    completionStatus?: DailyCareRecordStatus;
     nextActions?: OrchestratorOperation[];
   }>>;
 }

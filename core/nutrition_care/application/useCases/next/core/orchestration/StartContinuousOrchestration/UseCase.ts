@@ -1,5 +1,4 @@
 import {
-  AggregateID,
   handleError,
   left,
   Result,
@@ -8,29 +7,33 @@ import {
 } from "@shared";
 import { StartContinuousOrchestrationRequest } from "./Request";
 import { StartContinuousOrchestrationResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
+
 
 export class StartContinuousOrchestrationUseCase
   implements
     UseCase<StartContinuousOrchestrationRequest, StartContinuousOrchestrationResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(
     request: StartContinuousOrchestrationRequest
   ): Promise<StartContinuousOrchestrationResponse> {
     try {
-      const session = await this.orchestratorPort.getPatientCareSession(request.sessionId);
-
-      const result = await this.orchestratorPort.orchestrateWithContinuousEvaluation(
-        session,
+      const sessionRes = await this.orchestratorPort.getPatientCareSession(request.sessionId);
+     if(sessionRes.isFailure) {
+      return left(sessionRes);
+     }
+      const resultRes = await this.orchestratorPort.orchestrateWithContinuousEvaluation(
+        sessionRes.val,
         {
           patientVariables: request.patientVariables,
           maxIterations: request.maxIterations
         }
       );
+      const result = resultRes.val;
 
       return right(Result.ok({
         sessionId: request.sessionId,
