@@ -37,22 +37,22 @@ export class UpdateOrientationReferenceUseCase
     try {
       const orientationRef = await this.repo.getById(request.id);
 
-      if (request.name) {
-        orientationRef.changeName(request.name);
+      if (request.data.name) {
+        orientationRef.changeName(request.data.name);
       }
-      if (request.code) {
-        const codeRes = SystemCode.create(request.code);
+      if (request.data.code) {
+        const codeRes = SystemCode.create(request.data.code);
         if (codeRes.isFailure) return left(codeRes);
         orientationRef.changeCode(codeRes.val);
       }
-      if (request.criteria) {
-        const criterionRes = request.criteria.map(Criterion.create);
+      if (request.data.criteria) {
+        const criterionRes = request.data.criteria.map(Criterion.create);
         const combinedRes = Result.combine(criterionRes);
         if (combinedRes.isFailure) return left(combinedRes);
         orientationRef.changeCriteria(criterionRes.map(res => res.val));
       }
-      if (request.treatmentPhase) {
-        const treatmentPhaseRes = SystemCode.create(request.treatmentPhase);
+      if (request.data.treatmentPhase) {
+        const treatmentPhaseRes = SystemCode.create(request.data.treatmentPhase);
         if (treatmentPhaseRes.isFailure) return left(treatmentPhaseRes);
         orientationRef.changeTreatmentPhase(treatmentPhaseRes.val);
       }

@@ -1,4 +1,4 @@
-import { DomainDateTime, Result } from "@/core/shared";
+import { AggregateID, DomainDateTime, Result } from "@/core/shared";
 import { CarePhase, DailyCareRecord } from "../../models";
 
 export interface IDailyPlanGeneratorService {

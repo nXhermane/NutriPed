@@ -1,4 +1,5 @@
 export * from "./appetiteTest";
+export * from "./carePhase";
 export * from "./complication";
 export * from "./core";
 export * from "./medicines";

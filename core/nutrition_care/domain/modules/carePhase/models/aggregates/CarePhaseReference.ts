@@ -31,8 +31,8 @@ export interface ICarePhaseReference extends EntityPropsBaseType {
   followUpPlan: FollowUpAction[];
 }
 
-export class CarephaseReference extends AggregateRoot<ICarePhaseReference> {
-  getCode(): string {
+export class CarePhaseReference extends AggregateRoot<ICarePhaseReference> {
+  getCode(): CARE_PHASE_CODES {
     return this.props.code.unpack();
   }
   getName(): string {

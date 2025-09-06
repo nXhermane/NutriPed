@@ -11,7 +11,7 @@ import {
   SystemCode,
 } from "@/core/shared";
 import {
-  CarephaseReference,
+  CarePhaseReference,
   CreateFollowUpAction,
   CreateMonitoringElement,
   CreateRecommededTreatment,
@@ -35,12 +35,12 @@ export interface CreateCarePhaseReference extends EntityPropsBaseType {
 }
 
 export class CarePhaseReferenceFactory
-  implements Factory<CreateCarePhaseReference, CarephaseReference>
+  implements Factory<CreateCarePhaseReference, CarePhaseReference>
 {
   constructor(private readonly idGenerator: GenerateUniqueId) {}
   async create(
     props: CreateCarePhaseReference
-  ): Promise<Result<CarephaseReference>> {
+  ): Promise<Result<CarePhaseReference>> {
     try {
       const codeRes = SystemCode.create(props.code);
       const nextPhaseRes = SystemCode.create(props.nextPhase);
@@ -84,7 +84,7 @@ export class CarePhaseReferenceFactory
         );
       }
       return Result.ok(
-        new CarephaseReference({
+        new CarePhaseReference({
           id: this.idGenerator.generate().toValue(),
           props: {
             code: codeRes.val,

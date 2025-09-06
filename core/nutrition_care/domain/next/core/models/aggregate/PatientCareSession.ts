@@ -3,8 +3,10 @@ import {
   AggregateID,
   AggregateRoot,
   ArgumentOutOfRangeException,
+  CreateEntityProps,
   DomainDateTime,
   EntityPropsBaseType,
+  GenerateUniqueId,
   handleError,
   InvalidObject,
   Result,
@@ -13,6 +15,38 @@ import {
 export enum PatientCareSessionStatus {
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
+  WAITING_FOR_USER_RESPONSE = "WAITING_FOR_USER_RESPONSE",
+}
+
+export enum MessageType {
+  PHASE_TRANSITION_REQUEST = "PHASE_TRANSITION_REQUEST",
+  PHASE_FAILURE_NOTIFICATION = "PHASE_FAILURE_NOTIFICATION",
+  MISSING_VARIABLES_NOTIFICATION = "MISSING_VARIABLES_NOTIFICATION",
+  USER_DECISION_REQUEST = "USER_DECISION_REQUEST",
+  GENERAL_NOTIFICATION = "GENERAL_NOTIFICATION",
+}
+
+export enum DecisionType {
+  PHASE_TRANSITION_CONFIRMATION = "PHASE_TRANSITION_CONFIRMATION",
+  PHASE_RETRY_DECISION = "PHASE_RETRY_DECISION",
+  VARIABLE_PROVISION = "VARIABLE_PROVISION",
+  TREATMENT_ADJUSTMENT = "TREATMENT_ADJUSTMENT",
+}
+
+export interface Message {
+  id: AggregateID;
+  type: MessageType;
+  content: string;
+  timestamp: DomainDateTime;
+  requiresResponse: boolean;
+  decisionType?: DecisionType;
+}
+
+export interface UserResponse {
+  messageId: AggregateID;
+  response: string;
+  timestamp: DomainDateTime;
+  decisionData?: Record<string, any>;
 }
 
 export interface IPatientCareSession extends EntityPropsBaseType {
@@ -24,11 +58,18 @@ export interface IPatientCareSession extends EntityPropsBaseType {
   currentDailyRecord: DailyCareRecord | null;
   phaseHistory: CarePhase[];
   dailyRecords: DailyCareRecord[];
+  // Communication system
+  inbox: Message[];
+  responses: UserResponse[];
 }
 export interface CreatePatientCareSession {
   patientId: AggregateID;
 }
 export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
+  constructor(createEntityProps: CreateEntityProps<IPatientCareSession>) {
+    super(createEntityProps);
+  }
+
   getPatientId(): AggregateID {
     return this.props.patientId;
   }
@@ -57,6 +98,129 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
 
   getDailyRecords(): DailyCareRecord[] {
     return this.props.dailyRecords;
+  }
+
+  // Communication system getters
+  getInbox(): Message[] {
+    return this.props.inbox;
+  }
+
+  getResponses(): UserResponse[] {
+    return this.props.responses;
+  }
+
+  hasPendingMessages(): boolean {
+    return this.props.inbox.some(msg => msg.requiresResponse);
+  }
+
+  getPendingMessages(): Message[] {
+    return this.props.inbox.filter(msg => msg.requiresResponse);
+  }
+
+  // Communication system methods
+  sendMessage(
+    type: MessageType,
+    content: string,
+    requiresResponse: boolean = false,
+    decisionType?: DecisionType,
+    messageId?: AggregateID
+  ): Message {
+    const message: Message = {
+      id: messageId || `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      type,
+      content,
+      timestamp: DomainDateTime.now(),
+      requiresResponse,
+      decisionType,
+    };
+
+    this.props.inbox.push(message);
+
+    // If message requires response, change status to waiting
+    if (requiresResponse && this.props.status === PatientCareSessionStatus.IN_PROGRESS) {
+      this.props.status = PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE;
+    }
+
+    this.validate();
+    return message;
+  }
+
+  receiveUserResponse(messageId: AggregateID, response: string, decisionData?: Record<string, any>): boolean {
+    const messageIndex = this.props.inbox.findIndex(msg => msg.id === messageId);
+    if (messageIndex === -1) {
+      return false; // Message not found
+    }
+
+    const message = this.props.inbox[messageIndex];
+    if (!message.requiresResponse) {
+      return false; // Message doesn't require response
+    }
+
+    // Add response
+    const userResponse: UserResponse = {
+      messageId,
+      response,
+      timestamp: DomainDateTime.now(),
+      decisionData,
+    };
+
+    this.props.responses.push(userResponse);
+
+    // Mark message as responded (remove from pending)
+    message.requiresResponse = false;
+
+    // If no more pending messages, change status back to in progress
+    if (!this.hasPendingMessages() && this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE) {
+      this.props.status = PatientCareSessionStatus.IN_PROGRESS;
+    }
+
+    this.validate();
+    return true;
+  }
+
+  clearInbox(): void {
+    this.props.inbox = [];
+    if (this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE) {
+      this.props.status = PatientCareSessionStatus.IN_PROGRESS;
+    }
+    this.validate();
+  }
+
+  // Helper methods for common message types
+  notifyPhaseTransition(nextPhaseCode: string): Message {
+    return this.sendMessage(
+      MessageType.PHASE_TRANSITION_REQUEST,
+      `La phase de soin actuelle est terminée. Voulez-vous passer à la phase "${nextPhaseCode}" ?`,
+      true,
+      DecisionType.PHASE_TRANSITION_CONFIRMATION
+    );
+  }
+
+  notifyPhaseFailure(reason: string): Message {
+    return this.sendMessage(
+      MessageType.PHASE_FAILURE_NOTIFICATION,
+      `La phase de soin a échoué : ${reason}. Voulez-vous réessayer ou ajuster le traitement ?`,
+      true,
+      DecisionType.PHASE_RETRY_DECISION
+    );
+  }
+
+  notifyMissingVariables(missingVars: string[]): Message {
+    return this.sendMessage(
+      MessageType.MISSING_VARIABLES_NOTIFICATION,
+      `Variables manquantes pour continuer : ${missingVars.join(', ')}. Veuillez les fournir.`,
+      true,
+      DecisionType.VARIABLE_PROVISION
+    );
+  }
+
+  requestUserDecision(question: string, decisionType: DecisionType): Message {
+    return this.sendMessage(
+      MessageType.USER_DECISION_REQUEST,
+      question,
+      true,
+      decisionType
+    );
   }
 
   private getNextDailyRecordDate(): DomainDateTime {
@@ -158,6 +322,8 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
             currentDailyRecord: null,
             dailyRecords: [],
             phaseHistory: [],
+            inbox: [],
+            responses: [],
           },
         })
       );

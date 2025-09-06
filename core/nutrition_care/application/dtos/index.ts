@@ -1,4 +1,5 @@
 export * from "./appetiteTest";
+export * as CarePhaseDto from "./carePhase";
 export * from "./complication";
 export * as NextMedicinesDto from "./next/medicines";
 export * from "./core";

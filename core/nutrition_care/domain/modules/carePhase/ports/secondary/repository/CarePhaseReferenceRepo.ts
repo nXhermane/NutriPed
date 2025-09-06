@@ -1,8 +1,9 @@
 import { Repository, SystemCode } from "@/core/shared";
-import { CarephaseReference } from "../../../models";
+import { CarePhaseReference } from "../../../models";
 
 export interface CarePhaseReferenceRepository
-  extends Repository<CarephaseReference> {
-  getByCode(code: SystemCode): Promise<CarephaseReference>;
-  getAll(): Promise<CarephaseReference[]>;
+  extends Repository<CarePhaseReference> {
+  getByCode(code: SystemCode): Promise<CarePhaseReference>;
+  getAll(): Promise<CarePhaseReference[]>;
+  exist(code: SystemCode): Promise<boolean>;
 }

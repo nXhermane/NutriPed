@@ -1,4 +1,5 @@
 export * from "./CarePlanApplicatorService";
+export * from "./CarePhaseDailyCareRecordManager";
 export * from "./DailyActionGeneratorService";
 export * from "./DailyTaskGeneratorService";
 export * from "./DailyPlanGeneratorService";
@@ -7,3 +8,4 @@ export * from "./TreatmentDateManagementService";
 export * from "./DailyScheduleService";
 export * from "./PatientCarePhaseManagerService";
 export * from "./DailyPlanApplicatorService";
+export * from "./IPatientCareOrchestratorService";
