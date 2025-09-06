@@ -1,5 +1,5 @@
 export * from "./AppetiteTestReferenceMapper";
-export * from "./CarePhaseMapper";
+export * from "./CarePhaseRefMapper";
 export * from "./ComplicationMapper";
 export * from "./DailyCareJournalMapper";
 export * from "./MedicineMapper";

@@ -1,5 +1,7 @@
 import { AggregateID } from "@/core/shared";
 import { PatientCareSessionStatus } from "@/core/nutrition_care/domain/next/core/models/aggregate";
+import { CareMessageDto, DailyCareRecordDto, UserResponseSummaryDto, } from "./index";
+import { CarePhaseDto } from "./CarePhaseDto";
 
 export interface PatientCareSessionAggregateDto {
   id: AggregateID;
@@ -7,12 +9,12 @@ export interface PatientCareSessionAggregateDto {
   status: PatientCareSessionStatus;
   startDate: string;
   endDate: string | null;
-  currentPhase: any; // Will be properly typed later
-  currentDailyRecord: any; // Will be properly typed later
-  phaseHistory: any[]; // Will be properly typed later
-  dailyRecords: any[]; // Will be properly typed later
-  inbox: any[]; // Will be properly typed later
-  responses: any[]; // Will be properly typed later
+  currentPhase: CarePhaseDto | null;
+  currentDailyRecord: DailyCareRecordDto | null;
+  phaseHistory: CarePhaseDto[];
+  dailyRecords: DailyCareRecordDto[];
+  inbox: CareMessageDto[];
+  responses: UserResponseSummaryDto[];
   createdAt: string;
   updatedAt: string;
 }

@@ -9,3 +9,4 @@ export * from "./DailyMonitoringTaskDto";
 export * from "./MonitoringParameterDto";
 export * from "./OnGoingTreatmentDto";
 export * from "./PatientCareSessionAggregateDto";
+export * from "./UserResponseSummaryDto";
