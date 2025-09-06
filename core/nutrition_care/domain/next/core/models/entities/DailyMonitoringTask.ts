@@ -1,5 +1,7 @@
 import {
   AggregateID,
+  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -23,12 +25,14 @@ export interface IDailyMonitoringTask extends EntityPropsBaseType {
   monitoringId: AggregateID;
   status: DailyMonitoringTaskStatus;
   task: MonitoringTask;
+  effectiveDate: DomainDateTime;
 }
 
 export interface CreateDailyMonitoringTask {
   monitoringId: AggregateID;
   status?: DailyMonitoringTaskStatus;
   task: CreateMonitoringTask;
+  effectiveDate: string;
 }
 
 export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
@@ -73,8 +77,10 @@ export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
   ): Result<DailyMonitoringTask> {
     try {
       const taskRes = MonitoringTask.create(createProps.task);
-      if (taskRes.isFailure) {
-        return Result.fail(formatError(taskRes, DailyMonitoringTask.name));
+      const effectiveDateRes = DomainDateTime.create(createProps.effectiveDate);
+      const combinedRes = Result.combine([taskRes,effectiveDateRes]);
+      if (combinedRes.isFailure) {
+        return Result.fail(formatError(combinedRes, DailyMonitoringTask.name));
       }
       return Result.ok(
         new DailyMonitoringTask({
@@ -83,6 +89,7 @@ export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
             monitoringId: createProps.monitoringId,
             status: createProps.status || DailyMonitoringTaskStatus.IN_WAITING,
             task: taskRes.val,
+            effectiveDate: effectiveDateRes.val
           },
         })
       );
