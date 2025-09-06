@@ -1,6 +1,6 @@
 import { AggregateID, DomainDateTime, GenerateUniqueId } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { PatientCareSession, UserResponse } from "../../models";
+import { DailyMonitoringTask, DailyCareAction, PatientCareSession, UserResponse, DailyCareRecord, DailyCareRecordStatus } from "../../models";
 import { IPatientCareOrchestratorPort } from "../../ports/primary/IPatientCareOrchestratorPort";
 import { IPatientCareOrchestratorService, OrchestratorOperation, OrchestratorResult } from "../interfaces";
 import { PatientCareSessionRepository } from "../../ports";
@@ -157,22 +157,21 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
 
   async getSessionStatus(sessionId: AggregateID): Promise<{
     session: PatientCareSession;
-    currentRecord?: any;
-    pendingItems?: any[];
-    completionStatus?: string;
+    currentRecord: DailyCareRecord | null;
+    pendingItems?: (DailyCareAction | DailyMonitoringTask)[];
+    completionStatus?: DailyCareRecordStatus;
     nextActions?: OrchestratorOperation[];
   }> {
     const session = await this.getPatientCareSession(sessionId);
     const currentRecord = session.getCurrentDailyRecord();
 
-    let pendingItems: any[] = [];
-    let completionStatus = "UNKNOWN";
+    let pendingItems: (DailyCareAction | DailyMonitoringTask)[]= [];
+    let completionStatus = "UNKNOWN" as any;
 
     if (currentRecord) {
       const items = currentRecord.getPendingItems();
       pendingItems = [...items.actions, ...items.tasks];
-      completionStatus = currentRecord.isCompleted() ? "COMPLETED" :
-        currentRecord.isIncompleted() ? "INCOMPLETED" : "ACTIVE";
+      completionStatus = currentRecord.getStatus();
     }
 
     return {
