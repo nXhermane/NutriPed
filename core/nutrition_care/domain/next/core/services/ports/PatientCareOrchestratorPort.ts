@@ -1,8 +1,8 @@
-import { AggregateID, DomainDateTime, GenerateUniqueId } from "@/core/shared";
+import { AggregateID, formatError, GenerateUniqueId, handleError, Result } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { DailyMonitoringTask, DailyCareAction, PatientCareSession, UserResponse, DailyCareRecord, DailyCareRecordStatus, Message } from "../../models";
+import { DailyMonitoringTask, DailyCareAction, PatientCareSession, UserResponse, DailyCareRecord, DailyCareRecordStatus, Message, UserDecisionData } from "../../models";
 import { IPatientCareOrchestratorPort } from "../../ports/primary/IPatientCareOrchestratorPort";
-import { IPatientCareOrchestratorService, OrchestratorOperation, OrchestratorResult } from "../interfaces";
+import { ContinuousEvaluationContext, IPatientCareOrchestratorService, OrchestratorContext, OrchestratorOperation, OrchestratorResult } from "../interfaces";
 import { PatientCareSessionRepository } from "../../ports";
 
 /**
@@ -25,28 +25,16 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
   async orchestrate(
     session: PatientCareSession,
     operation: OrchestratorOperation,
-    context?: {
-      targetDate?: DomainDateTime;
-      userResponse?: UserResponse;
-      phaseCode?: CARE_PHASE_CODES;
-      patientVariables?: Record<string, number>;
-      actionId?: AggregateID;
-      taskId?: AggregateID;
-    }
-  ): Promise<OrchestratorResult> {
-    const result = await this.orchestratorService.orchestrate(session, operation, context);
-    return result.val;
+    context?: OrchestratorContext
+  ): Promise<Result<OrchestratorResult>> {
+    return this.orchestratorService.orchestrate(session, operation, context);
   }
 
   async orchestrateWithContinuousEvaluation(
     session: PatientCareSession,
-    context?: {
-      patientVariables?: Record<string, number>;
-      maxIterations?: number;
-    }
-  ): Promise<OrchestratorResult> {
-    const result = await this.orchestratorService.orchestrateWithContinuousEvaluation(session, context);
-    return result.val;
+    context?: ContinuousEvaluationContext
+  ): Promise<Result<OrchestratorResult>> {
+    return await this.orchestratorService.orchestrateWithContinuousEvaluation(session, context);
   }
 
   // GESTION DES SESSIONS
@@ -55,38 +43,49 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
     patientId: AggregateID,
     phaseCode: CARE_PHASE_CODES,
     patientVariables?: Record<string, number>
-  ): Promise<PatientCareSession> {
-    // Créer une nouvelle session
-    const session = PatientCareSession.create({ patientId }, this.generateId()).val;
+  ): Promise<Result<PatientCareSession>> {
+    try {
+      // Créer une nouvelle session
+      const session = PatientCareSession.create({ patientId }, this.generateId()).val;
 
-    // Initialiser avec la phase
-    const result = await this.orchestrate(session, OrchestratorOperation.INITIALIZE_SESSION, {
-      phaseCode,
-      patientVariables
-    });
-
-    if (result.success) {
-      // Persister la session si repository disponible
-      if (this.sessionRepository) {
-        await this.sessionRepository.save(result.session);
+      // Initialiser avec la phase
+      const result = await this.orchestrate(session, OrchestratorOperation.INITIALIZE_SESSION, {
+        phaseCode,
+        patientVariables
+      });
+      if (result.isFailure) {
+        return Result.fail(formatError(result, PatientCareOrchestratorPort.name));
       }
-      return result.session;
-    }
+      if (result.val.success) {
+        // Persister la session si repository disponible
+        if (this.sessionRepository) {
+          await this.sessionRepository.save(result.val.session);
+        }
+        return Result.ok(result.val.session);
+      }
 
-    throw new Error(`Échec d'initialisation de la session: ${result.message}`);
+      return Result.fail(`Échec d'initialisation de la session: ${result.val.message}`);
+    } catch (e) {
+      return handleError(e);
+    }
   }
 
-  async getPatientCareSession(sessionId: AggregateID): Promise<PatientCareSession> {
-    if (!this.sessionRepository) {
-      throw new Error("Repository de sessions non configuré");
-    }
+  async getPatientCareSession(sessionId: AggregateID): Promise<Result<PatientCareSession>> {
+    try {
 
-    const session = await this.sessionRepository.getById(sessionId);
-    if (!session) {
-      throw new Error(`Session ${sessionId} non trouvée`);
-    }
+      if (!this.sessionRepository) {
+        throw new Error("Repository de sessions non configuré");
+      }
 
-    return session;
+      const session = await this.sessionRepository.getById(sessionId);
+      if (!session) {
+        throw new Error(`Session ${sessionId} non trouvée`);
+      }
+
+      return session;
+    } catch (e) {
+      return handleError(e);
+    }
   }
 
   // OPÉRATIONS DE COMPLETION
@@ -94,38 +93,95 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
   async completeAction(
     sessionId: AggregateID,
     actionId: AggregateID
-  ): Promise<OrchestratorResult> {
-    const session = await this.getPatientCareSession(sessionId);
-    return await this.orchestrate(session, OrchestratorOperation.COMPLETE_ACTION, { actionId });
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      const resultRes = await this.orchestrate(sessionRes.val, OrchestratorOperation.COMPLETE_ACTION, { actionId });
+      if (resultRes.isFailure) {
+        return Result.fail(formatError(resultRes, PatientCareOrchestratorPort.name));
+      }
+      return resultRes;
+    } catch (e) {
+      return handleError(e);
+    }
+
   }
 
   async completeTask(
     sessionId: AggregateID,
     taskId: AggregateID
-  ): Promise<OrchestratorResult> {
-    const session = await this.getPatientCareSession(sessionId);
-    return await this.orchestrate(session, OrchestratorOperation.COMPLETE_TASK, { taskId });
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      const resultRes = await this.orchestrate(sessionRes.val, OrchestratorOperation.COMPLETE_TASK, { taskId });
+      if (resultRes.isFailure) {
+        return Result.fail(formatError(resultRes, PatientCareOrchestratorPort.name));
+      }
+      return resultRes;
+    } catch (e) {
+      return handleError(e);
+    }
   }
 
   async markActionIncomplete(
     sessionId: AggregateID,
     actionId: AggregateID
-  ): Promise<OrchestratorResult> {
-    const session = await this.getPatientCareSession(sessionId);
-    return await this.orchestrate(session, OrchestratorOperation.MARK_ACTION_INCOMPLETE, { actionId });
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      const resultRes = await this.orchestrate(sessionRes.val, OrchestratorOperation.MARK_ACTION_INCOMPLETE, { actionId });
+      if (resultRes.isFailure) {
+        return Result.fail(formatError(resultRes, PatientCareOrchestratorPort.name));
+      }
+      return resultRes;
+    } catch (e) {
+      return handleError(e);
+    }
+
   }
 
   async markTaskIncomplete(
     sessionId: AggregateID,
     taskId: AggregateID
-  ): Promise<OrchestratorResult> {
-    const session = await this.getPatientCareSession(sessionId);
-    return await this.orchestrate(session, OrchestratorOperation.MARK_TASK_INCOMPLETE, { taskId });
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      const resultRes = await this.orchestrate(sessionRes.val, OrchestratorOperation.MARK_TASK_INCOMPLETE, { taskId });
+      if (resultRes.isFailure) {
+        return Result.fail(formatError(resultRes, PatientCareOrchestratorPort.name));
+      }
+      return resultRes;
+    } catch (e) {
+      return handleError(e);
+    }
   }
 
-  async markRecordIncomplete(sessionId: AggregateID): Promise<OrchestratorResult> {
-    const session = await this.getPatientCareSession(sessionId);
-    return await this.orchestrate(session, OrchestratorOperation.MARK_RECORD_INCOMPLETE);
+  async markRecordIncomplete(sessionId: AggregateID): Promise<Result<OrchestratorResult>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      const resultRes = await this.orchestrate(sessionRes.val, OrchestratorOperation.MARK_RECORD_INCOMPLETE);
+      if (resultRes.isFailure) {
+        return Result.fail(formatError(resultRes, PatientCareOrchestratorPort.name));
+      }
+      return resultRes;
+    } catch (e) {
+      return handleError(e);
+    }
   }
 
   // COMMUNICATION UTILISATEUR
@@ -134,63 +190,80 @@ export class PatientCareOrchestratorPort implements IPatientCareOrchestratorPort
     sessionId: AggregateID,
     messageId: AggregateID,
     response: string,
-    decisionData?: Record<string, any>
-  ): Promise<OrchestratorResult> {
-    const session = await this.getPatientCareSession(sessionId);
-
-    return await this.orchestrate(session, OrchestratorOperation.HANDLE_USER_RESPONSE, {
-      userResponse: {
-        messageId,
-        response,
-        timestamp: DomainDateTime.now(),
-        decisionData
+    decisionData?:UserDecisionData
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
       }
-    });
+      const userResponseRes = UserResponse.create({
+        messageId,response,decisionData
+      })
+      if(userResponseRes.isFailure) {
+        return Result.fail(formatError(userResponseRes,PatientCareOrchestratorPort.name));
+      }
+      const resultRes = await this.orchestrate(sessionRes.val, OrchestratorOperation.HANDLE_USER_RESPONSE, {
+        userResponse:userResponseRes.val
+      });
+      if (resultRes.isFailure) {
+        return Result.fail(formatError(resultRes, PatientCareOrchestratorPort.name));
+      }
+      return resultRes;
+    }
+    catch (e) {
+      return handleError(e);
+    }
   }
 
-  async getPendingMessages(sessionId: AggregateID): Promise<Message[]> {
-    const session = await this.getPatientCareSession(sessionId);
-    return session.getPendingMessages();
+  async getPendingMessages(sessionId: AggregateID): Promise<Result<Message[]>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      return Result.ok(sessionRes.val.getPendingMessages())
+    } catch (e) {
+      return handleError(e);
+    }
   }
 
   // SURVEILLANCE ET MONITORING
 
-  async getSessionStatus(sessionId: AggregateID): Promise<{
+  async getSessionStatus(sessionId: AggregateID): Promise<Result<{
     session: PatientCareSession;
     currentRecord: DailyCareRecord | null;
     pendingItems?: (DailyCareAction | DailyMonitoringTask)[];
     completionStatus?: DailyCareRecordStatus;
     nextActions?: OrchestratorOperation[];
-  }> {
-    const session = await this.getPatientCareSession(sessionId);
-    const currentRecord = session.getCurrentDailyRecord();
+  }>> {
+    try {
+      const sessionRes = await this.getPatientCareSession(sessionId);
+      if (sessionRes.isFailure) {
+        return Result.fail(formatError(sessionRes, PatientCareOrchestratorPort.name))
+      }
+      const session = sessionRes.val
+      const currentRecord = session.getCurrentDailyRecord();
 
-    let pendingItems: (DailyCareAction | DailyMonitoringTask)[]= [];
-    let completionStatus = "UNKNOWN" as any;
+      let pendingItems: (DailyCareAction | DailyMonitoringTask)[] = [];
+      let completionStatus = "UNKNOWN" as any;
 
-    if (currentRecord) {
-      const items = currentRecord.getPendingItems();
-      pendingItems = [...items.actions, ...items.tasks];
-      completionStatus = currentRecord.getStatus();
+      if (currentRecord) {
+        const items = currentRecord.getPendingItems();
+        pendingItems = [...items.actions, ...items.tasks];
+        completionStatus = currentRecord.getStatus();
+      }
+
+      return Result.ok({
+        session,// ceci n'est pas important n'on plus
+        currentRecord,// ceic n'est pas important 
+        pendingItems,
+        completionStatus,
+        nextActions: this.determineNextActions(session)
+      })
+    } catch (e) {
+      return handleError(e)
     }
-
-    return {
-      session,// ceci n'est pas important n'on plus
-      currentRecord,// ceic n'est pas important 
-      pendingItems,
-      completionStatus,
-      nextActions: this.determineNextActions(session)
-    };
-  }
-
-  // TODO:Eliminer cette methode plus tard 
-  async getSessionHistory(
-    sessionId: AggregateID,
-    limit: number = 10
-  ): Promise<OrchestratorResult[]> {
-    // Cette méthode nécessiterait un repository d'historique
-    // Pour l'instant, on retourne un tableau vide
-    return [];
   }
 
   // MÉTHODES UTILITAIRES PRIVÉES

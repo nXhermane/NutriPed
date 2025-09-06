@@ -1,5 +1,4 @@
-import { UserResponse } from "../valueObjects";
-import { CarePhase, DailyCareRecord, DecisionType, Message, MessageType } from "./../entities";
+import { CarePhase, DailyCareRecord } from "./../entities";
 import {
   AggregateID,
   AggregateRoot,
@@ -18,7 +17,36 @@ export enum PatientCareSessionStatus {
   WAITING_FOR_USER_RESPONSE = "WAITING_FOR_USER_RESPONSE",
 }
 
+export enum MessageType {
+  PHASE_TRANSITION_REQUEST = "PHASE_TRANSITION_REQUEST",
+  PHASE_FAILURE_NOTIFICATION = "PHASE_FAILURE_NOTIFICATION",
+  MISSING_VARIABLES_NOTIFICATION = "MISSING_VARIABLES_NOTIFICATION",
+  USER_DECISION_REQUEST = "USER_DECISION_REQUEST",
+  GENERAL_NOTIFICATION = "GENERAL_NOTIFICATION",
+}
 
+export enum DecisionType {
+  PHASE_TRANSITION_CONFIRMATION = "PHASE_TRANSITION_CONFIRMATION",
+  PHASE_RETRY_DECISION = "PHASE_RETRY_DECISION",
+  VARIABLE_PROVISION = "VARIABLE_PROVISION",
+  TREATMENT_ADJUSTMENT = "TREATMENT_ADJUSTMENT",
+}
+
+export interface Message {
+  id: AggregateID;
+  type: MessageType;
+  content: string;
+  timestamp: DomainDateTime;
+  requiresResponse: boolean;
+  decisionType?: DecisionType;
+}
+
+export interface UserResponse {
+  messageId: AggregateID;
+  response: string;
+  timestamp: DomainDateTime;
+  decisionData?: Record<string, any>;
+}
 
 export interface IPatientCareSession extends EntityPropsBaseType {
   patientId: AggregateID;
@@ -81,22 +109,34 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
   }
 
   hasPendingMessages(): boolean {
-    return this.props.inbox.some(msg => msg.getRequiresResponse());
+    return this.props.inbox.some(msg => msg.requiresResponse);
   }
 
   getPendingMessages(): Message[] {
-    return this.props.inbox.filter(msg => msg.getRequiresResponse());
+    return this.props.inbox.filter(msg => msg.requiresResponse);
   }
 
   // Communication system methods
   sendMessage(
-    message: Message
+    type: MessageType,
+    content: string,
+    requiresResponse: boolean = false,
+    decisionType?: DecisionType,
+    messageId?: AggregateID
   ): Message {
+    const message: Message = {
+      id: messageId || `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      type,
+      content,
+      timestamp: DomainDateTime.now(),
+      requiresResponse,
+      decisionType,
+    };
 
     this.props.inbox.push(message);
 
     // If message requires response, change status to waiting
-    if (message.getRequiresResponse() && this.props.status === PatientCareSessionStatus.IN_PROGRESS) {
+    if (requiresResponse && this.props.status === PatientCareSessionStatus.IN_PROGRESS) {
       this.props.status = PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE;
     }
 
@@ -104,21 +144,30 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
     return message;
   }
 
-  receiveUserResponse(response: UserResponse): boolean {
-    const messageIndex = this.props.inbox.findIndex(msg => msg.id === response.getMessageId());
+  receiveUserResponse(messageId: AggregateID, response: string, decisionData?: Record<string, any>): boolean {
+    const messageIndex = this.props.inbox.findIndex(msg => msg.id === messageId);
     if (messageIndex === -1) {
       return false; // Message not found
     }
 
     const message = this.props.inbox[messageIndex];
-    if (!message.getRequiresResponse()) {
+    if (!message.requiresResponse) {
       return false; // Message doesn't require response
     }
 
-    this.props.responses.push(response);
+    // Add response
+    const userResponse: UserResponse = {
+      messageId,
+      response,
+      timestamp: DomainDateTime.now(),
+      decisionData,
+    };
+
+    this.props.responses.push(userResponse);
 
     // Mark message as responded (remove from pending)
-    message.reponseReceived();
+    message.requiresResponse = false;
+
     // If no more pending messages, change status back to in progress
     if (!this.hasPendingMessages() && this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE) {
       this.props.status = PatientCareSessionStatus.IN_PROGRESS;
@@ -137,64 +186,40 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
   }
 
   // Helper methods for common message types
-  notifyPhaseTransition(nextPhaseCode: string, notifId: AggregateID): Result<Message> {
-    const messageRes = Message.create({
-      type: MessageType.PHASE_TRANSITION_REQUEST,
-      decisionType: DecisionType.PHASE_TRANSITION_CONFIRMATION,
-      content: `La phase de soin actuelle est terminée. Voulez-vous passer à la phase "${nextPhaseCode}" ?`,
-      requiresResponse: true
-    }, notifId);
-    if (messageRes.isFailure) {
-      return messageRes;
-    }
-    this.sendMessage(messageRes.val)
-    return messageRes;
+  notifyPhaseTransition(nextPhaseCode: string): Message {
+    return this.sendMessage(
+      MessageType.PHASE_TRANSITION_REQUEST,
+      `La phase de soin actuelle est terminée. Voulez-vous passer à la phase "${nextPhaseCode}" ?`,
+      true,
+      DecisionType.PHASE_TRANSITION_CONFIRMATION
+    );
   }
 
-  notifyPhaseFailure(reason: string, notifId: AggregateID): Result<Message> {
-    const messageRes = Message.create({
-      type: MessageType.PHASE_FAILURE_NOTIFICATION,
-      decisionType: DecisionType.PHASE_RETRY_DECISION,
-      content: `La phase de soin a échoué : ${reason}. Voulez-vous réessayer ou ajuster le traitement ?`,
-      requiresResponse: true,
-    }, notifId);
-    if (messageRes.isFailure) {
-      return messageRes;
-    }
-    this.sendMessage(messageRes.val)
-    return messageRes;
-
+  notifyPhaseFailure(reason: string): Message {
+    return this.sendMessage(
+      MessageType.PHASE_FAILURE_NOTIFICATION,
+      `La phase de soin a échoué : ${reason}. Voulez-vous réessayer ou ajuster le traitement ?`,
+      true,
+      DecisionType.PHASE_RETRY_DECISION
+    );
   }
 
-  notifyMissingVariables(missingVars: string[], notifId: AggregateID): Result<Message> {
-    const messageRes = Message.create({
-      type: MessageType.MISSING_VARIABLES_NOTIFICATION,
-      decisionType: DecisionType.VARIABLE_PROVISION,
-      content: `Variables manquantes pour continuer : ${missingVars.join(', ')}. Veuillez les fournir.`,
-      requiresResponse: true,
-    }, notifId);
-    if (messageRes.isFailure) {
-      return messageRes;
-    }
-    this.sendMessage(messageRes.val)
-    return messageRes;
-
+  notifyMissingVariables(missingVars: string[]): Message {
+    return this.sendMessage(
+      MessageType.MISSING_VARIABLES_NOTIFICATION,
+      `Variables manquantes pour continuer : ${missingVars.join(', ')}. Veuillez les fournir.`,
+      true,
+      DecisionType.VARIABLE_PROVISION
+    );
   }
 
-  requestUserDecision(question: string, decisionType: DecisionType, notifId: AggregateID): Result<Message> {
-
-    const messageRes = Message.create({
-      type: MessageType.USER_DECISION_REQUEST,
-      decisionType: decisionType,
-      content: question,
-      requiresResponse: true,
-    }, notifId);
-    if (messageRes.isFailure) {
-      return messageRes;
-    }
-    this.sendMessage(messageRes.val)
-    return messageRes;
-
+  requestUserDecision(question: string, decisionType: DecisionType): Message {
+    return this.sendMessage(
+      MessageType.USER_DECISION_REQUEST,
+      question,
+      true,
+      decisionType
+    );
   }
 
   private getNextDailyRecordDate(): DomainDateTime {

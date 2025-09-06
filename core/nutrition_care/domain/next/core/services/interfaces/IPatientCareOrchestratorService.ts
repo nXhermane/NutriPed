@@ -1,6 +1,6 @@
 import { AggregateID, DomainDateTime, Result } from "@/core/shared";
+import { PatientCareSession, UserResponse } from "../../models";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { PatientCareSession, Message, UserResponse } from "../../models";
 
 export enum OrchestratorOperation {
   INITIALIZE_SESSION = "INITIALIZE_SESSION",
@@ -26,6 +26,7 @@ export interface OrchestratorResult {
   requiresUserAction?: boolean;
   nextOperation?: OrchestratorOperation;
 }
+
 /**
  * Interface pour le service d'orchestration des soins patients
  * Définit le contrat pour la gestion complète du cycle de vie des soins nutritionnels
@@ -42,12 +43,7 @@ export interface IPatientCareOrchestratorService {
   orchestrate(
     session: PatientCareSession,
     operation: OrchestratorOperation,
-    context?: {
-      targetDate?: DomainDateTime;
-      userResponse?: UserResponse;
-      phaseCode?: CARE_PHASE_CODES;
-      patientVariables?: Record<string, number>;
-    }
+    context?: OrchestratorContext
   ): Promise<Result<OrchestratorResult>>;
 
   /**
@@ -64,10 +60,7 @@ export interface IPatientCareOrchestratorService {
    */
   orchestrateWithContinuousEvaluation(
     session: PatientCareSession,
-    context?: {
-      patientVariables?: Record<string, number>;
-      maxIterations?: number;
-    }
+    context?: ContinuousEvaluationContext
   ): Promise<Result<OrchestratorResult>>;
 }
 
@@ -76,9 +69,11 @@ export interface IPatientCareOrchestratorService {
  */
 export type OrchestratorContext = {
   targetDate?: DomainDateTime;
-  userResponse?: { messageId: AggregateID; response: string; decisionData?: any };
-  phaseCode?: string;
+  userResponse?: UserResponse;
+  phaseCode?: CARE_PHASE_CODES;
   patientVariables?: Record<string, number>;
+  actionId?: AggregateID;
+  taskId?: AggregateID;
 };
 
 export type ContinuousEvaluationContext = {

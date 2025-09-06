@@ -87,27 +87,29 @@ import {
   AggregateID,
   DomainDateTime,
   formatError,
+  GenerateUniqueId,
   handleError,
   Result,
   SystemCode,
 } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { PatientCareSession, UserResponse, MessageType, DecisionType } from "../models";
+import { PatientCareSession, UserResponse, MessageType, DecisionType, UserDecisionType, UserDecisionData, UserDecisionAction, Message, UserDecisionItemType } from "../models";
 import {
   ICarePhaseDailyCareRecordManager,
   ICarePhaseManagerService,
   IPatientCareOrchestratorService,
+  OrchestratorContext,
   OrchestratorOperation,
   OrchestratorResult,
 } from "./interfaces";
 import { CarePhaseDecision } from "@/core/nutrition_care/domain/modules";
 
 
-
 export class PatientCareOrchestratorService implements IPatientCareOrchestratorService {
   constructor(
+    private readonly idGenerator: GenerateUniqueId,
     private readonly carePhaseManager: ICarePhaseManagerService,
-    private readonly dailyCareManager: ICarePhaseDailyCareRecordManager  ) {}
+    private readonly dailyCareManager: ICarePhaseDailyCareRecordManager) { }
 
   /**
    * Point d'entrée principal - Orchestre toutes les opérations
@@ -115,14 +117,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   async orchestrate(
     session: PatientCareSession,
     operation: OrchestratorOperation,
-    context?: {
-      targetDate?: DomainDateTime;
-      userResponse?: UserResponse;
-      phaseCode?: CARE_PHASE_CODES;
-      patientVariables?: Record<string, number>;
-      actionId?: AggregateID;
-      taskId?: AggregateID;
-    }
+    context?: OrchestratorContext
   ): Promise<Result<OrchestratorResult>> {
     try {
       // Vérifier l'état de la session avant toute opération
@@ -142,7 +137,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           return await this.updateDailyPlan(session, context);
 
         case OrchestratorOperation.COMPLETE_DAILY_RECORD:
-          return await this.completeDailyRecord(session, context);
+          return await this.completeDailyRecord(session);
 
         case OrchestratorOperation.TRANSITION_PHASE:
           return await this.transitionPhase(session, context);
@@ -167,7 +162,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           return await this.markTaskIncomplete(session, context);
 
         case OrchestratorOperation.MARK_RECORD_INCOMPLETE:
-          return await this.markRecordIncomplete(session, context);
+          return await this.markRecordIncomplete(session);
 
         default:
           return Result.fail(`Unknown operation: ${operation}`);
@@ -334,7 +329,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async initializeSession(
     session: PatientCareSession,
-    context?: any
+    context?: OrchestratorContext
   ): Promise<Result<OrchestratorResult>> {
     try {
       // Validation: s'assurer que currentPhase est null
@@ -344,7 +339,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
       // Créer le code de phase avec SystemCode
       const phaseCodeValue = context?.phaseCode || ""; // Pour que le empty string puisse entrainer le failure du code. sinon on ne peut pas supposer de phase de traitement
-      const phaseCodeResult = SystemCode.create(phaseCodeValue);
+      const phaseCodeResult = SystemCode.create<CARE_PHASE_CODES>(phaseCodeValue as any);
 
       if (phaseCodeResult.isFailure) {
         return Result.fail(formatError(phaseCodeResult, PatientCareOrchestratorService.name));
@@ -391,7 +386,10 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async generateDailyPlan(
     session: PatientCareSession,
-    context?: any
+    context?: {
+      targetDate?: DomainDateTime,
+      patientVariables?:Record<string,number>
+    }
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentPhase = session.getCurrentPhase();
@@ -434,7 +432,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async updateDailyPlan(
     session: PatientCareSession,
-    context?: any
+    context?: {
+      targetDate?: DomainDateTime
+    }
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentPhase = session.getCurrentPhase();
@@ -452,7 +452,6 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         currentPhase,
         currentRecord,
         patientId,
-        targetDate,
       );
 
       if (updateResult.isFailure) {
@@ -476,7 +475,6 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async completeDailyRecord(
     session: PatientCareSession,
-    context?: any
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -504,8 +502,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         // Préparer le message pour les items non terminés
         const pendingCount = pendingItems.actions.length + pendingItems.tasks.length;
         session.notifyMissingVariables([
-          `${pendingCount} items non terminés`
-        ]);
+          `${pendingCount} items non terminés`,
+        ], this.idGenerator.generate().toValue());
 
         return Result.ok({
           success: true,
@@ -526,7 +524,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async transitionPhase(
     session: PatientCareSession,
-    context?: any
+    context?: OrchestratorContext
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentPhase = session.getCurrentPhase();
@@ -575,29 +573,30 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async handleUserResponse(
     session: PatientCareSession,
-    context?: any
+    context?: {
+      userResponse?: UserResponse
+    }
   ): Promise<Result<OrchestratorResult>> {
     try {
       if (!context?.userResponse) {
         return Result.fail("Aucune réponse utilisateur fournie");
       }
 
-      const { messageId, response, decisionData } = context.userResponse;
 
       // Traiter la réponse
-      const success = session.receiveUserResponse(messageId, response, decisionData);
+      const success = session.receiveUserResponse(context.userResponse);
 
       if (!success) {
         return Result.fail("Échec du traitement de la réponse utilisateur");
       }
 
       // Gérer les réponses liées à la completion
-      if (decisionData?.type === "COMPLETION_RESPONSE") {
-        return await this.handleCompletionResponse(session, decisionData);
+      if (context.userResponse.getDecisionData()?.type === UserDecisionType.COMPLETION_RESPONSE) {
+        return await this.handleCompletionResponse(session, context.userResponse.getDecisionData());
       }
 
       // Déterminer la prochaine opération basée sur le type de réponse
-      const nextOperation = this.determineNextOperation(session, decisionData);
+      const nextOperation = this.determineNextOperation(context.userResponse.getDecisionData());
 
       return Result.ok({
         success: true,
@@ -616,7 +615,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async handleCompletionResponse(
     session: PatientCareSession,
-    decisionData: any
+    decisionData: UserDecisionData
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -624,28 +623,28 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         return Result.fail("Aucun record quotidien actif");
       }
 
-      const { action, completionChoice, itemIds } = decisionData;
+      const { action, items } = decisionData;
 
       switch (action) {
-        case "COMPLETE_ITEMS":
+        case UserDecisionAction.COMPLETE_ITEMS:
           // L'utilisateur veut compléter les items spécifiés
-          if (itemIds && Array.isArray(itemIds)) {
-            for (const itemId of itemIds) {
-              if (itemId.type === "action") {
+          if (items && Array.isArray(items)) {
+            for (const itemId of items) {
+              if (itemId.type === UserDecisionItemType.ACTION) {
                 await this.completeAction(session, { actionId: itemId.id });
-              } else if (itemId.type === "task") {
+              } else if (itemId.type === UserDecisionItemType.TASK) {
                 await this.completeTask(session, { taskId: itemId.id });
               }
             }
           }
           break;
 
-        case "MARK_INCOMPLETE":
+        case UserDecisionAction.MARK_INCOMPLETE:
           // L'utilisateur veut marquer le record comme incomplet
           currentRecord.markAsIncompleted();
           break;
 
-        case "COMPLETE_ALL":
+        case UserDecisionAction.COMPLETE_ALL:
           // Compléter automatiquement tous les items en attente
           const pendingItems = currentRecord.getPendingItems();
           for (const action of pendingItems.actions) {
@@ -690,7 +689,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async synchronizeState(
     session: PatientCareSession,
-    context?: any
+    context?: OrchestratorContext
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -778,8 +777,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    * Détermine la prochaine opération basée sur la réponse utilisateur
    */
   private determineNextOperation(
-    session: PatientCareSession,
-    decisionData?: any
+    decisionData?: UserDecisionData
   ): OrchestratorOperation {
     if (!decisionData) {
       return OrchestratorOperation.SYNCHRONIZE_STATE;
@@ -787,11 +785,11 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
     // Logique de décision basée sur le type de réponse
     switch (decisionData.type) {
-      case "PHASE_TRANSITION":
+      case UserDecisionType.PHASE_TRANSITION:
         return OrchestratorOperation.TRANSITION_PHASE;
-      case "TREATMENT_ADJUSTMENT":
+      case UserDecisionType.TREATMENT_ADJUSTMENT:
         return OrchestratorOperation.UPDATE_DAILY_PLAN;
-      case "VARIABLE_PROVISION":
+      case UserDecisionType.VARIABLE_PROVISION:
         return OrchestratorOperation.GENERATE_DAILY_PLAN;
       default:
         return OrchestratorOperation.SYNCHRONIZE_STATE;
@@ -803,7 +801,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async completeAction(
     session: PatientCareSession,
-    context?: any
+    context?: { actionId?: AggregateID }
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -849,7 +847,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async completeTask(
     session: PatientCareSession,
-    context?: any
+    context?: {
+      taskId?: AggregateID
+    }
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -895,7 +895,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async markActionIncomplete(
     session: PatientCareSession,
-    context?: any
+    context?: {
+      actionId?: AggregateID
+    }
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -929,7 +931,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async markTaskIncomplete(
     session: PatientCareSession,
-    context?: any
+    context?: {
+      taskId?: AggregateID
+    }
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -963,7 +967,6 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    */
   private async markRecordIncomplete(
     session: PatientCareSession,
-    context?: any
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -1033,11 +1036,19 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       // RÈGLE 2: Si c'est aujourd'hui et qu'il y a des items en attente
       if (recordDate.isSameDay(today) && hasPendingItems) {
         // Envoyer un message de notification REQUIérant une réponse
-        const message = session.sendMessage(
-          MessageType.MISSING_VARIABLES_NOTIFICATION,
-          `Le record du jour (${recordDate.toString()}) a ${pendingItems.actions.length + pendingItems.tasks.length} items non terminés. Voulez-vous les compléter maintenant ou marquer comme incomplet ?`,
-          true, // requiresResponse = true
-          DecisionType.VARIABLE_PROVISION
+        const messageRes = Message.create(
+          {
+            type: MessageType.MISSING_VARIABLES_NOTIFICATION,
+            content: `Le record du jour (${recordDate.toString()}) a ${pendingItems.actions.length + pendingItems.tasks.length} items non terminés. Voulez-vous les compléter maintenant ou marquer comme incomplet ?`,
+            requiresResponse: true,
+            decisionType: DecisionType.VARIABLE_PROVISION
+          }, this.idGenerator.generate().toValue()
+        )
+        if (messageRes.isFailure) {
+          return Result.fail(formatError(messageRes, PatientCareOrchestratorService.name));
+        }
+        session.sendMessage(
+          messageRes.val
         );
 
         return Result.ok({
@@ -1056,11 +1067,16 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         currentRecord.markAsIncompleted();
 
         // Envoyer une notification simple (sans réponse requise)
-        session.sendMessage(
-          MessageType.GENERAL_NOTIFICATION,
-          `Le record du ${recordDate.toString()} a été automatiquement marqué comme incomplet (${pendingItems.actions.length + pendingItems.tasks.length} items non terminés)`,
-          false // requiresResponse = false
-        );
+        const messageRes = Message.create({
+          content: `Le record du ${recordDate.toString()} a été automatiquement marqué comme incomplet (${pendingItems.actions.length + pendingItems.tasks.length} items non terminés)`,
+          type: MessageType.GENERAL_NOTIFICATION,
+          requiresResponse: false,
+
+        }, this.idGenerator.generate().toValue())
+        if (messageRes.isFailure) {
+          return Result.fail(formatError(messageRes, PatientCareOrchestratorService.name));
+        }
+        session.sendMessage(messageRes.val);
 
         return Result.ok({
           success: true,

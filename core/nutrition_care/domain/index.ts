@@ -1,3 +1,3 @@
 export * from "./core";
 export * from "./modules";
-export * as NextCore from "./next/core";
+export * as NextCore from "./next";
