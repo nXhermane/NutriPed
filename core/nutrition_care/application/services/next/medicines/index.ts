@@ -1,2 +1,2 @@
-export * from "./MedicineAppService";
-export * from "./interfaces";
+export { MedicineService } from "./MedicineService";
+export type { MedicineServiceUseCases } from "./MedicineService";
