@@ -37,17 +37,364 @@ interface IPatientCareOrchestratorService {
 }
 ```
 
-### **Dépendances Injectées**
+### **Dépendances Injectées (État Actuel)**
 ```typescript
 constructor(
   private readonly carePhaseManager: ICarePhaseManagerService,
-  private readonly dailyCareManager: ICarePhaseDailyCareRecordManager,
-  private readonly dailyPlanApplicator: IDailyPlanApplicatorService,
-  private readonly idGenerator: GenerateUniqueId
+  private readonly dailyCareManager: ICarePhaseDailyCareRecordManager
 ) {}
 ```
 
 ## 🔄 Cycle de Vie des Opérations
+
+### **DIAGRAMME GÉNÉRAL DES OPÉRATIONS**
+
+#### **ASCII Art :**
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ INITIALIZE      │ -> │ GENERATE_DAILY  │ -> │ COMPLETE_DAILY  │
+│ SESSION         │    │ PLAN            │    │ RECORD          │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ SYNCHRONIZE     │ <- │ TRANSITION      │ <- │ HANDLE_USER     │
+│ STATE           │    │ PHASE           │    │ RESPONSE        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+#### **Mermaid :**
+```mermaid
+graph TD
+    A[INITIALIZE_SESSION] --> B[GENERATE_DAILY_PLAN]
+    B --> C[COMPLETE_DAILY_RECORD]
+    C --> D[TRANSITION_PHASE]
+    D --> E[HANDLE_USER_RESPONSE]
+    E --> F[SYNCHRONIZE_STATE]
+    F --> B
+    D --> B
+```
+
+### **WORKFLOW DE COMPLETION INTÉGRÉ**
+
+#### **ASCII Art :**
+```
+┌─────────────────┐
+│   RECORD AVEC   │
+│ ITEMS EN ATTENTE│
+└─────────────────┘
+         │
+         ▼
+┌─────────────────┐    ┌─────────────────┐
+│   AUJOURD'HUI   │ -> │ MESSAGE +       │
+│                 │    │ RÉPONSE REQUISE │
+└─────────────────┘    └─────────────────┘
+         │                        │
+         ▼                        ▼
+┌─────────────────┐    ┌─────────────────┐
+│ JOUR PASSÉ      │ -> │ INCOMPLET AUTO  │
+│                 │    │ + NOTIFICATION  │
+└─────────────────┘    └─────────────────┘
+```
+
+#### **Mermaid :**
+```mermaid
+flowchart TD
+    A[Record avec items en attente] --> B{Date du record ?}
+    B -->|Aujourd'hui| C[Message + réponse requise]
+    B -->|Jour passé| D[Marquage incomplet automatique]
+    D --> E[Notification simple]
+    C --> F[Attendre réponse utilisateur]
+```
+
+### **FLOW DÉTAILLÉ DE L'ORCHESTRATION CONTINUE**
+```
+┌─────────────────────────────────────┐
+│    ORCHESTRATE_WITH_CONTINUOUS      │
+│           EVALUATION                │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│  VÉRIFIER MESSAGES EN ATTENTE       │
+│  if (hasPendingMessages())          │
+│     → RETURN REQUIRES_USER_ACTION   │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   EXÉCUTER OPÉRATION COURANTE       │
+│   await orchestrate(operation)      │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│  SI REQUIRES_USER_ACTION            │
+│     → RETURN REQUIRES_USER_ACTION   │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   LOGIQUE DE COMPLETION INTÉGRÉE    │
+│   checkAndHandleRecordCompletion()  │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│  DÉTERMINER PROCHAINE OPÉRATION     │
+│  nextOperation || SYNCHRONIZE_STATE │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│  CONDITION D'ARRÊT                  │
+│  if (SYNC_STATE && today reached)   │
+│     → BREAK (ÉTAT SYNCHRONISÉ)      │
+└─────────────────────────────────────┘
+```
+
+### **FLOW DES ÉTATS DES DAILY CARE RECORDS**
+
+#### **ASCII Art :**
+```
+┌─────────────┐
+│   CREATED   │
+│  (ACTIVE)   │
+└─────────────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│   ACTIONS   │ --> │ COMPLETED  │
+│ COMPLETED   │     │            │
+└─────────────┘     └─────────────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│   ACTIVE    │ --> │ COMPLETED  │
+│             │     │            │
+└─────────────┘     └─────────────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│INCOMPLETED  │     │   RECORD   │
+│ (JOURS      │     │ TERMINÉ    │
+│  PASSÉS)    │     └─────────────┘
+└─────────────┘
+```
+
+#### **Mermaid :**
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    CREATED --> ACTIVE: Générer actions/tasks
+    ACTIVE --> COMPLETED: Toutes actions/tasks terminées
+    ACTIVE --> INCOMPLETED: Jours passés + items en attente
+    COMPLETED --> [*]: Record archivé
+    INCOMPLETED --> [*]: Record archivé
+```
+
+### **FLOW DE COMMUNICATION UTILISATEUR**
+
+#### **ASCII Art :**
+```
+┌─────────────────────────────────────┐
+│        MESSAGE GÉNÉRÉ               │
+│   (PHASE/MISSING_VARS/etc.)         │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   REQUIRES_RESPONSE ?               │
+└─────────────────────────────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│   REQUIERT  │     │    SIMPLE   │
+│  RÉPONSE    │     │ NOTIFICATION│
+│             │     │             │
+│ • AUJOURD'HUI│     │ • JOURS     │
+│ • PHASE TRANS│     │   PASSÉS    │
+│ • VARIABLES  │     │ • INFO      │
+└─────────────┘     └─────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│  ATTENDRE   │     │   CONTINUER │
+│ RÉPONSE     │     │ ORCHESTRATION│
+│ UTILISATEUR │     │              │
+└─────────────┘     └─────────────┘
+```
+
+#### **Mermaid :**
+```mermaid
+flowchart TD
+    A[Message généré] --> B{Réponse requise ?}
+    B -->|Oui| C[Message interactif]
+    B -->|Non| D[Notification simple]
+
+    C --> E[Selon contexte temporel]
+    E --> F[Aujourd'hui → Attendre réponse]
+    E --> G[Jour passé → Continuer orchestration]
+
+    D --> H[Continuer orchestration]
+    F --> I[Orchestration en pause]
+    G --> J[Orchestration continue]
+    H --> J
+
+    style I fill:#ffcccc
+    style J fill:#ccffcc
+```
+
+### **FLOW DES OPÉRATIONS DE COMPLETION**
+```
+┌─────────────────────────────────────┐
+│     COMPLETE_ACTION                 │
+│     COMPLETE_TASK                   │
+│     MARK_ACTION_INCOMPLETE          │
+│     MARK_TASK_INCOMPLETE            │
+│     MARK_RECORD_INCOMPLETE          │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   VALIDER RECORD ACTIF              │
+│   if (!currentRecord) → FAIL        │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   VALIDER PARAMÈTRES                │
+│   (actionId, taskId requis)         │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   EXÉCUTER OPÉRATION                │
+│   currentRecord.completeAction()    │
+│   currentRecord.completeTask()      │
+│   etc.                              │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   METTRE À JOUR STATUT              │
+│   updateStatus()                    │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   RETOURNER RÉSULTAT                │
+│   + nextOperation appropriée        │
+└─────────────────────────────────────┘
+```
+
+### **FLOW TEMPOREL DÉTAILLÉ**
+```
+┌─────────────────────────────────────┐
+│      RECORD COURANT                 │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   COMPARER AVEC AUJOURD'HUI         │
+│   recordDate.isSameDay(today)       │
+└─────────────────────────────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│ AUJOURD'HUI │     │ JOUR PASSÉ  │
+└─────────────┘     └─────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│ ITEMS EN    │     │ ITEMS EN    │
+│ ATTENTE ?   │     │ ATTENTE ?   │
+└─────────────┘     └─────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│ MESSAGE +   │     │ INCOMPLET   │
+│ RÉPONSE     │     │ AUTOMATIQUE │
+│ REQUISE     │     │             │
+└─────────────┘     └─────────────┘
+```
+
+### **FLOW DES RÉPONSES UTILISATEUR POUR COMPLETION**
+```
+┌─────────────────────────────────────┐
+│   RÉPONSE UTILISATEUR REÇUE        │
+│   decisionData.type === "COMPLETION_RESPONSE"
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   VALIDER RECORD ACTIF              │
+│   if (!currentRecord) → FAIL        │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   EXTRAIRE DONNÉES                  │
+│   { action, itemIds, ... }          │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   TRAITER SELON ACTION              │
+│   COMPLETE_ITEMS / MARK_INCOMPLETE  │
+│   / COMPLETE_ALL                    │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   VÉRIFIER SI TERMINÉ               │
+│   currentRecord.isCompleted()       │
+└─────────────────────────────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│   TERMINÉ   │     │ PAS TERMINÉ │
+│             │     │             │
+│ → markAsCompleted│     │ → nextOperation│
+│ → TRANSITION_PHASE│     │   = COMPLETE_DAILY
+└─────────────┘     └─────────────┘
+```
+
+### **FLOW DES ÉTATS DU SYSTÈME D'ORCHESTRATION**
+```
+┌─────────────────────────────────────┐
+│        ÉTAT INITIAL                 │
+│        IDLE                         │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   orchestrateWithContinuousEvaluation
+│   → PROCESSING                      │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│   BOUCLE D'ORCHESTRATION            │
+│   while (iterationCount < max)      │
+└─────────────────────────────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│ MESSAGES EN │     │  CONTINUER  │
+│ ATTENTE     │     │ ORCHESTRATION│
+│             │     │              │
+│ → WAITING_FOR_USER│     │ → PROCESSING │
+└─────────────┘     └─────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│ REQUIRES_   │     │  ÉTAT       │
+│ USER_ACTION │     │ SYNCHRONISÉ │
+│             │     │              │
+│ → WAITING_FOR_USER│     │ → COMPLETED │
+└─────────────┘     └─────────────┘
+```
 
 ### **1. INITIALIZE_SESSION**
 **Objectif** : Créer une nouvelle session de soin

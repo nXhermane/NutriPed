@@ -1,8 +1,31 @@
 import { AggregateID, DomainDateTime, Result } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
 import { PatientCareSession, Message, UserResponse } from "../../models";
-import { OrchestratorOperation, OrchestratorResult } from "../PatientCareOrchestratorService";
 
+export enum OrchestratorOperation {
+  INITIALIZE_SESSION = "INITIALIZE_SESSION",
+  GENERATE_DAILY_PLAN = "GENERATE_DAILY_PLAN",
+  UPDATE_DAILY_PLAN = "UPDATE_DAILY_PLAN",
+  COMPLETE_DAILY_RECORD = "COMPLETE_DAILY_RECORD",
+  TRANSITION_PHASE = "TRANSITION_PHASE",
+  HANDLE_USER_RESPONSE = "HANDLE_USER_RESPONSE",
+  SYNCHRONIZE_STATE = "SYNCHRONIZE_STATE",
+  // Nouvelles opérations pour la completion
+  COMPLETE_ACTION = "COMPLETE_ACTION",
+  COMPLETE_TASK = "COMPLETE_TASK",
+  MARK_ACTION_INCOMPLETE = "MARK_ACTION_INCOMPLETE",
+  MARK_TASK_INCOMPLETE = "MARK_TASK_INCOMPLETE",
+  MARK_RECORD_INCOMPLETE = "MARK_RECORD_INCOMPLETE",
+}
+
+export interface OrchestratorResult {
+  success: boolean;
+  operation: OrchestratorOperation;
+  session: PatientCareSession;
+  message?: string;
+  requiresUserAction?: boolean;
+  nextOperation?: OrchestratorOperation;
+}
 /**
  * Interface pour le service d'orchestration des soins patients
  * Définit le contrat pour la gestion complète du cycle de vie des soins nutritionnels

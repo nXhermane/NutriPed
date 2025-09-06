@@ -1,40 +1,108 @@
+/**
+ * PATIENT CARE ORCHESTRATOR SERVICE
+ *
+ * Service d'orchestration complet pour la gestion des soins patient avec
+ * système de completion automatique des actions et tâches.
+ *
+ * FONCTIONNALITÉS PRINCIPALES :
+ * ==============================
+ *
+ * 1. INITIALISATION & SYNCHRONISATION
+ *    - Création de sessions de soin
+ *    - Génération automatique de daily plans
+ *    - Rejeu des jours passés
+ *
+ * 2. GESTION DE LA COMPLETION (NOUVEAU)
+ *    - Statut INCOMPLETED pour les daily care records
+ *    - Règles temporelles de completion :
+ *      • Actions : Seulement après effectiveDate
+ *      • Tâches : À n'importe quel moment
+ *      • Records : INCOMPLETED seulement pour jours passés
+ *    - Notifications intelligentes selon le contexte
+ *
+ * 3. ORCHESTRATION AUTOMATIQUE
+ *    - Boucle d'évaluation continue
+ *    - Gestion des transitions de phase
+ *    - Arrêt intelligent si réponse utilisateur requise
+ *
+ * 4. COMMUNICATION UTILISATEUR
+ *    - Messages avec/sans réponse requise
+ *    - Gestion des réponses de completion
+ *    - Support des décisions multiples
+ *
+ * ARCHITECTURE :
+ * ==============
+ *
+ * ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+ * │   Application   │ -> │      Port       │ -> │    Service      │
+ * │   (Contrôleurs) │    │ (Interface)     │    │ (Orchestration) │
+ * └─────────────────┘    └─────────────────┘    └─────────────────┘
+ *          │                        │                        │
+ *          ▼                        ▼                        ▼
+ * ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+ * │   Exemples      │    │   Domain        │    │   Entities      │
+ * │ (Utilisation)   │    │   Models        │    │ (Records)       │
+ * └─────────────────┘    └─────────────────┘    └─────────────────┘
+ *
+ * WORKFLOW COMPLETION :
+ * ====================
+ *
+ * 1. GÉNÉRATION RECORD
+ *    └── DailyCareRecord avec actions/tasks
+ *
+ * 2. VÉRIFICATION AUTOMATIQUE (dans boucle)
+ *    ├── Record terminé ? → Continuer orchestration
+ *    ├── Aujourd'hui + items en attente ?
+ *    │   └── Message + réponse requise → Arrêt orchestration
+ *    └── Jour passé + items en attente ?
+ *        └── Marquage incomplet + notification → Continuer
+ *
+ * 3. RÉPONSE UTILISATEUR
+ *    ├── Compléter items spécifiques
+ *    ├── Marquer incomplet
+ *    └── Compléter automatiquement
+ *
+ * 4. FINALISATION
+ *    └── Record complet → Transition phase
+ *
+ * UTILISATION :
+ * ============
+ *
+ * ```typescript
+ * // Via le port (recommandé)
+ * const orchestrator = PatientCareOrchestratorPortFactory.create(
+ *   carePhaseManager,
+ *   dailyCareManager
+ * );
+ *
+ * // Orchestration automatique
+ * const result = await orchestrator.orchestrateWithContinuousEvaluation(session);
+ *
+ * // Completion manuelle
+ * await orchestrator.completeAction(sessionId, actionId);
+ * ```
+ */
+
 import {
   AggregateID,
   DomainDateTime,
   formatError,
-  GenerateUniqueId,
   handleError,
   Result,
   SystemCode,
 } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { PatientCareSession, UserResponse } from "../models";
+import { PatientCareSession, UserResponse, MessageType, DecisionType } from "../models";
 import {
   ICarePhaseDailyCareRecordManager,
   ICarePhaseManagerService,
-  IDailyPlanApplicatorService,
   IPatientCareOrchestratorService,
+  OrchestratorOperation,
+  OrchestratorResult,
 } from "./interfaces";
 import { CarePhaseDecision } from "@/core/nutrition_care/domain/modules";
 
-export enum OrchestratorOperation {
-  INITIALIZE_SESSION = "INITIALIZE_SESSION",
-  GENERATE_DAILY_PLAN = "GENERATE_DAILY_PLAN",
-  UPDATE_DAILY_PLAN = "UPDATE_DAILY_PLAN",
-  COMPLETE_DAILY_RECORD = "COMPLETE_DAILY_RECORD",
-  TRANSITION_PHASE = "TRANSITION_PHASE",
-  HANDLE_USER_RESPONSE = "HANDLE_USER_RESPONSE",
-  SYNCHRONIZE_STATE = "SYNCHRONIZE_STATE",
-}
 
-export interface OrchestratorResult {
-  success: boolean;
-  operation: OrchestratorOperation;
-  session: PatientCareSession;
-  message?: string;
-  requiresUserAction?: boolean;
-  nextOperation?: OrchestratorOperation;
-}
 
 export class PatientCareOrchestratorService implements IPatientCareOrchestratorService {
   constructor(
@@ -52,6 +120,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       userResponse?: UserResponse;
       phaseCode?: CARE_PHASE_CODES;
       patientVariables?: Record<string, number>;
+      actionId?: AggregateID;
+      taskId?: AggregateID;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
@@ -83,6 +153,22 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         case OrchestratorOperation.SYNCHRONIZE_STATE:
           return await this.synchronizeState(session, context);
 
+        // Nouvelles opérations pour la completion
+        case OrchestratorOperation.COMPLETE_ACTION:
+          return await this.completeAction(session, context);
+
+        case OrchestratorOperation.COMPLETE_TASK:
+          return await this.completeTask(session, context);
+
+        case OrchestratorOperation.MARK_ACTION_INCOMPLETE:
+          return await this.markActionIncomplete(session, context);
+
+        case OrchestratorOperation.MARK_TASK_INCOMPLETE:
+          return await this.markTaskIncomplete(session, context);
+
+        case OrchestratorOperation.MARK_RECORD_INCOMPLETE:
+          return await this.markRecordIncomplete(session, context);
+
         default:
           return Result.fail(`Unknown operation: ${operation}`);
       }
@@ -93,11 +179,54 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
   /**
    * Orchestration automatique avec boucle d'évaluation continue
-   * Cette méthode gère automatiquement le cycle complet :
-   * - Génération de daily plans jusqu'à aujourd'hui
-   * - Évaluation continue de l'état du patient
-   * - Gestion des transitions de phase
-   * - Arrêt automatique si messages en attente
+   *
+   * Cette méthode gère automatiquement le cycle complet du système de soin :
+   *
+   * 1. INITIALISATION & SYNCHRONISATION
+   *    - Génération de daily plans jusqu'à aujourd'hui
+   *    - Rejeu automatique des jours passés
+   *    - Synchronisation de l'état du patient
+   *
+   * 2. ÉVALUATION CONTINUE
+   *    - Évaluation de l'état du patient
+   *    - Gestion des transitions de phase automatiques
+   *    - Adaptation des traitements selon les variables patient
+   *
+   * 3. GESTION DE LA COMPLETION (NOUVEAU)
+   *    - Vérification automatique de la completion des actions/tâches
+   *    - Application des règles temporelles de completion :
+   *      • Aujourd'hui + items en attente = Message avec réponse requise
+   *      • Jour passé + items en attente = Marquage automatique incomplet
+   *      • Jour passé + tout terminé = Marquage automatique complet
+   *    - Notifications intelligentes selon le contexte
+   *
+   * 4. INTERACTION UTILISATEUR
+   *    - Arrêt automatique si messages en attente de réponse
+   *    - Gestion des réponses utilisateur pour la completion
+   *    - Support des décisions de completion (compléter, marquer incomplet, etc.)
+   *
+   * 5. SÉCURITÉ & PERFORMANCE
+   *    - Protection contre les boucles infinies (maxIterations)
+   *    - Validation d'état avant chaque opération
+   *    - Gestion d'erreurs complète avec logging
+   *
+   * WORKFLOW COMPLETION :
+   * ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+   * │   Record avec   │ -> │ Vérification    │ -> │ Application des │
+   * │ items en attente │    │ règles          │    │ règles          │
+   * └─────────────────┘    └─────────────────┘    └─────────────────┘
+   *          │                        │                        │
+   *          ▼                        ▼                        ▼
+   * ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+   * │ Aujourd'hui     │ -> │ Message +       │ -> │ Attente réponse │
+   * │                 │    │ réponse requise │    │ utilisateur     │
+   * └─────────────────┘    └─────────────────┘    └─────────────────┘
+   *          │                        │                        │
+   *          ▼                        ▼                        ▼
+   * ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+   * │ Jour passé      │ -> │ Marquage auto   │ -> │ Notification    │
+   * │                 │    │ incomplet       │    │ simple          │
+   * └─────────────────┘    └─────────────────┘    └─────────────────┘
    */
   async orchestrateWithContinuousEvaluation(
     session: PatientCareSession,
@@ -146,6 +275,23 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
             message: `${orchestratorResult.message} - Arrêt pour réponse utilisateur`
           });
         }
+
+        // LOGIQUE DE COMPLETION INTÉGRÉE DANS LA BOUCLE
+        const completionCheck = await this.checkAndHandleRecordCompletion(session);
+        if (completionCheck.isFailure) {
+          return completionCheck;
+        }
+
+        const completionResult = completionCheck.val;
+        if (completionResult.requiresUserAction) {
+          return Result.ok({
+            ...completionResult,
+            message: `${completionResult.message} - Notification de completion`,
+            operation: currentOperation
+          });
+        }
+
+        session = completionResult.session;
 
         // Déterminer la prochaine opération
         currentOperation = orchestratorResult.nextOperation || OrchestratorOperation.SYNCHRONIZE_STATE;
@@ -197,7 +343,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       }
 
       // Créer le code de phase avec SystemCode
-      const phaseCodeValue = context?.phaseCode || "INITIAL_ASSESSMENT";
+      const phaseCodeValue = context?.phaseCode || ""; // Pour que le empty string puisse entrainer le failure du code. sinon on ne peut pas supposer de phase de traitement
       const phaseCodeResult = SystemCode.create(phaseCodeValue);
 
       if (phaseCodeResult.isFailure) {
@@ -408,7 +554,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         return await this.generateDailyPlan(session, context);
       } else {
         // Transition de phase requise
-        const targetPhase = (evaluation as any).tragetPhase || (evaluation as any).targetPhase;
+        const targetPhase = (evaluation as any).tragetPhase;
 
         return Result.ok({
           success: true,
@@ -445,6 +591,11 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         return Result.fail("Échec du traitement de la réponse utilisateur");
       }
 
+      // Gérer les réponses liées à la completion
+      if (decisionData?.type === "COMPLETION_RESPONSE") {
+        return await this.handleCompletionResponse(session, decisionData);
+      }
+
       // Déterminer la prochaine opération basée sur le type de réponse
       const nextOperation = this.determineNextOperation(session, decisionData);
 
@@ -455,6 +606,80 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         message: "Réponse utilisateur traitée",
         nextOperation
       });
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  /**
+   * Gère spécifiquement les réponses liées à la completion
+   */
+  private async handleCompletionResponse(
+    session: PatientCareSession,
+    decisionData: any
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        return Result.fail("Aucun record quotidien actif");
+      }
+
+      const { action, completionChoice, itemIds } = decisionData;
+
+      switch (action) {
+        case "COMPLETE_ITEMS":
+          // L'utilisateur veut compléter les items spécifiés
+          if (itemIds && Array.isArray(itemIds)) {
+            for (const itemId of itemIds) {
+              if (itemId.type === "action") {
+                await this.completeAction(session, { actionId: itemId.id });
+              } else if (itemId.type === "task") {
+                await this.completeTask(session, { taskId: itemId.id });
+              }
+            }
+          }
+          break;
+
+        case "MARK_INCOMPLETE":
+          // L'utilisateur veut marquer le record comme incomplet
+          currentRecord.markAsIncompleted();
+          break;
+
+        case "COMPLETE_ALL":
+          // Compléter automatiquement tous les items en attente
+          const pendingItems = currentRecord.getPendingItems();
+          for (const action of pendingItems.actions) {
+            await this.completeAction(session, { actionId: action.id });
+          }
+          for (const task of pendingItems.tasks) {
+            await this.completeTask(session, { taskId: task.id });
+          }
+          break;
+
+        default:
+          return Result.fail(`Action de completion inconnue: ${action}`);
+      }
+
+      // Vérifier si le record est maintenant complet
+      if (currentRecord.isCompleted()) {
+        currentRecord.markAsCompleted();
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.HANDLE_USER_RESPONSE,
+          session,
+          message: "Record terminé suite à la réponse utilisateur",
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+        });
+      }
+
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.HANDLE_USER_RESPONSE,
+        session,
+        message: "Réponse de completion traitée",
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+      });
+
     } catch (e) {
       return handleError(e);
     }
@@ -570,6 +795,307 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         return OrchestratorOperation.GENERATE_DAILY_PLAN;
       default:
         return OrchestratorOperation.SYNCHRONIZE_STATE;
+    }
+  }
+
+  /**
+   * Marque une action comme complétée
+   */
+  private async completeAction(
+    session: PatientCareSession,
+    context?: any
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        return Result.fail("Aucun record quotidien actif");
+      }
+
+      if (!context?.actionId) {
+        return Result.fail("ID de l'action requis");
+      }
+
+      const result = currentRecord.completeAction(context.actionId);
+      if (result.isFailure) {
+        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+      }
+
+      // Vérifier si le record est maintenant complet
+      if (currentRecord.isCompleted()) {
+        currentRecord.markAsCompleted();
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.COMPLETE_ACTION,
+          session,
+          message: "Action complétée - Record terminé",
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+        });
+      }
+
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.COMPLETE_ACTION,
+        session,
+        message: "Action marquée comme complétée",
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+      });
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  /**
+   * Marque une tâche comme complétée
+   */
+  private async completeTask(
+    session: PatientCareSession,
+    context?: any
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        return Result.fail("Aucun record quotidien actif");
+      }
+
+      if (!context?.taskId) {
+        return Result.fail("ID de la tâche requis");
+      }
+
+      const result = currentRecord.completeTask(context.taskId);
+      if (result.isFailure) {
+        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+      }
+
+      // Vérifier si le record est maintenant complet
+      if (currentRecord.isCompleted()) {
+        currentRecord.markAsCompleted();
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.COMPLETE_TASK,
+          session,
+          message: "Tâche complétée - Record terminé",
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+        });
+      }
+
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.COMPLETE_TASK,
+        session,
+        message: "Tâche marquée comme complétée",
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+      });
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  /**
+   * Marque une action comme non complétée
+   */
+  private async markActionIncomplete(
+    session: PatientCareSession,
+    context?: any
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        return Result.fail("Aucun record quotidien actif");
+      }
+
+      if (!context?.actionId) {
+        return Result.fail("ID de l'action requis");
+      }
+
+      const result = currentRecord.markActionAsNotCompleted(context.actionId);
+      if (result.isFailure) {
+        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+      }
+
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.MARK_ACTION_INCOMPLETE,
+        session,
+        message: "Action marquée comme non complétée",
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+      });
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  /**
+   * Marque une tâche comme non complétée
+   */
+  private async markTaskIncomplete(
+    session: PatientCareSession,
+    context?: any
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        return Result.fail("Aucun record quotidien actif");
+      }
+
+      if (!context?.taskId) {
+        return Result.fail("ID de la tâche requis");
+      }
+
+      const result = currentRecord.markTaskAsNotCompleted(context.taskId);
+      if (result.isFailure) {
+        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+      }
+
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.MARK_TASK_INCOMPLETE,
+        session,
+        message: "Tâche marquée comme non complétée",
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+      });
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  /**
+   * Marque le record quotidien comme incomplet
+   */
+  private async markRecordIncomplete(
+    session: PatientCareSession,
+    context?: any
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        return Result.fail("Aucun record quotidien actif");
+      }
+
+      // Vérifier les règles de l'utilisateur
+      const recordDate = DomainDateTime.create(currentRecord.getDate()).val;
+      const today = DomainDateTime.now();
+
+      if (recordDate.isSameDay(today)) {
+        return Result.fail("Impossible de marquer un record du jour comme incomplet");
+      }
+
+      currentRecord.markAsIncompleted();
+
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.MARK_RECORD_INCOMPLETE,
+        session,
+        message: "Record marqué comme incomplet",
+        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+      });
+    } catch (e) {
+      return handleError(e);
+    }
+  }
+
+  /**
+   * Vérifie et gère automatiquement la completion des records selon les règles
+   * Cette méthode est appelée dans la boucle d'orchestration continue
+   */
+  private async checkAndHandleRecordCompletion(
+    session: PatientCareSession
+  ): Promise<Result<OrchestratorResult>> {
+    try {
+      const currentRecord = session.getCurrentDailyRecord();
+      if (!currentRecord) {
+        // Pas de record actif, continuer
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.SYNCHRONIZE_STATE,
+          session,
+          message: "Aucun record actif",
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        });
+      }
+
+      const recordDate = DomainDateTime.create(currentRecord.getDate()).val;
+      const today = DomainDateTime.now();
+      const isCompleted = currentRecord.isCompleted();
+      const pendingItems = currentRecord.getPendingItems();
+      const hasPendingItems = (pendingItems.actions.length + pendingItems.tasks.length) > 0;
+
+      // RÈGLE 1: Si le record est déjà terminé, continuer
+      if (isCompleted) {
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.SYNCHRONIZE_STATE,
+          session,
+          message: "Record déjà terminé",
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        });
+      }
+
+      // RÈGLE 2: Si c'est aujourd'hui et qu'il y a des items en attente
+      if (recordDate.isSameDay(today) && hasPendingItems) {
+        // Envoyer un message de notification REQUIérant une réponse
+        const message = session.sendMessage(
+          MessageType.MISSING_VARIABLES_NOTIFICATION,
+          `Le record du jour (${recordDate.toString()}) a ${pendingItems.actions.length + pendingItems.tasks.length} items non terminés. Voulez-vous les compléter maintenant ou marquer comme incomplet ?`,
+          true, // requiresResponse = true
+          DecisionType.VARIABLE_PROVISION
+        );
+
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.SYNCHRONIZE_STATE,
+          session,
+          message: `Notification envoyée pour ${pendingItems.actions.length + pendingItems.tasks.length} items en attente`,
+          requiresUserAction: true,
+          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE
+        });
+      }
+
+      // RÈGLE 3: Si c'est un jour passé et qu'il y a des items en attente
+      if (recordDate.isBefore(today) && hasPendingItems) {
+        // Marquer automatiquement comme incomplet (sans réponse utilisateur)
+        currentRecord.markAsIncompleted();
+
+        // Envoyer une notification simple (sans réponse requise)
+        session.sendMessage(
+          MessageType.GENERAL_NOTIFICATION,
+          `Le record du ${recordDate.toString()} a été automatiquement marqué comme incomplet (${pendingItems.actions.length + pendingItems.tasks.length} items non terminés)`,
+          false // requiresResponse = false
+        );
+
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.SYNCHRONIZE_STATE,
+          session,
+          message: `Record passé marqué comme incomplet automatiquement`,
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        });
+      }
+
+      // RÈGLE 4: Si c'est un jour passé et que tout est terminé
+      if (recordDate.isBefore(today) && !hasPendingItems && !isCompleted) {
+        // Marquer comme terminé
+        currentRecord.markAsCompleted();
+
+        return Result.ok({
+          success: true,
+          operation: OrchestratorOperation.SYNCHRONIZE_STATE,
+          session,
+          message: `Record passé marqué comme terminé`,
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        });
+      }
+
+      // Cas par défaut : continuer
+      return Result.ok({
+        success: true,
+        operation: OrchestratorOperation.SYNCHRONIZE_STATE,
+        session,
+        message: "Vérification de completion terminée",
+        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+      });
+
+    } catch (e) {
+      return handleError(e);
     }
   }
 }

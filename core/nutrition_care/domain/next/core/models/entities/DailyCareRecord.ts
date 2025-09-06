@@ -20,8 +20,15 @@ import {
   IDailyMonitoringTask,
 } from "./DailyMonitoringTask";
 
+export enum DailyCareRecordStatus {
+  ACTIVE = "active",
+  COMPLETED = "completed",
+  INCOMPLETED = "incompleted",
+}
+
 export interface IDailyCareRecord extends EntityPropsBaseType {
   date: DomainDateTime;
+  status: DailyCareRecordStatus;
   treatmentActions: DailyCareAction[];
   monitoringTasks: DailyMonitoringTask[];
 }
@@ -34,6 +41,9 @@ export interface CreateDailyCareRecord {
 export class DailyCareRecord extends Entity<IDailyCareRecord> {
   getDate(): string {
     return this.props.date.toString();
+  }
+  getStatus(): DailyCareRecordStatus {
+    return this.props.status;
   }
   getActions(): (IDailyCareAction & BaseEntityProps)[] {
     return this.props.treatmentActions.map(entity => entity.getProps());
@@ -120,6 +130,90 @@ export class DailyCareRecord extends Entity<IDailyCareRecord> {
     return allActionsCompleted && allTasksCompleted;
   }
 
+  // Nouvelles méthodes pour gérer la completion des actions et tâches
+  completeAction(actionId: AggregateID): Result<void> {
+    try {
+      const action = this.props.treatmentActions.find(a => a.id === actionId);
+      if (!action) {
+        return Result.fail("Action not found");
+      }
+      action.completed();
+      this.updateStatus();
+      return Result.ok(undefined);
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
+
+  completeTask(taskId: AggregateID): Result<void> {
+    try {
+      const task = this.props.monitoringTasks.find(t => t.id === taskId);
+      if (!task) {
+        return Result.fail("Task not found");
+      }
+      task.completed();
+      this.updateStatus();
+      return Result.ok(undefined);
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
+
+  markActionAsNotCompleted(actionId: AggregateID): Result<void> {
+    try {
+      const action = this.props.treatmentActions.find(a => a.id === actionId);
+      if (!action) {
+        return Result.fail("Action not found");
+      }
+      action.notCompleted();
+      this.updateStatus();
+      return Result.ok(undefined);
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
+
+  markTaskAsNotCompleted(taskId: AggregateID): Result<void> {
+    try {
+      const task = this.props.monitoringTasks.find(t => t.id === taskId);
+      if (!task) {
+        return Result.fail("Task not found");
+      }
+      task.notCompleted();
+      this.updateStatus();
+      return Result.ok(undefined);
+    } catch (e: unknown) {
+      return handleError(e);
+    }
+  }
+
+  // Méthodes pour gérer le statut du record
+  markAsCompleted(): void {
+    if (this.isCompleted()) {
+      this.props.status = DailyCareRecordStatus.COMPLETED;
+    }
+  }
+
+  markAsIncompleted(): void {
+    this.props.status = DailyCareRecordStatus.INCOMPLETED;
+  }
+
+  isIncompleted(): boolean {
+    return this.props.status === DailyCareRecordStatus.INCOMPLETED;
+  }
+
+  isActive(): boolean {
+    return this.props.status === DailyCareRecordStatus.ACTIVE;
+  }
+
+  private updateStatus(): void {
+    if (this.isCompleted()) {
+      this.props.status = DailyCareRecordStatus.COMPLETED;
+    } else if (this.props.status !== DailyCareRecordStatus.INCOMPLETED) {
+      this.props.status = DailyCareRecordStatus.ACTIVE;
+    }
+  }
+
   public validate(): void {
     this._isValid = false;
     const today = DomainDateTime.now();
@@ -151,6 +245,7 @@ export class DailyCareRecord extends Entity<IDailyCareRecord> {
           id,
           props: {
             date: dateRes.val,
+            status: DailyCareRecordStatus.ACTIVE,
             treatmentActions: actionsRes.map(res => res.val),
             monitoringTasks: tasksRes.map(res => res.val),
           },
