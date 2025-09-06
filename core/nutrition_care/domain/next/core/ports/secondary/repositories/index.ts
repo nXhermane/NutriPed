@@ -1,5 +1,6 @@
 export * from "./PatientCareSession";
 export * from "./CarePhase";
+export * from "./CareMessage";
 export * from "./DailyCareAction";
 export * from "./DailyMonitoringTask";
 export * from "./MonitoringParameter";
