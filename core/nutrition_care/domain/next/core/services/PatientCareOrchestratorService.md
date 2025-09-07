@@ -7,6 +7,7 @@ Le `PatientCareOrchestratorService` est le **chef d'orchestre** du système de s
 ## 🎯 Rôle et Responsabilités
 
 ### **Orchestration Complète**
+
 - ✅ Gestion du cycle de vie des sessions de soin
 - ✅ Coordination entre tous les services du domaine
 - ✅ Communication interactive avec l'utilisateur médical
@@ -14,6 +15,7 @@ Le `PatientCareOrchestratorService` est le **chef d'orchestre** du système de s
 - ✅ Gestion des transitions de phase médicales
 
 ### **Robustesse Médicale**
+
 - ✅ Validation stricte des états et transitions
 - ✅ Gestion des variables manquantes
 - ✅ Protection contre les erreurs médicales
@@ -22,6 +24,7 @@ Le `PatientCareOrchestratorService` est le **chef d'orchestre** du système de s
 ## 🏗️ Architecture
 
 ### **Interface Contractuelle**
+
 ```typescript
 interface IPatientCareOrchestratorService {
   orchestrate(
@@ -38,6 +41,7 @@ interface IPatientCareOrchestratorService {
 ```
 
 ### **Dépendances Injectées (État Actuel)**
+
 ```typescript
 constructor(
   private readonly carePhaseManager: ICarePhaseManagerService,
@@ -50,6 +54,7 @@ constructor(
 ### **DIAGRAMME GÉNÉRAL DES OPÉRATIONS**
 
 #### **ASCII Art :**
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │ INITIALIZE      │ -> │ GENERATE_DAILY  │ -> │ COMPLETE_DAILY  │
@@ -64,6 +69,7 @@ constructor(
 ```
 
 #### **Mermaid :**
+
 ```mermaid
 graph TD
     A[INITIALIZE_SESSION] --> B[GENERATE_DAILY_PLAN]
@@ -78,6 +84,7 @@ graph TD
 ### **WORKFLOW DE COMPLETION INTÉGRÉ**
 
 #### **ASCII Art :**
+
 ```
 ┌─────────────────┐
 │   RECORD AVEC   │
@@ -98,6 +105,7 @@ graph TD
 ```
 
 #### **Mermaid :**
+
 ```mermaid
 flowchart TD
     A[Record avec items en attente] --> B{Date du record ?}
@@ -108,6 +116,7 @@ flowchart TD
 ```
 
 ### **FLOW DÉTAILLÉ DE L'ORCHESTRATION CONTINUE**
+
 ```
 ┌─────────────────────────────────────┐
 │    ORCHESTRATE_WITH_CONTINUOUS      │
@@ -156,6 +165,7 @@ flowchart TD
 ### **FLOW DES ÉTATS DES DAILY CARE RECORDS**
 
 #### **ASCII Art :**
+
 ```
 ┌─────────────┐
 │   CREATED   │
@@ -183,6 +193,7 @@ flowchart TD
 ```
 
 #### **Mermaid :**
+
 ```mermaid
 stateDiagram-v2
     [*] --> CREATED
@@ -196,6 +207,7 @@ stateDiagram-v2
 ### **FLOW DE COMMUNICATION UTILISATEUR**
 
 #### **ASCII Art :**
+
 ```
 ┌─────────────────────────────────────┐
 │        MESSAGE GÉNÉRÉ               │
@@ -226,6 +238,7 @@ stateDiagram-v2
 ```
 
 #### **Mermaid :**
+
 ```mermaid
 flowchart TD
     A[Message généré] --> B{Réponse requise ?}
@@ -246,6 +259,7 @@ flowchart TD
 ```
 
 ### **FLOW DES OPÉRATIONS DE COMPLETION**
+
 ```
 ┌─────────────────────────────────────┐
 │     COMPLETE_ACTION                 │
@@ -289,6 +303,7 @@ flowchart TD
 ```
 
 ### **FLOW TEMPOREL DÉTAILLÉ**
+
 ```
 ┌─────────────────────────────────────┐
 │      RECORD COURANT                 │
@@ -320,6 +335,7 @@ flowchart TD
 ```
 
 ### **FLOW DES RÉPONSES UTILISATEUR POUR COMPLETION**
+
 ```
 ┌─────────────────────────────────────┐
 │   RÉPONSE UTILISATEUR REÇUE        │
@@ -361,6 +377,7 @@ flowchart TD
 ```
 
 ### **FLOW DES ÉTATS DU SYSTÈME D'ORCHESTRATION**
+
 ```
 ┌─────────────────────────────────────┐
 │        ÉTAT INITIAL                 │
@@ -397,7 +414,9 @@ flowchart TD
 ```
 
 ### **1. INITIALIZE_SESSION**
+
 **Objectif** : Créer une nouvelle session de soin
+
 ```typescript
 // Validation
 if (session.getCurrentPhase() !== null) {
@@ -413,12 +432,14 @@ const phaseResult = await carePhaseManager.generate(
 // Génération du premier plan
 const dailyPlanResult = await generateDailyPlan(session, {
   targetDate: DomainDateTime.now(),
-  patientVariables: context.patientVariables
+  patientVariables: context.patientVariables,
 });
 ```
 
 ### **2. GENERATE_DAILY_PLAN**
+
 **Objectif** : Créer un plan de soin quotidien
+
 ```typescript
 // Logique de date intelligente
 const targetDate = context?.targetDate || DomainDateTime.now();
@@ -435,7 +456,9 @@ const dailyRecordResult = await dailyCareManager.generateDailyCareRecord(
 ```
 
 ### **3. COMPLETE_DAILY_RECORD**
+
 **Objectif** : Évaluer et finaliser un record quotidien
+
 ```typescript
 const pendingItems = currentRecord.getPendingItems();
 const isCompleted = currentRecord.isCompleted();
@@ -452,7 +475,9 @@ if (isCompleted) {
 ```
 
 ### **4. TRANSITION_PHASE**
+
 **Objectif** : Gérer les transitions de phase médicales
+
 ```typescript
 const evaluationResult = await carePhaseManager.evaluate(
   currentPhase,
@@ -470,7 +495,9 @@ if (evaluation.decision === CarePhaseDecision.CONTINUE) {
 ```
 
 ### **5. HANDLE_USER_RESPONSE**
+
 **Objectif** : Traiter les réponses utilisateur
+
 ```typescript
 const success = session.receiveUserResponse(
   context.userResponse.messageId,
@@ -485,13 +512,15 @@ const nextOperation = determineNextOperation(
 ```
 
 ### **6. SYNCHRONIZE_STATE**
+
 **Objectif** : Synchroniser automatiquement l'état
+
 ```typescript
 // Rejeu automatique des jours manqués
 while (currentDate.isBefore(today) || currentDate.isSameDay(today)) {
   const dailyPlanResult = await generateDailyPlan(session, {
     targetDate: currentDate,
-    patientVariables: context.patientVariables
+    patientVariables: context.patientVariables,
   });
   currentDate = currentDate.addDays(1);
 }
@@ -500,6 +529,7 @@ while (currentDate.isBefore(today) || currentDate.isSameDay(today)) {
 ## 🎯 Orchestration Continue
 
 ### **Méthode Principale**
+
 ```typescript
 async orchestrateWithContinuousEvaluation(
   session: PatientCareSession,
@@ -511,6 +541,7 @@ async orchestrateWithContinuousEvaluation(
 ```
 
 ### **Algorithme d'Orchestration**
+
 ```typescript
 while (iterationCount < maxIterations) {
   // 1. Vérifier messages en attente
@@ -527,7 +558,8 @@ while (iterationCount < maxIterations) {
   }
 
   // 4. Déterminer prochaine opération
-  currentOperation = result.nextOperation || OrchestratorOperation.SYNCHRONIZE_STATE;
+  currentOperation =
+    result.nextOperation || OrchestratorOperation.SYNCHRONIZE_STATE;
 
   // 5. Condition d'arrêt
   if (currentOperation === SYNCHRONIZE_STATE && recordDate.isSameDay(today)) {
@@ -539,27 +571,30 @@ while (iterationCount < maxIterations) {
 ## 💬 Système de Communication
 
 ### **Types de Messages**
+
 ```typescript
 enum MessageType {
   PHASE_TRANSITION_REQUEST = "PHASE_TRANSITION_REQUEST",
   PHASE_FAILURE_NOTIFICATION = "PHASE_FAILURE_NOTIFICATION",
   MISSING_VARIABLES_NOTIFICATION = "MISSING_VARIABLES_NOTIFICATION",
   USER_DECISION_REQUEST = "USER_DECISION_REQUEST",
-  GENERAL_NOTIFICATION = "GENERAL_NOTIFICATION"
+  GENERAL_NOTIFICATION = "GENERAL_NOTIFICATION",
 }
 ```
 
 ### **Types de Décisions**
+
 ```typescript
 enum DecisionType {
   PHASE_TRANSITION_CONFIRMATION = "PHASE_TRANSITION_CONFIRMATION",
   PHASE_RETRY_DECISION = "PHASE_RETRY_DECISION",
   VARIABLE_PROVISION = "VARIABLE_PROVISION",
-  TREATMENT_ADJUSTMENT = "TREATMENT_ADJUSTMENT"
+  TREATMENT_ADJUSTMENT = "TREATMENT_ADJUSTMENT",
 }
 ```
 
 ### **Structure des Messages**
+
 ```typescript
 interface Message {
   id: AggregateID;
@@ -581,6 +616,7 @@ interface UserResponse {
 ## 🔧 Utilisation Pratique
 
 ### **Injection de Dépendances**
+
 ```typescript
 // Dans un module DI (Dependency Injection)
 const orchestrator = new PatientCareOrchestratorService(
@@ -592,6 +628,7 @@ const orchestrator = new PatientCareOrchestratorService(
 ```
 
 ### **Workflow Complet Automatique**
+
 ```typescript
 async function handlePatientWorkflow(patientId: string) {
   // 1. Créer session
@@ -602,7 +639,7 @@ async function handlePatientWorkflow(patientId: string) {
     session.val,
     {
       patientVariables: { weight: 65, height: 170, age: 2 },
-      maxIterations: 50
+      maxIterations: 50,
     }
   );
 
@@ -615,6 +652,7 @@ async function handlePatientWorkflow(patientId: string) {
 ```
 
 ### **Gestion Interactive**
+
 ```typescript
 async function handleUserResponse(
   session: PatientCareSession,
@@ -637,13 +675,14 @@ async function handleUserResponse(
 ```
 
 ### **Synchronisation d'État**
+
 ```typescript
 async function synchronizePatientState(session: PatientCareSession) {
   const result = await orchestrator.orchestrate(
     session,
     OrchestratorOperation.SYNCHRONIZE_STATE,
     {
-      patientVariables: { weight: 65, height: 170 }
+      patientVariables: { weight: 65, height: 170 },
     }
   );
 
@@ -655,6 +694,7 @@ async function synchronizePatientState(session: PatientCareSession) {
 ## 🛡️ Robustesse et Sécurité
 
 ### **Validations d'État**
+
 ```typescript
 private validateSessionState(session: PatientCareSession): Result<void> {
   // Vérifier messages en attente
@@ -676,6 +716,7 @@ private validateSessionState(session: PatientCareSession): Result<void> {
 ```
 
 ### **Protection contre les Boucles Infinies**
+
 ```typescript
 const maxIterations = context?.maxIterations || 100;
 let iterationCount = 0;
@@ -685,12 +726,15 @@ while (iterationCount < maxIterations) {
   // Logique d'orchestration...
 
   if (iterationCount >= maxIterations) {
-    return Result.fail("Limite d'itérations atteinte - possible boucle infinie");
+    return Result.fail(
+      "Limite d'itérations atteinte - possible boucle infinie"
+    );
   }
 }
 ```
 
 ### **Gestion des Erreurs**
+
 ```typescript
 try {
   // Logique métier
@@ -709,26 +753,29 @@ try {
 ## 📊 États et Transitions
 
 ### **États de Session**
+
 ```typescript
 enum PatientCareSessionStatus {
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
-  WAITING_FOR_USER_RESPONSE = "WAITING_FOR_USER_RESPONSE"
+  WAITING_FOR_USER_RESPONSE = "WAITING_FOR_USER_RESPONSE",
 }
 ```
 
 ### **États d'Orchestrateur**
+
 ```typescript
 enum OrchestratorState {
   IDLE = "IDLE",
   PROCESSING = "PROCESSING",
   WAITING_FOR_USER = "WAITING_FOR_USER",
   COMPLETED = "COMPLETED",
-  ERROR = "ERROR"
+  ERROR = "ERROR",
 }
 ```
 
 ### **Flux de Transitions**
+
 ```
 INITIALIZE_SESSION
     ↓
@@ -746,6 +793,7 @@ HANDLE_USER_RESPONSE
 ## 🔍 Observabilité et Debugging
 
 ### **Logs Détaillés**
+
 ```typescript
 console.log(`📋 Exécution opération: ${currentOperation}`);
 console.log(`✅ ${orchestratorResult.message}`);
@@ -754,6 +802,7 @@ console.log(`🏁 Orchestration terminée après ${iterationCount} itérations`)
 ```
 
 ### **Contexte d'Exécution**
+
 ```typescript
 type OrchestratorExecutionContext = {
   sessionId: string;
@@ -770,26 +819,31 @@ type OrchestratorExecutionContext = {
 ## 🚀 Avantages du Système
 
 ### **✅ Automatisation Intelligente**
+
 - Génération automatique des plans quotidiens
 - Synchronisation transparente de l'état
 - Gestion automatique des transitions de phase
 
 ### **✅ Communication Interactive**
+
 - Messages contextuels pour l'utilisateur médical
 - Décisions médicales guidées
 - Gestion dynamique des variables manquantes
 
 ### **✅ Robustesse Médicale**
+
 - Validation stricte des états et transitions
 - Protection contre les erreurs médicales
 - Traçabilité complète des décisions
 
 ### **✅ Maintenabilité**
+
 - Architecture claire avec séparation des responsabilités
 - Interface contractuelle pour les tests
 - Code auto-documenté avec types TypeScript
 
 ### **✅ Performance**
+
 - Orchestration asynchrone non-bloquante
 - Protection contre les boucles infinies
 - Gestion optimisée des ressources
@@ -797,6 +851,7 @@ type OrchestratorExecutionContext = {
 ## 🎯 Cas d'Usage Médicaux
 
 ### **1. Nouveau Patient**
+
 ```typescript
 // Initialisation automatique
 const result = await orchestrator.orchestrateWithContinuousEvaluation(
@@ -807,6 +862,7 @@ const result = await orchestrator.orchestrateWithContinuousEvaluation(
 ```
 
 ### **2. Reprise de Session**
+
 ```typescript
 // Synchronisation automatique
 const result = await orchestrator.orchestrate(
@@ -817,6 +873,7 @@ const result = await orchestrator.orchestrate(
 ```
 
 ### **3. Transition de Phase**
+
 ```typescript
 // Évaluation et transition automatique
 const result = await orchestrator.orchestrate(
@@ -827,6 +884,7 @@ const result = await orchestrator.orchestrate(
 ```
 
 ### **4. Variables Manquantes**
+
 ```typescript
 // Notification automatique
 // Le système détecte automatiquement les variables manquantes
@@ -836,12 +894,14 @@ const result = await orchestrator.orchestrate(
 ## 📈 Métriques et Monitoring
 
 ### **Indicateurs Clés**
+
 - **Taux de succès des orchestrations**
 - **Temps moyen de traitement par opération**
 - **Nombre de messages utilisateur générés**
 - **Taux de synchronisation automatique réussie**
 
 ### **Logs Structurés**
+
 ```json
 {
   "sessionId": "session_123",
@@ -856,6 +916,7 @@ const result = await orchestrator.orchestrate(
 ## 🔮 Évolutions Futures
 
 ### **Améliorations Possibles**
+
 - ✅ **Machine Learning** : Prédiction des transitions de phase
 - ✅ **Analytics Avancés** : Métriques médicales détaillées
 - ✅ **Intégration IoT** : Connexion aux dispositifs médicaux
@@ -863,6 +924,7 @@ const result = await orchestrator.orchestrate(
 - ✅ **Temps Réel** : Notifications push instantanées
 
 ### **Extensibilité**
+
 - ✅ Nouvelles opérations via l'énumération `OrchestratorOperation`
 - ✅ Nouveaux types de messages via `MessageType`
 - ✅ Nouvelles décisions médicales via `DecisionType`

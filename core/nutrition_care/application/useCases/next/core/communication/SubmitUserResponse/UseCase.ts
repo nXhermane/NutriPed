@@ -1,17 +1,10 @@
-import {
-  handleError,
-  left,
-  Result,
-  right,
-  UseCase,
-} from "@shared";
+import { handleError, left, Result, right, UseCase } from "@shared";
 import { SubmitUserResponseRequest } from "./Request";
 import { SubmitUserResponseResponse } from "./Response";
 import { NextCore } from "@/core/nutrition_care/domain";
 
 export class SubmitUserResponseUseCase
-  implements
-    UseCase<SubmitUserResponseRequest, SubmitUserResponseResponse>
+  implements UseCase<SubmitUserResponseRequest, SubmitUserResponseResponse>
 {
   constructor(
     private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
@@ -27,17 +20,19 @@ export class SubmitUserResponseUseCase
         request.response,
         request.decisionData
       );
-      if(resultRes.isFailure) {
-        return left(resultRes)
+      if (resultRes.isFailure) {
+        return left(resultRes);
       }
       const result = resultRes.val;
 
-      return right(Result.ok({
-        sessionId: request.sessionId,
-        messageId: request.messageId,
-        success: result.success,
-        message: result.message || "Response submitted successfully"
-      }));
+      return right(
+        Result.ok({
+          sessionId: request.sessionId,
+          messageId: request.messageId,
+          success: result.success,
+          message: result.message || "Response submitted successfully",
+        })
+      );
     } catch (e: unknown) {
       return left(handleError(e));
     }

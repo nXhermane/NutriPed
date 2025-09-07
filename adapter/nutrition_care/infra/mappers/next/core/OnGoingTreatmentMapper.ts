@@ -1,12 +1,16 @@
 import { InfrastructureMapper } from "@/core/shared";
-import { OnGoingTreatment, CreateOnGoindTreatment } from "@/core/nutrition_care/domain/next/core/models/entities";
+import {
+  OnGoingTreatment,
+  CreateOnGoindTreatment,
+} from "@/core/nutrition_care/domain/next/core/models/entities";
 import { OnGoingTreatmentPersistenceDto } from "../../../dtos/next/core";
 
 export class OnGoingTreatmentInfraMapper
-  implements InfrastructureMapper<OnGoingTreatment, OnGoingTreatmentPersistenceDto>
+  implements
+    InfrastructureMapper<OnGoingTreatment, OnGoingTreatmentPersistenceDto>
 {
   toPersistence(entity: OnGoingTreatment): OnGoingTreatmentPersistenceDto {
-    const {recommendation} = entity.getProps();
+    const { recommendation } = entity.getProps();
     return {
       id: entity.id as string,
       code: entity.getCode(),
@@ -21,7 +25,7 @@ export class OnGoingTreatmentInfraMapper
         duration: recommendation.getDuration(),
         frequency: recommendation.getFrequency(),
         recommendationCode: recommendation.getRecommendatioCode(),
-        type: recommendation.getType()
+        type: recommendation.getType(),
       },
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -41,7 +45,9 @@ export class OnGoingTreatmentInfraMapper
 
     const result = OnGoingTreatment.create(createProps, record.id);
     if (result.isFailure) {
-      throw new Error(`Failed to create OnGoingTreatment from persistence data: ${result.err}`);
+      throw new Error(
+        `Failed to create OnGoingTreatment from persistence data: ${result.err}`
+      );
     }
 
     return result.val;

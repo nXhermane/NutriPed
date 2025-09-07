@@ -6,7 +6,6 @@ import {
 } from "../../../../useCases/next/medicines";
 import { NextMedicinesDto } from "@/core/nutrition_care/application/dtos";
 
-
 export interface IMedicineAppService {
   create(
     req: CreateMedicineRequest
@@ -16,5 +15,7 @@ export interface IMedicineAppService {
   ): Promise<AppServiceResponse<NextMedicinesDto.MedicineDto[]> | Message>;
   getDosage(
     req: GetMedicineDosageRequest
-  ): Promise<AppServiceResponse<NextMedicinesDto.MedicationDosageResultDto> | Message>;
+  ): Promise<
+    AppServiceResponse<NextMedicinesDto.MedicationDosageResultDto> | Message
+  >;
 }

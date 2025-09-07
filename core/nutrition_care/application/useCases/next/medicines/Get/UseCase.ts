@@ -26,20 +26,20 @@ export class GetMedicineUseCase
   async execute(request: GetMedicineRequest): Promise<GetMedicineResponse> {
     try {
       const medicines = [];
-      if(request.code && !request.id) {
+      if (request.code && !request.id) {
         const codeRes = SystemCode.create(request.code);
-        if(codeRes.isFailure) {
+        if (codeRes.isFailure) {
           return left(codeRes);
         }
-        const medicine = await this.repo.getByCode(codeRes.val)
+        const medicine = await this.repo.getByCode(codeRes.val);
         medicines.push(medicine);
-      }else if (request.id && !request.code) {
+      } else if (request.id && !request.code) {
         const medicine = await this.repo.getById(request.id);
         medicines.push(medicine);
-      }else {
-        medicines.push(...await this.repo.getAll());
+      } else {
+        medicines.push(...(await this.repo.getAll()));
       }
-      if(Guard.isEmpty(medicines).succeeded) {
+      if (Guard.isEmpty(medicines).succeeded) {
         return left(Result.fail("The medicines not found."));
       }
       return right(

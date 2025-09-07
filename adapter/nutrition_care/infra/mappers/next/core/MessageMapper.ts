@@ -1,5 +1,8 @@
 import { InfrastructureMapper } from "@/core/shared";
-import { Message, CreateMessage } from "@/core/nutrition_care/domain/next/core/models/entities";
+import {
+  Message,
+  CreateMessage,
+} from "@/core/nutrition_care/domain/next/core/models/entities";
 import { MessagePersistenceDto } from "../../../dtos/next/core";
 
 export class MessageInfraMapper
@@ -29,7 +32,9 @@ export class MessageInfraMapper
 
     const result = Message.create(createProps, record.id);
     if (result.isFailure) {
-      throw new Error(`Failed to create Message from persistence data: ${result.err}`);
+      throw new Error(
+        `Failed to create Message from persistence data: ${result.err}`
+      );
     }
 
     return result.val;

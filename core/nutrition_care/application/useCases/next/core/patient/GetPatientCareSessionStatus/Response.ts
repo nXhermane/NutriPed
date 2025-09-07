@@ -4,8 +4,8 @@ export type GetPatientCareSessionStatusResponse = Either<
   ExceptionBase | unknown,
   Result<{
     sessionId: AggregateID;
-    completionStatus: NextCore.DailyCareRecordStatus | undefined ;
-    pendingItems: {id: AggregateID,type: "action" | 'task'}[];
+    completionStatus: NextCore.DailyCareRecordStatus | undefined;
+    pendingItems: { id: AggregateID; type: "action" | "task" }[];
     nextActions: NextCore.OrchestratorOperation[];
   }>
 >;

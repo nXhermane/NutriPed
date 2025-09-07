@@ -14,7 +14,9 @@ import {
   ICareSessionVariableGeneratorService,
 } from "./interfaces";
 
-export class CarePhaseDailyCareRecordManager implements ICarePhaseDailyCareRecordManager {
+export class CarePhaseDailyCareRecordManager
+  implements ICarePhaseDailyCareRecordManager
+{
   constructor(
     private readonly dailyPlanGenerator: IDailyPlanGeneratorService,
     private readonly dailyPlanApplicator: IDailyPlanApplicatorService,
@@ -31,11 +33,12 @@ export class CarePhaseDailyCareRecordManager implements ICarePhaseDailyCareRecor
       // If no context provided, generate it from the care session
       let patientContext = context;
       if (!patientContext) {
-        const contextResult = await this.careSessionVariableGenerator.generateActionGenerationContextVariables(
-          patientId,
-          carePhase,
-          targetDate
-        );
+        const contextResult =
+          await this.careSessionVariableGenerator.generateActionGenerationContextVariables(
+            patientId,
+            carePhase,
+            targetDate
+          );
         if (contextResult.isFailure) {
           return Result.fail(
             formatError(contextResult, CarePhaseDailyCareRecordManager.name)
@@ -73,11 +76,12 @@ export class CarePhaseDailyCareRecordManager implements ICarePhaseDailyCareRecor
       // If no context provided, generate it from the care session
       let patientContext = context;
       if (!patientContext) {
-        const contextResult = await this.careSessionVariableGenerator.generateActionGenerationContextVariables(
-          patientId,
-          carePhase,
-          existingRecord.getProps().date
-        );
+        const contextResult =
+          await this.careSessionVariableGenerator.generateActionGenerationContextVariables(
+            patientId,
+            carePhase,
+            existingRecord.getProps().date
+          );
         if (contextResult.isFailure) {
           return Result.fail(
             formatError(contextResult, CarePhaseDailyCareRecordManager.name)
@@ -95,7 +99,10 @@ export class CarePhaseDailyCareRecordManager implements ICarePhaseDailyCareRecor
 
       if (planGenerationResult.isFailure) {
         return Result.fail(
-          formatError(planGenerationResult, CarePhaseDailyCareRecordManager.name)
+          formatError(
+            planGenerationResult,
+            CarePhaseDailyCareRecordManager.name
+          )
         );
       }
 

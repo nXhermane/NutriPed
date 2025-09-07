@@ -10,9 +10,7 @@ export interface IMedicineServiceNext {
     req: CreateMedicineRequest
   ): Promise<AppServiceResponse<{ id: AggregateID }> | Message>;
 
-  get(
-    req: GetMedicineRequest
-  ): Promise<AppServiceResponse<any[]> | Message>;
+  get(req: GetMedicineRequest): Promise<AppServiceResponse<any[]> | Message>;
 
   getDosage(
     req: GetMedicineDosageRequest

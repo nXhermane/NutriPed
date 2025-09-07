@@ -18,9 +18,7 @@ export class CreateMilkUseCase
     private readonly idGenerator: GenerateUniqueId,
     private readonly repo: NextNutritionCare.MilkRepository
   ) {}
-  async execute(
-    request: CreateMilkRequest
-  ): Promise<CreateMilkResponse> {
+  async execute(request: CreateMilkRequest): Promise<CreateMilkResponse> {
     try {
       const newId = this.idGenerator.generate().toValue();
 
@@ -39,10 +37,7 @@ export class CreateMilkUseCase
       }
 
       // Create the milk entity
-      const milkResult = NextNutritionCare.Milk.create(
-        request.data,
-        newId
-      );
+      const milkResult = NextNutritionCare.Milk.create(request.data, newId);
 
       if (milkResult.isFailure) {
         return left(milkResult);

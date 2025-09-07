@@ -6,7 +6,8 @@ import { DailyCareRecordPersistenceDto } from "./DailyCareRecordPersistenceDto";
 import { MessagePersistenceDto } from "./MessagePersistenceDto";
 import { UserResponseSummaryPersistenceDto } from "./UserResponseSummaryPersistenceDto";
 
-export interface PatientCareSessionAggregatePersistenceDto extends EntityPersistenceDto {
+export interface PatientCareSessionAggregatePersistenceDto
+  extends EntityPersistenceDto {
   patientId: AggregateID;
   status: NextCore.PatientCareSessionStatus;
   startDate: string;

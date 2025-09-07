@@ -19,7 +19,9 @@ export interface NutritionalProductServiceUseCases {
   >;
 }
 
-export class NutritionalProductService implements INutritionalProductServiceNext {
+export class NutritionalProductService
+  implements INutritionalProductServiceNext
+{
   constructor(private readonly ucs: NutritionalProductServiceUseCases) {}
 
   async create(

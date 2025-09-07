@@ -15,9 +15,7 @@ export interface IOrientationServiceNext {
     req: GetOrientationReferenceRequest
   ): Promise<AppServiceResponse<any[]> | Message>;
 
-  orient(
-    req: OrientRequest
-  ): Promise<AppServiceResponse<any> | Message>;
+  orient(req: OrientRequest): Promise<AppServiceResponse<any> | Message>;
 
   update(
     req: UpdateOrientationReferenceRequest

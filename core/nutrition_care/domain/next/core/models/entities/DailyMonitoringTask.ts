@@ -78,7 +78,7 @@ export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
     try {
       const taskRes = MonitoringTask.create(createProps.task);
       const effectiveDateRes = DomainDateTime.create(createProps.effectiveDate);
-      const combinedRes = Result.combine([taskRes,effectiveDateRes]);
+      const combinedRes = Result.combine([taskRes, effectiveDateRes]);
       if (combinedRes.isFailure) {
         return Result.fail(formatError(combinedRes, DailyMonitoringTask.name));
       }
@@ -89,7 +89,7 @@ export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
             monitoringId: createProps.monitoringId,
             status: createProps.status || DailyMonitoringTaskStatus.IN_WAITING,
             task: taskRes.val,
-            effectiveDate: effectiveDateRes.val
+            effectiveDate: effectiveDateRes.val,
           },
         })
       );

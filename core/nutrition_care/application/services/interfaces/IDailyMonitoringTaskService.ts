@@ -1,7 +1,5 @@
 import { AppServiceResponse, Message } from "@shared";
-import {
-  GetDailyMonitoringTaskRequest,
-} from "../../useCases/next/core/dailyMonitoringTask";
+import { GetDailyMonitoringTaskRequest } from "../../useCases/next/core/dailyMonitoringTask";
 import { DailyMonitoringTaskDto } from "../../dtos";
 
 export interface IDailyMonitoringTaskService {

@@ -52,17 +52,26 @@ export class DailyCareRecord extends Entity<IDailyCareRecord> {
     return this.props.monitoringTasks.map(entity => entity.getProps());
   }
   addAction(action: DailyCareAction) {
-    const findedIndex = this.props.treatmentActions.findIndex(act => act.getTreatmentId() === action.getTreatmentId() && act.getProps().effectiveDate.isSameDateTime(action.getProps().effectiveDate));
-    if(findedIndex === -1) {
+    const findedIndex = this.props.treatmentActions.findIndex(
+      act =>
+        act.getTreatmentId() === action.getTreatmentId() &&
+        act
+          .getProps()
+          .effectiveDate.isSameDateTime(action.getProps().effectiveDate)
+    );
+    if (findedIndex === -1) {
       this.props.treatmentActions.push(action);
     }
     this.validate();
   }
   addTask(task: DailyMonitoringTask) {
     // CHECK: if it the good decision to use effective date for juste the simple verification of singularity of task.
-    const findedIndex = this.props.monitoringTasks.findIndex(existingTask =>
-     existingTask.getProps().effectiveDate.isSameDateTime(task.getProps().effectiveDate) &&
-      existingTask.getTask().code === task.getTask().code
+    const findedIndex = this.props.monitoringTasks.findIndex(
+      existingTask =>
+        existingTask
+          .getProps()
+          .effectiveDate.isSameDateTime(task.getProps().effectiveDate) &&
+        existingTask.getTask().code === task.getTask().code
     );
     if (findedIndex === -1) {
       this.props.monitoringTasks.push(task);

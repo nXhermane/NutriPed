@@ -5,5 +5,5 @@ export type SubmitUserResponseRequest = {
   sessionId: AggregateID;
   messageId: AggregateID;
   response: string;
-  decisionData?:NextCore.UserDecisionData
+  decisionData?: NextCore.UserDecisionData;
 };

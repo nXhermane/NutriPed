@@ -41,7 +41,7 @@ export class DailyTaskGeneratorService implements IDailyTaskGeneratorService {
             {
               monitoringId: parameter.id,
               task,
-              effectiveDate: effectiveDate.toString()
+              effectiveDate: effectiveDate.toString(),
             },
             this.idGenerator.generate().toValue()
           )

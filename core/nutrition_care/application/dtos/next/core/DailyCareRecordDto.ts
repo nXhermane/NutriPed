@@ -1,7 +1,7 @@
 import { AggregateID } from "@/core/shared";
 import { DailyCareRecordStatus } from "@/core/nutrition_care/domain/next/core/models/entities";
 import { DailyCareActionDto } from "./DailyCareActionDto";
-import {DailyMonitoringTaskDto} from "./DailyMonitoringTaskDto";
+import { DailyMonitoringTaskDto } from "./DailyMonitoringTaskDto";
 
 export interface DailyCareRecordDto {
   id: AggregateID;

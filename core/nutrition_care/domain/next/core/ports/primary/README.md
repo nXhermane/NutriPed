@@ -9,6 +9,7 @@ Le `IPatientCareOrchestrationPort` est le port primaire principal pour l'orchest
 ## 🏗️ Architecture
 
 ### **Structure des Ports**
+
 ```
 core/nutrition_care/application/
 ├── ports/
@@ -21,6 +22,7 @@ core/nutrition_care/application/
 ```
 
 ### **Responsabilités du Port Primaire**
+
 - ✅ **Définir le contrat** : Interface claire pour les use cases
 - ✅ **Adapter les appels** : Transformation des données entre couches
 - ✅ **Gérer les erreurs** : Conversion des erreurs domaine vers application
@@ -29,6 +31,7 @@ core/nutrition_care/application/
 ## 🔧 Interface du Port
 
 ### **Méthodes Principales**
+
 ```typescript
 interface IPatientCareOrchestrationPort {
   // Initialisation de session
@@ -71,13 +74,16 @@ interface IPatientCareOrchestrationPort {
   hasPendingMessages(session: PatientCareSession): Promise<Result<boolean>>;
 
   // Statut de session
-  getPatientCareSessionStatus(session: PatientCareSession): Promise<Result<SessionStatus>>;
+  getPatientCareSessionStatus(
+    session: PatientCareSession
+  ): Promise<Result<SessionStatus>>;
 }
 ```
 
 ## 🚀 Utilisation dans les Use Cases
 
 ### **1. Injection de Dépendances**
+
 ```typescript
 export class InitializePatientCareUseCase {
   constructor(
@@ -88,6 +94,7 @@ export class InitializePatientCareUseCase {
 ```
 
 ### **2. Utilisation Simple**
+
 ```typescript
 async execute(patientId: AggregateID) {
   const result = await this.orchestrationPort.initializePatientCareSession(
@@ -105,6 +112,7 @@ async execute(patientId: AggregateID) {
 ```
 
 ### **3. Orchestration Complète**
+
 ```typescript
 async execute(session: PatientCareSession) {
   const result = await this.orchestrationPort.orchestratePatientCareWorkflow(
@@ -120,6 +128,7 @@ async execute(session: PatientCareSession) {
 ## 🔄 Adaptation des Données
 
 ### **Domaine → Application**
+
 ```typescript
 // Dans l'implémentation du port
 async getPendingMessages(session: PatientCareSession) {
@@ -139,24 +148,32 @@ async getPendingMessages(session: PatientCareSession) {
 ```
 
 ### **Application → Domaine**
+
 ```typescript
 // Conversion des types pour le domaine
-const domainContext = context ? {
-  targetDate: context.targetDate ? DomainDateTime.create(context.targetDate).val : undefined,
-  userResponse: context.userResponse ? {
-    messageId: context.userResponse.messageId,
-    response: context.userResponse.response,
-    timestamp: DomainDateTime.now(),
-    decisionData: context.userResponse.decisionData
-  } : undefined,
-  phaseCode: context.phaseCode as CARE_PHASE_CODES,
-  patientVariables: context.patientVariables
-} : undefined;
+const domainContext = context
+  ? {
+      targetDate: context.targetDate
+        ? DomainDateTime.create(context.targetDate).val
+        : undefined,
+      userResponse: context.userResponse
+        ? {
+            messageId: context.userResponse.messageId,
+            response: context.userResponse.response,
+            timestamp: DomainDateTime.now(),
+            decisionData: context.userResponse.decisionData,
+          }
+        : undefined,
+      phaseCode: context.phaseCode as CARE_PHASE_CODES,
+      patientVariables: context.patientVariables,
+    }
+  : undefined;
 ```
 
 ## 🛡️ Gestion des Erreurs
 
 ### **Transformation des Erreurs**
+
 ```typescript
 // Erreurs domaine → erreurs application
 if (result.isFailure) {
@@ -170,6 +187,7 @@ if (result.isFailure) {
 ```
 
 ### **Types d'Erreurs Gérées**
+
 - ✅ **Erreurs de validation** : États invalides, données manquantes
 - ✅ **Erreurs métier** : Règles domaine violées
 - ✅ **Erreurs techniques** : Problèmes d'infrastructure
@@ -178,11 +196,13 @@ if (result.isFailure) {
 ## 📊 Avantages du Port Primaire
 
 ### **✅ Séparation des Préoccupations**
+
 - **Use Cases** : Logique applicative pure
 - **Port** : Adaptation et transformation
 - **Domaine** : Règles métier et logique complexe
 
 ### **✅ Testabilité**
+
 ```typescript
 // Mock du port pour les tests
 const mockPort: IPatientCareOrchestrationPort = {
@@ -193,11 +213,13 @@ const mockPort: IPatientCareOrchestrationPort = {
 ```
 
 ### **✅ Maintenabilité**
+
 - **Contrats clairs** : Interface définit exactement les services
 - **Évolution contrôlée** : Changements dans le domaine n'affectent pas les use cases
 - **Dépendances explicites** : Injection claire des services
 
 ### **✅ Réutilisabilité**
+
 - **Multiples implémentations** : Différentes stratégies d'orchestration
 - **Configuration flexible** : Paramétrage selon les besoins
 - **Extension facile** : Nouvelles méthodes sans casser l'existant
@@ -205,6 +227,7 @@ const mockPort: IPatientCareOrchestrationPort = {
 ## 🎯 Patterns d'Utilisation
 
 ### **Factory Pattern**
+
 ```typescript
 export class PatientCareUseCaseFactory {
   constructor(private readonly port: IPatientCareOrchestrationPort) {}
@@ -221,6 +244,7 @@ export class PatientCareUseCaseFactory {
 ```
 
 ### **Workflow Orchestrator**
+
 ```typescript
 export class PatientCareWorkflowOrchestrator {
   constructor(private readonly port: IPatientCareOrchestrationPort) {}
@@ -246,6 +270,7 @@ export class PatientCareWorkflowOrchestrator {
 ## 🔧 Configuration et Injection
 
 ### **Module DI (Dependency Injection)**
+
 ```typescript
 // Configuration des dépendances
 const orchestrator = new PatientCareOrchestratorService(
@@ -262,6 +287,7 @@ const useCaseFactory = new PatientCareUseCaseFactory(orchestrationPort);
 ```
 
 ### **Factory Statique**
+
 ```typescript
 export class OrchestrationPortFactory {
   static create(orchestrator: IPatientCareOrchestratorService) {
@@ -273,12 +299,14 @@ export class OrchestrationPortFactory {
 ## 📈 Métriques et Monitoring
 
 ### **Points de Monitoring**
+
 - ✅ **Taux de succès** des opérations d'orchestration
 - ✅ **Temps de réponse** des appels au domaine
 - ✅ **Nombre d'erreurs** par type d'opération
 - ✅ **Utilisation des use cases** et patterns d'usage
 
 ### **Logs Structurés**
+
 ```json
 {
   "port": "PatientCareOrchestrationPort",
@@ -293,21 +321,25 @@ export class OrchestrationPortFactory {
 ## 🎯 Bonnes Pratiques
 
 ### **✅ Design Patterns**
+
 - **Interface Segregation** : Interfaces spécifiques par domaine
 - **Dependency Inversion** : Use cases dépendent d'interfaces, pas d'implémentations
 - **Factory Pattern** : Création centralisée des use cases
 
 ### **✅ Gestion d'Erreurs**
+
 - **Transformation** : Erreurs domaine → erreurs application
 - **Contexte** : Messages d'erreur informatifs
 - **Logging** : Traçabilité des erreurs
 
 ### **✅ Performance**
+
 - **Async/Await** : Opérations non-bloquantes
 - **Lazy Loading** : Chargement à la demande
 - **Caching** : Mise en cache des données fréquentes
 
 ### **✅ Tests**
+
 - **Mocks** : Tests unitaires avec mocks du port
 - **Integration Tests** : Tests avec vraie implémentation
 - **Contract Tests** : Validation des contrats d'interface
@@ -319,6 +351,7 @@ export class OrchestrationPortFactory {
 Le **port primaire `IPatientCareOrchestrationPort`** est l'**interface contractuelle** entre la couche application (use cases) et la couche domaine (orchestration).
 
 Il garantit :
+
 - ✅ **Séparation claire** des responsabilités
 - ✅ **Testabilité** et maintenabilité
 - ✅ **Évolutivité** et réutilisabilité

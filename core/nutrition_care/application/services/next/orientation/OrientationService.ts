@@ -21,10 +21,7 @@ export interface OrientationServiceUseCases {
     GetOrientationReferenceRequest,
     GetOrientationReferenceResponse
   >;
-  orientUC: UseCase<
-    OrientRequest,
-    OrientResponse
-  >;
+  orientUC: UseCase<OrientRequest, OrientResponse>;
   updateOrientationReferenceUC: UseCase<
     UpdateOrientationReferenceRequest,
     UpdateOrientationReferenceResponse
@@ -50,9 +47,7 @@ export class OrientationService implements IOrientationServiceNext {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async orient(
-    req: OrientRequest
-  ): Promise<AppServiceResponse<any> | Message> {
+  async orient(req: OrientRequest): Promise<AppServiceResponse<any> | Message> {
     const res = await this.ucs.orientUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));

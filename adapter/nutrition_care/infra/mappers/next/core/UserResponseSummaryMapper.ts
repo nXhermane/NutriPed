@@ -1,4 +1,7 @@
-import { UserResponse, CreateUserRespone } from "@/core/nutrition_care/domain/next/core/models/valueObjects";
+import {
+  UserResponse,
+  CreateUserRespone,
+} from "@/core/nutrition_care/domain/next/core/models/valueObjects";
 import { UserResponseSummaryPersistenceDto } from "../../../dtos/next/core";
 
 export class UserResponseSummaryInfraMapper {
@@ -21,7 +24,9 @@ export class UserResponseSummaryInfraMapper {
 
     const result = UserResponse.create(createProps);
     if (result.isFailure) {
-      throw new Error(`Failed to create UserResponse from persistence data: ${result.err}`);
+      throw new Error(
+        `Failed to create UserResponse from persistence data: ${result.err}`
+      );
     }
 
     return result.val;

@@ -1,14 +1,7 @@
-import {
-  handleError,
-  left,
-  Result,
-  right,
-  UseCase,
-} from "@shared";
+import { handleError, left, Result, right, UseCase } from "@shared";
 import { HandleCompletionResponseRequest } from "./Request";
 import { HandleCompletionResponseResponse } from "./Response";
 import { NextCore } from "@/core/nutrition_care/domain";
-
 
 export class HandleCompletionResponseUseCase
   implements
@@ -28,16 +21,18 @@ export class HandleCompletionResponseUseCase
         request.response,
         request.decisionData
       );
-     if(resultRes.isFailure) {
-      return left(resultRes);
-     }
-     const result = resultRes.val;
-      return right(Result.ok({
-        sessionId: request.sessionId,
-        messageId: request.messageId,
-        success: result.success,
-        message: result.message || "Response handled successfully"
-      }));
+      if (resultRes.isFailure) {
+        return left(resultRes);
+      }
+      const result = resultRes.val;
+      return right(
+        Result.ok({
+          sessionId: request.sessionId,
+          messageId: request.messageId,
+          success: result.success,
+          message: result.message || "Response handled successfully",
+        })
+      );
     } catch (e: unknown) {
       return left(handleError(e));
     }

@@ -13,14 +13,8 @@ import {
 } from "../../../useCases/next/core/completion";
 
 export interface CompletionServiceUseCases {
-  completeActionUC: UseCase<
-    CompleteActionRequest,
-    CompleteActionResponse
-  >;
-  completeTaskUC: UseCase<
-    CompleteTaskRequest,
-    CompleteTaskResponse
-  >;
+  completeActionUC: UseCase<CompleteActionRequest, CompleteActionResponse>;
+  completeTaskUC: UseCase<CompleteTaskRequest, CompleteTaskResponse>;
   handleCompletionResponseUC: UseCase<
     HandleCompletionResponseRequest,
     HandleCompletionResponseResponse
@@ -36,7 +30,15 @@ export class CompletionService implements ICompletionService {
 
   async completeAction(
     req: CompleteActionRequest
-  ): Promise<AppServiceResponse<{ sessionId: AggregateID; actionId: AggregateID; success: boolean; message: string }> | Message> {
+  ): Promise<
+    | AppServiceResponse<{
+        sessionId: AggregateID;
+        actionId: AggregateID;
+        success: boolean;
+        message: string;
+      }>
+    | Message
+  > {
     const res = await this.ucs.completeActionUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
@@ -44,7 +46,15 @@ export class CompletionService implements ICompletionService {
 
   async completeTask(
     req: CompleteTaskRequest
-  ): Promise<AppServiceResponse<{ sessionId: AggregateID; taskId: AggregateID; success: boolean; message: string }> | Message> {
+  ): Promise<
+    | AppServiceResponse<{
+        sessionId: AggregateID;
+        taskId: AggregateID;
+        success: boolean;
+        message: string;
+      }>
+    | Message
+  > {
     const res = await this.ucs.completeTaskUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
@@ -52,7 +62,14 @@ export class CompletionService implements ICompletionService {
 
   async handleCompletionResponse(
     req: HandleCompletionResponseRequest
-  ): Promise<AppServiceResponse<{ sessionId: AggregateID; success: boolean; message: string }> | Message> {
+  ): Promise<
+    | AppServiceResponse<{
+        sessionId: AggregateID;
+        success: boolean;
+        message: string;
+      }>
+    | Message
+  > {
     const res = await this.ucs.handleCompletionResponseUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
@@ -60,7 +77,14 @@ export class CompletionService implements ICompletionService {
 
   async markRecordIncomplete(
     req: MarkRecordIncompleteRequest
-  ): Promise<AppServiceResponse<{ sessionId: AggregateID; success: boolean; message: string }> | Message> {
+  ): Promise<
+    | AppServiceResponse<{
+        sessionId: AggregateID;
+        success: boolean;
+        message: string;
+      }>
+    | Message
+  > {
     const res = await this.ucs.markRecordIncompleteUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));

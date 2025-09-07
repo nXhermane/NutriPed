@@ -13,18 +13,23 @@ import { OnGoingTreatmentDto } from "@/core/nutrition_care/application/dtos";
 import { OnGoingTreatment } from "@/core/nutrition_care/domain/next";
 
 export class GetOnGoingTreatmentUseCase
-  implements
-  UseCase<GetOnGoingTreatmentRequest, GetOnGoingTreatmentResponse> {
+  implements UseCase<GetOnGoingTreatmentRequest, GetOnGoingTreatmentResponse>
+{
   constructor(
     private readonly onGoingTreatmentRepository: OnGoingTreatmentRepository,
-    private readonly onGoingTreatmentMapper: ApplicationMapper<OnGoingTreatment,OnGoingTreatmentDto>
-  ) { }
+    private readonly onGoingTreatmentMapper: ApplicationMapper<
+      OnGoingTreatment,
+      OnGoingTreatmentDto
+    >
+  ) {}
 
   async execute(
     request: GetOnGoingTreatmentRequest
   ): Promise<GetOnGoingTreatmentResponse> {
     try {
-      const entity = await this.onGoingTreatmentRepository.getById(request.onGoingTreatmentId);
+      const entity = await this.onGoingTreatmentRepository.getById(
+        request.onGoingTreatmentId
+      );
       const entityDto = this.onGoingTreatmentMapper.toResponse(entity);
 
       return right(Result.ok(entityDto));

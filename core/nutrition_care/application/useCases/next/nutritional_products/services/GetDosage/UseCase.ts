@@ -13,11 +13,18 @@ import { NutritionalProductDosageDto } from "@/core/nutrition_care/application/d
 import { NextNutritionCare } from "@/core/nutrition_care/domain";
 
 export class GetNutritionalProductDosageUseCase
-  implements UseCase<GetNutritionalProductDosageRequest, GetNutritionalProductDosageResponse>
+  implements
+    UseCase<
+      GetNutritionalProductDosageRequest,
+      GetNutritionalProductDosageResponse
+    >
 {
   constructor(
     private readonly nutritionalProductAdvisorService: NextNutritionCare.NutritionalProductAdvisorService,
-    private readonly mapper: ApplicationMapper<NextNutritionCare.NutritionalProductDosage, NutritionalProductDosageDto>
+    private readonly mapper: ApplicationMapper<
+      NextNutritionCare.NutritionalProductDosage,
+      NutritionalProductDosageDto
+    >
   ) {}
   async execute(
     request: GetNutritionalProductDosageRequest
@@ -28,19 +35,18 @@ export class GetNutritionalProductDosageUseCase
         return left(productCodeResult);
       }
 
-      const dosageResult = await this.nutritionalProductAdvisorService.getDosage(
-        productCodeResult.val,
-        request.context,
-        request.adjustmentPercentage
-      );
+      const dosageResult =
+        await this.nutritionalProductAdvisorService.getDosage(
+          productCodeResult.val,
+          request.context,
+          request.adjustmentPercentage
+        );
 
       if (dosageResult.isFailure) {
         return left(dosageResult);
       }
 
-      return right(
-        Result.ok(this.mapper.toResponse(dosageResult.val))
-      );
+      return right(Result.ok(this.mapper.toResponse(dosageResult.val)));
     } catch (e: unknown) {
       return left(handleError(e));
     }

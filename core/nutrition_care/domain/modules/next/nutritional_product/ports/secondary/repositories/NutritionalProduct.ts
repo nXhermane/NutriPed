@@ -7,5 +7,7 @@ export interface NutritionalProductRepository
   getByCode(
     code: SystemCode<NUTRITIONAL_PRODUCT_CODE>
   ): Promise<NutritionalProduct>;
-  exist(code: SystemCode<NUTRITIONAL_PRODUCT_CODE>): Promise<NutritionalProduct>;
+  exist(
+    code: SystemCode<NUTRITIONAL_PRODUCT_CODE>
+  ): Promise<NutritionalProduct>;
 }

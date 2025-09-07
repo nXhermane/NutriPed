@@ -1,11 +1,17 @@
 import { InfrastructureMapper } from "@/core/shared";
-import { DailyMonitoringTask, CreateDailyMonitoringTask } from "@/core/nutrition_care/domain/next/core/models/entities";
+import {
+  DailyMonitoringTask,
+  CreateDailyMonitoringTask,
+} from "@/core/nutrition_care/domain/next/core/models/entities";
 import { DailyMonitoringTaskPersistenceDto } from "../../../dtos/next/core";
 
 export class DailyMonitoringTaskInfraMapper
-  implements InfrastructureMapper<DailyMonitoringTask, DailyMonitoringTaskPersistenceDto>
+  implements
+    InfrastructureMapper<DailyMonitoringTask, DailyMonitoringTaskPersistenceDto>
 {
-  toPersistence(entity: DailyMonitoringTask): DailyMonitoringTaskPersistenceDto {
+  toPersistence(
+    entity: DailyMonitoringTask
+  ): DailyMonitoringTaskPersistenceDto {
     return {
       id: entity.id as string,
       monitoringId: entity.getMonitoringId(),
@@ -30,7 +36,9 @@ export class DailyMonitoringTaskInfraMapper
 
     const result = DailyMonitoringTask.create(createProps, record.id);
     if (result.isFailure) {
-      throw new Error(`Failed to create DailyMonitoringTask from persistence data: ${result.err}`);
+      throw new Error(
+        `Failed to create DailyMonitoringTask from persistence data: ${result.err}`
+      );
     }
 
     return result.val;

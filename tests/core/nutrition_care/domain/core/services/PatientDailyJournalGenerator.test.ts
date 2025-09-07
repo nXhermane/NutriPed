@@ -1,9 +1,4 @@
-import {
-  GenerateUniqueId,
-  EntityUniqueID,
-  Result,
-  DomainDate,
-} from "@shared";
+import { GenerateUniqueId, EntityUniqueID, Result, DomainDate } from "@shared";
 import {
   PatientCareSession,
   DailyCareJournal,
@@ -75,9 +70,7 @@ describe("PatientDailyJournalGenerator", () => {
 
     // Assert
     expect(result.isSuccess).toBe(true);
-    expect(patientCareSession.getCurrentJournal()?.id).toBe(
-      "existing-journal"
-    );
+    expect(patientCareSession.getCurrentJournal()?.id).toBe("existing-journal");
   });
 
   it("should return a failure result if the daily journal creation fails", () => {
