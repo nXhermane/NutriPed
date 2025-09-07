@@ -17,7 +17,15 @@ import {
   ValueTypeDto,
   WeightRange,
 } from "@core/nutrition_care";
+import { NextCore } from "@/core/nutrition_care/domain";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+// Type definitions for JSON fields
+type NutritionalOrMedicalAction = NextCore.INutritionalAction | NextCore.IMedicalAction;
+type MonitoringTaskData = NextCore.IMonitoringTask;
+type MonitoringParameterElementData = NextCore.IMonitoringParameterElement;
+type OnGoingTreatmentRecommendationData = NextCore.IOnGoingTreatmentRecommendation;
+type UserDecisionDataType = NextCore.UserDecisionData;
 
 export const appetite_test_references = sqliteTable(
   "appetite_test_references",
@@ -220,7 +228,7 @@ export const patient_care_sessions = sqliteTable("patient_care_sessions", {
     .$type<{ name: string; code: string }>()
     .notNull(),
   carePhases: text("care_phases", { mode: "json" })
-    .$type<CarePhaseDto[]>()
+    .$type<any[]>()
     .notNull(),
   currentState: text("current_state_id", { length: 50 }).notNull(),
   dailyJournals: text("daily_journals", { mode: "json" })
@@ -245,6 +253,110 @@ export const next_medicines = sqliteTable("next_medicines", {
   contraindications: text("contraindications", { mode: "json" }).notNull(),
   interactions: text("interactions", { mode: "json" }).notNull(),
   notes: text("notes", { mode: "json" }).notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// Next Core Tables
+export const care_phases = sqliteTable("care_phases", {
+  id: text("id").primaryKey(),
+  status: text("status").notNull(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date"),
+  monitoringParameters: text("monitoring_parameters", { mode: "json" }).$type<string[]>().notNull(),
+  onGoingTreatments: text("on_going_treatments", { mode: "json" }).$type<string[]>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const daily_care_actions = sqliteTable("daily_care_actions", {
+  id: text("id").primaryKey(),
+  treatmentId: text("treatment_id").notNull(),
+  status: text("status").notNull(),
+  type: text("type").notNull(),
+  action: text("action", { mode: "json" }).$type<NutritionalOrMedicalAction>().notNull(),
+  effectiveDate: text("effective_date").notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const daily_monitoring_tasks = sqliteTable("daily_monitoring_tasks", {
+  id: text("id").primaryKey(),
+  monitoringId: text("monitoring_id").notNull(),
+  status: text("status").notNull(),
+  task: text("task", { mode: "json" }).$type<MonitoringTaskData>().notNull(),
+  effectiveDate: text("effective_date").notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const daily_care_records = sqliteTable("daily_care_records", {
+  id: text("id").primaryKey(),
+  date: text("date").notNull(),
+  status: text("status").notNull(),
+  treatmentActions: text("treatment_actions", { mode: "json" }).$type<string[]>().notNull(),
+  monitoringTasks: text("monitoring_tasks", { mode: "json" }).$type<string[]>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const messages = sqliteTable("messages", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(),
+  content: text("content").notNull(),
+  timestamp: text("timestamp").notNull(),
+  requiresResponse: integer("requires_response", { mode: "boolean" }).notNull(),
+  decisionType: text("decision_type"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const monitoring_parameters = sqliteTable("monitoring_parameters", {
+  id: text("id").primaryKey(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date"),
+  nextTaskDate: text("next_task_date"),
+  lastExecutionDate: text("last_execution_date"),
+  element: text("element", { mode: "json" }).$type<MonitoringParameterElementData>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const on_going_treatments = sqliteTable("on_going_treatments", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date"),
+  status: text("status").notNull(),
+  nextActionDate: text("next_action_date"),
+  lastExecutionDate: text("last_execution_date"),
+  recommendation: text("recommendation", { mode: "json" }).$type<OnGoingTreatmentRecommendationData>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const user_response_summaries = sqliteTable("user_response_summaries", {
+  id: text("id").primaryKey(),
+  messageId: text("message_id").notNull(),
+  response: text("response").notNull(),
+  timestamp: text("timestamp").notNull(),
+  decisionData: text("decision_data", { mode: "json" }).$type<UserDecisionDataType>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const patient_care_session_aggregates = sqliteTable("patient_care_session_aggregates", {
+  id: text("id").primaryKey(),
+  patientId: text("patient_id").notNull(),
+  status: text("status").notNull(),
+  startDate: text("start_date").notNull(),
+  endDate: text("end_date"),
+  currentPhase: text("current_phase"),
+  currentDailyRecord: text("current_daily_record"),
+  phaseHistory: text("phase_history", { mode: "json" }).$type<string[]>().notNull(),
+  dailyRecords: text("daily_records", { mode: "json" }).$type<string[]>().notNull(),
+  inbox: text("inbox", { mode: "json" }).$type<string[]>().notNull(),
+  responses: text("responses", { mode: "json" }).$type<string[]>().notNull(),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
