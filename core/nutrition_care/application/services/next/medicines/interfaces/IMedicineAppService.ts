@@ -4,10 +4,8 @@ import {
   GetMedicineRequest,
   GetMedicineDosageRequest,
 } from "../../../../useCases/next/medicines";
-import {
-  MedicineDto,
-  MedicationDosageResultDto,
-} from "../../../../../dtos/next/medicines";
+import { NextMedicinesDto } from "@/core/nutrition_care/application/dtos";
+
 
 export interface IMedicineAppService {
   create(
@@ -15,8 +13,8 @@ export interface IMedicineAppService {
   ): Promise<AppServiceResponse<{ id: AggregateID }> | Message>;
   get(
     req: GetMedicineRequest
-  ): Promise<AppServiceResponse<MedicineDto[]> | Message>;
+  ): Promise<AppServiceResponse<NextMedicinesDto.MedicineDto[]> | Message>;
   getDosage(
     req: GetMedicineDosageRequest
-  ): Promise<AppServiceResponse<MedicationDosageResultDto> | Message>;
+  ): Promise<AppServiceResponse<NextMedicinesDto.MedicationDosageResultDto> | Message>;
 }

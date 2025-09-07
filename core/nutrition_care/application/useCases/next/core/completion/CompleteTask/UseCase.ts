@@ -8,14 +8,14 @@ import {
 } from "@shared";
 import { CompleteTaskRequest } from "./Request";
 import { CompleteTaskResponse } from "./Response";
-import { PatientCareOrchestratorPort } from "../../../../../../domain/next/core/services/ports/PatientCareOrchestratorPort";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export class CompleteTaskUseCase
   implements
     UseCase<CompleteTaskRequest, CompleteTaskResponse>
 {
   constructor(
-    private readonly orchestratorPort: PatientCareOrchestratorPort
+    private readonly orchestratorPort: NextCore.IPatientCareOrchestratorPort
   ) {}
 
   async execute(

@@ -1,9 +1,9 @@
 import { ApplicationMapper } from "@/core/shared";
-import { OnGoingTreatmentDto } from "../dtos";
-import { OnGoingTreatment } from "../../domain/next/core/models/entities";
+import { NextCore } from "../../domain";
+import { OnGoingTreatmentDto } from "../dtos/next/core/OnGoingTreatmentDto";
 
-export class OnGoingTreatmentMapper implements ApplicationMapper<OnGoingTreatment, OnGoingTreatmentDto> {
-  toResponse(entity: OnGoingTreatment): OnGoingTreatmentDto {
+export class OnGoingTreatmentMapper implements ApplicationMapper<NextCore.OnGoingTreatment, OnGoingTreatmentDto> {
+  toResponse(entity: NextCore.OnGoingTreatment): OnGoingTreatmentDto {
     const recommendation = entity.getRecommendation();
     return {
       id: entity.id,

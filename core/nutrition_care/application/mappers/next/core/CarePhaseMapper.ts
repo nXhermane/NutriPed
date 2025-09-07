@@ -1,6 +1,6 @@
 import { ApplicationMapper } from "@shared";
 import { CarePhase } from "../../../../domain/next/core/models/entities/CarePhase";
-import { CarePhaseDto } from "../../../dtos/next/core/PatientCareSessionDto";
+import { CarePhaseDto } from "../../../dtos/core/PatientCareSessionDto";
 
 /**
  * Mapper pour les phases de soin

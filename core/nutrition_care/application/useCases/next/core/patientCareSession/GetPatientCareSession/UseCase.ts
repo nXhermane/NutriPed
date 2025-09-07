@@ -1,4 +1,5 @@
 import {
+  ApplicationMapper,
   handleError,
   left,
   Result,
@@ -8,14 +9,16 @@ import {
 import { GetPatientCareSessionRequest } from "./Request";
 import { GetPatientCareSessionResponse } from "./Response";
 import { PatientCareSessionRepository } from "@/core/nutrition_care/domain/next/core/ports/secondary/repositories";
-import { PatientCareSessionAggregateMapper } from "@/core/nutrition_care/application/mappers";
+import { NextCore } from "@/core/nutrition_care/domain";
+import { NextCoreDtos } from "@/core/nutrition_care/application/dtos";
+
 
 export class GetPatientCareSessionUseCase
   implements
   UseCase<GetPatientCareSessionRequest, GetPatientCareSessionResponse> {
   constructor(
     private readonly patientCareSessionRepository: PatientCareSessionRepository,
-    private readonly patientCareSessionMapper: PatientCareSessionAggregateMapper
+    private readonly patientCareSessionMapper: ApplicationMapper<NextCore.PatientCareSession,NextCoreDtos.PatientCareSessionAggregateDto>
   ) { }
 
   async execute(

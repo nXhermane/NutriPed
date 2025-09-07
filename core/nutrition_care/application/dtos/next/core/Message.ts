@@ -1,5 +1,5 @@
 import { NextCore } from "@/core/nutrition_care/domain";
-import { AggregateID, DomainDateTime } from "@/core/shared";
+import { AggregateID } from "@/core/shared";
 
 export interface MessageDto {
     id: AggregateID;

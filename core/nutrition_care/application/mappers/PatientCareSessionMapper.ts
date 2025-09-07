@@ -6,11 +6,11 @@ import {
   PatientCurrentState,
 } from "../../domain";
 import {
-  CarePhaseDto,
   DailyCareJournalDto,
   PatientCareSessionDto,
   PatientCurrentStateDto,
 } from "../dtos";
+import { CarePhaseDto } from "../dtos/core";
 
 export class PatientCareSessionMapper
   implements ApplicationMapper<PatientCareSession, PatientCareSessionDto>

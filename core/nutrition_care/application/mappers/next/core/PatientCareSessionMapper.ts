@@ -9,7 +9,7 @@ import {
   MessageDto,
   CarePhaseDto,
   DailyCareRecordDto
-} from "../../../dtos/next/core/PatientCareSessionDto";
+} from "../../../dtos/core/PatientCareSessionDto";
 
 /**
  * Mapper pour les sessions de soin patient

@@ -1,5 +1,5 @@
 import { AggregateID } from "@/core/shared";
-import { IMonitoringParameterElement } from "@/core/nutrition_care/domain/next/core/models/valueObjects";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export interface MonitoringParameterDto {
   id: AggregateID;
@@ -7,7 +7,7 @@ export interface MonitoringParameterDto {
   endDate: string | null;
   nextTaskDate: string | null;
   lastExecutionDate: string | null;
-  element: IMonitoringParameterElement;
+  element: NextCore.IMonitoringParameterElement;
   createdAt: string;
   updatedAt: string;
 }

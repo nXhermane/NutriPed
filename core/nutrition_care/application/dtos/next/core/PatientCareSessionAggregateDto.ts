@@ -1,19 +1,21 @@
 import { AggregateID } from "@/core/shared";
-import { PatientCareSessionStatus } from "@/core/nutrition_care/domain/next/core/models/aggregate";
-import { CareMessageDto, DailyCareRecordDto, UserResponseSummaryDto, } from "./index";
+import { NextCore } from "@/core/nutrition_care/domain";
 import { CarePhaseDto } from "./CarePhaseDto";
+import { DailyCareRecordDto } from "./DailyCareRecordDto";
+import { MessageDto } from "./Message";
+import { UserResponseSummaryDto } from "./UserResponseSummaryDto";
 
 export interface PatientCareSessionAggregateDto {
   id: AggregateID;
   patientId: AggregateID;
-  status: PatientCareSessionStatus;
+  status: NextCore.PatientCareSessionStatus;
   startDate: string;
   endDate: string | null;
   currentPhase: CarePhaseDto | null;
   currentDailyRecord: DailyCareRecordDto | null;
   phaseHistory: CarePhaseDto[];
   dailyRecords: DailyCareRecordDto[];
-  inbox: CareMessageDto[];
+  inbox: MessageDto[];
   responses: UserResponseSummaryDto[];
   createdAt: string;
   updatedAt: string;
