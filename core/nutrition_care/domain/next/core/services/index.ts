@@ -3,8 +3,6 @@ export * from "./CareSessionVariableGeneratorService";
 export * from "./DailyPlanApplicatorService";
 export * from "./DailyPlanGeneratorService";
 export * from "./PatientCareOrchestratorService";
-export * from "./PatientCareOrchestrationPort";
-export * from "./PatientCareOrchestrationPortExample";
 export * from "./helpers";
 export * from "./interfaces";
 export * from "./TreatmentDateManagementService";

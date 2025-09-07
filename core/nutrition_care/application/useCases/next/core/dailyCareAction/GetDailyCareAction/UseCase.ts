@@ -8,16 +8,16 @@ import {
 } from "@/core/shared";
 import { GetDailyCareActionRequest } from "./Request";
 import { GetDailyCareActionResponse } from "./Response";
-import { DailyCareActionRepository } from "@/core/nutrition_care/domain/next/core/ports/secondary/repositories";
 import { DailyCareAction } from "@/core/nutrition_care/domain/next";
-import { DailyCareActionDto } from "@/core/nutrition_care/application/dtos";
+import { NextCoreDtos } from "@/core/nutrition_care/application/dtos";
+import { NextCore } from "@/core/nutrition_care/domain";
 
 export class GetDailyCareActionUseCase
   implements
   UseCase<GetDailyCareActionRequest, GetDailyCareActionResponse> {
   constructor(
-    private readonly dailyCareActionRepository: DailyCareActionRepository,
-    private readonly dailyCareActionMapper: ApplicationMapper<DailyCareAction,DailyCareActionDto>
+    private readonly dailyCareActionRepository:NextCore.DailyCareActionRepository,
+    private readonly dailyCareActionMapper: ApplicationMapper<DailyCareAction,NextCoreDtos.DailyCareActionDto>
   ) { }
 
   async execute(

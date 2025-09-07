@@ -1,6 +1,6 @@
 import { ApplicationMapper } from "@shared";
 import { DailyCareRecord } from "../../../../domain/next/core/models/entities/DailyCareRecord";
-import { DailyCareRecordDto } from "../../../dtos/next/core/PatientCareSessionDto";
+import { DailyCareRecordDto } from "../../../dtos/core/PatientCareSessionDto";
 
 /**
  * Mapper pour les records de soin quotidien

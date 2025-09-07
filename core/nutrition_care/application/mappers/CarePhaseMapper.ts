@@ -1,19 +1,14 @@
 import { ApplicationMapper } from "@/core/shared";
-import { CarePhase } from "../../domain/next";
+import { CarePhase } from "../../domain";
 import { CarePhaseDto } from "../dtos/core";
 
 export class CarePhaseMapper implements ApplicationMapper<CarePhase, CarePhaseDto> {
     toResponse(entity: CarePhase): CarePhaseDto {
         return {
             id: entity.id,
-            status: entity.getStatus(),
-            startDate: entity.getStartDate(),
-            endDate: entity.getEndDate(),
-            monitoringParameters: entity.getMonitoringParameters().map(param => param.id),
-            onGoingTreatments: entity.getOnGoingTreatments().map(treatment => treatment.id),
+            name: entity.getProps().name,
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt
         }
     }
-
 }

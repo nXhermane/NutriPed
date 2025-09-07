@@ -97,8 +97,6 @@ import {
   OrientationRefMapper,
   PatientCurrentStateMapper,
   CarePhase,
-  CarePhaseDto,
-  CarePhaseMapper,
   CreateAppetiteTestUseCase,
   GetAppetiteTestUseCase,
   EvaluateAppetiteUseCase,
@@ -189,6 +187,8 @@ import {
   NextNutritionCareRepoWeb,
 } from "./infra";
 import { SQLiteDatabase } from "expo-sqlite";
+import { CarePhaseMapper } from "@/core/nutrition_care/application/mappers/CarePhaseMapper";
+import { CarePhaseDto } from "@/core/nutrition_care/application/dtos/core";
 
 export class NutritionCareContext {
   private static instance: NutritionCareContext | null = null;

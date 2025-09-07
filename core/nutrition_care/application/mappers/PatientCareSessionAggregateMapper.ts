@@ -1,11 +1,13 @@
 import { ApplicationMapper } from "@/core/shared";
-import { PatientCareSessionAggregateDto } from "../dtos";
 import { PatientCareSession } from "../../domain/next/core/models/aggregate";
-import { CareMessageDto, CarePhaseDto, DailyCareRecordDto } from "../dtos/core";
 import { CarePhase, DailyCareRecord, Message } from "../../domain/next";
+import { MessageDto } from "../dtos/next/core";
+import { PatientCareSessionAggregateDto } from "../dtos/next/core/PatientCareSessionAggregateDto";
+import { DailyCareRecordDto } from "../dtos/next/core/DailyCareRecordDto";
+import { CarePhaseDto } from "../dtos/next/core/CarePhaseDto";
 
 export class PatientCareSessionAggregateMapper implements ApplicationMapper<PatientCareSession, PatientCareSessionAggregateDto> {
-  constructor(private readonly carePhaseMapper: ApplicationMapper<CarePhase, CarePhaseDto>, private readonly dailyRecordMapper: ApplicationMapper<DailyCareRecord, DailyCareRecordDto>,private readonly messageMapper: ApplicationMapper<Message,CareMessageDto>) { }
+  constructor(private readonly carePhaseMapper: ApplicationMapper<CarePhase, CarePhaseDto>, private readonly dailyRecordMapper: ApplicationMapper<DailyCareRecord, DailyCareRecordDto>,private readonly messageMapper: ApplicationMapper<Message,MessageDto>) { }
   toResponse(entity: PatientCareSession): PatientCareSessionAggregateDto {
     const {currentDailyRecord,currentPhase,dailyRecords,phaseHistory,inbox} = entity.getProps()
     return {

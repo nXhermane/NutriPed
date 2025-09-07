@@ -1,7 +1,7 @@
 import { Either, ExceptionBase, Result } from "@/core/shared";
-import { CareMessageDto } from "@/core/nutrition_care/application/dtos";
+import { MessageDto } from "@/core/nutrition_care/application/dtos/next/core";
 
 export type GetCareMessageResponse = Either<
   ExceptionBase | unknown,
-  Result<CareMessageDto>
+  Result<MessageDto>
 >;

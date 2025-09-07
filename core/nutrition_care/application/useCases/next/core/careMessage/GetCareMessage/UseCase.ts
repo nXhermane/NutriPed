@@ -10,14 +10,14 @@ import { GetCareMessageRequest } from "./Request";
 import { GetCareMessageResponse } from "./Response";
 import { CareMessageRepository } from "@/core/nutrition_care/domain/next/core/ports/secondary/repositories";
 import { Message } from "@/core/nutrition_care/domain/next";
-import { CareMessageDto } from "@/core/nutrition_care/application/dtos";
+import { MessageDto } from "@/core/nutrition_care/application/dtos/next/core";
 
 export class GetCareMessageUseCase
     implements
     UseCase<GetCareMessageRequest, GetCareMessageResponse> {
     constructor(
         private readonly careMessageRepository: CareMessageRepository,
-        private readonly careMessageMapper: ApplicationMapper<Message, CareMessageDto>
+        private readonly careMessageMapper: ApplicationMapper<Message, MessageDto>
     ) { }
 
     async execute(
