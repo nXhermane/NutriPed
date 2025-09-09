@@ -1,15 +1,23 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { PatientCareSession, PatientCareSessionRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  PatientCareSession,
+  PatientCareSessionRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { PatientCareSessionAggregatePersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class PatientCareSessionRepositoryWeb
-  extends EntityBaseRepositoryWeb<PatientCareSession, PatientCareSessionAggregatePersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    PatientCareSession,
+    PatientCareSessionAggregatePersistenceDto
+  >
   implements PatientCareSessionRepository
 {
   protected storeName = "patient_care_session_aggregates";
 
-  async getByIdOrPatientId(patientIdOrId: AggregateID): Promise<PatientCareSession> {
+  async getByIdOrPatientId(
+    patientIdOrId: AggregateID
+  ): Promise<PatientCareSession> {
     try {
       const store = await this.getObjectStore();
       return new Promise((resolve, reject) => {
@@ -19,20 +27,30 @@ export class PatientCareSessionRepositoryWeb
         idRequest.onsuccess = event => {
           const result = (event.target as IDBRequest).result;
           if (result) {
-            resolve(this.mapper.toDomain(result as PatientCareSessionAggregatePersistenceDto));
+            resolve(
+              this.mapper.toDomain(
+                result as PatientCareSessionAggregatePersistenceDto
+              )
+            );
             return;
           }
 
           // If not found by ID, try by patientId
-          const patientIdRequest = store.index("patientId").get(patientIdOrId.toString());
-          
+          const patientIdRequest = store
+            .index("patientId")
+            .get(patientIdOrId.toString());
+
           patientIdRequest.onsuccess = patientEvent => {
             const patientResult = (patientEvent.target as IDBRequest).result;
             if (!patientResult) {
               reject(new Error("PatientCareSession not found"));
               return;
             }
-            resolve(this.mapper.toDomain(patientResult as PatientCareSessionAggregatePersistenceDto));
+            resolve(
+              this.mapper.toDomain(
+                patientResult as PatientCareSessionAggregatePersistenceDto
+              )
+            );
           };
 
           patientIdRequest.onerror = patientEvent => {

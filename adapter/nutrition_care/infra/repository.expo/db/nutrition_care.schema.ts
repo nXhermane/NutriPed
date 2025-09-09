@@ -262,13 +262,18 @@ export const next_medicines = sqliteTable("next_medicines", {
 });
 
 // Next Nutritional Product Tables
-export const next_nutritional_products = sqliteTable("next_nutritional_products", {
-  id: text("id").primaryKey(),
-  code: text("code").notNull(),
-  dosageTables: text("dosage_tables", { mode: "json" }).$type<CreateDosageScenario[]>().notNull(),
-  createdAt: text("created_at").notNull(),
-  updatedAt: text("updated_at").notNull(),
-});
+export const next_nutritional_products = sqliteTable(
+  "next_nutritional_products",
+  {
+    id: text("id").primaryKey(),
+    code: text("code").notNull(),
+    dosageTables: text("dosage_tables", { mode: "json" })
+      .$type<CreateDosageScenario[]>()
+      .notNull(),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  }
+);
 
 export const next_milks = sqliteTable("next_milks", {
   id: text("id").primaryKey(),
@@ -280,15 +285,20 @@ export const next_milks = sqliteTable("next_milks", {
 });
 
 // Next Orientation Tables
-export const next_orientation_references = sqliteTable("next_orientation_references", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  code: text("code").notNull(),
-  criteria: text("criteria", { mode: "json" }).$type<CreateCriterion[]>().notNull(),
-  treatmentPhase: text("treatment_phase"),
-  createdAt: text("created_at").notNull(),
-  updatedAt: text("updated_at").notNull(),
-});
+export const next_orientation_references = sqliteTable(
+  "next_orientation_references",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    code: text("code").notNull(),
+    criteria: text("criteria", { mode: "json" })
+      .$type<CreateCriterion[]>()
+      .notNull(),
+    treatmentPhase: text("treatment_phase"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  }
+);
 
 // Next Core Tables
 export const care_phases = sqliteTable("care_phases", {
@@ -411,7 +421,9 @@ export const patient_care_session_aggregates = sqliteTable(
       .$type<string[]>()
       .notNull(),
     inbox: text("inbox", { mode: "json" }).$type<string[]>().notNull(),
-    responses: text("responses", { mode: "json" }).$type<UserResponseSummaryPersistenceDto[]>().notNull(),
+    responses: text("responses", { mode: "json" })
+      .$type<UserResponseSummaryPersistenceDto[]>()
+      .notNull(),
     createdAt: text("created_at").notNull(),
     updatedAt: text("updated_at").notNull(),
   }

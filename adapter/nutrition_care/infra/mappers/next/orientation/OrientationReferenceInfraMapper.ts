@@ -8,9 +8,14 @@ import { OrientationReferencePersistenceDto } from "../../../dtos/next/orientati
 
 export class OrientationReferenceInfraMapper
   implements
-    InfrastructureMapper<NextNutritionCare.OrientationReference, OrientationReferencePersistenceDto>
+    InfrastructureMapper<
+      NextNutritionCare.OrientationReference,
+      OrientationReferencePersistenceDto
+    >
 {
-  toPersistence(entity: NextNutritionCare.OrientationReference): OrientationReferencePersistenceDto {
+  toPersistence(
+    entity: NextNutritionCare.OrientationReference
+  ): OrientationReferencePersistenceDto {
     return {
       id: entity.id,
       name: entity.getName(),
@@ -25,8 +30,10 @@ export class OrientationReferenceInfraMapper
       updatedAt: entity.updatedAt,
     };
   }
-  
-  toDomain(record: OrientationReferencePersistenceDto): NextNutritionCare.OrientationReference {
+
+  toDomain(
+    record: OrientationReferencePersistenceDto
+  ): NextNutritionCare.OrientationReference {
     const orientationRes = NextNutritionCare.OrientationReference.create(
       record as NextNutritionCare.CreateOrientationReference,
       record.id
@@ -37,7 +44,13 @@ export class OrientationReferenceInfraMapper
         formatError(orientationRes, NextNutritionCare.OrientationReference.name)
       );
     }
-    const { id, createdAt, updatedAt, ...props } = orientationRes.val.getProps();
-    return new NextNutritionCare.OrientationReference({ id, createdAt, updatedAt, props });
+    const { id, createdAt, updatedAt, ...props } =
+      orientationRes.val.getProps();
+    return new NextNutritionCare.OrientationReference({
+      id,
+      createdAt,
+      updatedAt,
+      props,
+    });
   }
 }

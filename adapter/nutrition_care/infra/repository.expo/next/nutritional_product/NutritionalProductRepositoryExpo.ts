@@ -9,6 +9,4 @@ export class NutritionalProductRepositoryExpoImpl
     NutritionalProductPersistenceDto,
     typeof next_nutritional_products
   >
-  implements NextNutritionCare.NutritionalProductRepository {
-    
-  }
+  implements NextNutritionCare.NutritionalProductRepository {}

@@ -1,12 +1,27 @@
-import { DailyCareRecord, DailyCareRecordRepository, DailyCareAction, DailyMonitoringTask } from "@/core/nutrition_care/domain/next/core";
+import {
+  DailyCareRecord,
+  DailyCareRecordRepository,
+  DailyCareAction,
+  DailyMonitoringTask,
+} from "@/core/nutrition_care/domain/next/core";
 import { EntityBaseRepositoryExpo } from "../../../../../shared";
-import { DailyCareRecordPersistenceDto, DailyCareRecordPersistenceRecordDto } from "../../../dtos/next/core";
+import {
+  DailyCareRecordPersistenceDto,
+  DailyCareRecordPersistenceRecordDto,
+} from "../../../dtos/next/core";
 import { daily_care_records } from "../../db";
-import { AggregateID, InfrastructureMapper, Repository } from "@/core/shared";
+import {
+  AggregateID,
+  IEventBus,
+  InfrastructureMapper,
+  Repository,
+} from "@/core/shared";
 import { eq } from "drizzle-orm";
-import { RepositoryException, RepositoryNotFoundError } from "../../../../../shared/repository.expo/expo.repository.errors";
+import {
+  RepositoryException,
+  RepositoryNotFoundError,
+} from "../../../../../shared/repository.expo/expo.repository.errors";
 import { SQLiteDatabase } from "expo-sqlite";
-import { IEventBus } from "domain-eventrix";
 
 export class DailyCareRecordRepositoryExpoImpl
   extends EntityBaseRepositoryExpo<
@@ -15,22 +30,21 @@ export class DailyCareRecordRepositoryExpoImpl
     typeof daily_care_records,
     DailyCareRecordPersistenceRecordDto
   >
-  implements DailyCareRecordRepository {
-
-
+  implements DailyCareRecordRepository
+{
   constructor(
     expo: SQLiteDatabase,
-    mapper: InfrastructureMapper<DailyCareRecord, DailyCareRecordPersistenceDto, DailyCareRecordPersistenceRecordDto>,
+    mapper: InfrastructureMapper<
+      DailyCareRecord,
+      DailyCareRecordPersistenceDto,
+      DailyCareRecordPersistenceRecordDto
+    >,
+    schema: typeof daily_care_records,
     private dailyCareActionRepository: Repository<DailyCareAction>,
     private dailyMonitoringTaskRepository: Repository<DailyMonitoringTask>,
     eventBus: IEventBus | null = null
   ) {
-    super(
-      expo,
-      mapper,
-      daily_care_records,
-      eventBus
-    );
+    super(expo, mapper, schema, eventBus);
   }
 
   async exist(id: AggregateID): Promise<boolean> {
@@ -47,11 +61,15 @@ export class DailyCareRecordRepositoryExpoImpl
         .get();
 
       if (!record) {
-        throw new RepositoryNotFoundError(`DailyCareRecord with id [${id}] not found.`);
+        throw new RepositoryNotFoundError(
+          `DailyCareRecord with id [${id}] not found.`
+        );
       }
 
       // Reconstruire les entités liées à partir des IDs stockés
-      const recordDto = await this.buildCompleteRecord(record as DailyCareRecordPersistenceDto);
+      const recordDto = await this.buildCompleteRecord(
+        record as DailyCareRecordPersistenceDto
+      );
 
       return this.mapper.toDomain(recordDto);
     } catch (e: unknown) {
@@ -71,17 +89,21 @@ export class DailyCareRecordRepositoryExpoImpl
   ): Promise<DailyCareRecordPersistenceRecordDto> {
     // Récupérer les entités liées par leurs IDs
     const treatmentActions = await Promise.all(
-      recordPersistence.treatmentActions.map(id => this.dailyCareActionRepository.getById(id))
+      recordPersistence.treatmentActions.map(id =>
+        this.dailyCareActionRepository.getById(id)
+      )
     );
 
     const monitoringTasks = await Promise.all(
-      recordPersistence.monitoringTasks.map(id => this.dailyMonitoringTaskRepository.getById(id))
+      recordPersistence.monitoringTasks.map(id =>
+        this.dailyMonitoringTaskRepository.getById(id)
+      )
     );
 
     return {
       ...recordPersistence,
       treatmentActions,
-      monitoringTasks
+      monitoringTasks,
     };
   }
 
@@ -90,12 +112,12 @@ export class DailyCareRecordRepositoryExpoImpl
     // Sauvegarder d'abord les entités liées
     const treatmentActions = entity.getProps().treatmentActions;
     for (const action of treatmentActions) {
-      await this.dailyCareActionRepository.save(action,trx);
+      await this.dailyCareActionRepository.save(action, trx);
     }
 
     const monitoringTasks = entity.getProps().monitoringTasks;
     for (const task of monitoringTasks) {
-      await this.dailyMonitoringTaskRepository.save(task,trx);
+      await this.dailyMonitoringTaskRepository.save(task, trx);
     }
 
     // Ensuite sauvegarder l'entité principale

@@ -6,9 +6,7 @@ import {
 } from "../../useCases/next/core/orchestration";
 
 export interface IOrchestrationService {
-  generateDailyCarePlan(
-    req: GenerateDailyCarePlanRequest
-  ): Promise<
+  generateDailyCarePlan(req: GenerateDailyCarePlanRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;
@@ -29,9 +27,7 @@ export interface IOrchestrationService {
     | Message
   >;
 
-  synchronizePatientState(
-    req: SynchronizePatientStateRequest
-  ): Promise<
+  synchronizePatientState(req: SynchronizePatientStateRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;

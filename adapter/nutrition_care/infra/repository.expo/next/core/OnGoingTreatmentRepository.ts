@@ -1,4 +1,7 @@
-import { OnGoingTreatment, OnGoingTreatmentRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  OnGoingTreatment,
+  OnGoingTreatmentRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { EntityBaseRepositoryExpo } from "../../../../../shared";
 import { OnGoingTreatmentPersistenceDto } from "../../../dtos/next/core";
 import { on_going_treatments } from "../../db";
@@ -12,8 +15,6 @@ export class OnGoingTreatmentRepositoryExpoImpl
   >
   implements OnGoingTreatmentRepository
 {
-  
-
   async exist(id: AggregateID): Promise<boolean> {
     return this._exist(id);
   }

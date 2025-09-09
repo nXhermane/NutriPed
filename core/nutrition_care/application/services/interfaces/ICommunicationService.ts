@@ -11,9 +11,7 @@ export interface ICommunicationService {
     AppServiceResponse<{ sessionId: AggregateID; messages: any[] }> | Message
   >;
 
-  submitUserResponse(
-    req: SubmitUserResponseRequest
-  ): Promise<
+  submitUserResponse(req: SubmitUserResponseRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         messageId: AggregateID;

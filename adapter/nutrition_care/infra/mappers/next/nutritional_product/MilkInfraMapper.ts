@@ -7,8 +7,7 @@ import {
 import { MilkPersistenceDto } from "../../../dtos/next/nutritional_product";
 
 export class MilkInfraMapper
-  implements
-    InfrastructureMapper<NextNutritionCare.Milk, MilkPersistenceDto>
+  implements InfrastructureMapper<NextNutritionCare.Milk, MilkPersistenceDto>
 {
   toPersistence(entity: NextNutritionCare.Milk): MilkPersistenceDto {
     return {
@@ -20,7 +19,7 @@ export class MilkInfraMapper
       updatedAt: entity.updatedAt,
     };
   }
-  
+
   toDomain(record: MilkPersistenceDto): NextNutritionCare.Milk {
     const milkRes = NextNutritionCare.Milk.create(
       record as NextNutritionCare.CreateMilk,

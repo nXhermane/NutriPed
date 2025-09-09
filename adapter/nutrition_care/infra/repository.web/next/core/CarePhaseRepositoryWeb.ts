@@ -1,5 +1,8 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { CarePhase, CarePhaseRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  CarePhase,
+  CarePhaseRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { CarePhasePersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 

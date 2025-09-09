@@ -19,7 +19,7 @@ export class EvaluateNutritionalProductUseCase
     >
 {
   constructor(
-    private readonly nutritionalProductAdvisorService: NextNutritionCare.NutritionalProductAdvisorService,
+    private readonly nutritionalProductAdvisorService: NextNutritionCare.INutritionalProductAdvisorService,
     private readonly mapper: ApplicationMapper<
       NextNutritionCare.NutritionalProductDosage,
       NutritionalProductDosageDto

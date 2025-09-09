@@ -1,5 +1,8 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { Message, CareMessageRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  Message,
+  CareMessageRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { MessagePersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 

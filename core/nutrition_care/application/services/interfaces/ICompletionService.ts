@@ -7,9 +7,7 @@ import {
 } from "../../useCases/next/core/completion";
 
 export interface ICompletionService {
-  completeAction(
-    req: CompleteActionRequest
-  ): Promise<
+  completeAction(req: CompleteActionRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         actionId: AggregateID;
@@ -19,9 +17,7 @@ export interface ICompletionService {
     | Message
   >;
 
-  completeTask(
-    req: CompleteTaskRequest
-  ): Promise<
+  completeTask(req: CompleteTaskRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         taskId: AggregateID;
@@ -31,9 +27,7 @@ export interface ICompletionService {
     | Message
   >;
 
-  handleCompletionResponse(
-    req: HandleCompletionResponseRequest
-  ): Promise<
+  handleCompletionResponse(req: HandleCompletionResponseRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;
@@ -42,9 +36,7 @@ export interface ICompletionService {
     | Message
   >;
 
-  markRecordIncomplete(
-    req: MarkRecordIncompleteRequest
-  ): Promise<
+  markRecordIncomplete(req: MarkRecordIncompleteRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;

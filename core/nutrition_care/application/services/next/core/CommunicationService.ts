@@ -32,9 +32,7 @@ export class CommunicationService implements ICommunicationService {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async submitUserResponse(
-    req: SubmitUserResponseRequest
-  ): Promise<
+  async submitUserResponse(req: SubmitUserResponseRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         messageId: AggregateID;

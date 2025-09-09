@@ -1,11 +1,19 @@
-import { CarePhase, CarePhaseRepository, MonitoringParameter, OnGoingTreatment } from "@/core/nutrition_care/domain/next/core";
+import {
+  CarePhase,
+  CarePhaseRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { EntityBaseRepositoryExpo } from "../../../../../shared";
-import { CarePhasePersistenceDto, CarePhasePersistenceRecordDto } from "../../../dtos/next/core";
+import {
+  CarePhasePersistenceDto,
+  CarePhasePersistenceRecordDto,
+} from "../../../dtos/next/core";
 import { care_phases } from "../../db";
-import { AggregateID, IEventBus, InfrastructureMapper, Repository } from "@/core/shared";
+import { AggregateID, IEventBus, InfrastructureMapper } from "@/core/shared";
 import { eq } from "drizzle-orm";
-import { RepositoryException, RepositoryNotFoundError } from "../../../../../shared/repository.expo/expo.repository.errors";
-import { CarePhaseInfraMapper } from "../../../mappers/next/core/CarePhaseMapper";
+import {
+  RepositoryException,
+  RepositoryNotFoundError,
+} from "../../../../../shared/repository.expo/expo.repository.errors";
 import { SQLiteDatabase } from "expo-sqlite";
 import { NextCore } from "@/core/nutrition_care";
 
@@ -18,20 +26,19 @@ export class CarePhaseRepositoryExpoImpl
   >
   implements CarePhaseRepository
 {
-
   constructor(
     expo: SQLiteDatabase,
-    mapper: InfrastructureMapper<NextCore.CarePhase,CarePhasePersistenceDto,CarePhasePersistenceRecordDto>,
+    mapper: InfrastructureMapper<
+      NextCore.CarePhase,
+      CarePhasePersistenceDto,
+      CarePhasePersistenceRecordDto
+    >,
+    schema: typeof care_phases,
     private monitoringParameterRepository: NextCore.MonitoringParameterRepository,
     private onGoingTreatmentRepository: NextCore.OnGoingTreatmentRepository,
     eventBus: IEventBus | null = null
   ) {
-    super(
-      expo,
-     mapper,
-      care_phases,
-      eventBus
-    );
+    super(expo, mapper, schema, eventBus);
   }
 
   async exist(id: AggregateID): Promise<boolean> {
@@ -48,12 +55,16 @@ export class CarePhaseRepositoryExpoImpl
         .get();
 
       if (!record) {
-        throw new RepositoryNotFoundError(`CarePhase with id [${id}] not found.`);
+        throw new RepositoryNotFoundError(
+          `CarePhase with id [${id}] not found.`
+        );
       }
 
       // Reconstruire les entités liées à partir des IDs stockés
-      const recordDto = await this.buildCompleteRecord(record as CarePhasePersistenceDto);
-      
+      const recordDto = await this.buildCompleteRecord(
+        record as CarePhasePersistenceDto
+      );
+
       return this.mapper.toDomain(recordDto);
     } catch (e: unknown) {
       if (e instanceof RepositoryNotFoundError) {
@@ -72,17 +83,21 @@ export class CarePhaseRepositoryExpoImpl
   ): Promise<CarePhasePersistenceRecordDto> {
     // Récupérer les entités liées par leurs IDs
     const monitoringParameters = await Promise.all(
-      phasePersistence.monitoringParameters.map(id => this.monitoringParameterRepository.getById(id))
+      phasePersistence.monitoringParameters.map(id =>
+        this.monitoringParameterRepository.getById(id)
+      )
     );
 
     const onGoingTreatments = await Promise.all(
-      phasePersistence.onGoingTreatments.map(id => this.onGoingTreatmentRepository.getById(id))
+      phasePersistence.onGoingTreatments.map(id =>
+        this.onGoingTreatmentRepository.getById(id)
+      )
     );
 
     return {
       ...phasePersistence,
       monitoringParameters,
-      onGoingTreatments
+      onGoingTreatments,
     };
   }
 

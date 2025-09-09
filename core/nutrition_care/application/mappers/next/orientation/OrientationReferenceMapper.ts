@@ -1,6 +1,6 @@
 import { ApplicationMapper } from "@shared";
-import { OrientationReference } from "../../../domain/modules/next/orientation";
-import { OrientationReferenceDto } from "../../dtos/next/orientation";
+import { OrientationReference } from "../../../../domain/modules/next/orientation";
+import { OrientationReferenceDto } from "../../../dtos/next/orientation";
 
 export class OrientationReferenceMapper
   implements ApplicationMapper<OrientationReference, OrientationReferenceDto>

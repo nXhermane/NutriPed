@@ -5,7 +5,7 @@ import { NextCore } from "@/core/nutrition_care";
 import { CARE_PHASE_CODES } from "@/core/constants";
 
 export interface CarePhasePersistenceDto extends EntityPersistenceDto {
-  code: CARE_PHASE_CODES
+  code: CARE_PHASE_CODES;
   status: CarePhaseStatus;
   startDate: string;
   endDate: string | null;

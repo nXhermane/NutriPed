@@ -1,10 +1,16 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { MonitoringParameter, MonitoringParameterRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  MonitoringParameter,
+  MonitoringParameterRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { MonitoringParameterPersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class MonitoringParameterRepositoryWeb
-  extends EntityBaseRepositoryWeb<MonitoringParameter, MonitoringParameterPersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    MonitoringParameter,
+    MonitoringParameterPersistenceDto
+  >
   implements MonitoringParameterRepository
 {
   protected storeName = "monitoring_parameters";

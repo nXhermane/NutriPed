@@ -28,9 +28,7 @@ export interface OrchestrationServiceUseCases {
 export class OrchestrationService implements IOrchestrationService {
   constructor(private readonly ucs: OrchestrationServiceUseCases) {}
 
-  async generateDailyCarePlan(
-    req: GenerateDailyCarePlanRequest
-  ): Promise<
+  async generateDailyCarePlan(req: GenerateDailyCarePlanRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;
@@ -59,9 +57,7 @@ export class OrchestrationService implements IOrchestrationService {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async synchronizePatientState(
-    req: SynchronizePatientStateRequest
-  ): Promise<
+  async synchronizePatientState(req: SynchronizePatientStateRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;

@@ -9,9 +9,10 @@ export interface DailyCareRecordPersistenceDto extends EntityPersistenceDto {
   treatmentActions: AggregateID[];
   monitoringTasks: AggregateID[];
 }
-export interface DailyCareRecordPersistenceRecordDto extends EntityPersistenceDto {
-date: string;
-status: DailyCareRecordStatus;
-treatmentActions: NextCore.DailyCareAction[];
-monitoringTasks: NextCore.DailyMonitoringTask[];
+export interface DailyCareRecordPersistenceRecordDto
+  extends EntityPersistenceDto {
+  date: string;
+  status: DailyCareRecordStatus;
+  treatmentActions: NextCore.DailyCareAction[];
+  monitoringTasks: NextCore.DailyMonitoringTask[];
 }

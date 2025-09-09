@@ -6,12 +6,17 @@ import { SystemCode } from "@/core/shared";
 import { NUTRITIONAL_PRODUCT_CODE } from "@/core/constants";
 
 export class NutritionalProductRepositoryWeb
-  extends EntityBaseRepositoryWeb<NutritionalProduct, NutritionalProductPersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    NutritionalProduct,
+    NutritionalProductPersistenceDto
+  >
   implements NutritionalProductRepository
 {
   protected storeName = "next_nutritional_products";
 
-  async getByCode(code: SystemCode<NUTRITIONAL_PRODUCT_CODE>): Promise<NutritionalProduct> {
+  async getByCode(
+    code: SystemCode<NUTRITIONAL_PRODUCT_CODE>
+  ): Promise<NutritionalProduct> {
     try {
       const store = await this.getObjectStore();
       return new Promise((resolve, reject) => {
@@ -23,7 +28,9 @@ export class NutritionalProductRepositoryWeb
             reject(new Error("NutritionalProduct not found"));
             return;
           }
-          resolve(this.mapper.toDomain(result as NutritionalProductPersistenceDto));
+          resolve(
+            this.mapper.toDomain(result as NutritionalProductPersistenceDto)
+          );
         };
 
         request.onerror = event => {

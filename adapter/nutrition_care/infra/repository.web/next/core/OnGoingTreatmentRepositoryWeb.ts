@@ -1,10 +1,16 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { OnGoingTreatment, OnGoingTreatmentRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  OnGoingTreatment,
+  OnGoingTreatmentRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { OnGoingTreatmentPersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class OnGoingTreatmentRepositoryWeb
-  extends EntityBaseRepositoryWeb<OnGoingTreatment, OnGoingTreatmentPersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    OnGoingTreatment,
+    OnGoingTreatmentPersistenceDto
+  >
   implements OnGoingTreatmentRepository
 {
   protected storeName = "on_going_treatments";

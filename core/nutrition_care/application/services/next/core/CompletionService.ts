@@ -28,9 +28,7 @@ export interface CompletionServiceUseCases {
 export class CompletionService implements ICompletionService {
   constructor(private readonly ucs: CompletionServiceUseCases) {}
 
-  async completeAction(
-    req: CompleteActionRequest
-  ): Promise<
+  async completeAction(req: CompleteActionRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         actionId: AggregateID;
@@ -44,9 +42,7 @@ export class CompletionService implements ICompletionService {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async completeTask(
-    req: CompleteTaskRequest
-  ): Promise<
+  async completeTask(req: CompleteTaskRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         taskId: AggregateID;
@@ -60,9 +56,7 @@ export class CompletionService implements ICompletionService {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async handleCompletionResponse(
-    req: HandleCompletionResponseRequest
-  ): Promise<
+  async handleCompletionResponse(req: HandleCompletionResponseRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;
@@ -75,9 +69,7 @@ export class CompletionService implements ICompletionService {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async markRecordIncomplete(
-    req: MarkRecordIncompleteRequest
-  ): Promise<
+  async markRecordIncomplete(req: MarkRecordIncompleteRequest): Promise<
     | AppServiceResponse<{
         sessionId: AggregateID;
         success: boolean;

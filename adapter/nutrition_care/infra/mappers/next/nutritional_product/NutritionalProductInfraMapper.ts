@@ -8,8 +8,14 @@ import { NutritionalProductPersistenceDto } from "../../../dtos/next/nutritional
 
 export class NutritionalProductInfraMapper
   implements
-  InfrastructureMapper<NextNutritionCare.NutritionalProduct, NutritionalProductPersistenceDto> {
-  toPersistence(entity: NextNutritionCare.NutritionalProduct): NutritionalProductPersistenceDto {
+    InfrastructureMapper<
+      NextNutritionCare.NutritionalProduct,
+      NutritionalProductPersistenceDto
+    >
+{
+  toPersistence(
+    entity: NextNutritionCare.NutritionalProduct
+  ): NutritionalProductPersistenceDto {
     return {
       id: entity.id,
       code: entity.getCode(),
@@ -49,7 +55,9 @@ export class NutritionalProductInfraMapper
     };
   }
 
-  toDomain(record: NutritionalProductPersistenceDto): NextNutritionCare.NutritionalProduct {
+  toDomain(
+    record: NutritionalProductPersistenceDto
+  ): NextNutritionCare.NutritionalProduct {
     const productRes = NextNutritionCare.NutritionalProduct.create(
       record as NextNutritionCare.CreateNutritionalProduct,
       record.id
@@ -61,6 +69,11 @@ export class NutritionalProductInfraMapper
       );
     }
     const { id, createdAt, updatedAt, ...props } = productRes.val.getProps();
-    return new NextNutritionCare.NutritionalProduct({ id, createdAt, updatedAt, props });
+    return new NextNutritionCare.NutritionalProduct({
+      id,
+      createdAt,
+      updatedAt,
+      props,
+    });
   }
 }

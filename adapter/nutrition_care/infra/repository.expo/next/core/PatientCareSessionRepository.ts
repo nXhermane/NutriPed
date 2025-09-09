@@ -1,10 +1,19 @@
-import { PatientCareSession, PatientCareSessionRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  PatientCareSession,
+  PatientCareSessionRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { EntityBaseRepositoryExpo } from "../../../../../shared";
-import { PatientCareSessionAggregatePersistenceDto, PatientCareSessionAggregatePersistenceRecordDto } from "../../../dtos/next/core";
+import {
+  PatientCareSessionAggregatePersistenceDto,
+  PatientCareSessionAggregatePersistenceRecordDto,
+} from "../../../dtos/next/core";
 import { patient_care_session_aggregates } from "../../db";
 import { AggregateID, IEventBus, InfrastructureMapper } from "@/core/shared";
 import { eq, or } from "drizzle-orm";
-import { RepositoryException, RepositoryNotFoundError } from "../../../../../shared/repository.expo/expo.repository.errors";
+import {
+  RepositoryException,
+  RepositoryNotFoundError,
+} from "../../../../../shared/repository.expo/expo.repository.errors";
 import { SQLiteDatabase } from "expo-sqlite";
 import { NextCore } from "@/core/nutrition_care";
 
@@ -17,25 +26,25 @@ export class PatientCareSessionRepositoryExpoImpl
   >
   implements PatientCareSessionRepository
 {
- 
-
   constructor(
     expo: SQLiteDatabase,
-    mapper: InfrastructureMapper<NextCore.PatientCareSession, PatientCareSessionAggregatePersistenceDto,PatientCareSessionAggregatePersistenceRecordDto>,
-    eventBus: IEventBus,
+    mapper: InfrastructureMapper<
+      NextCore.PatientCareSession,
+      PatientCareSessionAggregatePersistenceDto,
+      PatientCareSessionAggregatePersistenceRecordDto
+    >,
+    schema: typeof patient_care_session_aggregates,
     private carePhaseRepository: NextCore.CarePhaseRepository,
-    private dailyCareRecordRepository:NextCore.DailyCareRecordRepository,
-    private messageRepository:NextCore.CareMessageRepository,
-
+    private dailyCareRecordRepository: NextCore.DailyCareRecordRepository,
+    private messageRepository: NextCore.CareMessageRepository,
+    eventBus: IEventBus
   ) {
-    super(
-      expo,mapper,
-      patient_care_session_aggregates,
-      eventBus
-    );
+    super(expo, mapper, schema, eventBus);
   }
 
-  async getByIdOrPatientId(patientIdOrId: AggregateID): Promise<PatientCareSession> {
+  async getByIdOrPatientId(
+    patientIdOrId: AggregateID
+  ): Promise<PatientCareSession> {
     try {
       const sessionPersistence = await this.db
         .select()
@@ -55,8 +64,10 @@ export class PatientCareSessionRepositoryExpoImpl
       }
 
       // Reconstruire les entités liées à partir des IDs stockés
-      const recordDto = await this.buildCompleteRecord(sessionPersistence as PatientCareSessionAggregatePersistenceDto);
-      
+      const recordDto = await this.buildCompleteRecord(
+        sessionPersistence as PatientCareSessionAggregatePersistenceDto
+      );
+
       const entity = this.mapper.toDomain(recordDto);
       return entity;
     } catch (e: unknown) {
@@ -75,20 +86,26 @@ export class PatientCareSessionRepositoryExpoImpl
     sessionPersistence: PatientCareSessionAggregatePersistenceDto
   ): Promise<PatientCareSessionAggregatePersistenceRecordDto> {
     // Récupérer les entités liées par leurs IDs
-    const currentPhase = sessionPersistence.currentPhase 
+    const currentPhase = sessionPersistence.currentPhase
       ? await this.carePhaseRepository.getById(sessionPersistence.currentPhase)
       : null;
 
     const phaseHistory = await Promise.all(
-      sessionPersistence.phaseHistory.map(id => this.carePhaseRepository.getById(id))
+      sessionPersistence.phaseHistory.map(id =>
+        this.carePhaseRepository.getById(id)
+      )
     );
 
     const dailyRecords = await Promise.all(
-      sessionPersistence.dailyRecords.map(id => this.dailyCareRecordRepository.getById(id))
+      sessionPersistence.dailyRecords.map(id =>
+        this.dailyCareRecordRepository.getById(id)
+      )
     );
 
     const currentDailyRecord = sessionPersistence.currentDailyRecord
-      ? await this.dailyCareRecordRepository.getById(sessionPersistence.currentDailyRecord)
+      ? await this.dailyCareRecordRepository.getById(
+          sessionPersistence.currentDailyRecord
+        )
       : null;
 
     const inbox = await Promise.all(
@@ -102,7 +119,7 @@ export class PatientCareSessionRepositoryExpoImpl
       phaseHistory,
       dailyRecords,
       inbox,
-      responses: sessionPersistence.responses // UserResponse déjà complets
+      responses: sessionPersistence.responses, // UserResponse déjà complets
     };
   }
 
@@ -110,7 +127,7 @@ export class PatientCareSessionRepositoryExpoImpl
   async save(entity: PatientCareSession, trx?: any): Promise<void> {
     // Si aucune transaction n'est fournie, créer une nouvelle transaction
     if (!trx) {
-      return this.db.transaction(async (transaction) => {
+      return this.db.transaction(async transaction => {
         await this.saveWithTransaction(entity, transaction);
       });
     } else {
@@ -119,7 +136,10 @@ export class PatientCareSessionRepositoryExpoImpl
     }
   }
 
-  private async saveWithTransaction(entity: PatientCareSession, trx: any): Promise<void> {
+  private async saveWithTransaction(
+    entity: PatientCareSession,
+    trx: any
+  ): Promise<void> {
     // Sauvegarder d'abord les entités liées avec la même transaction
     const currentPhase = entity.getCurrentPhase();
     if (currentPhase) {

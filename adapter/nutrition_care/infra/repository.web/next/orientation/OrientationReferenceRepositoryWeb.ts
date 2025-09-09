@@ -5,7 +5,10 @@ import { OrientationReferencePersistenceDto } from "../../../dtos/next/orientati
 import { SystemCode } from "@/core/shared";
 
 export class OrientationReferenceRepositoryWeb
-  extends EntityBaseRepositoryWeb<OrientationReference, OrientationReferencePersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    OrientationReference,
+    OrientationReferencePersistenceDto
+  >
   implements OrientationReferenceRepository
 {
   protected storeName = "next_orientation_references";
@@ -22,7 +25,9 @@ export class OrientationReferenceRepositoryWeb
             reject(new Error("OrientationReference not found"));
             return;
           }
-          resolve(this.mapper.toDomain(result as OrientationReferencePersistenceDto));
+          resolve(
+            this.mapper.toDomain(result as OrientationReferencePersistenceDto)
+          );
         };
 
         request.onerror = event => {

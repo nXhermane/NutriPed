@@ -1,10 +1,16 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { DailyMonitoringTask, DailyMonitoringTaskRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  DailyMonitoringTask,
+  DailyMonitoringTaskRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { DailyMonitoringTaskPersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class DailyMonitoringTaskRepositoryWeb
-  extends EntityBaseRepositoryWeb<DailyMonitoringTask, DailyMonitoringTaskPersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    DailyMonitoringTask,
+    DailyMonitoringTaskPersistenceDto
+  >
   implements DailyMonitoringTaskRepository
 {
   protected storeName = "daily_monitoring_tasks";

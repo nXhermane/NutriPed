@@ -1,4 +1,7 @@
-import { Message, CareMessageRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  Message,
+  CareMessageRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { EntityBaseRepositoryExpo } from "../../../../../shared";
 import { MessagePersistenceDto } from "../../../dtos/next/core";
 import { messages } from "../../db";
@@ -12,7 +15,6 @@ export class MessageRepositoryExpoImpl
   >
   implements CareMessageRepository
 {
-
   async exist(id: AggregateID): Promise<boolean> {
     return this._exist(id);
   }

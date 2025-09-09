@@ -1,10 +1,16 @@
 import { EntityBaseRepositoryWeb } from "@/adapter/shared/repository.web";
-import { DailyCareRecord, DailyCareRecordRepository } from "@/core/nutrition_care/domain/next/core";
+import {
+  DailyCareRecord,
+  DailyCareRecordRepository,
+} from "@/core/nutrition_care/domain/next/core";
 import { DailyCareRecordPersistenceDto } from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class DailyCareRecordRepositoryWeb
-  extends EntityBaseRepositoryWeb<DailyCareRecord, DailyCareRecordPersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    DailyCareRecord,
+    DailyCareRecordPersistenceDto
+  >
   implements DailyCareRecordRepository
 {
   protected storeName = "daily_care_records";
