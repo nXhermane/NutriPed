@@ -1,21 +1,31 @@
 import { EntityPersistenceDto } from "@/adapter/shared";
 import { AggregateID } from "@/core/shared";
 import { NextCore } from "@/core/nutrition_care/domain";
-import { CarePhasePersistenceDto } from "./CarePhasePersistenceDto";
-import { DailyCareRecordPersistenceDto } from "./DailyCareRecordPersistenceDto";
-import { MessagePersistenceDto } from "./MessagePersistenceDto";
 import { UserResponseSummaryPersistenceDto } from "./UserResponseSummaryPersistenceDto";
 
 export interface PatientCareSessionAggregatePersistenceDto
-  extends EntityPersistenceDto {
+  extends EntityPersistenceDto { patientId: AggregateID;
+    status: NextCore.PatientCareSessionStatus;
+    startDate: string;
+    endDate: string | null;
+    currentPhase: AggregateID | null;
+    currentDailyRecord: AggregateID | null;
+    phaseHistory: AggregateID[];
+    dailyRecords: AggregateID[];
+    inbox: AggregateID[];
+    responses: UserResponseSummaryPersistenceDto[];
+
+}
+
+export interface PatientCareSessionAggregatePersistenceRecordDto extends EntityPersistenceDto {
   patientId: AggregateID;
   status: NextCore.PatientCareSessionStatus;
   startDate: string;
   endDate: string | null;
-  currentPhase: CarePhasePersistenceDto | null;
-  currentDailyRecord: DailyCareRecordPersistenceDto | null;
-  phaseHistory: CarePhasePersistenceDto[];
-  dailyRecords: DailyCareRecordPersistenceDto[];
-  inbox: MessagePersistenceDto[];
+  currentPhase: NextCore.CarePhase | null;
+  currentDailyRecord: NextCore.DailyCareRecord | null;
+  phaseHistory: NextCore.CarePhase[];
+  dailyRecords: NextCore.DailyCareRecord[];
+  inbox: NextCore.Message[];
   responses: UserResponseSummaryPersistenceDto[];
 }

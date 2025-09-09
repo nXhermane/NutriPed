@@ -34,6 +34,7 @@ export interface IDailyCareRecord extends EntityPropsBaseType {
 }
 export interface CreateDailyCareRecord {
   date: string;
+  status?: DailyCareRecordStatus;
   treatmentActions: (CreateDailyCareAction & { id: AggregateID })[];
   monitoringTasks: (CreateDailyMonitoringTask & { id: AggregateID })[];
 }
@@ -254,7 +255,7 @@ export class DailyCareRecord extends Entity<IDailyCareRecord> {
           id,
           props: {
             date: dateRes.val,
-            status: DailyCareRecordStatus.ACTIVE,
+            status: createProps.status || DailyCareRecordStatus.ACTIVE,
             treatmentActions: actionsRes.map(res => res.val),
             monitoringTasks: tasksRes.map(res => res.val),
           },

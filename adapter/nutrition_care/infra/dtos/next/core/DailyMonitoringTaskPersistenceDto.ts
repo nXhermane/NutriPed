@@ -6,6 +6,6 @@ export interface DailyMonitoringTaskPersistenceDto
   extends EntityPersistenceDto {
   monitoringId: AggregateID;
   status: NextCore.DailyMonitoringTaskStatus;
-  task: NextCore.IMonitoringTask;
+  task: NextCore.CreateMonitoringTask;
   effectiveDate: string;
 }

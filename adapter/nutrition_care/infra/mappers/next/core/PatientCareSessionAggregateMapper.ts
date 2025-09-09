@@ -1,21 +1,15 @@
-import { InfrastructureMapper } from "@/core/shared";
+import { DomainDateTime, InfrastructureMapper } from "@/core/shared";
 import { PatientCareSession } from "@/core/nutrition_care/domain/next/core/models/aggregate";
-import { PatientCareSessionAggregatePersistenceDto } from "../../../dtos/next/core";
-import { CarePhaseInfraMapper } from "./CarePhaseMapper";
-import { DailyCareRecordInfraMapper } from "./DailyCareRecordMapper";
-import { MessageInfraMapper } from "./MessageMapper";
+import { PatientCareSessionAggregatePersistenceDto, PatientCareSessionAggregatePersistenceRecordDto } from "../../../dtos/next/core";
 import { UserResponseSummaryInfraMapper } from "./UserResponseSummaryMapper";
-
+import { NextCore } from "@/core/nutrition_care";
 export class PatientCareSessionAggregateInfraMapper
   implements
-    InfrastructureMapper<
-      PatientCareSession,
-      PatientCareSessionAggregatePersistenceDto
-    >
-{
-  private carePhaseMapper = new CarePhaseInfraMapper();
-  private dailyRecordMapper = new DailyCareRecordInfraMapper();
-  private messageMapper = new MessageInfraMapper();
+  InfrastructureMapper<
+    PatientCareSession,
+    PatientCareSessionAggregatePersistenceDto,
+    PatientCareSessionAggregatePersistenceRecordDto
+  > {
   private responseMapper = new UserResponseSummaryInfraMapper();
 
   toPersistence(
@@ -28,20 +22,20 @@ export class PatientCareSessionAggregateInfraMapper
       startDate: entity.getStartDate(),
       endDate: entity.getEndDate(),
       currentPhase: entity.getCurrentPhase()
-        ? this.carePhaseMapper.toPersistence(entity.getCurrentPhase()!)
+        ? entity.getCurrentPhase()!.id
         : null,
       currentDailyRecord: entity.getCurrentDailyRecord()
-        ? this.dailyRecordMapper.toPersistence(entity.getCurrentDailyRecord()!)
+        ? entity.getCurrentDailyRecord()!.id
         : null,
       phaseHistory: entity
         .getPhaseHistory()
-        .map(phase => this.carePhaseMapper.toPersistence(phase)),
+        .map(phase => phase.id),
       dailyRecords: entity
         .getDailyRecords()
-        .map(record => this.dailyRecordMapper.toPersistence(record)),
+        .map(record => record.id),
       inbox: entity
         .getInbox()
-        .map(message => this.messageMapper.toPersistence(message)),
+        .map(message => message.id),
       responses: entity
         .getResponses()
         .map(response => this.responseMapper.toPersistence(response)),
@@ -51,8 +45,37 @@ export class PatientCareSessionAggregateInfraMapper
   }
 
   toDomain(
-    record: PatientCareSessionAggregatePersistenceDto
+    record: PatientCareSessionAggregatePersistenceRecordDto
   ): PatientCareSession {
-    throw new Error("toDomain not implemented");
+    const props: NextCore.IPatientCareSession = {
+      patientId: record.patientId,
+      status: record.status,
+      startDate: DomainDateTime.create(record.startDate).val,
+      endDate: record.endDate ? DomainDateTime.create(record.endDate).val : null,
+      currentPhase: record.currentPhase
+        ? record.currentPhase
+        : null,
+      currentDailyRecord: record.currentDailyRecord
+        ? record.currentDailyRecord
+        : null,
+      phaseHistory: record.phaseHistory,
+      dailyRecords: record.dailyRecords,
+      inbox: record.inbox,
+      responses: record.responses.map(response =>
+        this.responseMapper.toDomain(response)
+      ),
+
+    };
+
+
+    const result = new PatientCareSession({
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+      id: record.id,
+      props: props,
+    });
+
+
+    return result;
   }
 }

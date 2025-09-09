@@ -16,7 +16,10 @@ export class DailyMonitoringTaskInfraMapper
       id: entity.id as string,
       monitoringId: entity.getMonitoringId(),
       status: entity.getStatus(),
-      task: entity.getTask(),
+      task: {
+        category: entity.getTask().category,
+        code: entity.getTask().code.unpack(),
+      },
       effectiveDate: entity.props.effectiveDate.toString(),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -27,10 +30,7 @@ export class DailyMonitoringTaskInfraMapper
     const createProps: CreateDailyMonitoringTask = {
       monitoringId: record.monitoringId,
       status: record.status,
-      task: {
-        category: record.task.category,
-        code: record.task.code.unpack(),
-      },
+      task: record.task,
       effectiveDate: record.effectiveDate,
     };
 

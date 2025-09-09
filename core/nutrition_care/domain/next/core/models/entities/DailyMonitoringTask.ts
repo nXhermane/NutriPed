@@ -45,6 +45,9 @@ export class DailyMonitoringTask extends Entity<IDailyMonitoringTask> {
   getTask(): IMonitoringTask {
     return this.props.task.unpack();
   }
+  getEffectiveDate(): string {
+    return this.props.effectiveDate.toString();
+  }
   completed() {
     this.props.status = DailyMonitoringTaskStatus.COMPLETED;
   }
