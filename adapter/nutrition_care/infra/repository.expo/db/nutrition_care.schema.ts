@@ -19,6 +19,7 @@ import {
 } from "@core/nutrition_care";
 import { NextCore } from "@/core/nutrition_care/domain";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { UserResponseSummaryPersistenceDto } from "../../dtos/next/core";
 
 // Type definitions for JSON fields
 type NutritionalOrMedicalAction =
@@ -379,7 +380,7 @@ export const patient_care_session_aggregates = sqliteTable(
       .$type<string[]>()
       .notNull(),
     inbox: text("inbox", { mode: "json" }).$type<string[]>().notNull(),
-    responses: text("responses", { mode: "json" }).$type<string[]>().notNull(),
+    responses: text("responses", { mode: "json" }).$type<UserResponseSummaryPersistenceDto[]>().notNull(),
     createdAt: text("created_at").notNull(),
     updatedAt: text("updated_at").notNull(),
   }
