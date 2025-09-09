@@ -9,5 +9,5 @@ export interface NutritionalProductRepository
   ): Promise<NutritionalProduct>;
   exist(
     code: SystemCode<NUTRITIONAL_PRODUCT_CODE>
-  ): Promise<NutritionalProduct>;
+  ): Promise<boolean>;
 }

@@ -106,35 +106,47 @@ export class PatientCareSessionRepositoryExpoImpl
     };
   }
 
-  // Override save pour sauvegarder les entités liées
+  // Override save pour sauvegarder les entités liées avec transaction
   async save(entity: PatientCareSession, trx?: any): Promise<void> {
-    // Sauvegarder d'abord les entités liées
+    // Si aucune transaction n'est fournie, créer une nouvelle transaction
+    if (!trx) {
+      return this.db.transaction(async (transaction) => {
+        await this.saveWithTransaction(entity, transaction);
+      });
+    } else {
+      // Utiliser la transaction existante
+      await this.saveWithTransaction(entity, trx);
+    }
+  }
+
+  private async saveWithTransaction(entity: PatientCareSession, trx: any): Promise<void> {
+    // Sauvegarder d'abord les entités liées avec la même transaction
     const currentPhase = entity.getCurrentPhase();
     if (currentPhase) {
-      await this.carePhaseRepository.save(currentPhase);
+      await this.carePhaseRepository.save(currentPhase, trx);
     }
 
     const phaseHistory = entity.getPhaseHistory();
     for (const phase of phaseHistory) {
-      await this.carePhaseRepository.save(phase);
+      await this.carePhaseRepository.save(phase, trx);
     }
 
     const dailyRecords = entity.getDailyRecords();
     for (const record of dailyRecords) {
-      await this.dailyCareRecordRepository.save(record);
+      await this.dailyCareRecordRepository.save(record, trx);
     }
 
     const currentDailyRecord = entity.getCurrentDailyRecord();
     if (currentDailyRecord) {
-      await this.dailyCareRecordRepository.save(currentDailyRecord);
+      await this.dailyCareRecordRepository.save(currentDailyRecord, trx);
     }
 
     const inbox = entity.getInbox();
     for (const message of inbox) {
-      await this.messageRepository.save(message);
+      await this.messageRepository.save(message, trx);
     }
 
-    // Ensuite sauvegarder l'agrégat principal
+    // Ensuite sauvegarder l'agrégat principal avec la transaction
     await super.save(entity, trx);
   }
 

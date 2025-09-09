@@ -20,6 +20,8 @@ import {
 import { NextCore } from "@/core/nutrition_care/domain";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { UserResponseSummaryPersistenceDto } from "../../dtos/next/core";
+import { CreateCriterion } from "@/core/shared";
+import { CreateDosageScenario } from "@/core/nutrition_care/domain/modules/next";
 
 // Type definitions for JSON fields
 type NutritionalOrMedicalAction =
@@ -255,6 +257,35 @@ export const next_medicines = sqliteTable("next_medicines", {
   contraindications: text("contraindications", { mode: "json" }).notNull(),
   interactions: text("interactions", { mode: "json" }).notNull(),
   notes: text("notes", { mode: "json" }).notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// Next Nutritional Product Tables
+export const next_nutritional_products = sqliteTable("next_nutritional_products", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  dosageTables: text("dosage_tables", { mode: "json" }).$type<CreateDosageScenario[]>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const next_milks = sqliteTable("next_milks", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  name: text("name").notNull(),
+  notes: text("notes", { mode: "json" }).$type<string[]>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// Next Orientation Tables
+export const next_orientation_references = sqliteTable("next_orientation_references", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  code: text("code").notNull(),
+  criteria: text("criteria", { mode: "json" }).$type<CreateCriterion[]>().notNull(),
+  treatmentPhase: text("treatment_phase"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
