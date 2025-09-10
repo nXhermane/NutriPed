@@ -15,6 +15,16 @@ export class PatientCareSessionRepositoryWeb
 {
   protected storeName = "patient_care_session_aggregates";
 
+  getById(id: AggregateID): Promise<PatientCareSession> {
+    throw new Error("Method not implemented.");
+  }
+  save(entity: PatientCareSession, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: AggregateID, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async getByIdOrPatientId(
     patientIdOrId: AggregateID
   ): Promise<PatientCareSession> {

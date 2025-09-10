@@ -15,6 +15,16 @@ export class OnGoingTreatmentRepositoryWeb
 {
   protected storeName = "on_going_treatments";
 
+  getById(id: AggregateID): Promise<OnGoingTreatment> {
+    throw new Error("Method not implemented.");
+  }
+  save(entity: OnGoingTreatment, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: AggregateID, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async exist(id: AggregateID): Promise<boolean> {
     try {
       const store = await this.getObjectStore();
