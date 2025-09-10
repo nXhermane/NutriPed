@@ -1665,15 +1665,15 @@ export class NutritionCareContext {
     return this.carePhaseReferenceAppService;
   }
   // Next module app service getters (only application services are exposed)
-  getNextNutritionalProductAppService(): NextNutritionCareAppService.NutritionalProductService | null {
+  getNextNutritionalProductAppService(): NextNutritionCareAppService.NutritionalProductService {
     return this.nextNutritionalProductAppService;
   }
 
-  getNextMilkAppService(): NextNutritionCareAppService.MilkService | null {
+  getNextMilkAppService(): NextNutritionCareAppService.MilkService  {
     return this.nextMilkAppService;
   }
 
-  getNextOrientationAppService(): NextNutritionCareAppService.OrientationService | null {
+  getNextOrientationAppService(): NextNutritionCareAppService.OrientationService  {
     return this.nextOrientationAppService;
   }
 

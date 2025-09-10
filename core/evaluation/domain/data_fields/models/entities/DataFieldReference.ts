@@ -111,6 +111,7 @@ export class DataFieldReference extends Entity<IDataFieldReference> {
     if (Guard.isEmpty(this.props.question).succeeded) {
       throw new EmptyStringError("The asking on DataField can't be empty.");
     }
+    
     switch (this.props.type) {
       case FieldDataType.ENUM:
         {
@@ -120,7 +121,7 @@ export class DataFieldReference extends Entity<IDataFieldReference> {
             );
           }
           const enumValueContaintDefaultValue = this.props.enum?.some(
-            enumItem => enumItem === this.props.defaultValue
+            enumItem => enumItem.value === this.props.defaultValue
           );
           if (!enumValueContaintDefaultValue) {
             throw new ArgumentNotProvidedException(
