@@ -160,6 +160,18 @@ import {
   CarePhaseRefMapper,
   GetCarePhaseReferenceUseCase,
   CreateCarePhaseReferenceUseCase,
+  NextCoreUseCases,
+  ICommunicationService,
+  ICompletionService,
+  IDailyCareActionService,
+  IDailyCareRecordService,
+  IDailyMonitoringTaskService,
+  IMonitoringParameterService,
+  IOnGoingTreatmentService,
+  IOrchestrationService,
+  IPatientCareSessionServiceNext,
+  IRecommendedTreatmentService,
+  RecommendedTreatmentService,
 } from "@core/nutrition_care";
 
 import { PatientACLImpl } from "@core/sharedAcl";
@@ -246,6 +258,7 @@ import { ComputedVariablePerformerAcl } from "@/core/nutrition_care/adapter/acl/
 import { DiagnosticContext } from "../evaluation";
 import { MedicalRecordVariableTransformerAclImpl } from "@/core/nutrition_care/adapter";
 import { MedicalRecordContext } from "../medical_record";
+import { NextCoreAppService } from "@/core/nutrition_care/application/services/next";
 
 export class NutritionCareContext {
   private static instance: NutritionCareContext | null = null;
@@ -320,8 +333,8 @@ export class NutritionCareContext {
   >;
   private readonly carePhaseReferenceInfraMapper: InfrastructureMapper<
     CarePhaseReference, CarePhaseReferencePersistenceDto, CarePhaseReferencePersistenceRecordDto>;
-  private readonly recommendedTreatmentInfraMapper: InfrastructureMapper<RecommendedTreatment,RecommendedTreatmentPersistenceDto>;
-  private readonly monitoringElementInfraMapper: InfrastructureMapper<MonitoringElement,MonitoringElementPersistenceDto>;
+  private readonly recommendedTreatmentInfraMapper: InfrastructureMapper<RecommendedTreatment, RecommendedTreatmentPersistenceDto>;
+  private readonly monitoringElementInfraMapper: InfrastructureMapper<MonitoringElement, MonitoringElementPersistenceDto>;
   private readonly milkInfraMapper: InfrastructureMapper<
     Milk,
     MilkPersistenceDto
@@ -376,12 +389,25 @@ export class NutritionCareContext {
   private readonly patientDailyJournalGenerator: IPatientDailyJournalGenerator;
   private readonly medicineDosageService: IMedicineDosageService;
   private readonly carePhaseReferenceOrchestrator: ICarePhaseReferenceOrchestrator;
+  private readonly recommendedTreatmentService: IRecommendedTreatmentService
   // Next domain services
   private nextMedicineService: NextNutritionCare.IMedicationDosageCalculator;
   private nextNutritionalProductService: NextNutritionCare.INutritionalProductAdvisorService;
   private nextNutritionalProductAdvisorService: NextNutritionCare.INutritionalProductAdvisorService;
   private nextOrientationService: NextNutritionCare.IOrientationService;
-
+  // Next core
+  private readonly nextCarePhaseDailyCareRecordManager: NextCore.ICarePhaseDailyCareRecordManager;
+  private readonly nextCarePlanApplicatorService: NextCore.ICarePlanApplicatorService;
+  private readonly nextCareSessionVariableGenerator: NextCore.ICareSessionVariableGeneratorService;
+  private readonly nextDailyActionGeneratorService: NextCore.IDailyActionGeneratorService;
+  private readonly nextDailyPlanGeneratorService: NextCore.IDailyPlanGeneratorService;
+  private readonly nextDailyPlanApplicatorService: NextCore.IDailyPlanApplicatorService;
+  private readonly nextDailyScheduleService: NextCore.IDailyScheduleService;
+  private readonly nextDailyTaskGeneratorService: NextCore.DailyTaskGeneratorService;
+  private readonly nextPatientOrchestratorService: NextCore.IPatientCareOrchestratorService;
+  private readonly nextPatientCarePhaseManagerService: NextCore.ICarePhaseManagerService;
+  private readonly nextTreatmentDateManagementService: NextCore.ITreatmentDateManagementService;
+  private readonly nextPatientOrchestratorPort: NextCore.IPatientCareOrchestratorPort;
   // Domain Factories
   private readonly patientCareSessionFactory: Factory<
     CreatePatientCareSessionProps,
@@ -399,7 +425,7 @@ export class NutritionCareContext {
   private readonly nextMedicineAppMapper: NextMedicinesMapper.MedicineMapper;
   private readonly nextMedicineDosageResultAppMapper: NextMedicinesMapper.MedicationDosageResultMapper;
   private readonly nextOrientationAppMapper: NextOrientationAppMapper.OrientationReferenceMapper;
-  private readonly carePhaseReferenceAppMapper: ApplicationMapper<CarePhaseReference,CarePhaseReferenceDto>;
+  private readonly carePhaseReferenceAppMapper: ApplicationMapper<CarePhaseReference, CarePhaseReferenceDto>;
   // Next module app mappers
   private readonly nextNutritionalProductAppMapper: NextNutritionalProductMapper.NutritionalProductMapper;
   private readonly nextNutritionalProductDosageAppMapper: NextNutritionalProductMapper.NutritionalProductDosageMapper;
@@ -410,7 +436,6 @@ export class NutritionCareContext {
   private readonly dailyJournalAppMapper: DailyCareJournalMapper;
   private readonly carePhaseAppMapper: CarePhaseMapper;
   private readonly patientCareSessionAppMapper: PatientCareSessionMapper;
-
   // Use Cases
   private readonly createAppetiteTestRefUC: UseCase<
     CreateAppetiteTestRequest,
@@ -505,6 +530,26 @@ export class NutritionCareContext {
     NextOrientationUseCases.OrientRequest,
     NextOrientationUseCases.OrientResponse
   >;
+  // Next Core UseCases ...
+  private readonly nextGetMessageUC: UseCase<NextCoreUseCases.GetCareMessageRequest, NextCoreUseCases.GetCareMessageResponse>;
+  private readonly nextGetPendingMessagesUC: UseCase<NextCoreUseCases.GetPendingMessagesRequest, NextCoreUseCases.GetPendingMessagesResponse>;
+  private readonly nextSubmitUserResponseUC: UseCase<NextCoreUseCases.SubmitUserResponseRequest, NextCoreUseCases.SubmitUserResponseResponse>;
+  private readonly nextCompleteActionUC: UseCase<NextCoreUseCases.CompleteActionRequest, NextCoreUseCases.CompleteActionResponse>;
+  private readonly nextCompleteTaskUC: UseCase<NextCoreUseCases.CompleteTaskRequest, NextCoreUseCases.CompleteTaskResponse>;
+  private readonly nextHandleCompletionResponseUC: UseCase<NextCoreUseCases.HandleCompletionResponseRequest, NextCoreUseCases.HandleCompletionResponseResponse>;
+  private readonly nextMarkRecordIncompleteUC: UseCase<NextCoreUseCases.MarkRecordIncompleteRequest, NextCoreUseCases.MarkRecordIncompleteResponse>;
+  private readonly nextGetDailyCareActionUC: UseCase<NextCoreUseCases.GetDailyCareActionRequest, NextCoreUseCases.GetDailyCareActionResponse>;
+  private readonly nextGetDailyCareRecordUC: UseCase<NextCoreUseCases.GetDailyCareRecordRequest, NextCoreUseCases.GetDailyCareRecordResponse>;
+  private readonly nextGetDailyMonitoringTaskUC: UseCase<NextCoreUseCases.GetDailyMonitoringTaskRequest, NextCoreUseCases.GetDailyMonitoringTaskResponse>;
+  private readonly nextGetMonitoringParameterUC: UseCase<NextCoreUseCases.GetMonitoringParameterRequest, NextCoreUseCases.GetMonitoringParameterResponse>;
+  private readonly nextGetOnGoingTreatmentUC: UseCase<NextCoreUseCases.GetOnGoingTreatmentRequest, NextCoreUseCases.GetOnGoingTreatmentResponse>;
+  private readonly nextGenerateDailyCarePlanUC: UseCase<NextCoreUseCases.GenerateDailyCarePlanRequest, NextCoreUseCases.GenerateDailyCarePlanResponse>;
+  private readonly nextStartContinuousOrchestrationUC: UseCase<NextCoreUseCases.StartContinuousOrchestrationRequest, NextCoreUseCases.StartContinuousOrchestrationResponse>;
+  private readonly nextSynchronizePatientStateUC: UseCase<NextCoreUseCases.SynchronizePatientStateRequest, NextCoreUseCases.SynchronizePatientStateResponse>;
+  private readonly nextCreatePatientCareSessionUC: UseCase<NextCoreUseCases.CreatePatientCareSessionRequest, NextCoreUseCases.CreatePatientCareSessionResponse>;
+  private readonly nextGetPatientCareSessionStateUC: UseCase<NextCoreUseCases.GetPatientCareSessionStatusRequest, NextCoreUseCases.GetPatientCareSessionStatusResponse>;
+  private readonly nextGetPatientCareSessionUC: UseCase<NextCoreUseCases.GetPatientCareSessionRequest, NextCoreUseCases.GetPatientCareSessionResponse>;
+
   private readonly createMilkUC: UseCase<CreateMilkRequest, CreateMilkResponse>;
   private readonly getMilkUC: UseCase<GetMilkRequest, GetMilkResponse>;
   private readonly suggestMilkUC: UseCase<
@@ -562,7 +607,16 @@ export class NutritionCareContext {
   private readonly milkAppService: IMilkAppService;
   private readonly orientationAppService: IOrientationAppService;
   private readonly patientCareSessionAppService: IPatientCareSessionAppService;
-
+  // Next Core app services ... 
+  private readonly nextCommunicationAppService: ICommunicationService;
+  private readonly nextCompletionAppService: ICompletionService;
+  private readonly nextDailyCareActionAppService: IDailyCareActionService;
+  private readonly nextDailyRecordAppService: IDailyCareRecordService;
+  private readonly nextDailyMonitoringTaskAppService: IDailyMonitoringTaskService;
+  private readonly nextMonitoringParameterAppService: IMonitoringParameterService;
+  private readonly nextOnGoingTreatmentAppService: IOnGoingTreatmentService;
+  private readonly nextOrchestrationAppService: IOrchestrationService;
+  private readonly nextPatientCareSessionAppService: IPatientCareSessionServiceNext;
   // ACL
   private readonly patientAcl: PatientACLImpl;
   private readonly computedVariablePerformerAcl: IComputedVariablePerformerACL;
@@ -592,12 +646,12 @@ export class NutritionCareContext {
     this.patientAcl = new PatientACLImpl(
       PatientContext.init(dbConnection, expo, eventBus).getService()
     );
-    this.computedVariablePerformerAcl = new ComputedVariablePerformerAcl(DiagnosticContext.init(dbConnection,expo ,eventBus).getFormulaFieldService())
+    this.computedVariablePerformerAcl = new ComputedVariablePerformerAcl(DiagnosticContext.init(dbConnection, expo, eventBus).getFormulaFieldService())
     this.medicalRecordVariableTransformerAcl = new MedicalRecordVariableTransformerAclImpl({
-      growthIndicatorValuesService: DiagnosticContext.init(dbConnection,expo ,eventBus).getGrowthIndicatorValueService(),
-      medicalRecordService: MedicalRecordContext.init(dbConnection,expo ,eventBus).getMedicalRecordService(),
-      normalizeData: DiagnosticContext.init(dbConnection,expo ,eventBus).getNormalizeDataService(),
-      patientService: PatientContext.init(dbConnection,expo ,eventBus).getService(),
+      growthIndicatorValuesService: DiagnosticContext.init(dbConnection, expo, eventBus).getGrowthIndicatorValueService(),
+      medicalRecordService: MedicalRecordContext.init(dbConnection, expo, eventBus).getMedicalRecordService(),
+      normalizeData: DiagnosticContext.init(dbConnection, expo, eventBus).getNormalizeDataService(),
+      patientService: PatientContext.init(dbConnection, expo, eventBus).getService(),
     })
 
     // Infra Mappers
@@ -628,7 +682,7 @@ export class NutritionCareContext {
       new NextNutritionCareInfraMapper.OnGoingTreatmentInfraMapper();
     this.nextPatientCareSessionInfraMapper =
       new NextNutritionCareInfraMapper.PatientCareSessionAggregateInfraMapper();
-    this.carePhaseReferenceInfraMapper  =new CarePhaseReferenceInfraMapper();
+    this.carePhaseReferenceInfraMapper = new CarePhaseReferenceInfraMapper();
     this.recommendedTreatmentInfraMapper = new RecommendedTreatmentInfraMapper();
     this.monitoringElementInfraMapper = new MonitoringElementInfraMapper();
     this.milkInfraMapper = new MilkInfraMapper();
@@ -783,39 +837,39 @@ export class NutritionCareContext {
         this.nextMessageRepo,
         this.eventBus
       );
-      this.recommendedTreatmentRepo = isWebEnv()? new RecommendedTreatmentRepositoryWeb(
-        this.dbConnection as IndexedDBConnection,
-        this.recommendedTreatmentInfraMapper,
-        this.eventBus
-      ) : new RecommendedTreatmentRepositoryExpo(
-        this.expo  as SQLiteDatabase, 
-        this.recommendedTreatmentInfraMapper,
-        recommended_treatments,
-       this.eventBus
-      )
-      this.monitoringElementRepo = isWebEnv() ? new MonitoringElementRepositoryWeb(
-        this.dbConnection as IndexedDBConnection,
-        this.monitoringElementInfraMapper,
-        this.eventBus
-      ) : new MonitoringElementRepositoryExpo(
-        this.expo as SQLiteDatabase,
-        this.monitoringElementInfraMapper,
-        monitoring_elements,
-        this.eventBus
-      )
-      this.carePhaseReferenceRepo = isWebEnv() ? new CarePhaseReferenceRepositoryWeb(
-        this.dbConnection as IndexedDBConnection,
-        this.carePhaseReferenceInfraMapper as any,
-        this.eventBus
-      ) : new CarePhaseReferenceRepositoryExpo(
-        this.expo as SQLiteDatabase,
-        this.carePhaseReferenceInfraMapper,
-        care_phase_references,
-        this.recommendedTreatmentRepo,
-        this.monitoringElementRepo,
-        this.eventBus
-        
-      );
+    this.recommendedTreatmentRepo = isWebEnv() ? new RecommendedTreatmentRepositoryWeb(
+      this.dbConnection as IndexedDBConnection,
+      this.recommendedTreatmentInfraMapper,
+      this.eventBus
+    ) : new RecommendedTreatmentRepositoryExpo(
+      this.expo as SQLiteDatabase,
+      this.recommendedTreatmentInfraMapper,
+      recommended_treatments,
+      this.eventBus
+    )
+    this.monitoringElementRepo = isWebEnv() ? new MonitoringElementRepositoryWeb(
+      this.dbConnection as IndexedDBConnection,
+      this.monitoringElementInfraMapper,
+      this.eventBus
+    ) : new MonitoringElementRepositoryExpo(
+      this.expo as SQLiteDatabase,
+      this.monitoringElementInfraMapper,
+      monitoring_elements,
+      this.eventBus
+    )
+    this.carePhaseReferenceRepo = isWebEnv() ? new CarePhaseReferenceRepositoryWeb(
+      this.dbConnection as IndexedDBConnection,
+      this.carePhaseReferenceInfraMapper as any,
+      this.eventBus
+    ) : new CarePhaseReferenceRepositoryExpo(
+      this.expo as SQLiteDatabase,
+      this.carePhaseReferenceInfraMapper,
+      care_phase_references,
+      this.recommendedTreatmentRepo,
+      this.monitoringElementRepo,
+      this.eventBus
+
+    );
     this.milkRepo = isWebEnv()
       ? new MilkRepositoryWebImpl(
         this.dbConnection as IndexedDBConnection,
@@ -880,11 +934,11 @@ export class NutritionCareContext {
           dailyJournalRepo: this.dailyCareJournalInfraMapper,
         }
       );
-      
+
     this.appetiteTestService = new AppetiteTestService(
       this.appetiteTestRefRepo
     );
-    
+
     // Domain Services instantiation
     this.medicineDosageService = new MedicineDosageService();
     // Next module services
@@ -907,10 +961,27 @@ export class NutritionCareContext {
     this.patientDailyJournalGenerator = new PatientDailyJournalGenerator(
       this.idGenerator
     );
-    this.carePhaseReferenceOrchestrator = new CarePhaseReferenceOrchestrator(this.carePhaseReferenceRepo,this.recommendedTreatmentRepo);
-
+    this.carePhaseReferenceOrchestrator = new CarePhaseReferenceOrchestrator(this.carePhaseReferenceRepo, this.recommendedTreatmentRepo);
+     this.recommendedTreatmentService = new RecommendedTreatmentService(this.recommendedTreatmentRepo);
     // Next Core Domain Services and helpers
-
+    // Helpers 
+    const dateCalculatorServiceHelper = new NextCore.DateCalculatorService();
+    this.nextTreatmentDateManagementService = new NextCore.TreatmentDateManagementService(dateCalculatorServiceHelper);
+    const treatmentManagerHelper = new NextCore.TreatmentManager(this.idGenerator,this.nextTreatmentDateManagementService);
+    const monitoringParameterManagerHelper = new NextCore.MonitoringParameterManager(this.idGenerator,this.nextTreatmentDateManagementService);
+    const triggersExecutorHelper = new NextCore.TriggerExecutor(this.recommendedTreatmentService,this.idGenerator);
+    // Domain Services 
+    this.nextCareSessionVariableGenerator = new NextCore.CareSessionVariableGeneratorService(this.computedVariablePerformerAcl,this.medicalRecordVariableTransformerAcl); 
+    this.nextCarePlanApplicatorService = new NextCore.CarePlanApplicatorService(treatmentManagerHelper,monitoringParameterManagerHelper,triggersExecutorHelper)
+    this.nextDailyScheduleService = new NextCore.DailyScheduleService(this.nextTreatmentDateManagementService);
+    this.nextDailyActionGeneratorService = new NextCore.DailyActionGeneratorService(this.idGenerator,this.nextMedicineService,this.nextNutritionalProductAdvisorService);
+    this.nextDailyTaskGeneratorService = new NextCore.DailyTaskGeneratorService(this.idGenerator);
+    this.nextDailyPlanGeneratorService = new NextCore.DailyPlanGeneratorService(this.idGenerator,this.nextDailyScheduleService,this.nextDailyActionGeneratorService,this.nextDailyTaskGeneratorService);
+    this.nextDailyPlanApplicatorService = new NextCore.DailyPlanApplicatorService()
+    this.nextCarePhaseDailyCareRecordManager = new NextCore.CarePhaseDailyCareRecordManager(this.nextDailyPlanGeneratorService,this.nextDailyPlanApplicatorService,this.nextCareSessionVariableGenerator);
+   this.nextPatientCarePhaseManagerService = new NextCore.CarePhaseManagerService(this.idGenerator,this.carePhaseReferenceOrchestrator,this.nextCareSessionVariableGenerator,this.nextCarePlanApplicatorService);
+    this.nextPatientOrchestratorService = new NextCore.PatientCareOrchestratorService(this.idGenerator,this.nextPatientCarePhaseManagerService,this.nextCarePhaseDailyCareRecordManager);
+    this.nextPatientOrchestratorPort = new NextCore.PatientCareOrchestratorPort(this.nextPatientOrchestratorService, this.nextPatientCareSessionRepo,this.idGenerator);
     // Domain Factories
     this.patientCareSessionFactory = new PatientCareSessionFactory(
       this.idGenerator,
@@ -925,7 +996,7 @@ export class NutritionCareContext {
     this.nextMedicineAppMapper = new NextMedicinesMapper.MedicineMapper();
     this.nextMedicineDosageResultAppMapper =
       new NextMedicinesMapper.MedicationDosageResultMapper();
-      this.carePhaseReferenceAppMapper = new CarePhaseRefMapper();
+    this.carePhaseReferenceAppMapper = new CarePhaseRefMapper();
     // Next module app mappers
     this.nextNutritionalProductAppMapper =
       new NextNutritionalProductMapper.NutritionalProductMapper();
@@ -945,7 +1016,7 @@ export class NutritionCareContext {
       this.dailyJournalAppMapper
     );
     // Next Core app mappers
-
+    
     // Use Cases
     this.createAppetiteTestRefUC = new CreateAppetiteTestUseCase(
       this.idGenerator,
@@ -1127,10 +1198,10 @@ export class NutritionCareContext {
         getDosageUC: this.nextGetMedicineDosageUC,
         getUC: this.nextGetMedicineUC,
       });
-      this.carePhaseReferenceAppService = new CarePhaseReferenceAppService({
-        createUC: this.createCarePhaseReferenceUC,
-        getUC: this.getCarePhaseReferenceUC,
-      })
+    this.carePhaseReferenceAppService = new CarePhaseReferenceAppService({
+      createUC: this.createCarePhaseReferenceUC,
+      getUC: this.getCarePhaseReferenceUC,
+    })
     // Next module app services
     this.nextNutritionalProductAppService =
       new NextNutritionCareAppService.NutritionalProductService({

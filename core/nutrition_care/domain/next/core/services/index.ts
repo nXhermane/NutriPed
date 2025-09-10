@@ -11,3 +11,4 @@ export * from "./DailyScheduleService";
 export * from "./DailyActionGeneratorService";
 export * from "./DailyTaskGeneratorService";
 export * from "./PatientCarePhaseManagerService";
+export * from "./CarePlanApplicatorService";
