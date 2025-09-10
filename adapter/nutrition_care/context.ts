@@ -774,10 +774,10 @@ export class NutritionCareContext {
         this.eventBus
       );
     this.nextMedicineRepo = isWebEnv()
-      ? (new NextNutritionCareRepoWeb.MedicineRepositoryWeb(
+      ? new NextNutritionCareRepoWeb.MedicineRepositoryWeb(
         this.dbConnection as IndexedDBConnection,
         this.nextMedicineInfraMapper
-      ) as any) // FIX : this repo not have an exist method for web env
+      )
       : new NextNutritionCareRepoExpo.MedicineRepositoryExpo(
         this.expo as SQLiteDatabase,
         this.nextMedicineInfraMapper,
@@ -819,69 +819,101 @@ export class NutritionCareContext {
         this.eventBus
       );
 
-    this.nextMonitoringParameterRepo =
-      new NextNutritionCareRepoExpo.MonitoringParameterRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextMonitoringParameterInfraMapper,
-        monitoring_parameters,
-        this.eventBus
-      );
-    this.nextOnGoingTreatmentRepo =
-      new NextNutritionCareRepoExpo.OnGoingTreatmentRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextOnGoingTreatmentInfraMapper,
-        on_going_treatments,
-        this.eventBus
-      );
-    this.nextCarePhaseRepo =
-      new NextNutritionCareRepoExpo.CarePhaseRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextCarePhaseInfraMapper,
-        care_phases,
-        this.nextMonitoringParameterRepo,
-        this.nextOnGoingTreatmentRepo,
-        this.eventBus
-      );
-    this.nextDailyCareActionRepo =
-      new NextNutritionCareRepoExpo.DailyCareActionRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextDailyCareActionInfraMapper,
-        daily_care_actions,
-        this.eventBus
-      );
-    this.nextDailyMonitoringTaskRepo =
-      new NextNutritionCareRepoExpo.DailyMonitoringTaskRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextDailyMonitoringTaskInfraMapper,
-        daily_monitoring_tasks,
-        this.eventBus
-      );
-    this.nextDailyCareRecordRepo =
-      new NextNutritionCareRepoExpo.DailyCareRecordRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextDailyCareRecordInfraMapper,
-        daily_care_records,
-        this.nextDailyCareActionRepo,
-        this.nextDailyMonitoringTaskRepo,
-        this.eventBus
-      );
-    this.nextMessageRepo =
-      new NextNutritionCareRepoExpo.MessageRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextMessageInfraMapper,
-        messages,
-        this.eventBus
-      );
-    this.nextPatientCareSessionRepo =
-      new NextNutritionCareRepoExpo.PatientCareSessionRepositoryExpoImpl(
-        this.expo as SQLiteDatabase,
-        this.nextPatientCareSessionInfraMapper,
-        patient_care_session_aggregates,
-        this.nextCarePhaseRepo,
-        this.nextDailyCareRecordRepo,
-        this.nextMessageRepo,
-        this.eventBus
-      );
+    this.nextMonitoringParameterRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.MonitoringParameterRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextMonitoringParameterInfraMapper
+        )
+      : new NextNutritionCareRepoExpo.MonitoringParameterRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextMonitoringParameterInfraMapper,
+          monitoring_parameters,
+          this.eventBus
+        );
+    this.nextOnGoingTreatmentRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.OnGoingTreatmentRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextOnGoingTreatmentInfraMapper
+        )
+      : new NextNutritionCareRepoExpo.OnGoingTreatmentRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextOnGoingTreatmentInfraMapper,
+          on_going_treatments,
+          this.eventBus
+        );
+    this.nextCarePhaseRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.CarePhaseRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextCarePhaseInfraMapper,
+        )
+      : new NextNutritionCareRepoExpo.CarePhaseRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextCarePhaseInfraMapper,
+          care_phases,
+          this.nextMonitoringParameterRepo,
+          this.nextOnGoingTreatmentRepo,
+          this.eventBus
+        );
+    this.nextDailyCareActionRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.DailyCareActionRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextDailyCareActionInfraMapper,
+        )
+      : new NextNutritionCareRepoExpo.DailyCareActionRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextDailyCareActionInfraMapper,
+          daily_care_actions,
+          this.eventBus
+        );
+    this.nextDailyMonitoringTaskRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.DailyMonitoringTaskRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextDailyMonitoringTaskInfraMapper,
+        )
+      : new NextNutritionCareRepoExpo.DailyMonitoringTaskRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextDailyMonitoringTaskInfraMapper,
+          daily_monitoring_tasks,
+          this.eventBus
+        );
+    this.nextDailyCareRecordRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.DailyCareRecordRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextDailyCareRecordInfraMapper,
+        )
+      : new NextNutritionCareRepoExpo.DailyCareRecordRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextDailyCareRecordInfraMapper,
+          daily_care_records,
+          this.nextDailyCareActionRepo,
+          this.nextDailyMonitoringTaskRepo,
+          this.eventBus
+        );
+    this.nextMessageRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.MessageRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextMessageInfraMapper,
+        )
+      : new NextNutritionCareRepoExpo.MessageRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextMessageInfraMapper,
+          messages,
+          this.eventBus
+        );
+    this.nextPatientCareSessionRepo = isWebEnv()
+      ? new NextNutritionCareRepoWeb.PatientCareSessionRepositoryWeb(
+          this.dbConnection as IndexedDBConnection,
+          this.nextPatientCareSessionInfraMapper,
+        )
+      : new NextNutritionCareRepoExpo.PatientCareSessionRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.nextPatientCareSessionInfraMapper,
+          patient_care_session_aggregates,
+          this.nextCarePhaseRepo,
+          this.nextDailyCareRecordRepo,
+          this.nextMessageRepo,
+          this.eventBus
+        );
     this.recommendedTreatmentRepo = isWebEnv() ? new RecommendedTreatmentRepositoryWeb(
       this.dbConnection as IndexedDBConnection,
       this.recommendedTreatmentInfraMapper,
@@ -1065,10 +1097,10 @@ export class NutritionCareContext {
     this.nextDailyCareRecordMapper = new NextCoreMapper.DailyCareRecordMapper();
     this.nextMessageMapper = new NextCoreMapper.MessageMapper();
     this.nextPatientCareSessionMapper = new PatientCareSessionAggregateMapper(this.nextCarePhaseMapper,this.nextDailyCareRecordMapper,this.nextMessageMapper);
-    this.nextDailyCareActionAppMapper = new DailyCareActionMapper();
-    this.nextOnGoingTreatmentMapper = new OnGoingTreatmentMapper();
-    this.nextDailyMonitoringTaskMapper = new DailyMonitoringTaskMapper();
-    this.nextMonitoringParameterMapper = new MonitoringParameterMapper();
+    this.nextDailyCareActionAppMapper = new NextCoreMapper.DailyCareActionMapper();
+    this.nextOnGoingTreatmentMapper = new NextCoreMapper.OnGoingTreatmentMapper();
+    this.nextDailyMonitoringTaskMapper = new NextCoreMapper.DailyMonitoringTaskMapper();
+    this.nextMonitoringParameterMapper = new NextCoreMapper.MonitoringParameterMapper();
     
     // Use Cases
     this.createAppetiteTestRefUC = new CreateAppetiteTestUseCase(
@@ -1264,15 +1296,15 @@ export class NutritionCareContext {
     );
     this.nextGetDailyMonitoringTaskUC = new GetDailyMonitoringTaskUseCase(
       this.nextDailyMonitoringTaskRepo,
-      this.nextCarePhaseMapper
+      this.nextDailyMonitoringTaskMapper
     );
     this.nextGetMonitoringParameterUC = new GetMonitoringParameterUseCase(
       this.nextMonitoringParameterRepo,
-      this.nextCarePhaseMapper
+      this.nextMonitoringParameterMapper
     );
     this.nextGetOnGoingTreatmentUC = new GetOnGoingTreatmentUseCase(
       this.nextOnGoingTreatmentRepo,
-      this.nextCarePhaseMapper
+      this.nextOnGoingTreatmentMapper
     );
     this.nextGenerateDailyCarePlanUC = new GenerateDailyCarePlanUseCase(
       this.nextPatientOrchestratorPort

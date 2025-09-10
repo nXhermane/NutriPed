@@ -15,6 +15,16 @@ export class DailyCareRecordRepositoryWeb
 {
   protected storeName = "daily_care_records";
 
+  getById(id: AggregateID): Promise<DailyCareRecord> {
+    throw new Error("Method not implemented.");
+  }
+  save(entity: DailyCareRecord, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: AggregateID, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async exist(id: AggregateID): Promise<boolean> {
     try {
       const store = await this.getObjectStore();

@@ -11,6 +11,11 @@ export class MedicineRepositoryWeb
   implements MedicineRepository
 {
   protected storeName = "next_medicines";
+
+  public async exist(code: SystemCode): Promise<boolean> {
+    return this.exists(code);
+  }
+
   async getByCode(code: SystemCode): Promise<Medicine> {
     try {
       const store = await this.getObjectStore();

@@ -12,6 +12,16 @@ export class MessageRepositoryWeb
 {
   protected storeName = "messages";
 
+  getById(id: AggregateID): Promise<Message> {
+    throw new Error("Method not implemented.");
+  }
+  save(entity: Message, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: AggregateID, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async exist(id: AggregateID): Promise<boolean> {
     try {
       const store = await this.getObjectStore();

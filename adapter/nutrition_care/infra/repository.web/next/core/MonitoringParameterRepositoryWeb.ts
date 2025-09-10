@@ -15,6 +15,16 @@ export class MonitoringParameterRepositoryWeb
 {
   protected storeName = "monitoring_parameters";
 
+  getById(id: AggregateID): Promise<MonitoringParameter> {
+    throw new Error("Method not implemented.");
+  }
+  save(entity: MonitoringParameter, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: AggregateID, trx?: any): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
   async exist(id: AggregateID): Promise<boolean> {
     try {
       const store = await this.getObjectStore();
