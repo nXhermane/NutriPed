@@ -25,7 +25,6 @@ export class DiagnosticRuleInfraMapper
       throw new InfraMapToDomainError(
         formatError(diagnosticRuleRes, DiagnosticRuleInfraMapper.name)
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, createdAt, updatedAt, ...props } =
       diagnosticRuleRes.val.getProps();
     return new DiagnosticRule({

@@ -61,7 +61,7 @@ export default function Layout() {
       );
       setTimeout(() => router.back(), 300);
     }
-  }, [error]);
+  }, [error, toast]);
 
   if (data.length === 0 || onLoading || !currentPatientInteraction)
     return <Loading />;

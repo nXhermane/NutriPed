@@ -1,0 +1,1 @@
+ALTER TABLE `medical_records` ADD `appetite_tests` text NOT NULL;

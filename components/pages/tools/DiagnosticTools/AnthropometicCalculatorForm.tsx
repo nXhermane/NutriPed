@@ -19,7 +19,7 @@ export interface AnthropometricCalculatorFormProps {
   initialState?: Record<string, { value: any; error?: string }>;
 }
 
-export const AnthropometricCalcualtorForm: React.FC<
+const AnthropometricCalcualtorFormComponent: React.FC<
   AnthropometricCalculatorFormProps
 > = ({ formRef, schema, title, zodSchema, initialState }) => {
   return (
@@ -47,3 +47,7 @@ export const AnthropometricCalcualtorForm: React.FC<
     </VStack>
   );
 };
+
+export const AnthropometricCalcualtorForm = React.memo(
+  AnthropometricCalcualtorFormComponent
+);

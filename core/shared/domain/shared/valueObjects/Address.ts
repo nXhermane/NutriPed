@@ -12,10 +12,6 @@ export interface IAddress {
 }
 
 export class Address extends ValueObject<IAddress> {
-  constructor(props: IAddress) {
-    super(props);
-  }
-
   protected validate(props: IAddress): void {
     if (Guard.isEmpty(props.country).succeeded) {
       throw new ArgumentNotProvidedException("Le pays de doit etre founir.");

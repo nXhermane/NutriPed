@@ -1,13 +1,9 @@
 import { Text } from "@/components/ui/text";
-import {
-  NavigationIndependentTree,
-  useNavigation,
-} from "@react-navigation/native";
+import { NavigationIndependentTree } from "@react-navigation/native";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
   DrawerHeaderProps,
-  useDrawerStatus,
 } from "@react-navigation/drawer";
 import React from "react";
 import { VStack } from "@/components/ui/vstack";
@@ -15,7 +11,6 @@ import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
 import { Menu, X } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
-import { useUI } from "@/src/context";
 import { AnthropometricCalculatorScreen } from "./AnthropometricCalculatorScreen";
 import { ClinicalEvaluationScreen } from "./ClinicalEvaluationScreen";
 import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen";
@@ -25,8 +20,7 @@ import { StackScreenHeader } from "../../shared";
 
 const Drawer = createDrawerNavigator();
 
-export const DiagnosticTools = ({}) => {
-  const navigation = useNavigation();
+export function DiagnosticTools() {
   return (
     <VStack className="flex-1">
       <NavigationIndependentTree>
@@ -63,14 +57,13 @@ export const DiagnosticTools = ({}) => {
       </NavigationIndependentTree>
     </VStack>
   );
-};
+}
 
-export interface DiagnosticToolDrawerHeaderProps extends DrawerHeaderProps {}
+export type DiagnosticToolDrawerHeaderProps = DrawerHeaderProps;
 
 export const DiagnosticToolHeader: React.FC<
   DiagnosticToolDrawerHeaderProps
 > = ({ route, navigation }) => {
-  const drawerStatus = useDrawerStatus();
   return (
     <StackScreenHeader
       name={route?.name}
@@ -85,35 +78,15 @@ export const DiagnosticToolHeader: React.FC<
   );
 };
 
-export interface DiagnosticToolDrawerContentProps
-  extends DrawerContentComponentProps {}
+export type DiagnosticToolDrawerContentProps = DrawerContentComponentProps;
 
 export const DiagnosticToolDrawerContent: React.FC<
   DiagnosticToolDrawerContentProps
-> = ({ navigation, state, descriptors, ...props }) => {
-  const drawerStatus = useDrawerStatus();
-  const { colorMode } = useUI();
+> = ({ navigation, state, descriptors }) => {
   return (
     <VStack className="h-[70%] w-full">
-      {/* <Pressable
-        className="absolute -right-4 top-[50%] z-0 h-v-10 -translate-y-8 items-center overflow-hidden rounded-r-xl bg-primary-c_light"
-        onPress={() => navigation.toggleDrawer()}
-      >
-        <Box className="h-full w-full flex-row items-center">
-          <Icon
-            as={drawerStatus === "closed" ? ChevronRight : ChevronLeft}
-            className="h-5 w-5 text-typography-primary"
-          />
-        </Box>
-      </Pressable> */}
-
       <VStack className="absolute right-0 h-full w-[80%] justify-center overflow-hidden rounded-r-2xl rounded-bl-full rounded-tl-2xl">
-        <FakeBlur
-          // experimentalBlurMethod="dimezisBlurView"
-          // intensity={90}
-          // tint={colorMode}
-          className="h-full items-center gap-3 px-4 pt-[35%]"
-        >
+        <FakeBlur className="h-full items-center gap-3 px-4 pt-[35%]">
           <Pressable
             className="rounded-full bg-primary-c_light p-1"
             onPress={() => navigation.closeDrawer()}

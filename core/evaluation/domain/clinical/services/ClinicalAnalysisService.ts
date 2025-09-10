@@ -21,10 +21,9 @@ import {
   Result,
   UnitCode,
 } from "@shared";
-import { EvaluationContext } from "../../common";
+import { EvaluationContext, UnitAcl } from "../../common";
 import {
   ClinicalData,
-  ClinicalDataType,
   ClinicalNutritionalAnalysisResult,
   ClinicalSign,
   ClinicalSignReference,
@@ -33,9 +32,9 @@ import {
   ClinicalSignReferenceRepository,
   IClinicalAnalysisService,
   NutritionalRiskFactorRepository,
-  UnitAcl,
 } from "../ports";
 import { CLINICAL_ERRORS, handleClinicalError } from "../errors";
+import { ClinicalDataType } from "@/core/constants";
 // FIXME: Regler le probleme avec les donnees data du reference avec les varibles . une corrections du cote des donnees de reference pourrai bien ressoudre le probleme lors de l'actualisation de la prochaine version
 // BUG: Regler le probleme de signe cliniques present: dans le programme actuelle juste les signes cliniques qui on une valeurs d'interpretation === true
 export class ClinicalAnalysisService implements IClinicalAnalysisService {

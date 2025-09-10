@@ -1,6 +1,6 @@
 import {
   AggregateID,
-  DomainDate,
+  DomainDateTime,
   Entity,
   EntityPropsBaseType,
   formatError,
@@ -12,7 +12,7 @@ import {
 export interface IComplicationDataRecord extends EntityPropsBaseType {
   code: SystemCode;
   isPresent: boolean;
-  recordedAt: DomainDate;
+  recordedAt: DomainDateTime;
 }
 
 export interface CreateComplicationDataRecord {
@@ -44,8 +44,8 @@ export class ComplicationDataRecord extends Entity<IComplicationDataRecord> {
     try {
       const codeRes = SystemCode.create(createProps.code);
       const recordedDateRes = createProps.recordedAt
-        ? DomainDate.create(createProps.recordedAt)
-        : DomainDate.create();
+        ? DomainDateTime.create(createProps.recordedAt)
+        : DomainDateTime.create();
       const combinedRes = Result.combine([codeRes, recordedDateRes]);
       if (combinedRes.isFailure)
         return Result.fail(

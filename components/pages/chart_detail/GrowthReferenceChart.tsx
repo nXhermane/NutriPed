@@ -34,7 +34,7 @@ export const GrowthReferenceChart: React.FC<GrowthReferenceChartProps> =
         useSeriePlottingDataGenerator(selectedSeries);
 
       return (
-        <VStack>
+        <VStack className="">
           <GrowthInteractiveChart
             data={data}
             displayMode={displayMode as DisplayMode}

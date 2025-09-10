@@ -1,4 +1,4 @@
-import { AggregateID, Birthday, Gender } from "@shared";
+import { AggregateID, Birthday, Gender, Result } from "@shared";
 
 export interface PatientInfo {
   id: AggregateID;
@@ -6,5 +6,5 @@ export interface PatientInfo {
   gender: Gender;
 }
 export interface NutritionCarePatientACL {
-  getPatientInfo(patientID: AggregateID): Promise<PatientInfo | null>;
+  getPatientInfo(patientID: AggregateID): Promise<Result<PatientInfo | null>>;
 }

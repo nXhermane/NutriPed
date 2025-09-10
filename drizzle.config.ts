@@ -5,4 +5,4 @@ export default {
   out: "./drizzle",
   dialect: "sqlite",
   driver: "expo", // <--- very important
-} satisfies Config;
+} as Config;

@@ -60,7 +60,7 @@ const ChartDetail = () => {
         "Erreur lors du chargement de la courbe de croissance. Veillez reessayer!"
       );
     }
-  }, [error, indicatorError]);
+  }, [error, indicatorError, toast]);
   useEffect(() => {
     if (params.indicatorCode) {
       const indicatorData =

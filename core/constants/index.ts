@@ -384,7 +384,20 @@ export enum BiochemicalRangeStatus {
   NORMAL = "normal",
   OVER = "over",
 }
-
+export enum MEDICINE_CODES {
+  AMOX = "AMOX",
+  AMP = "AMP",
+  GENT = "GENT",
+  CEFO = "CEFO",
+  CIPRO = "CIPRO",
+  CLOXA = "CLOXA",
+  METRO = "METRO",
+  NYST = "NYST",
+  FLUC = "FLUC",
+  FURO = "FURO",
+  CEFT = "CEFT",
+  AMOXI_ACIDE_CLAVULANIQUE = "AMOXI_ACIDE_CLAVULANIQUE",
+}
 /**
  * @version v0.0.1-next
  **/
@@ -399,3 +412,198 @@ export enum DataFieldCategory {
  **/
 export const clinicalEffect = (clinicalCode: string) =>
   `${clinicalCode}_effect`;
+/**
+ * @version v0.0.1-next
+ **/
+export enum CARE_PHASE_CODES {
+  CNT_PHASE1 = "cnt_phase_aiguë",
+  CNT_TRANS_PHASE = "cnt_phase_transition",
+  CNT_PHASE2 = "cnt_phase_rehabilitation",
+  CNT_INFANT_LT6m_LT3kg = "cnt_infant_lt6m_lt3kg",
+}
+/**
+ * @version v0.0.1-next
+ */
+export enum CARE_PHASE_DURATION_TYPE {
+  DAYS = "days",
+  HOURS = "hours",
+  WHILE_PHASE = "while_phase",
+}
+/**
+ * @version v0.0.1-next
+ */
+export enum DURATION_TYPE {
+  DAYS = "days",
+  HOURS = "hours",
+  WHILE_IN_PHASE = "while_in_phase",
+}
+/**
+ * @version v0.0.1-next
+ */
+export enum RECOMMENDED_TREATMENT_TYPE {
+  NUTRITIONAL = "nutritional",
+  SYSTEMATIC = "systematic",
+}
+export enum TREATMENT_TRIGGER_ACTION {
+  STOP = "STOP_TREATMENT",
+  START = "START_TREATMENT",
+}
+
+export enum MONITORING_VALUE_SOURCE {
+  CALCULATED = "calculated_monitoring_value", // Intégrer pour pouvoir distinguer les monitorings values calculables a partie d'autre source de donnée . ex.: Pourcentage de variation d'un monitoring value sur une periods donnée et on pourra aussi fournir la formule de calcule et les variables independantes
+  NOT_CALCULATED = "not_calculated_monitoring_value",
+}
+export enum FREQUENCY_TYPE {
+  DAILY = "day",
+  HOURSLY = "hours",
+  WEEKLY = "week",
+}
+export enum MONITORING_ELEMENT_CATEGORY {
+  ANTHROPOMETRIC = "anthropometric_monitoring_element",
+  BIOCHEMICAL = "biochemical_monitoring_element",
+  CLINICAL_SIGNS = "clinical_signs_monitoring_element",
+  DATA_FIELD = "data_field_monitoring_element",
+}
+
+export enum MedicineCategory {
+  ANTIBACTERIALS = "antibacterials",
+  ANTIFUNGALS = "antifungals",
+  ANTIMALARIALS = "antimalarials",
+  SCABIES = "scabies",
+  CARDIAC_FAILURE = "cardiac_failure",
+  ALTERNATIVES = "alternatives",
+}
+
+export enum AdministrationRoute {
+  ORAL = "oral",
+  IV = "iv",
+  IM = "im",
+  IV_IM = "iv/im",
+  RECTAL = "rectal",
+  TOPICAL = "topical",
+  ORAL_IV = "oral/iv",
+  ORAL_IM = "oral/im",
+}
+
+export enum DosageUnit {
+  MG = "mg",
+  MG_KG = "mg/kg",
+  MG_KG_DAY = "mg/kg/day",
+  UI = "UI",
+  ML = "ml",
+  G = "g",
+}
+
+export enum MilkType {
+  F100 = "f100",
+  F75 = "f75",
+  F100Diluted = "f100_diluted",
+}
+export enum RecommendedMilkPerDay {
+  EIGHT = "8",
+  FIVE = "5",
+  SIX = "6",
+}
+export type NUTRITIONAL_PRODUCT_CODE = MilkType;
+
+export const CARE_SESSION = {
+  DAYS_IN_PHASE: "days_in_phase",
+  CURRENT_CARE_PHASE: "current_care_phase",
+} as const;
+
+export const CALCULATED_MONITORING_ELEMENT = {
+  WEIGHT_GAIN_RATE_KG_DAY: "weight_gain_rate_kg_day",
+  WEIGHT_GAIN_RATE_DURING_PHASE: "weight_gain_rating_during_phase",
+  WEIGHT_LOSS_PERCENT_BETWEEN_TWO_CONSECUTIVE_MEASUREMENTS:
+    "weigth_loss_percent_between_two_consecutive_measurements",
+  WEIGHT_LOSS_PERCENT_BETWEEN_THREE_CONSECUTIVE_MEASUREMENTS:
+    "weigth_loss_percent_between_three_consecutive_measurements",
+  WEIGHT_CHANGE_RATE_DURING_DIARRHEA: "weight_change_rate_during_diarrhea",
+  NUTRITIONAL_MILK_CONSUMPTION_RATE_PERCENT_PER_DAY:
+    "nutritional_milk_consumption_rate_percent_per_day",
+} as const;
+export const initialValueCode = (code: string) => "initial_" + code;
+
+export const TREATMENT_PLAN_IDS = {
+  CNT_PHASE1_F75: "CNT_PHASE1::nutritional::F75",
+  CNT_PHASE1_F100_DILUTED: "CNT_PHASE1::nutritional::F100::diluted",
+  CNT_PHASE1_AMOXICILLIN: "CNT_PHASE1::systematic::AMOXICILLIN",
+  CNT_TRANS_PHASE_F100: "CNT_TRANS_PHASE::nutritional::F100",
+  CNT_TRANS_PHASE_F100_DILUTED: "CNT_TRANS_PHASE::nutritional::F100::diluted",
+  CNT_TRANS_PHASE_AMOXICILLIN: "CNT_TRANS_PHASE::systematic::AMOXICILLIN",
+  CNT_PHASE2_F100: "CNT_PHASE2::nutritional::F100",
+  CNT_PHASE2_F100_DILUTED: "CNT_PHASE2::nutritional::F100::diluted",
+} as const;
+/**
+ * @version v0.1.1-next
+ */
+export enum DosageFormulaUnit {
+  ML = "ml",
+  G = "g",
+  PACKET = "packet",
+}
+/**
+ * @version v0.1.1-next
+ */
+export enum FeedingFrequenciePerDay {
+  EIGHT = "8",
+  FIVE = "5",
+  SIX = "6",
+}
+export type AdmissionVariable<T extends string> = `admission_${T}`;
+export type ConsecutiveVariable<T extends string> =
+  `consecutive_${number}_${T}`;
+export type DailyVariable<T extends string> = `daily_${number}_${T}`;
+/**
+ *
+ * @param {string} code
+ * @returns {string}
+ * @version v0.1.1-next
+ */
+export const admissionVariable = <T extends string>(
+  code: T
+): AdmissionVariable<T> => `admission_${code}`;
+export const consecutiveVariable = <T extends string>(
+  code: T,
+  n: number
+): ConsecutiveVariable<T> => `consecutive_${n}_${code}`;
+
+export const dailyVariable = <T extends string>(
+  code: T,
+  n: number
+): DailyVariable<T> => `daily_${n}_${code}`;
+export type ClinicalSignChangeDay<T extends string> = `change_day_${T}`;
+
+/**
+ *
+ * @param {T extends ValueOf<typeof CLINICAL_SIGNS>} code
+ * @returns {ClinicalSignChangeDay<T>}
+ * @version v0.1.1-next
+ */
+export const clinicalSignChangeDay = <T extends ValueOf<typeof CLINICAL_SIGNS>>(
+  code: T
+): ClinicalSignChangeDay<T> => `change_day_${code}`;
+
+export const WEIGHT_RECORDING_PREV_DAY = dailyVariable(
+  AnthroSystemCodes.WEIGHT,
+  0
+);
+export const WEIGHT_RECORDING_BEFORE_PREV_DAY = dailyVariable(
+  AnthroSystemCodes.WEIGHT,
+  1
+);
+export const WEIGHT_IN_PHASE_ADMISSION = admissionVariable(
+  AnthroSystemCodes.WEIGHT
+);
+export const WEIGHT_CONSECUTIVE_RECORDING_1 = consecutiveVariable(
+  AnthroSystemCodes.WEIGHT,
+  1
+);
+export const WEIGHT_CONSECUTIVE_RECORDING_2 = consecutiveVariable(
+  AnthroSystemCodes.WEIGHT,
+  2
+);
+export const WEIGHT_CONSECUTIVE_RECORDING_0 = consecutiveVariable(
+  AnthroSystemCodes.WEIGHT,
+  0
+);

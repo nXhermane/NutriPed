@@ -3,26 +3,29 @@ import {
   AnthropometricRecord,
   INormalizeAnthropometricDataACL,
 } from "../../domain";
-import { INormalizeAnthropometricDataAppService } from "@/core/evaluation";
+import { INormalizeDataAppService } from "@/core/evaluation";
 
 export class NormalizeAnthropomericDataACL
   implements INormalizeAnthropometricDataACL
 {
   constructor(
-    private readonly normalizeAnthropometricDataService: INormalizeAnthropometricDataAppService
+    private readonly normalizeAnthropometricDataService: INormalizeDataAppService
   ) {}
   async normalize(
     anthropRecord: AnthropometricRecord
   ): Promise<Result<AnthropometricRecord>> {
     try {
-      const result = await this.normalizeAnthropometricDataService.normalize({
-        anthropometricMeasures: [
+      const result =
+        await this.normalizeAnthropometricDataService.normalizeAnthropometricData(
           {
-            code: anthropRecord.getCode(),
-            ...anthropRecord.getMeasurement(),
-          },
-        ],
-      });
+            anthropometricMeasures: [
+              {
+                code: anthropRecord.getCode(),
+                ...anthropRecord.getMeasurement(),
+              },
+            ],
+          }
+        );
       if ("data" in result) {
         const normalizeRecord = result.data[0];
         const newUnitRes = UnitCode.create(normalizeRecord.unit);

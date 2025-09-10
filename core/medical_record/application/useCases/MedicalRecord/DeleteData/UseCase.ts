@@ -55,6 +55,16 @@ export class DeleteDataFromMedicalRecordUseCase
           medicalRecord.deleteComplicationRecord(id)
         );
       }
+      if (data.appetiteTests) {
+        data.appetiteTests.forEach(id =>
+          medicalRecord.deleteAppetiteTestRecord(id)
+        );
+      }
+      if (data.dataFields) {
+        data.dataFields.forEach(id =>
+          medicalRecord.deleteDataFieldResponse(id)
+        );
+      }
       return Result.ok(true);
     } catch (e: unknown) {
       return handleError(e);

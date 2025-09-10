@@ -5,3 +5,4 @@ export * from "./core";
 export * from "./db";
 export * from "./data_fields";
 export * from "./next";
+export * from "./appetite_test";

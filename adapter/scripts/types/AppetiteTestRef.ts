@@ -1,6 +1,7 @@
 import {
   APPETITE_TEST_PRODUCT_TYPE,
   APPETITE_TEST_SACHET_FRACTION_PARTITION,
+  DATA_FIELD_CODE_TYPE,
 } from "@core/constants";
 
 export interface AppetiteTestRef {
@@ -15,7 +16,5 @@ export interface AppetiteTestRef {
     ];
     potRange: [number, number | null];
   }[];
-  otherData: {
-    fields: [];
-  };
+  neededDataFields: { code: DATA_FIELD_CODE_TYPE; require: boolean }[];
 }

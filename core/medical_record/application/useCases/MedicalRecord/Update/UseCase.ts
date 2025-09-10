@@ -5,6 +5,7 @@ import {
   left,
   Result,
   right,
+  SystemCode,
   UnitCode,
   UseCase,
 } from "@shared";
@@ -106,14 +107,16 @@ export class UpdateMedicalRecordUseCase
       }
       if (data.dataFieldResponses) {
         const dataFieldRes = data.dataFieldResponses.map(props =>
-          DataFieldResponse.create(props)
+          DataFieldResponse.create(props.data, props.id)
         );
         const combinedRes = Result.combine(dataFieldRes);
         if (combinedRes.isFailure)
           return Result.fail(
             formatError(combinedRes, UpdateMedicalRecordUseCase.name)
           );
-        medicalRecord.changeDataFields(dataFieldRes.map(res => res.val));
+        data.dataFieldResponses.map(field =>
+          medicalRecord.changeDataFields(field.id, field.data.data)
+        );
       }
       if (data.clinicalData) {
         const clinicalResError: Result<any>[] = [];
@@ -152,6 +155,31 @@ export class UpdateMedicalRecordUseCase
             isPresent: complication.isPresent,
           });
         });
+      }
+      if (data.appetiteTests) {
+        data.appetiteTests.forEach(test =>
+          medicalRecord.changeAppetiteTest(test.id, test.data)
+        );
+      }
+      if (data.orientationRecords) {
+        for (const orientationRecord of data.orientationRecords) {
+          const codeRes = orientationRecord.data.code
+            ? SystemCode.create(orientationRecord.data.code)
+            : Result.ok(undefined);
+          const treatmentRes = orientationRecord.data.treatmentPhase
+            ? SystemCode.create(orientationRecord.data.treatmentPhase)
+            : Result.ok(undefined);
+          const combinedRes = Result.combine([codeRes, treatmentRes as any]);
+          if (combinedRes.isFailure) {
+            return Result.fail(
+              formatError(combinedRes, UpdateMedicalRecordUseCase.name)
+            );
+          }
+          medicalRecord.changeOrientationRecord(orientationRecord.id, {
+            code: codeRes.val,
+            treatmentPhase: treatmentRes.val,
+          });
+        }
       }
 
       return Result.ok(true);

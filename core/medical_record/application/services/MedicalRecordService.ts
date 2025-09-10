@@ -16,6 +16,9 @@ import {
   DeleteDataFromMedicalRecordResponse,
   GetNormalizedAnthropometricDataRequest,
   GetNormalizedAnthropometricDataResponse,
+  GetLatestValuesUntilDateRequest,
+  GetLatestValuesUntilDateResponse,
+  GetLastestValuesUnitlDateDto,
 } from "../useCases";
 import { MedicalRecordDto } from "../dtos";
 import { CreateAnthropometricRecord } from "../../domain";
@@ -36,6 +39,10 @@ export interface MedicalRecordServiceUseCases {
   getNormalizeAnthropDataUC: UseCase<
     GetNormalizedAnthropometricDataRequest,
     GetNormalizedAnthropometricDataResponse
+  >;
+  getLatestValuesUntilDate: UseCase<
+    GetLatestValuesUntilDateRequest,
+    GetLatestValuesUntilDateResponse
   >;
 }
 
@@ -97,6 +104,13 @@ export class MedicalRecordService implements IMedicalRecordService {
     | Message
   > {
     const res = await this.ucs.getNormalizeAnthropDataUC.execute(req);
+    if (res.isRight()) return { data: res.value.val };
+    else return new Message("error", JSON.stringify((res.value as any)?.err));
+  }
+  async getLatestValuesUntilDate(
+    req: GetLatestValuesUntilDateRequest
+  ): Promise<AppServiceResponse<GetLastestValuesUnitlDateDto> | Message> {
+    const res = await this.ucs.getLatestValuesUntilDate.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }

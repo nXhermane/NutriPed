@@ -50,7 +50,7 @@ export default function TableDetailScreen() {
         "Erreur lors du chargement des table de croissance. Veillez reessayer!"
       );
     }
-  }, [error, indicatorError]);
+  }, [error, indicatorError, toast]);
 
   if (onLoading || indicatorLoading) return <Loading />;
 

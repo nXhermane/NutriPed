@@ -63,6 +63,21 @@ export interface PediatricAppContextType {
     nextNutritionalRiskFactors: ReturnType<
       typeof DiagnosticContext.prototype.getNextNutritionalRiskFactorService
     >;
+    appetiteTest: ReturnType<
+      typeof DiagnosticContext.prototype.getAppetiteTest
+    >;
+    patientOrchestrator: ReturnType<
+      typeof DiagnosticContext.prototype.getPatientOrchestrator
+    >;
+    formulaField: ReturnType<
+      typeof DiagnosticContext.prototype.getFormulaFieldService
+    >;
+    makeClinicalSignInterpretation: ReturnType<
+      typeof DiagnosticContext.prototype.getMakeClinicalSignDataInterpretationService
+    >;
+    normalizeData: ReturnType<
+      typeof DiagnosticContext.prototype.getNormalizeDataService
+    >;
   };
 
   // Services from MedicalRecord BC
@@ -87,6 +102,48 @@ export interface PediatricAppContextType {
     >;
     patientCareSession: ReturnType<
       typeof NutritionCareContext.prototype.getPatientCareSessionService
+    >;
+    nextMedicine: ReturnType<
+      typeof NutritionCareContext.prototype.getNextMedicineService
+    >;
+    carePhaseReference: ReturnType<
+      typeof NutritionCareContext.prototype.getCarePhaseReferenceService
+    >;
+    nextNutritionalProduct: ReturnType<
+      typeof NutritionCareContext.prototype.getNextNutritionalProductAppService
+    >;
+    nextMilk: ReturnType<
+      typeof NutritionCareContext.prototype.getNextMilkAppService
+    >;
+    nextOrientation: ReturnType<
+      typeof NutritionCareContext.prototype.getNextOrientationAppService
+    >;
+    nextCommunication: ReturnType<
+      typeof NutritionCareContext.prototype.getNextCommunicationService
+    >;
+    nextCompletion: ReturnType<
+      typeof NutritionCareContext.prototype.getNextCompletionService
+    >;
+    nextDailyCareAction: ReturnType<
+      typeof NutritionCareContext.prototype.getNextDailyCareActionService
+    >;
+    nextDailyCareRecord: ReturnType<
+      typeof NutritionCareContext.prototype.getNextDailyCareRecordService
+    >;
+    nextDailyMonitoringTask: ReturnType<
+      typeof NutritionCareContext.prototype.getNextDailyMonitoringTaskService
+    >;
+    nextMonitoringParameter: ReturnType<
+      typeof NutritionCareContext.prototype.getNextMonitoringParameterService
+    >;
+    nextOnGoingTreatment: ReturnType<
+      typeof NutritionCareContext.prototype.getNextOnGoingTreatmentService
+    >;
+    nextOrchestration: ReturnType<
+      typeof NutritionCareContext.prototype.getNextOrchestrationService
+    >;
+    nextPatientCareSession: ReturnType<
+      typeof NutritionCareContext.prototype.getNextPatientCareSessionService
     >;
   };
 

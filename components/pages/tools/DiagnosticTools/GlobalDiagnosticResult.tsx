@@ -42,15 +42,10 @@ export const GlobalDiagnosticResult: React.FC<
       setError(null);
       setDiagnosticResult(null);
       e.preventDefault();
-      const context =
-        wizardStates[1].data.data.context;
-      const anthropometricData =
-        wizardStates[1].data.data
-          .anthropometricData;
-      const clinicalData =
-        wizardStates[2].data.data;
-      const biologicalData =
-        wizardStates[3].data.data;
+      const context = wizardStates[1].data.data.context;
+      const anthropometricData = wizardStates[1].data.data.anthropometricData;
+      const clinicalData = wizardStates[2].data.data;
+      const biologicalData = wizardStates[3].data.data;
       if (context && anthropometricData && clinicalData && biologicalData) {
         const result = await nutritionalDiagnostic.makeIndependanteDiagnostic({
           context,

@@ -34,6 +34,7 @@ const Tool = () => {
         return <CalculTools />;
       case "diagnostic_tools":
         return <DiagnosticTools />;
+
       default:
         return (
           <Center className="flex-1">
@@ -57,7 +58,7 @@ const Tool = () => {
           animationMatchesGesture: true,
         }}
       />
-      {tool?.code != "diagnostic_tools" && (
+      {tool?.code !== "diagnostic_tools" && (
         <ToolDetailScreenHeader name={tool?.name || "Oops! Tool Not Found"} />
       )}
 

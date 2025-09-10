@@ -6,4 +6,7 @@ export interface INormalizeDataFieldResponseService {
   normalize(
     dataFieldResponse: DataFieldResponse[]
   ): Promise<Result<Record<DATA_FIELD_CODE_TYPE, number | string>>>;
+  normalizeAndFillDefaults(
+    dataFieldResponse: DataFieldResponse[]
+  ): Promise<Result<Record<DATA_FIELD_CODE_TYPE, number | string>>>;
 }

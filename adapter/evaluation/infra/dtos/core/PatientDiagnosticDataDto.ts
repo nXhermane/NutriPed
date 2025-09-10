@@ -11,7 +11,6 @@ export interface PatientDiagnosticDataPersistenceDto
     unit: string;
   }[];
   clinicalSigns: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     clinicalSigns: { code: string; data: Record<string, any> }[];
   };
   biologicalTestResults: { code: string; value: number; unit: string }[];

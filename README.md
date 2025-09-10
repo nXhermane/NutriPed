@@ -10,6 +10,7 @@ It allows for the detailed tracking of a patient's anthropometric, clinical, and
 
 ## ✨ Main Features
 
+
 *   **Patient Management:** Securely create, store, and manage patient records, including demographic information, parental details, and contact information.
 *   **Comprehensive Data Collection:**
     *   **Anthropometry:** Record measurements like weight, height, head circumference, and MUAC (Mid-Upper Arm Circumference).
@@ -22,9 +23,11 @@ It allows for the detailed tracking of a patient's anthropometric, clinical, and
 *   **Growth Charts & Tools:** Visualize patient growth over time using interactive charts and access various pediatric calculation tools.
 *   **Data Portability:** Features capabilities for importing and exporting data, potentially through formats like XLSX and ZIP, for interoperability with other systems.
 
+
 ## 💻 Technology Stack
 
 Nutriped is built with a modern and scalable technology stack, centered around a Domain-Driven Design (DDD) architecture.
+
 
 *   **Core Framework:** React Native (with Expo)
 *   **Language:** TypeScript
@@ -44,14 +47,17 @@ Nutriped is built with a modern and scalable technology stack, centered around a
 
 ### Prerequisites
 
+
 *   Node.js (LTS version recommended)
 *   npm or yarn
 *   Expo CLI
 *   An Android or iOS emulator/device for running the application.
 
+
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/nXhermane/NutriPed.git
     cd NutriPed
@@ -66,26 +72,26 @@ Nutriped is built with a modern and scalable technology stack, centered around a
 
 You can run the application on different platforms using the following scripts:
 
-*   **To start the development server:**
-    ```bash
-    yarn start
-    ```
-    This will open the Expo developer tools in your browser. You can then scan the QR code with the Expo Go app on your mobile device or run it on a simulator.
+- **To start the development server:**
 
-*   **To run directly on Android:**
-    ```bash
-    yarn android
-    ```
+  ```bash
+  yarn start
+  ```
 
-*   **To run directly on iOS:**
-    ```bash
-    yarn ios
-    ```
+  This will open the Expo developer tools in your browser. You can then scan the QR code with the Expo Go app on your mobile device or run it on a simulator.
 
-*   **To run on the web:**
-    ```bash
-    yarn web
-    ```
+- **To run directly on Android:**
+
+  ```bash
+  yarn android
+  ```
+
+- **To run directly on iOS:**
+
+  ```bash
+  yarn ios
+  ```
+
 
 ## Usage Example
 
@@ -93,6 +99,7 @@ You can run the application on different platforms using the following scripts:
 2.  **Create a new patient** by entering their demographic details (name, birthday, gender, etc.).
 3.  **Select the patient** to view their medical record.
 4.  **Add new data** by creating an evaluation entry:
+
     *   Enter anthropometric measurements.
     *   Document any relevant clinical signs.
     *   Input biological test results if available.

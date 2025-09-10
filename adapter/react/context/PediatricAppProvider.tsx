@@ -17,6 +17,7 @@ import {
   ClinicalSignDataInterpretationACL,
   MeasurementValidationACLImpl,
   NormalizeAnthropomericDataACL,
+  NormalizeDataFieldResponseACl,
 } from "@/core/medical_record";
 
 interface PediatricAppProviderProps {
@@ -64,7 +65,10 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           diagnosticContext.getValidatePatientMeasurementsService()
         ),
         normalizeAnthropometricDataACL: new NormalizeAnthropomericDataACL(
-          diagnosticContext.getNormalizeAnthropomtricDataService()
+          diagnosticContext.getNormalizeDataService()
+        ),
+        normalizeAndFillDataFieldResponseACL: new NormalizeDataFieldResponseACl(
+          diagnosticContext.getNormalizeDataService()
         ),
       };
       medicalRecordContext.setAcls(medicalRecordAcls);
@@ -110,6 +114,12 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           nextClinicalRefs: diagnosticContext.getNextClinicalRefService(),
           nextNutritionalRiskFactors:
             diagnosticContext.getNextNutritionalRiskFactorService(),
+          appetiteTest: diagnosticContext.getAppetiteTest(),
+          patientOrchestrator: diagnosticContext.getPatientOrchestrator(),
+          formulaField: diagnosticContext.getFormulaFieldService(),
+          makeClinicalSignInterpretation:
+            diagnosticContext.getMakeClinicalSignDataInterpretationService(),
+          normalizeData: diagnosticContext.getNormalizeDataService(),
         },
 
         // Get service from MedicalRecord BC
@@ -124,6 +134,28 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           orientation: nutritionCareContext.getOrientationService(),
           patientCareSession:
             nutritionCareContext.getPatientCareSessionService(),
+          nextMedicine: nutritionCareContext.getNextMedicineService(),
+          carePhaseReference:
+            nutritionCareContext.getCarePhaseReferenceService(),
+          nextNutritionalProduct:
+            nutritionCareContext.getNextNutritionalProductAppService(),
+          nextMilk: nutritionCareContext.getNextMilkAppService(),
+          nextOrientation: nutritionCareContext.getNextOrientationAppService(),
+          nextCommunication: nutritionCareContext.getNextCommunicationService(),
+          nextCompletion: nutritionCareContext.getNextCompletionService(),
+          nextDailyCareAction:
+            nutritionCareContext.getNextDailyCareActionService(),
+          nextDailyCareRecord:
+            nutritionCareContext.getNextDailyCareRecordService(),
+          nextDailyMonitoringTask:
+            nutritionCareContext.getNextDailyMonitoringTaskService(),
+          nextMonitoringParameter:
+            nutritionCareContext.getNextMonitoringParameterService(),
+          nextOnGoingTreatment:
+            nutritionCareContext.getNextOnGoingTreatmentService(),
+          nextOrchestration: nutritionCareContext.getNextOrchestrationService(),
+          nextPatientCareSession:
+            nutritionCareContext.getNextPatientCareSessionService(),
         },
 
         // Get service from Unit BC

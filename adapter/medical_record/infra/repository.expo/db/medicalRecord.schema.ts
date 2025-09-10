@@ -1,10 +1,12 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 import {
   AnthropometricDataPersistenceDto,
+  AppetiteTestRecordPersistenceDto,
   BiologicalDataPersistenceDto,
   ClinicalDataPersistenceDto,
   ComplicationDataPersistenceDto,
   DataFieldResponsePersistenceDto,
+  OrientationRecordPersistenceDto,
 } from "../../dtos";
 
 export const medical_records = sqliteTable("medical_records", {
@@ -26,5 +28,14 @@ export const medical_records = sqliteTable("medical_records", {
     .notNull(),
   dataFieldsResponse: text("data_fields_response", { mode: "json" })
     .$type<DataFieldResponsePersistenceDto[]>()
+    .notNull(),
+  /**
+   * @version 0.1.0-next
+   */
+  appetiteTests: text("appetite_tests", { mode: "json" })
+    .$type<AppetiteTestRecordPersistenceDto[]>()
+    .notNull(),
+  orientationRecords: text("orientation_records", { mode: "json" })
+    .$type<OrientationRecordPersistenceDto[]>()
     .notNull(),
 });

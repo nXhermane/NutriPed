@@ -1,5 +1,5 @@
 import { MedicalRecord } from "../../domain";
-import { AggregateID, ApplicationMapper } from "@shared";
+import { ApplicationMapper } from "@shared";
 import { MedicalRecordDto } from "../dtos";
 
 export class MedicalRecordMapper
@@ -41,12 +41,27 @@ export class MedicalRecordMapper
         isPresent: complication.getIsPresent(),
         recordedAt: complication.getRecordAt(),
       })),
-      dataFieldResponse: entity.getDataFields().map(valObj => ({
-        code: valObj.code.unpack(),
-        recordedAt: valObj.recodedAt.unpack(),
-        type: valObj.type,
-        value: valObj.value,
-        unit: valObj.unit?.unpack(),
+      dataFieldResponse: entity.getDataFields().map(field => ({
+        code: field.code.unpack(),
+        data: field.data,
+        id: field.id,
+        recordedAt: field.recordAt.unpack(),
+      })),
+      appetiteTests: entity.getAppetiteTest().map(test => ({
+        amount: test.amount,
+        id: test.id,
+        productType: test.productType,
+        fieldResponses: test.fieldResponses,
+        recordedAt: test.recordAt.unpack(),
+      })),
+      orientationRecords: entity.getOrientationRecord().map(orientation => ({
+        id: orientation.id,
+        code: orientation.code.unpack(),
+        treatmentPhase:
+          orientation.treatmentPhase !== null
+            ? orientation.treatmentPhase.unpack()
+            : orientation.treatmentPhase,
+        recordedAt: orientation.recordedAt.toString(),
       })),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

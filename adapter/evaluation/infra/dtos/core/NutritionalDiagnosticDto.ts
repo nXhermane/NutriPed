@@ -8,7 +8,7 @@ export interface NutritionalDiagnosticPersistenceDto
   patientData: PatientDiagnosticDataPersistenceDto;
   result?: NutritionalAssessmentResultPersistenceDto;
   date: string;
-  notes: string[];
+  notes: { date: string; content: string }[];
   atInit: boolean;
   modificationHistories: {
     prevResult: NutritionalAssessmentResultPersistenceDto;

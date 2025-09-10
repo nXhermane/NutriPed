@@ -1,8 +1,8 @@
 import { AggregateID } from "@shared";
 import { OrientationResult } from "../../../domain";
-import { CarePhaseDto } from "./CarePhaseDto";
 import { PatientCurrentStateDto } from "./PatientCurrentStateDto";
 import { DailyCareJournalDto } from "./DailyCareJournalDto";
+import { CarePhaseDto } from "./CarePhase";
 
 export interface PatientCareSessionDto {
   id: AggregateID;

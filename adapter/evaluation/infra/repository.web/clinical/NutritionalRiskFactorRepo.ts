@@ -2,11 +2,8 @@ import {
   NutritionalRiskFactor,
   NutritionalRiskFactorRepository,
 } from "@/core/evaluation";
-import { InfrastructureMapper, SystemCode } from "@shared";
-import {
-  EntityBaseRepositoryWeb,
-  IndexedDBConnection,
-} from "../../../../shared";
+import { SystemCode } from "@shared";
+import { EntityBaseRepositoryWeb } from "../../../../shared";
 import { NutritionalRiskFactorPersistenceDto } from "../../dtos";
 
 export class NutritionalRiskFactorRepoWebImpl
@@ -17,16 +14,6 @@ export class NutritionalRiskFactorRepoWebImpl
   implements NutritionalRiskFactorRepository
 {
   protected storeName: string = "nutritional_risk_factors";
-
-  constructor(
-    dbConnection: IndexedDBConnection,
-    mapper: InfrastructureMapper<
-      NutritionalRiskFactor,
-      NutritionalRiskFactorPersistenceDto
-    >
-  ) {
-    super(dbConnection, mapper);
-  }
 
   async getByClinicalRefCode(
     code: SystemCode

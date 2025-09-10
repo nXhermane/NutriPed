@@ -17,3 +17,7 @@ export * from "./Medicine";
 export * from "./Milk";
 export * from "./Unit";
 export * from "./Complication";
+export * from "./clinicalRef_next";
+export * from "./clinicalSignData_next";
+export * from "./NextData";
+export * from "./DataFieldReference";

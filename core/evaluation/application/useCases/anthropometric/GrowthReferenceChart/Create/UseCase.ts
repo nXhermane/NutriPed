@@ -44,7 +44,6 @@ export class CreateGrowthReferenceChartUseCase
           )
         );
 
-      growthReferenceChart.val.created();
       await this.repo.save(growthReferenceChart.val);
       return right(Result.ok({ id: growthReferenceChartId }));
     } catch (e: unknown) {

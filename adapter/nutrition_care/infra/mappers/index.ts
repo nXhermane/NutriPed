@@ -6,3 +6,4 @@ export * from "./MilkMapper";
 export * from "./OrientationRefMapper";
 export * from "./PatientCareSessionMapper";
 export * from "./PatientCurrentStateMapper";
+export * as NextNutritionCareInfraMapper from "./next";

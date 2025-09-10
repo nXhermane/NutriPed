@@ -24,7 +24,6 @@ import {
   InfraMapToDomainError,
   InfrastructureMapper,
 } from "@shared";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 import { SQLiteDatabase } from "expo-sqlite";
 import { eq, or } from "drizzle-orm";
 

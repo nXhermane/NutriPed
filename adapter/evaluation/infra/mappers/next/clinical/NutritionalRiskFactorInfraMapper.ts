@@ -38,7 +38,6 @@ export class NutritionalRiskFactorInfraMapper
           NutritionalRiskFactorInfraMapper.name
         )
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, createdAt, updatedAt, ...props } =
       nutritionalRiskFactorRes.val.getProps();
     return new NextClinicalDomain.NutritionalRiskFactor({

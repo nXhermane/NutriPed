@@ -1,4 +1,4 @@
-export const version = "v0.1.0-next";
+export const version = "v0.1.6-next";
 export const CORE_CONFIG = {
   pediatricDataZipUrl: `https://cdn.jsdelivr.net/gh/nxh-labs/Pediatric_Software_Data_Extraction@${version}/dist/PediatricSoftWareData.zip`,
   protocolesUrl: `https://cdn.jsdelivr.net/gh/nxh-labs/Pediatric_Software_Data_Extraction@${version}/dist/protocoles.json`,

@@ -1,10 +1,10 @@
 import { DynamicFormZodSchemaType, FormSchema } from "@/components/custom";
 import { IField } from "@/components/custom/FormField";
 import {
-  ClinicalDataType,
   ClinicalSignDataDto,
   ClinicalSignReferenceDto,
 } from "@/core/evaluation";
+import { ClinicalDataType } from "@/core/constants";
 import {
   BirthDateField,
   BirthDateToTodayZodSchema,

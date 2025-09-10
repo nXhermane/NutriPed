@@ -11,6 +11,7 @@ import { AddDataToMedicalRecordRequest } from "./Request";
 import { AddDataToMedicalRecordResponse } from "./Response";
 import {
   AnthropometricRecord,
+  AppetiteTestRecord,
   BiologicalValueRecord,
   ClinicalSingDataRecord,
   ComplicationDataRecord,
@@ -19,6 +20,7 @@ import {
   MeasurementValidationACL,
   MedicalRecord,
   MedicalRecordRepository,
+  OrientationRecord,
 } from "./../../../../domain";
 
 export class AddDataToMedicalRecordUseCase
@@ -151,7 +153,7 @@ export class AddDataToMedicalRecordUseCase
       }
       if (data.dataFieldResponses) {
         const dataFieldRes = data.dataFieldResponses.map(props =>
-          DataFieldResponse.create(props)
+          DataFieldResponse.create(props, this.idGenerator.generate().toValue())
         );
         const combinedRes = Result.combine(dataFieldRes);
         if (combinedRes.isFailure)
@@ -159,6 +161,34 @@ export class AddDataToMedicalRecordUseCase
             formatError(combinedRes, AddDataToMedicalRecordUseCase.name)
           );
         dataFieldRes.forEach(res => medicalRecord.addDataField(res.val));
+      }
+      if (data.appetiteTests) {
+        const appetiteTestRes = data.appetiteTests.map(props =>
+          AppetiteTestRecord.create(
+            props,
+            this.idGenerator.generate().toValue()
+          )
+        );
+        const combinedRes = Result.combine(appetiteTestRes);
+        if (combinedRes.isFailure) {
+          return Result.fail(
+            formatError(combinedRes, AddDataToMedicalRecordUseCase.name)
+          );
+        }
+      }
+      if (data.orientationRecords) {
+        const orientationRecordRes = data.orientationRecords.map(props =>
+          OrientationRecord.create(props, this.idGenerator.generate().toValue())
+        );
+        const combinedRes = Result.combine(orientationRecordRes);
+        if (combinedRes.isFailure) {
+          return Result.fail(
+            formatError(combinedRes, AddDataToMedicalRecordUseCase.name)
+          );
+        }
+        orientationRecordRes.map(res =>
+          medicalRecord.addOrientationRecord(res.val)
+        );
       }
       return Result.ok(true);
     } catch (e: unknown) {

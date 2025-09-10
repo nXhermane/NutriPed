@@ -19,6 +19,12 @@ import {
   AnthropometricMeasureService,
   AnthropometricValidationService,
   AnthropometricVariableGeneratorService,
+  AppetiteTestAppService,
+  AppetiteTestRef,
+  AppetiteTestRefDto,
+  AppetiteTestReferenceMapper,
+  AppetiteTestRefRepository,
+  AppetiteTestService,
   BiochemicalReference,
   BiochemicalReferenceDto,
   BiochemicalReferenceMapper,
@@ -49,6 +55,9 @@ import {
   CreateAnthropometricMeasureRequest,
   CreateAnthropometricMeasureResponse,
   CreateAnthropometricMeasureUseCase,
+  CreateAppetiteTestRequest,
+  CreateAppetiteTestResponse,
+  CreateAppetiteTestUseCase,
   CreateBiochemicalReferenceRequest,
   CreateBiochemicalReferenceResponse,
   CreateBiochemicalReferenceUseCase,
@@ -58,6 +67,7 @@ import {
   CreateDataFieldRefRequest,
   CreateDataFieldRefResponse,
   CreateDataFieldRefUseCase,
+  CreateFormulaFieldReferenceUseCase,
   CreateDiagnosticRuleRequest,
   CreateDiagnosticRuleResponse,
   CreateDiagnosticRuleUseCase,
@@ -83,6 +93,7 @@ import {
   DataFieldReferenceMapper,
   DataFieldReferenceRepository,
   DataFieldReferenceService,
+  FormulaFieldReferenceService,
   DataFieldValidationService,
   DeleteAnthropometricMeasureRequest,
   DeleteAnthropometricMeasureResponse,
@@ -113,12 +124,21 @@ import {
   DiagnosticRuleMapper,
   DiagnosticRuleRepository,
   DiagnosticRuleService,
+  EvaluateAppetiteRequest,
+  EvaluateAppetiteResponse,
+  EvaluateAppetiteUseCase,
   GenerateDiagnosticResultRequest,
   GenerateDiagnosticResultResponse,
   GenerateDiagnosticResultUseCase,
+  GetAllPatientAppetiteTestResultRequest,
+  GetAllPatientAppetiteTestResultResponse,
+  GetAllPatientAppetiteTestResultUseCase,
   GetAnthropometricMeasureRequest,
   GetAnthropometricMeasureResponse,
   GetAnthropometricMeasureUseCase,
+  GetAppetiteTestRequest,
+  GetAppetiteTestResponse,
+  GetAppetiteTestUseCase,
   GetBiochemicalReferenceRequest,
   GetBiochemicalReferenceResponse,
   GetBiochemicalReferenceUseCase,
@@ -128,6 +148,7 @@ import {
   GetDataFieldRefRequest,
   GetDataFieldRefResponse,
   GetDataFieldRefUseCase,
+  GetFormulaFieldReferenceUseCase,
   GetDiagnosticRuleRequest,
   GetDiagnosticRuleResponse,
   GetDiagnosticRuleUseCase,
@@ -140,6 +161,9 @@ import {
   GetIndicatorRequest,
   GetIndicatorResponse,
   GetIndicatorUseCase,
+  GetLastPatientAppetiteTestResultRequest,
+  GetLastPatientAppetiteTestResultResponse,
+  GetLastPatientAppetiteTestResultUseCase,
   GetNutritionalDiagnosticRequest,
   GetNutritionalDiagnosticResponse,
   GetNutritionalDiagnosticUseCase,
@@ -162,6 +186,8 @@ import {
   IAnthropometricMeasureService,
   IAnthropometricValidationService,
   IAnthropometricVariableGeneratorService,
+  IAppetiteTestAppService,
+  IAppetiteTestService,
   IBiochemicalReferenceService,
   IBiologicalAnalysisAppService,
   IBiologicalInterpretationService,
@@ -185,16 +211,25 @@ import {
   IndicatorMapper,
   IndicatorRepository,
   IndicatorService,
-  INormalizeAnthropometricDataAppService,
+  INormalizeDataAppService,
   INormalizeAnthropometricDataService,
   INormalizeDataFieldResponseService,
   INutritionalAssessmentService,
   INutritionalDiagnosticService,
   INutritionalRiskFactorService,
   IPatientDataValidationService,
+  IPatientEvaluationOrchestratorService,
   IReferenceSelectionService,
   IValidatePatientMeasurementsService,
   IZScoreCalculationService,
+  FormulaFieldReference,
+  FormulaFieldReferenceDto,
+  CreateFormulaFieldReferenceRequest,
+  CreateFormulaFieldReferenceResponse,
+  GetFormulaFieldReferenceRequest,
+  GetFormulaFieldReferenceResponse,
+  IFormulaFieldReferenceService,
+  FormulaFieldRefrenceRepo,
   IZScoreInterpretationService,
   LenheiBasedStrategy,
   MakeBiologicalInterpretationRequest,
@@ -215,7 +250,7 @@ import {
   NextClinicalDomain,
   NextClinicalDtos,
   NextMappers,
-  NormalizeAnthropometricDataAppService,
+  NormalizeDataAppService,
   NormalizeAnthropometricDataRequest,
   NormalizeAnthropometricDataResponse,
   NormalizeAnthropometricDataService,
@@ -225,7 +260,6 @@ import {
   NutritionalAssessmentResultDto,
   NutritionalAssessmentResultFactory,
   NutritionalAssessmentResultMapper,
-  NutritionalAssessmentResultRepository,
   NutritionalDiagnostic,
   NutritionalDiagnosticDto,
   NutritionalDiagnosticFactory,
@@ -241,7 +275,7 @@ import {
   PatientDiagnosticData,
   PatientDiagnosticDataDto,
   PatientDiagnosticDataMapper,
-  PatientDiagnosticDataRepository,
+  PatientEvaluationOrchestratorService,
   PerformPatientGlobalVariableRequest,
   PerformPatientGlobalVariableResponse,
   PerformPatientGlobalVariableUseCase,
@@ -280,6 +314,10 @@ import {
   ValidatePatientMeasurementsService,
   ZScoreCalculationService,
   ZScoreInterpretationService,
+  FormulaFieldReferenceMapper,
+  NormalizeAndFillDefaultDataFieldResponseRequest,
+  NormalizeAndFillDefaultDataFieldResponseResponse,
+  NormalizeAndFillDefaultDataFieldResponseUseCase,
 } from "@/core/evaluation";
 import {
   AnthropometricMeasurePersistenceDto,
@@ -293,9 +331,11 @@ import {
   NutritionalDiagnosticPersistenceDto,
   NutritionalRiskFactorPersistenceDto,
   PatientDiagnosticDataPersistenceDto,
+  FormulaFieldReferencePersistenceDto,
 } from "./infra/dtos";
 import {
   AnthropometricMeasureInfraMapper,
+  AppetiteTestInfraMapper,
   BiochemicalReferenceInfraMapper,
   ClinicalSignReferenceInfraMapper,
   DataFieldReferenceInfraMapper,
@@ -308,6 +348,7 @@ import {
   NutritionalDiagnosticInfraMapper,
   NutritionalRiskFactorInfraMapper,
   PatientDiagnosticDataInfraMapper,
+  FormulaFieldReferenceInfraMapper,
 } from "./infra/mappers";
 import {
   NutritionalAssessmentService,
@@ -324,6 +365,8 @@ import {
   GrowthReferenceTableRepositoryWebImpl,
   NutritionalRiskFactorRepoWebImpl,
   DataFieldReferenceRepositoryWebImpl,
+  FormulaFieldReferenceRepositoryWebImpl,
+  AppetiteTestRefRepositoryWebImpl,
 } from "./infra/repository.web";
 import {
   MedicalRecordACLImpl,
@@ -344,6 +387,8 @@ import { SQLiteDatabase } from "expo-sqlite";
 import {
   anthropometric_measures,
   AnthropometricMeasureRepositoryExpoImpl,
+  AppetiteTestReferencePersistenceDto,
+  AppetiteTestRefRepositoryExpoImpl,
   biochemical_references,
   BiochemicalReferenceRepositoryExpoImpl,
   clinical_sign_references,
@@ -359,6 +404,7 @@ import {
   GrowthReferenceTableRepositoryExpoImpl,
   IndicatorRepositoryExpoImpl,
   indicators,
+  next_appetite_test_references,
   next_clinical_sign_references,
   NextClinicalInfraDtos,
   NextClinicalInfraRepo,
@@ -370,6 +416,8 @@ import {
   NutritionalRiskFactorRepositoryExpoImpl,
   patient_diagnostic_data,
   PatientDiagnosticDataRepositoryExpoImpl,
+  formula_field_references,
+  FormulaFieldReferenceExpoRepo,
 } from "./infra";
 import { MedicalRecordContext } from "../medical_record";
 import { NextClinicalUseCase } from "@/core/evaluation/application/useCases/next";
@@ -422,6 +470,10 @@ export class DiagnosticContext {
     DataFieldReference,
     DataFieldReferencePersistenceDto
   >;
+  private readonly formulaFieldRefInfraMapper: InfrastructureMapper<
+    FormulaFieldReference,
+    FormulaFieldReferencePersistenceDto
+  >;
   private readonly diagnosticRuleInfraMapper: InfrastructureMapper<
     DiagnosticRule,
     DiagnosticRulePersistenceDto
@@ -438,6 +490,10 @@ export class DiagnosticContext {
     NextClinicalDomain.NutritionalRiskFactor,
     NextClinicalInfraDtos.NutritionalRiskFactorPersistenceDto
   >;
+  private readonly appetiteTestInfraMapper: InfrastructureMapper<
+    AppetiteTestRef,
+    AppetiteTestReferencePersistenceDto
+  >;
 
   // Repo
   // private readonly patientDiagnosticDataRepo: PatientDiagnosticDataRepository
@@ -450,10 +506,12 @@ export class DiagnosticContext {
   private readonly clinicalRefRepo: ClinicalSignReferenceRepository;
   private readonly biochemicalRefRepo: BiochemicalReferenceRepository;
   private readonly dataFieldRefRepo: DataFieldReferenceRepository;
+  private readonly formulaFieldRefRepo: FormulaFieldRefrenceRepo;
   private readonly diagnosticRuleRepo: DiagnosticRuleRepository;
   private readonly nutritionalRiskFactorRepo: NutritionalRiskFactorRepository;
   private readonly nextClinicalSignRefRepo: NextClinicalDomain.ClinicalSignReferenceRepository;
   private readonly nextNutritionalRiskFactorRepo: NextClinicalDomain.NutritionalRiskFactorRepository;
+  private readonly appetiteTestRepo: AppetiteTestRefRepository;
 
   // Domain Services
   private readonly anthroVariableGenerator: IAnthropometricVariableGeneratorService;
@@ -475,6 +533,7 @@ export class DiagnosticContext {
   private readonly nextClinicalVariableGenertorService: NextClinicalDomain.IClinicalVariableGeneratorService;
   private readonly nextClinicalInterpretationService: NextClinicalDomain.IClinicalInterpretationService;
   private readonly nextClinicalValidationService: NextClinicalDomain.IClinicalValidationService;
+  private readonly appetiteTestService: IAppetiteTestService;
 
   // Domain Services Associates
   private readonly zScoreCalculationService: IZScoreCalculationService;
@@ -523,6 +582,10 @@ export class DiagnosticContext {
     DataFieldReference,
     DataFieldReferenceDto
   >;
+  private readonly formulaFieldRefAppMapper: ApplicationMapper<
+    FormulaFieldReference,
+    FormulaFieldReferenceDto
+  >;
   private readonly diagnosticRuleAppMapper: ApplicationMapper<
     DiagnosticRule,
     DiagnosticRuleDto
@@ -546,6 +609,10 @@ export class DiagnosticContext {
   private readonly nextNutritionalRiskFactorAppMapper: ApplicationMapper<
     NextClinicalDomain.NutritionalRiskFactor,
     NextClinicalDtos.NutritionalRiskFactorDto
+  >;
+  private readonly appetiteTestAppMapper: ApplicationMapper<
+    AppetiteTestRef,
+    AppetiteTestRefDto
   >;
 
   // UseCases
@@ -625,6 +692,10 @@ export class DiagnosticContext {
     NormalizeAnthropometricDataRequest,
     NormalizeAnthropometricDataResponse
   >;
+  private readonly normalizeAndFillDefaultDataFieldResponseUC: UseCase<
+    NormalizeAndFillDefaultDataFieldResponseRequest,
+    NormalizeAndFillDefaultDataFieldResponseResponse
+  >;
   private readonly createClinicalRefUC: UseCase<
     CreateClinicalSignReferenceRequest,
     CreateClinicalSignReferenceResponse
@@ -686,9 +757,17 @@ export class DiagnosticContext {
     CreateDataFieldRefRequest,
     CreateDataFieldRefResponse
   >;
+  private readonly createFormulaFieldReferenceUC: UseCase<
+    CreateFormulaFieldReferenceRequest,
+    CreateFormulaFieldReferenceResponse
+  >;
   private readonly getDataFieldReferenceUC: UseCase<
     GetDataFieldRefRequest,
     GetDataFieldRefResponse
+  >;
+  private readonly getFormulaFieldReferenceUC: UseCase<
+    GetFormulaFieldReferenceRequest,
+    GetFormulaFieldReferenceResponse
   >;
   private readonly valideDataFieldResponseUC: UseCase<
     ValidateDataFieldResponseRequest,
@@ -725,6 +804,18 @@ export class DiagnosticContext {
   private readonly nextMakeClinicalDataInterpretationUC: UseCase<
     NextClinicalUseCase.MakeClinicalInterpretationRequest,
     NextClinicalUseCase.MakeClinicalInterpretationResponse
+  >;
+  private readonly createAppetiteTestRefUC: UseCase<
+    CreateAppetiteTestRequest,
+    CreateAppetiteTestResponse
+  >;
+  private readonly getAppetiteTestRefUC: UseCase<
+    GetAppetiteTestRequest,
+    GetAppetiteTestResponse
+  >;
+  private readonly evaluateAppetiteUC: UseCase<
+    EvaluateAppetiteRequest,
+    EvaluateAppetiteResponse
   >;
 
   // Core Diagnostic Use Cases
@@ -772,6 +863,14 @@ export class DiagnosticContext {
     MakeClinicalSignDataInterpretationRequest,
     MakeClinicalSignDataInterpretationResponse
   >;
+  private readonly getAllPatientAppetiteTestUC: UseCase<
+    GetAllPatientAppetiteTestResultRequest,
+    GetAllPatientAppetiteTestResultResponse
+  >;
+  private readonly getLastPatientAppetiteTestUC: UseCase<
+    GetLastPatientAppetiteTestResultRequest,
+    GetLastPatientAppetiteTestResultResponse
+  >;
   // Subscribers
   private readonly afterPatientCareSessionCreated: AfterPatientCareSessionCreatedHandler;
   private readonly afterAnthropometricDataAdded: AfterAnthropometricDataAddedDiagnosticHandler;
@@ -782,7 +881,7 @@ export class DiagnosticContext {
   private readonly indicatorAppService: IIndicatorService;
   private readonly growthChartAppService: IGrowthReferenceChartService;
   private readonly growthTableAppService: IGrowthReferenceTableService;
-  private readonly normalizeAnthropometricDataAppService: INormalizeAnthropometricDataAppService;
+  private readonly normalizeDataAppService: INormalizeDataAppService;
   private readonly clinicalRefAppService: IClinicalSignReferenceService;
   private readonly clinicalNutritionalAnalysisAppService: IClinicalNutritionalAnalysisAppService;
   private readonly diagnosticRuleAppService: IDiagnosticRuleService;
@@ -794,9 +893,12 @@ export class DiagnosticContext {
   private readonly growthIndicatorValueAppService: IGrowthIndicatorValueAppService;
   private readonly makeClinicalSignInterpretationAppService: IMakeClinicalSignDataInterpretationService;
   private readonly dataFieldReferenceAppService: IDataFieldReferenceService;
+  private readonly formulaFieldReferenceAppService: IFormulaFieldReferenceService;
   private readonly nextClinicalSignRefAppService: NextClinicalAppServices.IClinicalSignRefService;
   private readonly nextClinicalAnalysisAppService: NextClinicalAppServices.IClinicalAnalysisService;
   private readonly nextNutritionalRiskFactorAppService: NextClinicalAppServices.INutritionalRiskFactorService;
+  private readonly appetiteTestAppService: IAppetiteTestAppService;
+  private readonly patientEvaluationOrchestrator: IPatientEvaluationOrchestratorService;
   // ACL
 
   private readonly unitAcl: UnitAcl;
@@ -852,6 +954,7 @@ export class DiagnosticContext {
     this.clinicalRefInfraMapper = new ClinicalSignReferenceInfraMapper();
     this.biochemicalRefInfraMapper = new BiochemicalReferenceInfraMapper();
     this.dataFieldRefInfraMapper = new DataFieldReferenceInfraMapper();
+    this.formulaFieldRefInfraMapper = new FormulaFieldReferenceInfraMapper();
     this.diagnosticRuleInfraMapper = new DiagnosticRuleInfraMapper();
     this.nutritionalRiskFactorInfraMapper =
       new NutritionalRiskFactorInfraMapper();
@@ -859,7 +962,7 @@ export class DiagnosticContext {
       new NextClinicalInfraMappers.ClinicalSignReferenceInfraMapper();
     this.nextNutritionalRiskFactorInfraMapper =
       new NextClinicalInfraMappers.NutritionalRiskFactorInfraMapper();
-
+    this.appetiteTestInfraMapper = new AppetiteTestInfraMapper();
     // Initialiser les repositories
     this.nutritionalDiagnosticRepo = isWebEnv()
       ? new NutritionalDiagnosticRepositoryWebImpl(
@@ -969,6 +1072,16 @@ export class DiagnosticContext {
           data_field_references,
           this.eventBus
         );
+    this.formulaFieldRefRepo = isWebEnv()
+      ? new FormulaFieldReferenceRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.formulaFieldRefInfraMapper
+        )
+      : new FormulaFieldReferenceExpoRepo(
+          this.expo as SQLiteDatabase,
+          this.formulaFieldRefInfraMapper,
+          formula_field_references
+        );
     this.diagnosticRuleRepo = isWebEnv()
       ? new DiagnosticRuleRepositoryWebImpl(
           this.dbConnection as IndexedDBConnection,
@@ -1012,6 +1125,16 @@ export class DiagnosticContext {
           this.nextNutritionalRiskFactorInfraMapper,
           nutritional_risk_factors,
           this.eventBus
+        );
+    this.appetiteTestRepo = isWebEnv()
+      ? new AppetiteTestRefRepositoryWebImpl(
+          this.dbConnection as IndexedDBConnection,
+          this.appetiteTestInfraMapper
+        )
+      : new AppetiteTestRefRepositoryExpoImpl(
+          this.expo as SQLiteDatabase,
+          this.appetiteTestInfraMapper,
+          next_appetite_test_references
         );
     // Initialiser les services de domaine
     const anthroComputingHelper = new AnthroComputingHelper();
@@ -1098,6 +1221,7 @@ export class DiagnosticContext {
         this.dataFieldValidationService,
         this.nextClinicalSignRefRepo
       );
+    this.appetiteTestService = new AppetiteTestService(this.appetiteTestRepo);
 
     // Factories Needs
     this.nutritionalAssessmentFactory = new NutritionalAssessmentResultFactory(
@@ -1135,6 +1259,7 @@ export class DiagnosticContext {
     this.clinicalRefAppMapper = new ClinicalSignReferenceMapper();
     this.biochemicalRefAppMapper = new BiochemicalReferenceMapper();
     this.dataFieldRefAppMapper = new DataFieldReferenceMapper();
+    this.formulaFieldRefAppMapper = new FormulaFieldReferenceMapper();
     this.diagnosticRuleAppMapper = new DiagnosticRuleMapper();
     this.patientDiagnosticDataAppMapper = new PatientDiagnosticDataMapper();
     this.nutritionalAssessmentAppMapper =
@@ -1148,7 +1273,7 @@ export class DiagnosticContext {
       new NextMappers.ClinicalSignReferenceMapper();
     this.nextNutritionalRiskFactorAppMapper =
       new NextMappers.NutritionalRiskFactorMapper();
-
+    this.appetiteTestAppMapper = new AppetiteTestReferenceMapper();
     // Initialiser les cas d'utilisation
     this.createMeasureUC = new CreateAnthropometricMeasureUseCase(
       this.idGenerator,
@@ -1299,17 +1424,31 @@ export class DiagnosticContext {
         this.biologicalValidationService,
         this.biologicalInterpretationService
       );
+
+    // Nexted version useCases
     this.createDataFieldReferenceUC = new CreateDataFieldRefUseCase(
       this.idGenerator,
       this.dataFieldRefRepo
+    );
+    this.createFormulaFieldReferenceUC = new CreateFormulaFieldReferenceUseCase(
+      this.idGenerator,
+      this.formulaFieldRefRepo
     );
     this.getDataFieldReferenceUC = new GetDataFieldRefUseCase(
       this.dataFieldRefRepo,
       this.dataFieldRefAppMapper
     );
+    this.getFormulaFieldReferenceUC = new GetFormulaFieldReferenceUseCase(
+      this.formulaFieldRefRepo,
+      this.formulaFieldRefAppMapper
+    );
     this.valideDataFieldResponseUC = new ValidateDataFieldResponseUseCase(
       this.dataFieldValidationService
     );
+    this.normalizeAndFillDefaultDataFieldResponseUC =
+      new NormalizeAndFillDefaultDataFieldResponseUseCase(
+        this.normalizeDataFieldResponseService
+      );
     this.nextCreateClinicalSignRefUC =
       new NextClinicalUseCase.CreateClinicalSignReferenceUseCase(
         this.nextClinicalSignRefRepo,
@@ -1340,6 +1479,18 @@ export class DiagnosticContext {
       new NextClinicalUseCase.MakeClinicalInterpretationUseCase(
         this.nextClinicalInterpretationService
       );
+
+    this.createAppetiteTestRefUC = new CreateAppetiteTestUseCase(
+      this.idGenerator,
+      this.appetiteTestRepo
+    );
+    this.getAppetiteTestRefUC = new GetAppetiteTestUseCase(
+      this.appetiteTestRepo,
+      this.appetiteTestAppMapper
+    );
+    this.evaluateAppetiteUC = new EvaluateAppetiteUseCase(
+      this.appetiteTestService
+    );
     // Core Diagnostic Use Cases
     // Core Diagnostic Rules
 
@@ -1406,11 +1557,25 @@ export class DiagnosticContext {
         this.nutritionalDiagnosticRepo,
         this.makeClinicalAnalysisUC
       );
-  
+
     this.makeClinicalSignInterpretationUC =
       new MakeClinicalSignDataInterpretationUseCase(
         this.nutritionalDiagnosticRepo,
         this.makeClinicalAnalysisUC
+      );
+
+    // Patient UseCase Orchestrator
+    this.getAllPatientAppetiteTestUC =
+      new GetAllPatientAppetiteTestResultUseCase(
+        this.evaluateAppetiteUC,
+        this.medicalRecordAcl,
+        this.normalizeAnthropometricDataUC
+      );
+    this.getLastPatientAppetiteTestUC =
+      new GetLastPatientAppetiteTestResultUseCase(
+        this.evaluateAppetiteUC,
+        this.medicalRecordAcl,
+        this.normalizeAnthropometricDataUC
       );
     // Subscribers
     this.afterPatientCareSessionCreated =
@@ -1468,10 +1633,11 @@ export class DiagnosticContext {
       calculateAllAvailableIndicator:
         this.calculateAllAvailableGrowthIndicatorValueUC,
     });
-    this.normalizeAnthropometricDataAppService =
-      new NormalizeAnthropometricDataAppService({
-        normalizeUC: this.normalizeAnthropometricDataUC,
-      });
+    this.normalizeDataAppService = new NormalizeDataAppService({
+      normalizeAnthropometricDataUC: this.normalizeAnthropometricDataUC,
+      normalizeAndFillDefaultUC:
+        this.normalizeAndFillDefaultDataFieldResponseUC,
+    });
     this.clinicalRefAppService = new ClinicalSignReferenceService({
       createUC: this.createClinicalRefUC,
       getUC: this.getClinicalRefUC,
@@ -1503,6 +1669,10 @@ export class DiagnosticContext {
       getUC: this.getDataFieldReferenceUC,
       validationUC: this.valideDataFieldResponseUC,
     });
+    this.formulaFieldReferenceAppService = new FormulaFieldReferenceService({
+      createUC: this.createFormulaFieldReferenceUC,
+      getUC: this.getFormulaFieldReferenceUC,
+    });
     this.nextClinicalSignRefAppService =
       new NextClinicalAppServices.ClinicalSignRefService({
         createUC: this.nextCreateClinicalSignRefUC,
@@ -1523,6 +1693,11 @@ export class DiagnosticContext {
       getUC: this.getDiagnosticRuleUC,
     });
 
+    this.appetiteTestAppService = new AppetiteTestAppService({
+      createUC: this.createAppetiteTestRefUC,
+      evaluateAppetiteUC: this.evaluateAppetiteUC,
+      getUC: this.getAppetiteTestRefUC,
+    });
     this.nutritionalDiagnosticAppService = new NutritionalDiagnosticService({
       createUC: this.createNutritionalDiagnosticUC,
       getUC: this.getNutritionalDiagnosticUC,
@@ -1544,6 +1719,11 @@ export class DiagnosticContext {
     this.makeClinicalSignInterpretationAppService =
       new MakeClinicalSignDataInterpretationService({
         interpretUC: this.makeClinicalSignInterpretationUC,
+      });
+    this.patientEvaluationOrchestrator =
+      new PatientEvaluationOrchestratorService({
+        getAllAppetiteTest: this.getAllPatientAppetiteTestUC,
+        getLastAppetiteTest: this.getLastPatientAppetiteTestUC,
       });
   }
 
@@ -1607,11 +1787,14 @@ export class DiagnosticContext {
   getMakeClinicalSignDataInterpretationService(): IMakeClinicalSignDataInterpretationService {
     return this.makeClinicalSignInterpretationAppService;
   }
-  getNormalizeAnthropomtricDataService(): INormalizeAnthropometricDataAppService {
-    return this.normalizeAnthropometricDataAppService;
+  getNormalizeDataService(): INormalizeDataAppService {
+    return this.normalizeDataAppService;
   }
   getDataFieldService(): IDataFieldReferenceService {
     return this.dataFieldReferenceAppService;
+  }
+  getFormulaFieldService(): IFormulaFieldReferenceService {
+    return this.formulaFieldReferenceAppService;
   }
   getNextClinicalRefService(): NextClinicalAppServices.IClinicalSignRefService {
     return this.nextClinicalSignRefAppService;
@@ -1621,6 +1804,12 @@ export class DiagnosticContext {
   }
   getNextClinicalAnalysis(): NextClinicalAppServices.IClinicalAnalysisService {
     return this.nextClinicalAnalysisAppService;
+  }
+  getAppetiteTest(): IAppetiteTestAppService {
+    return this.appetiteTestAppService;
+  }
+  getPatientOrchestrator(): IPatientEvaluationOrchestratorService {
+    return this.patientEvaluationOrchestrator;
   }
   // Méthode de nettoyage des ressources si nécessaire
   dispose(): void {

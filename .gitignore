@@ -36,7 +36,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 #  yarn 
-yarn.lock 
+# yarn.lock 
 adapter/config/auth/config.ts
 
 # React Component Preview
@@ -46,3 +46,4 @@ suggest.ts
 DOCUMENTATION_TECHNIQUE.md
 medical_record_prototype.html
 note.txt
+coverage
