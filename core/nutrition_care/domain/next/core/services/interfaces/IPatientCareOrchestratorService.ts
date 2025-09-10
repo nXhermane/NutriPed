@@ -32,7 +32,6 @@ export interface OrchestratorResult {
  * Définit le contrat pour la gestion complète du cycle de vie des soins nutritionnels
  */
 export interface IPatientCareOrchestratorService {
-
   /**
    * Point d'entrée principal - Orchestre toutes les opérations
    * @param session Session de soin patient
@@ -101,7 +100,7 @@ export enum OrchestratorState {
   PROCESSING = "PROCESSING",
   WAITING_FOR_USER = "WAITING_FOR_USER",
   COMPLETED = "COMPLETED",
-  ERROR = "ERROR"
+  ERROR = "ERROR",
 }
 
 /**

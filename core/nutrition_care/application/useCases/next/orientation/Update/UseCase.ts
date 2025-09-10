@@ -52,7 +52,9 @@ export class UpdateOrientationReferenceUseCase
         orientationRef.changeCriteria(criterionRes.map(res => res.val));
       }
       if (request.data.treatmentPhase) {
-        const treatmentPhaseRes = SystemCode.create(request.data.treatmentPhase);
+        const treatmentPhaseRes = SystemCode.create(
+          request.data.treatmentPhase
+        );
         if (treatmentPhaseRes.isFailure) return left(treatmentPhaseRes);
         orientationRef.changeTreatmentPhase(treatmentPhaseRes.val);
       }

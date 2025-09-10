@@ -2,7 +2,9 @@ import { ApplicationMapper } from "@/core/shared";
 import { DailyMonitoringTaskDto } from "../dtos";
 import { DailyMonitoringTask } from "../../domain/next/core/models/entities";
 
-export class DailyMonitoringTaskMapper implements ApplicationMapper<DailyMonitoringTask, DailyMonitoringTaskDto> {
+export class DailyMonitoringTaskMapper
+  implements ApplicationMapper<DailyMonitoringTask, DailyMonitoringTaskDto>
+{
   toResponse(entity: DailyMonitoringTask): DailyMonitoringTaskDto {
     return {
       id: entity.id,

@@ -116,6 +116,10 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
             diagnosticContext.getNextNutritionalRiskFactorService(),
           appetiteTest: diagnosticContext.getAppetiteTest(),
           patientOrchestrator: diagnosticContext.getPatientOrchestrator(),
+          formulaField: diagnosticContext.getFormulaFieldService(),
+          makeClinicalSignInterpretation:
+            diagnosticContext.getMakeClinicalSignDataInterpretationService(),
+          normalizeData: diagnosticContext.getNormalizeDataService(),
         },
 
         // Get service from MedicalRecord BC
@@ -130,6 +134,28 @@ export const PediatricAppProvider: React.FC<PediatricAppProviderProps> = ({
           orientation: nutritionCareContext.getOrientationService(),
           patientCareSession:
             nutritionCareContext.getPatientCareSessionService(),
+          nextMedicine: nutritionCareContext.getNextMedicineService(),
+          carePhaseReference:
+            nutritionCareContext.getCarePhaseReferenceService(),
+          nextNutritionalProduct:
+            nutritionCareContext.getNextNutritionalProductAppService(),
+          nextMilk: nutritionCareContext.getNextMilkAppService(),
+          nextOrientation: nutritionCareContext.getNextOrientationAppService(),
+          nextCommunication: nutritionCareContext.getNextCommunicationService(),
+          nextCompletion: nutritionCareContext.getNextCompletionService(),
+          nextDailyCareAction:
+            nutritionCareContext.getNextDailyCareActionService(),
+          nextDailyCareRecord:
+            nutritionCareContext.getNextDailyCareRecordService(),
+          nextDailyMonitoringTask:
+            nutritionCareContext.getNextDailyMonitoringTaskService(),
+          nextMonitoringParameter:
+            nutritionCareContext.getNextMonitoringParameterService(),
+          nextOnGoingTreatment:
+            nutritionCareContext.getNextOnGoingTreatmentService(),
+          nextOrchestration: nutritionCareContext.getNextOrchestrationService(),
+          nextPatientCareSession:
+            nutritionCareContext.getNextPatientCareSessionService(),
         },
 
         // Get service from Unit BC

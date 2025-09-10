@@ -1,8 +1,25 @@
 export const DB_CONFIG = {
   name: "nutrition_app_db",
-  version: 3,
+  version: 4,
   stores: {
+    // Next modules
     next_medicines: { keyPath: "id", indexes: ["code"] },
+    next_nutritional_products: { keyPath: "id", indexes: ["code"] },
+    next_milks: { keyPath: "id", indexes: ["code"] },
+    next_orientation_references: { keyPath: "id", indexes: ["code"] },
+
+    // Next core tables
+    care_phases: { keyPath: "id" },
+    daily_care_actions: { keyPath: "id", indexes: ["treatmentId"] },
+    daily_monitoring_tasks: { keyPath: "id", indexes: ["monitoringId"] },
+    daily_care_records: { keyPath: "id", indexes: ["phaseId"] },
+    messages: { keyPath: "id" },
+    monitoring_parameters: { keyPath: "id" },
+    on_going_treatments: { keyPath: "id", indexes: ["code"] },
+    user_response_summaries: { keyPath: "id", indexes: ["messageId"] },
+    patient_care_session_aggregates: { keyPath: "id", indexes: ["patientId"] },
+
+    // Nutrition care tables
     formula_field_references: { keyPath: "id", indexes: ["code"] },
     appetite_test_refs: { keyPath: "id", indexes: ["code"] },
     complications: { keyPath: "id", indexes: ["code"] },
@@ -12,6 +29,8 @@ export const DB_CONFIG = {
     patient_current_states: { keyPath: "id" },
     daily_care_journals: { keyPath: "id" },
     patient_care_sessions: { keyPath: "id", indexes: ["patientId"] },
+
+    // Other domain tables
     nutritional_diagnostics: { keyPath: "id", indexes: ["patientId"] },
     diagnostic_rules: { keyPath: "id", indexes: ["code"] },
     anthropometric_measures: { keyPath: "id", indexes: ["code"] },

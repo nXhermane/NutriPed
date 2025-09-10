@@ -14,17 +14,23 @@ import { MonitoringParameterDto } from "@/core/nutrition_care/application/dtos";
 
 export class GetMonitoringParameterUseCase
   implements
-  UseCase<GetMonitoringParameterRequest, GetMonitoringParameterResponse> {
+    UseCase<GetMonitoringParameterRequest, GetMonitoringParameterResponse>
+{
   constructor(
     private readonly monitoringParameterRepository: MonitoringParameterRepository,
-    private readonly monitoringParameterMapper: ApplicationMapper<MonitoringParameter,MonitoringParameterDto>
-  ) { }
+    private readonly monitoringParameterMapper: ApplicationMapper<
+      MonitoringParameter,
+      MonitoringParameterDto
+    >
+  ) {}
 
   async execute(
     request: GetMonitoringParameterRequest
   ): Promise<GetMonitoringParameterResponse> {
     try {
-      const entity = await this.monitoringParameterRepository.getById(request.monitoringParameterId);
+      const entity = await this.monitoringParameterRepository.getById(
+        request.monitoringParameterId
+      );
       const entityDto = this.monitoringParameterMapper.toResponse(entity);
 
       return right(Result.ok(entityDto));

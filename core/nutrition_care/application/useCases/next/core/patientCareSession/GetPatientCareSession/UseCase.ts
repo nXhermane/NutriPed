@@ -12,20 +12,25 @@ import { PatientCareSessionRepository } from "@/core/nutrition_care/domain/next/
 import { NextCore } from "@/core/nutrition_care/domain";
 import { NextCoreDtos } from "@/core/nutrition_care/application/dtos";
 
-
 export class GetPatientCareSessionUseCase
   implements
-  UseCase<GetPatientCareSessionRequest, GetPatientCareSessionResponse> {
+    UseCase<GetPatientCareSessionRequest, GetPatientCareSessionResponse>
+{
   constructor(
     private readonly patientCareSessionRepository: PatientCareSessionRepository,
-    private readonly patientCareSessionMapper: ApplicationMapper<NextCore.PatientCareSession,NextCoreDtos.PatientCareSessionAggregateDto>
-  ) { }
+    private readonly patientCareSessionMapper: ApplicationMapper<
+      NextCore.PatientCareSession,
+      NextCoreDtos.PatientCareSessionAggregateDto
+    >
+  ) {}
 
   async execute(
     request: GetPatientCareSessionRequest
   ): Promise<GetPatientCareSessionResponse> {
     try {
-      const entity = await this.patientCareSessionRepository.getById(request.patientCareSessionId);
+      const entity = await this.patientCareSessionRepository.getById(
+        request.patientCareSessionId
+      );
       const entityDto = this.patientCareSessionMapper.toResponse(entity);
 
       return right(Result.ok(entityDto));

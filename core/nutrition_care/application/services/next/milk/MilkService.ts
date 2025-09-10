@@ -9,14 +9,8 @@ import {
 } from "../../../useCases/next/milk";
 
 export interface MilkServiceUseCases {
-  createMilkUC: UseCase<
-    CreateMilkRequest,
-    CreateMilkResponse
-  >;
-  getMilkUC: UseCase<
-    GetMilkRequest,
-    GetMilkResponse
-  >;
+  createMilkUC: UseCase<CreateMilkRequest, CreateMilkResponse>;
+  getMilkUC: UseCase<GetMilkRequest, GetMilkResponse>;
 }
 
 export class MilkService implements IMilkServiceNext {
@@ -30,9 +24,7 @@ export class MilkService implements IMilkServiceNext {
     else return new Message("error", JSON.stringify((res.value as any)?.err));
   }
 
-  async get(
-    req: GetMilkRequest
-  ): Promise<AppServiceResponse<any[]> | Message> {
+  async get(req: GetMilkRequest): Promise<AppServiceResponse<any[]> | Message> {
     const res = await this.ucs.getMilkUC.execute(req);
     if (res.isRight()) return { data: res.value.val };
     else return new Message("error", JSON.stringify((res.value as any)?.err));

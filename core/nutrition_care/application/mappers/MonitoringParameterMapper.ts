@@ -2,7 +2,9 @@ import { ApplicationMapper } from "@/core/shared";
 import { MonitoringParameterDto } from "../dtos";
 import { MonitoringParameter } from "../../domain/next/core/models/entities";
 
-export class MonitoringParameterMapper implements ApplicationMapper<MonitoringParameter, MonitoringParameterDto> {
+export class MonitoringParameterMapper
+  implements ApplicationMapper<MonitoringParameter, MonitoringParameterDto>
+{
   toResponse(entity: MonitoringParameter): MonitoringParameterDto {
     const element = entity.getElement();
     return {

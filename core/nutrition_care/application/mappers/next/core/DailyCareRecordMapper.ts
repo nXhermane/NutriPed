@@ -17,8 +17,12 @@ export class DailyCareRecordMapper
     const actions = entity.getActions ? entity.getActions() : [];
     const tasks = entity.getTasks ? entity.getTasks() : [];
 
-    const completedActions = actions.filter((action: any) => action.getStatus() === "completed").length;
-    const completedTasks = tasks.filter((task: any) => task.getStatus() === "completed").length;
+    const completedActions = actions.filter(
+      (action: any) => action.getStatus() === "completed"
+    ).length;
+    const completedTasks = tasks.filter(
+      (task: any) => task.getStatus() === "completed"
+    ).length;
 
     return {
       id: entity.id,
@@ -28,14 +32,20 @@ export class DailyCareRecordMapper
       tasksCount: tasks.length,
       completedActionsCount: completedActions,
       completedTasksCount: completedTasks,
-      completionPercentage: this.calculateCompletionPercentage(actions.length + tasks.length, completedActions + completedTasks)
+      completionPercentage: this.calculateCompletionPercentage(
+        actions.length + tasks.length,
+        completedActions + completedTasks
+      ),
     };
   }
 
   /**
    * Calcule le pourcentage de completion
    */
-  private calculateCompletionPercentage(total: number, completed: number): number {
+  private calculateCompletionPercentage(
+    total: number,
+    completed: number
+  ): number {
     if (total === 0) return 100;
     return Math.round((completed / total) * 100);
   }

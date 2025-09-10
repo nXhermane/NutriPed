@@ -1,7 +1,19 @@
 import { AggregateID, Result } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { DailyMonitoringTask, DailyCareAction, DailyCareRecord, DailyCareRecordStatus, Message, PatientCareSession } from "../../models";
-import { ContinuousEvaluationContext, OrchestratorContext, OrchestratorOperation, OrchestratorResult } from "../../services";
+import {
+  DailyMonitoringTask,
+  DailyCareAction,
+  DailyCareRecord,
+  DailyCareRecordStatus,
+  Message,
+  PatientCareSession,
+} from "../../models";
+import {
+  ContinuousEvaluationContext,
+  OrchestratorContext,
+  OrchestratorOperation,
+  OrchestratorResult,
+} from "../../services";
 
 /**
  * PORT POUR L'ORCHESTRATEUR DE SOINS PATIENT
@@ -11,7 +23,6 @@ import { ContinuousEvaluationContext, OrchestratorContext, OrchestratorOperation
  * connaître les détails d'implémentation.
  */
 export interface IPatientCareOrchestratorPort {
-
   /**
    * Orchestration principale - Point d'entrée unifié
    *
@@ -65,7 +76,9 @@ export interface IPatientCareOrchestratorPort {
    * @param sessionId ID de la session
    * @returns Session récupérée
    */
-  getPatientCareSession(sessionId: AggregateID): Promise<Result<PatientCareSession>>;
+  getPatientCareSession(
+    sessionId: AggregateID
+  ): Promise<Result<PatientCareSession>>;
 
   // OPERATIONS DE COMPLETION
 
@@ -123,7 +136,9 @@ export interface IPatientCareOrchestratorPort {
    * @param sessionId ID de la session
    * @returns Résultat de l'opération
    */
-  markRecordIncomplete(sessionId: AggregateID): Promise<Result<OrchestratorResult>>;
+  markRecordIncomplete(
+    sessionId: AggregateID
+  ): Promise<Result<OrchestratorResult>>;
 
   // OPERATIONS DE COMMUNICATION
 
@@ -159,11 +174,13 @@ export interface IPatientCareOrchestratorPort {
    * @param sessionId ID de la session
    * @returns État détaillé de la session
    */
-  getSessionStatus(sessionId: AggregateID): Promise<Result<{
-    session: PatientCareSession;
-    currentRecord: DailyCareRecord | null;
-    pendingItems?: (DailyCareAction | DailyMonitoringTask)[];
-    completionStatus?: DailyCareRecordStatus;
-    nextActions?: OrchestratorOperation[];
-  }>>;
+  getSessionStatus(sessionId: AggregateID): Promise<
+    Result<{
+      session: PatientCareSession;
+      currentRecord: DailyCareRecord | null;
+      pendingItems?: (DailyCareAction | DailyMonitoringTask)[];
+      completionStatus?: DailyCareRecordStatus;
+      nextActions?: OrchestratorOperation[];
+    }>
+  >;
 }

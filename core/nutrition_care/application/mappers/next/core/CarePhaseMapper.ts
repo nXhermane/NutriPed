@@ -20,7 +20,7 @@ export class CarePhaseMapper
       name: this.getPhaseName(entity.getCode()),
       status: entity.getStatus(),
       startDate: entity.getStartDate(),
-      endDate: entity.getEndDate()
+      endDate: entity.getEndDate(),
     };
   }
 
@@ -29,11 +29,11 @@ export class CarePhaseMapper
    */
   private getPhaseName(code: string): string {
     const phaseNames: Record<string, string> = {
-      "INIT": "Phase d'initialisation",
-      "STABILIZATION": "Phase de stabilisation",
-      "MAINTENANCE": "Phase de maintenance",
-      "RECOVERY": "Phase de récupération",
-      "TRANSITION": "Phase de transition"
+      INIT: "Phase d'initialisation",
+      STABILIZATION: "Phase de stabilisation",
+      MAINTENANCE: "Phase de maintenance",
+      RECOVERY: "Phase de récupération",
+      TRANSITION: "Phase de transition",
     };
     return phaseNames[code] || `Phase ${code}`;
   }

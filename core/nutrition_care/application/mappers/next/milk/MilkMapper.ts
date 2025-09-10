@@ -2,7 +2,9 @@ import { ApplicationMapper } from "@/core/shared";
 import { MilkDto } from "../../../dtos/next/milk";
 import { NextNutritionCare } from "../../../../domain";
 
-export class MilkMapper implements ApplicationMapper<NextNutritionCare.Milk, MilkDto> {
+export class MilkMapper
+  implements ApplicationMapper<NextNutritionCare.Milk, MilkDto>
+{
   toResponse(entity: NextNutritionCare.Milk): MilkDto {
     return {
       id: entity.id,

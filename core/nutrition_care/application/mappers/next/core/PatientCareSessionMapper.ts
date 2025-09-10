@@ -8,7 +8,7 @@ import {
   PendingItemDto,
   MessageDto,
   CarePhaseDto,
-  DailyCareRecordDto
+  DailyCareRecordDto,
 } from "../../../dtos/core/PatientCareSessionDto";
 
 /**
@@ -19,8 +19,14 @@ export class PatientCareSessionMapper
   implements ApplicationMapper<PatientCareSession, PatientCareSessionDto>
 {
   constructor(
-    private readonly carePhaseMapper: ApplicationMapper<CarePhase, CarePhaseDto>,
-    private readonly dailyCareRecordMapper: ApplicationMapper<DailyCareRecord, DailyCareRecordDto>
+    private readonly carePhaseMapper: ApplicationMapper<
+      CarePhase,
+      CarePhaseDto
+    >,
+    private readonly dailyCareRecordMapper: ApplicationMapper<
+      DailyCareRecord,
+      DailyCareRecordDto
+    >
   ) {}
 
   /**
@@ -35,10 +41,14 @@ export class PatientCareSessionMapper
       status: entity.getStatus(),
       startDate: entity.getStartDate(),
       endDate: entity.getEndDate(),
-      currentPhase: props.currentPhase ? this.carePhaseMapper.toResponse(props.currentPhase) : undefined,
-      currentDailyRecord: props.currentDailyRecord ? this.dailyCareRecordMapper.toResponse(props.currentDailyRecord) : undefined,
+      currentPhase: props.currentPhase
+        ? this.carePhaseMapper.toResponse(props.currentPhase)
+        : undefined,
+      currentDailyRecord: props.currentDailyRecord
+        ? this.dailyCareRecordMapper.toResponse(props.currentDailyRecord)
+        : undefined,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      updatedAt: entity.updatedAt,
     };
   }
 
@@ -47,15 +57,21 @@ export class PatientCareSessionMapper
    */
   toStatusResponse(entity: PatientCareSession): PatientCareSessionStatusDto {
     const currentRecord = entity.getCurrentDailyRecord();
-    const pendingItems = currentRecord ? this.getPendingItems(currentRecord) : [];
+    const pendingItems = currentRecord
+      ? this.getPendingItems(currentRecord)
+      : [];
 
     return {
       session: this.toResponse(entity),
-      currentRecord: currentRecord ? this.dailyCareRecordMapper.toResponse(currentRecord) : undefined,
+      currentRecord: currentRecord
+        ? this.dailyCareRecordMapper.toResponse(currentRecord)
+        : undefined,
       pendingItems,
       completionStatus: currentRecord ? currentRecord.getStatus() : "NO_RECORD",
       nextActions: this.determineNextActions(entity),
-      pendingMessages: entity.getPendingMessages().map(msg => this.mapMessageToDto(msg))
+      pendingMessages: entity
+        .getPendingMessages()
+        .map(msg => this.mapMessageToDto(msg)),
     };
   }
 
@@ -76,7 +92,7 @@ export class PatientCareSessionMapper
           code: action.getTreatmentId(),
           name: this.getActionName(action),
           status: action.getStatus(),
-          effectiveDate: action.getEffectiveDate()
+          effectiveDate: action.getEffectiveDate(),
         });
       }
     });
@@ -90,7 +106,7 @@ export class PatientCareSessionMapper
           code: task.getMonitoringId(),
           name: this.getTaskName(task),
           status: task.getStatus(),
-          effectiveDate: task.getEffectiveDate()
+          effectiveDate: task.getEffectiveDate(),
         });
       }
     });
@@ -133,7 +149,7 @@ export class PatientCareSessionMapper
       content: message.content,
       timestamp: message.timestamp.toString(),
       requiresResponse: message.requiresResponse,
-      decisionType: message.decisionType
+      decisionType: message.decisionType,
     };
   }
 

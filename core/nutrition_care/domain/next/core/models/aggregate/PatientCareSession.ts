@@ -1,5 +1,11 @@
 import { UserResponse } from "../valueObjects";
-import { CarePhase, DailyCareRecord, DecisionType, Message, MessageType } from "./../entities";
+import {
+  CarePhase,
+  DailyCareRecord,
+  DecisionType,
+  Message,
+  MessageType,
+} from "./../entities";
 import {
   AggregateID,
   AggregateRoot,
@@ -17,8 +23,6 @@ export enum PatientCareSessionStatus {
   COMPLETED = "COMPLETED",
   WAITING_FOR_USER_RESPONSE = "WAITING_FOR_USER_RESPONSE",
 }
-
-
 
 export interface IPatientCareSession extends EntityPropsBaseType {
   patientId: AggregateID;
@@ -89,14 +93,14 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
   }
 
   // Communication system methods
-  sendMessage(
-    message: Message
-  ): Message {
-
+  sendMessage(message: Message): Message {
     this.props.inbox.push(message);
 
     // If message requires response, change status to waiting
-    if (message.getRequiresResponse() && this.props.status === PatientCareSessionStatus.IN_PROGRESS) {
+    if (
+      message.getRequiresResponse() &&
+      this.props.status === PatientCareSessionStatus.IN_PROGRESS
+    ) {
       this.props.status = PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE;
     }
 
@@ -105,7 +109,9 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
   }
 
   receiveUserResponse(response: UserResponse): boolean {
-    const messageIndex = this.props.inbox.findIndex(msg => msg.id === response.getMessageId());
+    const messageIndex = this.props.inbox.findIndex(
+      msg => msg.id === response.getMessageId()
+    );
     if (messageIndex === -1) {
       return false; // Message not found
     }
@@ -120,7 +126,10 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
     // Mark message as responded (remove from pending)
     message.reponseReceived();
     // If no more pending messages, change status back to in progress
-    if (!this.hasPendingMessages() && this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE) {
+    if (
+      !this.hasPendingMessages() &&
+      this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE
+    ) {
       this.props.status = PatientCareSessionStatus.IN_PROGRESS;
     }
 
@@ -130,71 +139,91 @@ export class PatientCareSession extends AggregateRoot<IPatientCareSession> {
 
   clearInbox(): void {
     this.props.inbox = [];
-    if (this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE) {
+    if (
+      this.props.status === PatientCareSessionStatus.WAITING_FOR_USER_RESPONSE
+    ) {
       this.props.status = PatientCareSessionStatus.IN_PROGRESS;
     }
     this.validate();
   }
 
   // Helper methods for common message types
-  notifyPhaseTransition(nextPhaseCode: string, notifId: AggregateID): Result<Message> {
-    const messageRes = Message.create({
-      type: MessageType.PHASE_TRANSITION_REQUEST,
-      decisionType: DecisionType.PHASE_TRANSITION_CONFIRMATION,
-      content: `La phase de soin actuelle est terminée. Voulez-vous passer à la phase "${nextPhaseCode}" ?`,
-      requiresResponse: true
-    }, notifId);
+  notifyPhaseTransition(
+    nextPhaseCode: string,
+    notifId: AggregateID
+  ): Result<Message> {
+    const messageRes = Message.create(
+      {
+        type: MessageType.PHASE_TRANSITION_REQUEST,
+        decisionType: DecisionType.PHASE_TRANSITION_CONFIRMATION,
+        content: `La phase de soin actuelle est terminée. Voulez-vous passer à la phase "${nextPhaseCode}" ?`,
+        requiresResponse: true,
+      },
+      notifId
+    );
     if (messageRes.isFailure) {
       return messageRes;
     }
-    this.sendMessage(messageRes.val)
+    this.sendMessage(messageRes.val);
     return messageRes;
   }
 
   notifyPhaseFailure(reason: string, notifId: AggregateID): Result<Message> {
-    const messageRes = Message.create({
-      type: MessageType.PHASE_FAILURE_NOTIFICATION,
-      decisionType: DecisionType.PHASE_RETRY_DECISION,
-      content: `La phase de soin a échoué : ${reason}. Voulez-vous réessayer ou ajuster le traitement ?`,
-      requiresResponse: true,
-    }, notifId);
+    const messageRes = Message.create(
+      {
+        type: MessageType.PHASE_FAILURE_NOTIFICATION,
+        decisionType: DecisionType.PHASE_RETRY_DECISION,
+        content: `La phase de soin a échoué : ${reason}. Voulez-vous réessayer ou ajuster le traitement ?`,
+        requiresResponse: true,
+      },
+      notifId
+    );
     if (messageRes.isFailure) {
       return messageRes;
     }
-    this.sendMessage(messageRes.val)
+    this.sendMessage(messageRes.val);
     return messageRes;
-
   }
 
-  notifyMissingVariables(missingVars: string[], notifId: AggregateID): Result<Message> {
-    const messageRes = Message.create({
-      type: MessageType.MISSING_VARIABLES_NOTIFICATION,
-      decisionType: DecisionType.VARIABLE_PROVISION,
-      content: `Variables manquantes pour continuer : ${missingVars.join(', ')}. Veuillez les fournir.`,
-      requiresResponse: true,
-    }, notifId);
+  notifyMissingVariables(
+    missingVars: string[],
+    notifId: AggregateID
+  ): Result<Message> {
+    const messageRes = Message.create(
+      {
+        type: MessageType.MISSING_VARIABLES_NOTIFICATION,
+        decisionType: DecisionType.VARIABLE_PROVISION,
+        content: `Variables manquantes pour continuer : ${missingVars.join(", ")}. Veuillez les fournir.`,
+        requiresResponse: true,
+      },
+      notifId
+    );
     if (messageRes.isFailure) {
       return messageRes;
     }
-    this.sendMessage(messageRes.val)
+    this.sendMessage(messageRes.val);
     return messageRes;
-
   }
 
-  requestUserDecision(question: string, decisionType: DecisionType, notifId: AggregateID): Result<Message> {
-
-    const messageRes = Message.create({
-      type: MessageType.USER_DECISION_REQUEST,
-      decisionType: decisionType,
-      content: question,
-      requiresResponse: true,
-    }, notifId);
+  requestUserDecision(
+    question: string,
+    decisionType: DecisionType,
+    notifId: AggregateID
+  ): Result<Message> {
+    const messageRes = Message.create(
+      {
+        type: MessageType.USER_DECISION_REQUEST,
+        decisionType: decisionType,
+        content: question,
+        requiresResponse: true,
+      },
+      notifId
+    );
     if (messageRes.isFailure) {
       return messageRes;
     }
-    this.sendMessage(messageRes.val)
+    this.sendMessage(messageRes.val);
     return messageRes;
-
   }
 
   private getNextDailyRecordDate(): DomainDateTime {

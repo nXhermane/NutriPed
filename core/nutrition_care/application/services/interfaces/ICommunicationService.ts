@@ -7,9 +7,17 @@ import {
 export interface ICommunicationService {
   getPendingMessages(
     req: GetPendingMessagesRequest
-  ): Promise<AppServiceResponse<{ sessionId: AggregateID; messages: any[] }> | Message>;
+  ): Promise<
+    AppServiceResponse<{ sessionId: AggregateID; messages: any[] }> | Message
+  >;
 
-  submitUserResponse(
-    req: SubmitUserResponseRequest
-  ): Promise<AppServiceResponse<{ sessionId: AggregateID; messageId: AggregateID; success: boolean; message: string }> | Message>;
+  submitUserResponse(req: SubmitUserResponseRequest): Promise<
+    | AppServiceResponse<{
+        sessionId: AggregateID;
+        messageId: AggregateID;
+        success: boolean;
+        message: string;
+      }>
+    | Message
+  >;
 }

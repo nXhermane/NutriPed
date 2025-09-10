@@ -1,5 +1,5 @@
 import { ApplicationMapper } from "@shared";
-import { MessageDto } from "../../../dtos/next/core"
+import { MessageDto } from "../../../dtos/next/core";
 import { NextCore } from "@/core/nutrition_care/domain";
 
 /**
@@ -22,9 +22,7 @@ export class MessageMapper
       requiresResponse: entity.getRequiresResponse(),
       decisionType: entity.getDecisionType(),
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      updatedAt: entity.updatedAt,
     };
   }
 }
-
-

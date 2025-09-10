@@ -31,6 +31,7 @@ export abstract class EntityBaseRepositoryExpo<
   DomainEntity extends Entity<EntityPropsBaseType>,
   PersistenceModel extends object,
   TableSchema extends SQLiteTable & BaseTableFields,
+  PersistenceRecord extends object = PersistenceModel,
 > implements Repository<DomainEntity>
 {
   protected readonly db: ExpoSQLiteDatabase;
@@ -38,7 +39,8 @@ export abstract class EntityBaseRepositoryExpo<
     expo: SQLiteDatabase,
     protected readonly mapper: InfrastructureMapper<
       DomainEntity,
-      PersistenceModel
+      PersistenceModel,
+      PersistenceRecord
     >,
     protected table: TableSchema,
     protected readonly eventBus: IEventBus | null = null

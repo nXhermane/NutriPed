@@ -93,7 +93,17 @@ import {
   SystemCode,
 } from "@/core/shared";
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { PatientCareSession, UserResponse, MessageType, DecisionType, UserDecisionType, UserDecisionData, UserDecisionAction, Message, UserDecisionItemType } from "../models";
+import {
+  PatientCareSession,
+  UserResponse,
+  MessageType,
+  DecisionType,
+  UserDecisionType,
+  UserDecisionData,
+  UserDecisionAction,
+  Message,
+  UserDecisionItemType,
+} from "../models";
 import {
   ICarePhaseDailyCareRecordManager,
   ICarePhaseManagerService,
@@ -104,12 +114,14 @@ import {
 } from "./interfaces";
 import { CarePhaseDecision } from "@/core/nutrition_care/domain/modules";
 
-
-export class PatientCareOrchestratorService implements IPatientCareOrchestratorService {
+export class PatientCareOrchestratorService
+  implements IPatientCareOrchestratorService
+{
   constructor(
     private readonly idGenerator: GenerateUniqueId,
     private readonly carePhaseManager: ICarePhaseManagerService,
-    private readonly dailyCareManager: ICarePhaseDailyCareRecordManager) { }
+    private readonly dailyCareManager: ICarePhaseDailyCareRecordManager
+  ) {}
 
   /**
    * Point d'entrée principal - Orchestre toutes les opérations
@@ -123,7 +135,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       // Vérifier l'état de la session avant toute opération
       const stateCheck = this.validateSessionState(session);
       if (stateCheck.isFailure) {
-        return Result.fail(formatError(stateCheck, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(stateCheck, PatientCareOrchestratorService.name)
+        );
       }
 
       switch (operation) {
@@ -233,7 +247,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
     try {
       const maxIterations = context?.maxIterations || 100;
       let iterationCount = 0;
-      let currentOperation: OrchestratorOperation = OrchestratorOperation.SYNCHRONIZE_STATE;
+      let currentOperation: OrchestratorOperation =
+        OrchestratorOperation.SYNCHRONIZE_STATE;
 
       // Boucle principale d'orchestration
       while (iterationCount < maxIterations) {
@@ -247,13 +262,13 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
             session,
             message: "Orchestration interrompue - réponse utilisateur requise",
             requiresUserAction: true,
-            nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE
+            nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE,
           });
         }
 
         // Exécuter l'opération courante
         const result = await this.orchestrate(session, currentOperation, {
-          patientVariables: context?.patientVariables
+          patientVariables: context?.patientVariables,
         });
 
         if (result.isFailure) {
@@ -267,12 +282,13 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         if (orchestratorResult.requiresUserAction) {
           return Result.ok({
             ...orchestratorResult,
-            message: `${orchestratorResult.message} - Arrêt pour réponse utilisateur`
+            message: `${orchestratorResult.message} - Arrêt pour réponse utilisateur`,
           });
         }
 
         // LOGIQUE DE COMPLETION INTÉGRÉE DANS LA BOUCLE
-        const completionCheck = await this.checkAndHandleRecordCompletion(session);
+        const completionCheck =
+          await this.checkAndHandleRecordCompletion(session);
         if (completionCheck.isFailure) {
           return completionCheck;
         }
@@ -282,23 +298,30 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           return Result.ok({
             ...completionResult,
             message: `${completionResult.message} - Notification de completion`,
-            operation: currentOperation
+            operation: currentOperation,
           });
         }
 
         session = completionResult.session;
 
         // Déterminer la prochaine opération
-        currentOperation = orchestratorResult.nextOperation || OrchestratorOperation.SYNCHRONIZE_STATE;
+        currentOperation =
+          orchestratorResult.nextOperation ||
+          OrchestratorOperation.SYNCHRONIZE_STATE;
 
         // Condition d'arrêt : si on revient à SYNCHRONIZE_STATE sans progression
-        if (currentOperation === OrchestratorOperation.SYNCHRONIZE_STATE && iterationCount > 1) {
+        if (
+          currentOperation === OrchestratorOperation.SYNCHRONIZE_STATE &&
+          iterationCount > 1
+        ) {
           // Vérifier si on a fait du progrès
           const currentRecord = session.getCurrentDailyRecord();
           const today = DomainDateTime.now();
 
           if (currentRecord) {
-            const recordDate = DomainDateTime.create(currentRecord.getDate()).val;
+            const recordDate = DomainDateTime.create(
+              currentRecord.getDate()
+            ).val;
             if (recordDate.isSameDay(today)) {
               // On a rattrapé le présent, arrêter
               break;
@@ -308,7 +331,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       }
 
       if (iterationCount >= maxIterations) {
-        return Result.fail("Limite d'itérations atteinte - possible boucle infinie");
+        return Result.fail(
+          "Limite d'itérations atteinte - possible boucle infinie"
+        );
       }
 
       return Result.ok({
@@ -316,9 +341,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: currentOperation,
         session,
         message: `Orchestration terminée après ${iterationCount} itérations`,
-        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
       });
-
     } catch (e) {
       return handleError(e);
     }
@@ -334,15 +358,21 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
     try {
       // Validation: s'assurer que currentPhase est null
       if (session.getCurrentPhase() !== null) {
-        return Result.fail("Session déjà initialisée - phase existante détectée");
+        return Result.fail(
+          "Session déjà initialisée - phase existante détectée"
+        );
       }
 
       // Créer le code de phase avec SystemCode
       const phaseCodeValue = context?.phaseCode || ""; // Pour que le empty string puisse entrainer le failure du code. sinon on ne peut pas supposer de phase de traitement
-      const phaseCodeResult = SystemCode.create<CARE_PHASE_CODES>(phaseCodeValue as any);
+      const phaseCodeResult = SystemCode.create<CARE_PHASE_CODES>(
+        phaseCodeValue as any
+      );
 
       if (phaseCodeResult.isFailure) {
-        return Result.fail(formatError(phaseCodeResult, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(phaseCodeResult, PatientCareOrchestratorService.name)
+        );
       }
 
       const patientId = session.getPatientId();
@@ -353,7 +383,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       );
 
       if (phaseResult.isFailure) {
-        return Result.fail(formatError(phaseResult, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(phaseResult, PatientCareOrchestratorService.name)
+        );
       }
 
       // Transition vers la nouvelle phase
@@ -362,11 +394,13 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       // Générer le premier daily plan avec now (pas de current record)
       const dailyPlanResult = await this.generateDailyPlan(session, {
         targetDate: DomainDateTime.now(),
-        patientVariables: context?.patientVariables
+        patientVariables: context?.patientVariables,
       });
 
       if (dailyPlanResult.isFailure) {
-        return Result.fail(formatError(dailyPlanResult, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(dailyPlanResult, PatientCareOrchestratorService.name)
+        );
       }
 
       return Result.ok({
@@ -374,7 +408,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.INITIALIZE_SESSION,
         session,
         message: "Session de soin initialisée avec succès",
-        nextOperation: OrchestratorOperation.GENERATE_DAILY_PLAN
+        nextOperation: OrchestratorOperation.GENERATE_DAILY_PLAN,
       });
     } catch (e) {
       return handleError(e);
@@ -387,8 +421,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   private async generateDailyPlan(
     session: PatientCareSession,
     context?: {
-      targetDate?: DomainDateTime,
-      patientVariables?:Record<string,number>
+      targetDate?: DomainDateTime;
+      patientVariables?: Record<string, number>;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
@@ -401,15 +435,18 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       const patientId = session.getPatientId();
 
       // Générer le daily care record
-      const dailyRecordResult = await this.dailyCareManager.generateDailyCareRecord(
-        currentPhase,
-        patientId,
-        targetDate,
-        context?.patientVariables
-      );
+      const dailyRecordResult =
+        await this.dailyCareManager.generateDailyCareRecord(
+          currentPhase,
+          patientId,
+          targetDate,
+          context?.patientVariables
+        );
 
       if (dailyRecordResult.isFailure) {
-        return Result.fail(formatError(dailyRecordResult, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(dailyRecordResult, PatientCareOrchestratorService.name)
+        );
       }
 
       // Mettre à jour la session
@@ -420,7 +457,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.GENERATE_DAILY_PLAN,
         session,
         message: `Plan de soin généré pour le ${targetDate.toString()}`,
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
     } catch (e) {
       return handleError(e);
@@ -433,7 +470,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   private async updateDailyPlan(
     session: PatientCareSession,
     context?: {
-      targetDate?: DomainDateTime
+      targetDate?: DomainDateTime;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
@@ -448,14 +485,17 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       const targetDate = context?.targetDate || DomainDateTime.now();
 
       // Mettre à jour le record existant
-      const updateResult = await this.dailyCareManager.updateExistingDailyCareRecord(
-        currentPhase,
-        currentRecord,
-        patientId,
-      );
+      const updateResult =
+        await this.dailyCareManager.updateExistingDailyCareRecord(
+          currentPhase,
+          currentRecord,
+          patientId
+        );
 
       if (updateResult.isFailure) {
-        return Result.fail(formatError(updateResult, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(updateResult, PatientCareOrchestratorService.name)
+        );
       }
 
       return Result.ok({
@@ -463,7 +503,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.UPDATE_DAILY_PLAN,
         session,
         message: "Plan de soin mis à jour avec succès",
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
     } catch (e) {
       return handleError(e);
@@ -474,7 +514,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    * Marque les actions/tasks comme terminées et évalue le record
    */
   private async completeDailyRecord(
-    session: PatientCareSession,
+    session: PatientCareSession
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -496,14 +536,16 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
           session,
           message: "Record quotidien terminé",
-          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE,
         });
       } else {
         // Préparer le message pour les items non terminés
-        const pendingCount = pendingItems.actions.length + pendingItems.tasks.length;
-        session.notifyMissingVariables([
-          `${pendingCount} items non terminés`,
-        ], this.idGenerator.generate().toValue());
+        const pendingCount =
+          pendingItems.actions.length + pendingItems.tasks.length;
+        session.notifyMissingVariables(
+          [`${pendingCount} items non terminés`],
+          this.idGenerator.generate().toValue()
+        );
 
         return Result.ok({
           success: true,
@@ -511,7 +553,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           session,
           message: `${pendingCount} items restent à compléter`,
           requiresUserAction: true,
-          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE
+          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE,
         });
       }
     } catch (e) {
@@ -542,7 +584,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       );
 
       if (evaluationResult.isFailure) {
-        return Result.fail(formatError(evaluationResult, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(evaluationResult, PatientCareOrchestratorService.name)
+        );
       }
 
       const evaluation = evaluationResult.val;
@@ -560,7 +604,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           session,
           message: `Transition requise vers ${targetPhase}`,
           requiresUserAction: true,
-          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE
+          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE,
         });
       }
     } catch (e) {
@@ -574,14 +618,13 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   private async handleUserResponse(
     session: PatientCareSession,
     context?: {
-      userResponse?: UserResponse
+      userResponse?: UserResponse;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
       if (!context?.userResponse) {
         return Result.fail("Aucune réponse utilisateur fournie");
       }
-
 
       // Traiter la réponse
       const success = session.receiveUserResponse(context.userResponse);
@@ -591,19 +634,27 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       }
 
       // Gérer les réponses liées à la completion
-      if (context.userResponse.getDecisionData()?.type === UserDecisionType.COMPLETION_RESPONSE) {
-        return await this.handleCompletionResponse(session, context.userResponse.getDecisionData());
+      if (
+        context.userResponse.getDecisionData()?.type ===
+        UserDecisionType.COMPLETION_RESPONSE
+      ) {
+        return await this.handleCompletionResponse(
+          session,
+          context.userResponse.getDecisionData()
+        );
       }
 
       // Déterminer la prochaine opération basée sur le type de réponse
-      const nextOperation = this.determineNextOperation(context.userResponse.getDecisionData());
+      const nextOperation = this.determineNextOperation(
+        context.userResponse.getDecisionData()
+      );
 
       return Result.ok({
         success: true,
         operation: OrchestratorOperation.HANDLE_USER_RESPONSE,
         session,
         message: "Réponse utilisateur traitée",
-        nextOperation
+        nextOperation,
       });
     } catch (e) {
       return handleError(e);
@@ -667,7 +718,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.HANDLE_USER_RESPONSE,
           session,
           message: "Record terminé suite à la réponse utilisateur",
-          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE,
         });
       }
 
@@ -676,9 +727,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.HANDLE_USER_RESPONSE,
         session,
         message: "Réponse de completion traitée",
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
-
     } catch (e) {
       return handleError(e);
     }
@@ -697,7 +747,10 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
       if (!currentRecord) {
         // Pas de record actif, générer le plan du jour
-        return await this.generateDailyPlan(session, { targetDate: today, ...context });
+        return await this.generateDailyPlan(session, {
+          targetDate: today,
+          ...context,
+        });
       }
 
       const recordDate = DomainDateTime.create(currentRecord.getDate()).val;
@@ -709,7 +762,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.SYNCHRONIZE_STATE,
           session,
           message: "État synchronisé - record à jour",
-          nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+          nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
         });
       }
 
@@ -720,11 +773,13 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         while (currentDate.isBefore(today) || currentDate.isSameDay(today)) {
           const dailyPlanResult = await this.generateDailyPlan(session, {
             targetDate: currentDate,
-            ...context
+            ...context,
           });
 
           if (dailyPlanResult.isFailure) {
-            return Result.fail(formatError(dailyPlanResult, PatientCareOrchestratorService.name));
+            return Result.fail(
+              formatError(dailyPlanResult, PatientCareOrchestratorService.name)
+            );
           }
 
           currentDate = currentDate.addDays(1);
@@ -735,7 +790,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.SYNCHRONIZE_STATE,
           session,
           message: "État synchronisé - rejeu terminé",
-          nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+          nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
         });
       }
 
@@ -815,7 +870,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
       const result = currentRecord.completeAction(context.actionId);
       if (result.isFailure) {
-        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(result, PatientCareOrchestratorService.name)
+        );
       }
 
       // Vérifier si le record est maintenant complet
@@ -826,7 +883,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.COMPLETE_ACTION,
           session,
           message: "Action complétée - Record terminé",
-          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE,
         });
       }
 
@@ -835,7 +892,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.COMPLETE_ACTION,
         session,
         message: "Action marquée comme complétée",
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
     } catch (e) {
       return handleError(e);
@@ -848,7 +905,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   private async completeTask(
     session: PatientCareSession,
     context?: {
-      taskId?: AggregateID
+      taskId?: AggregateID;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
@@ -863,7 +920,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
       const result = currentRecord.completeTask(context.taskId);
       if (result.isFailure) {
-        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(result, PatientCareOrchestratorService.name)
+        );
       }
 
       // Vérifier si le record est maintenant complet
@@ -874,7 +933,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.COMPLETE_TASK,
           session,
           message: "Tâche complétée - Record terminé",
-          nextOperation: OrchestratorOperation.TRANSITION_PHASE
+          nextOperation: OrchestratorOperation.TRANSITION_PHASE,
         });
       }
 
@@ -883,7 +942,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.COMPLETE_TASK,
         session,
         message: "Tâche marquée comme complétée",
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
     } catch (e) {
       return handleError(e);
@@ -896,7 +955,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   private async markActionIncomplete(
     session: PatientCareSession,
     context?: {
-      actionId?: AggregateID
+      actionId?: AggregateID;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
@@ -911,7 +970,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
       const result = currentRecord.markActionAsNotCompleted(context.actionId);
       if (result.isFailure) {
-        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(result, PatientCareOrchestratorService.name)
+        );
       }
 
       return Result.ok({
@@ -919,7 +980,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.MARK_ACTION_INCOMPLETE,
         session,
         message: "Action marquée comme non complétée",
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
     } catch (e) {
       return handleError(e);
@@ -932,7 +993,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
   private async markTaskIncomplete(
     session: PatientCareSession,
     context?: {
-      taskId?: AggregateID
+      taskId?: AggregateID;
     }
   ): Promise<Result<OrchestratorResult>> {
     try {
@@ -947,7 +1008,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
 
       const result = currentRecord.markTaskAsNotCompleted(context.taskId);
       if (result.isFailure) {
-        return Result.fail(formatError(result, PatientCareOrchestratorService.name));
+        return Result.fail(
+          formatError(result, PatientCareOrchestratorService.name)
+        );
       }
 
       return Result.ok({
@@ -955,7 +1018,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.MARK_TASK_INCOMPLETE,
         session,
         message: "Tâche marquée comme non complétée",
-        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD
+        nextOperation: OrchestratorOperation.COMPLETE_DAILY_RECORD,
       });
     } catch (e) {
       return handleError(e);
@@ -966,7 +1029,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
    * Marque le record quotidien comme incomplet
    */
   private async markRecordIncomplete(
-    session: PatientCareSession,
+    session: PatientCareSession
   ): Promise<Result<OrchestratorResult>> {
     try {
       const currentRecord = session.getCurrentDailyRecord();
@@ -979,7 +1042,9 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       const today = DomainDateTime.now();
 
       if (recordDate.isSameDay(today)) {
-        return Result.fail("Impossible de marquer un record du jour comme incomplet");
+        return Result.fail(
+          "Impossible de marquer un record du jour comme incomplet"
+        );
       }
 
       currentRecord.markAsIncompleted();
@@ -989,7 +1054,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.MARK_RECORD_INCOMPLETE,
         session,
         message: "Record marqué comme incomplet",
-        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
       });
     } catch (e) {
       return handleError(e);
@@ -1012,7 +1077,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.SYNCHRONIZE_STATE,
           session,
           message: "Aucun record actif",
-          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
         });
       }
 
@@ -1020,7 +1085,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
       const today = DomainDateTime.now();
       const isCompleted = currentRecord.isCompleted();
       const pendingItems = currentRecord.getPendingItems();
-      const hasPendingItems = (pendingItems.actions.length + pendingItems.tasks.length) > 0;
+      const hasPendingItems =
+        pendingItems.actions.length + pendingItems.tasks.length > 0;
 
       // RÈGLE 1: Si le record est déjà terminé, continuer
       if (isCompleted) {
@@ -1029,7 +1095,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.SYNCHRONIZE_STATE,
           session,
           message: "Record déjà terminé",
-          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
         });
       }
 
@@ -1041,15 +1107,16 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
             type: MessageType.MISSING_VARIABLES_NOTIFICATION,
             content: `Le record du jour (${recordDate.toString()}) a ${pendingItems.actions.length + pendingItems.tasks.length} items non terminés. Voulez-vous les compléter maintenant ou marquer comme incomplet ?`,
             requiresResponse: true,
-            decisionType: DecisionType.VARIABLE_PROVISION
-          }, this.idGenerator.generate().toValue()
-        )
-        if (messageRes.isFailure) {
-          return Result.fail(formatError(messageRes, PatientCareOrchestratorService.name));
-        }
-        session.sendMessage(
-          messageRes.val
+            decisionType: DecisionType.VARIABLE_PROVISION,
+          },
+          this.idGenerator.generate().toValue()
         );
+        if (messageRes.isFailure) {
+          return Result.fail(
+            formatError(messageRes, PatientCareOrchestratorService.name)
+          );
+        }
+        session.sendMessage(messageRes.val);
 
         return Result.ok({
           success: true,
@@ -1057,7 +1124,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           session,
           message: `Notification envoyée pour ${pendingItems.actions.length + pendingItems.tasks.length} items en attente`,
           requiresUserAction: true,
-          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE
+          nextOperation: OrchestratorOperation.HANDLE_USER_RESPONSE,
         });
       }
 
@@ -1067,14 +1134,18 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         currentRecord.markAsIncompleted();
 
         // Envoyer une notification simple (sans réponse requise)
-        const messageRes = Message.create({
-          content: `Le record du ${recordDate.toString()} a été automatiquement marqué comme incomplet (${pendingItems.actions.length + pendingItems.tasks.length} items non terminés)`,
-          type: MessageType.GENERAL_NOTIFICATION,
-          requiresResponse: false,
-
-        }, this.idGenerator.generate().toValue())
+        const messageRes = Message.create(
+          {
+            content: `Le record du ${recordDate.toString()} a été automatiquement marqué comme incomplet (${pendingItems.actions.length + pendingItems.tasks.length} items non terminés)`,
+            type: MessageType.GENERAL_NOTIFICATION,
+            requiresResponse: false,
+          },
+          this.idGenerator.generate().toValue()
+        );
         if (messageRes.isFailure) {
-          return Result.fail(formatError(messageRes, PatientCareOrchestratorService.name));
+          return Result.fail(
+            formatError(messageRes, PatientCareOrchestratorService.name)
+          );
         }
         session.sendMessage(messageRes.val);
 
@@ -1083,7 +1154,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.SYNCHRONIZE_STATE,
           session,
           message: `Record passé marqué comme incomplet automatiquement`,
-          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
         });
       }
 
@@ -1097,7 +1168,7 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
           operation: OrchestratorOperation.SYNCHRONIZE_STATE,
           session,
           message: `Record passé marqué comme terminé`,
-          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+          nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
         });
       }
 
@@ -1107,9 +1178,8 @@ export class PatientCareOrchestratorService implements IPatientCareOrchestratorS
         operation: OrchestratorOperation.SYNCHRONIZE_STATE,
         session,
         message: "Vérification de completion terminée",
-        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE
+        nextOperation: OrchestratorOperation.SYNCHRONIZE_STATE,
       });
-
     } catch (e) {
       return handleError(e);
     }

@@ -1,5 +1,9 @@
 import { CARE_PHASE_CODES } from "@/core/constants";
-import { CreateFollowUpAction, CreateMonitoringElement, CreateRecommededTreatment } from "@/core/nutrition_care/domain";
+import {
+  CreateFollowUpAction,
+  CreateMonitoringElement,
+  CreateRecommededTreatment,
+} from "@/core/nutrition_care/domain";
 import { AggregateID, CreateCriterion } from "@/core/shared";
 
 export interface CarePhaseReferenceDto {
@@ -12,8 +16,8 @@ export interface CarePhaseReferenceDto {
   applicabilyConditions: CreateCriterion[];
   failureCriteria: CreateCriterion[];
   transitionCriteria: CreateCriterion[];
-  recommendedTreatments: (CreateRecommededTreatment & {id: AggregateID } )[];
-  monitoringElements: (CreateMonitoringElement & {id: AggregateID})[];
+  recommendedTreatments: (CreateRecommededTreatment & { id: AggregateID })[];
+  monitoringElements: (CreateMonitoringElement & { id: AggregateID })[];
   followUpActions: CreateFollowUpAction[];
   createdAt: string;
   updatedAt: string;

@@ -12,7 +12,8 @@ import { CreateNutritionalProductResponse } from "./Response";
 import { NextNutritionCare } from "@/core/nutrition_care/domain";
 
 export class CreateNutritionalProductUseCase
-  implements UseCase<CreateNutritionalProductRequest, CreateNutritionalProductResponse>
+  implements
+    UseCase<CreateNutritionalProductRequest, CreateNutritionalProductResponse>
 {
   constructor(
     private readonly idGenerator: GenerateUniqueId,
@@ -39,10 +40,8 @@ export class CreateNutritionalProductUseCase
       }
 
       // Create the nutritional product entity
-      const nutritionalProductResult = NextNutritionCare.NutritionalProduct.create(
-        request.data,
-        newId
-      );
+      const nutritionalProductResult =
+        NextNutritionCare.NutritionalProduct.create(request.data, newId);
 
       if (nutritionalProductResult.isFailure) {
         return left(nutritionalProductResult);

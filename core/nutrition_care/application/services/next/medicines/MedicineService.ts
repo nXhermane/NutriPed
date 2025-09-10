@@ -11,14 +11,8 @@ import {
 } from "../../../useCases/next/medicines";
 
 export interface MedicineServiceUseCases {
-  createMedicineUC: UseCase<
-    CreateMedicineRequest,
-    CreateMedicineResponse
-  >;
-  getMedicineUC: UseCase<
-    GetMedicineRequest,
-    GetMedicineResponse
-  >;
+  createMedicineUC: UseCase<CreateMedicineRequest, CreateMedicineResponse>;
+  getMedicineUC: UseCase<GetMedicineRequest, GetMedicineResponse>;
   getMedicineDosageUC: UseCase<
     GetMedicineDosageRequest,
     GetMedicineDosageResponse

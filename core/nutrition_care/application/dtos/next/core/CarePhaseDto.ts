@@ -3,11 +3,11 @@ import { AggregateID } from "@shared";
 
 export interface CarePhaseDto {
   id: AggregateID;
-  status: CarePhaseStatus
+  status: CarePhaseStatus;
   startDate: string;
   endDate: null | string;
   monitoringParameters: AggregateID[];
-  onGoingTreatments: AggregateID[]
+  onGoingTreatments: AggregateID[];
   createdAt: string;
   updatedAt: string;
 }

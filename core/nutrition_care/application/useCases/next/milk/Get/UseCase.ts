@@ -23,25 +23,23 @@ export class GetMilkUseCase
   async execute(request: GetMilkRequest): Promise<GetMilkResponse> {
     try {
       const milks = [];
-      if(request.code && !request.id) {
+      if (request.code && !request.id) {
         const codeRes = SystemCode.create(request.code);
-        if(codeRes.isFailure) {
+        if (codeRes.isFailure) {
           return left(codeRes);
         }
         const milk = await this.repo.getByCode(codeRes.val);
         milks.push(milk);
-      }else if (request.id && !request.code) {
+      } else if (request.id && !request.code) {
         const milk = await this.repo.getById(request.id);
         milks.push(milk);
-      }else {
-        milks.push(...await this.repo.getAll());
+      } else {
+        milks.push(...(await this.repo.getAll()));
       }
-      if(Guard.isEmpty(milks).succeeded) {
+      if (Guard.isEmpty(milks).succeeded) {
         return left(Result.fail("The milks not found."));
       }
-      return right(
-        Result.ok(milks.map(milk => this.mapper.toResponse(milk)))
-      );
+      return right(Result.ok(milks.map(milk => this.mapper.toResponse(milk))));
     } catch (e: unknown) {
       return left(handleError(e));
     }

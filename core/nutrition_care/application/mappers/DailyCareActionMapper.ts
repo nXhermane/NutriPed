@@ -1,8 +1,10 @@
 import { ApplicationMapper } from "@/core/shared";
-import { DailyCareActionDto } from "../dtos";
 import { DailyCareAction } from "../../domain/next/core/models/entities";
+import { DailyCareActionDto } from "../dtos/next/core";
 
-export class DailyCareActionMapper implements ApplicationMapper<DailyCareAction, DailyCareActionDto> {
+export class DailyCareActionMapper
+  implements ApplicationMapper<DailyCareAction, DailyCareActionDto>
+{
   toResponse(entity: DailyCareAction): DailyCareActionDto {
     const action = entity.getAction();
     return {

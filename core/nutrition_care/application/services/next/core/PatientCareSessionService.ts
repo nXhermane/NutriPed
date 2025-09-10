@@ -14,7 +14,9 @@ export interface PatientCareSessionServiceUseCases {
   >;
 }
 
-export class PatientCareSessionService implements IPatientCareSessionServiceNext {
+export class PatientCareSessionService
+  implements IPatientCareSessionServiceNext
+{
   constructor(private readonly ucs: PatientCareSessionServiceUseCases) {}
 
   async getPatientCareSession(

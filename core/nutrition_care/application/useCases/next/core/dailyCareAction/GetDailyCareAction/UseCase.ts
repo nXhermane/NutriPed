@@ -13,18 +13,23 @@ import { NextCoreDtos } from "@/core/nutrition_care/application/dtos";
 import { NextCore } from "@/core/nutrition_care/domain";
 
 export class GetDailyCareActionUseCase
-  implements
-  UseCase<GetDailyCareActionRequest, GetDailyCareActionResponse> {
+  implements UseCase<GetDailyCareActionRequest, GetDailyCareActionResponse>
+{
   constructor(
-    private readonly dailyCareActionRepository:NextCore.DailyCareActionRepository,
-    private readonly dailyCareActionMapper: ApplicationMapper<DailyCareAction,NextCoreDtos.DailyCareActionDto>
-  ) { }
+    private readonly dailyCareActionRepository: NextCore.DailyCareActionRepository,
+    private readonly dailyCareActionMapper: ApplicationMapper<
+      DailyCareAction,
+      NextCoreDtos.DailyCareActionDto
+    >
+  ) {}
 
   async execute(
     request: GetDailyCareActionRequest
   ): Promise<GetDailyCareActionResponse> {
     try {
-      const action = await this.dailyCareActionRepository.getById(request.actionId);
+      const action = await this.dailyCareActionRepository.getById(
+        request.actionId
+      );
       const actionDto = this.dailyCareActionMapper.toResponse(action);
 
       return right(Result.ok(actionDto));

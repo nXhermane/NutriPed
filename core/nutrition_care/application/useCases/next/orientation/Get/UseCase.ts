@@ -40,7 +40,9 @@ export class GetOrientationReferenceUseCase
         orientationRefs.push(orientationRef);
       } else if (request.orientationRefCode && !request.orientationRefId) {
         const codeRes = SystemCode.create(request.orientationRefCode);
-        if (codeRes.isFailure) {return left(codeRes);}
+        if (codeRes.isFailure) {
+          return left(codeRes);
+        }
         const orientationRef = await this.repo.getByCode(codeRes.val);
         orientationRefs.push(orientationRef);
       } else {

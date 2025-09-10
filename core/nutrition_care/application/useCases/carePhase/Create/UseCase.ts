@@ -5,17 +5,26 @@ import {
   right,
   UseCase,
   SystemCode,
+  Factory,
 } from "@shared";
 import { CreateCarePhaseReferenceRequest } from "./Request";
 import { CreateCarePhaseReferenceResponse } from "./Response";
-import { CarePhaseReferenceRepository, CarePhaseReferenceFactory } from "@/core/nutrition_care/domain/modules/carePhase";
+import {
+  CarePhaseReferenceRepository,
+  CarePhaseReference,
+  CreateCarePhaseReference,
+} from "@/core/nutrition_care/domain/modules/carePhase";
 
 export class CreateCarePhaseReferenceUseCase
-  implements UseCase<CreateCarePhaseReferenceRequest, CreateCarePhaseReferenceResponse>
+  implements
+    UseCase<CreateCarePhaseReferenceRequest, CreateCarePhaseReferenceResponse>
 {
   constructor(
     private readonly repo: CarePhaseReferenceRepository,
-    private readonly factory: CarePhaseReferenceFactory
+    private readonly factory: Factory<
+      CreateCarePhaseReference,
+      CarePhaseReference
+    >
   ) {}
   async execute(
     request: CreateCarePhaseReferenceRequest
