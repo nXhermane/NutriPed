@@ -5,7 +5,7 @@ import {
 } from "../../useCases/carePhase";
 import { CarePhaseReferenceDto } from "../../dtos/carePhase/CarePhaseDto";
 
-export interface ICarePhaseAppService {
+export interface ICarePhaseReferenceAppService {
   create(
     req: CreateCarePhaseReferenceRequest
   ): Promise<AppServiceResponse<{ id: AggregateID }> | Message>;

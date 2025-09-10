@@ -1,5 +1,5 @@
 import { AggregateID, AppServiceResponse, Message, UseCase } from "@shared";
-import { ICarePhaseAppService } from "./interfaces/ICarePhaseAppService";
+import { ICarePhaseReferenceAppService } from "./interfaces";
 import {
   CreateCarePhaseReferenceRequest,
   CreateCarePhaseReferenceResponse,
@@ -8,13 +8,13 @@ import {
 } from "../useCases/carePhase";
 import { CarePhaseReferenceDto } from "../dtos/carePhase/CarePhaseDto";
 
-export interface CarePhaseServiceUseCases {
+export interface CarePhaseReferenceServiceUseCases {
   createUC: UseCase<CreateCarePhaseReferenceRequest, CreateCarePhaseReferenceResponse>;
   getUC: UseCase<GetCarePhaseReferenceRequest, GetCarePhaseReferenceResponse>;
 }
 
-export class CarePhaseAppService implements ICarePhaseAppService {
-  constructor(private readonly ucs: CarePhaseServiceUseCases) {}
+export class CarePhaseReferenceAppService implements ICarePhaseReferenceAppService {
+  constructor(private readonly ucs: CarePhaseReferenceServiceUseCases) {}
 
   async create(
     req: CreateCarePhaseReferenceRequest

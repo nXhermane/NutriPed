@@ -1,9 +1,10 @@
-import { handleError, left, Result, right, UseCase, SystemCode } from "@shared";
+import { handleError, left, Result, right, UseCase, SystemCode, Factory } from "@shared";
 import { CreateCarePhaseReferenceRequest } from "./Request";
 import { CreateCarePhaseReferenceResponse } from "./Response";
 import {
   CarePhaseReferenceRepository,
-  CarePhaseReferenceFactory,
+  CarePhaseReference,
+  CreateCarePhaseReference,
 } from "@/core/nutrition_care/domain/modules/carePhase";
 
 export class CreateCarePhaseReferenceUseCase
@@ -12,7 +13,7 @@ export class CreateCarePhaseReferenceUseCase
 {
   constructor(
     private readonly repo: CarePhaseReferenceRepository,
-    private readonly factory: CarePhaseReferenceFactory
+    private readonly factory: Factory<CreateCarePhaseReference,CarePhaseReference>
   ) {}
   async execute(
     request: CreateCarePhaseReferenceRequest
