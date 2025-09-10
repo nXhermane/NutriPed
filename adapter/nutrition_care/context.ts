@@ -7,6 +7,41 @@ import {
   UseCase,
 } from "@shared";
 
+// Import Next Core Use Case Classes
+import {
+  GetCareMessageUseCase,
+  GetPendingMessagesUseCase,
+  SubmitUserResponseUseCase,
+  CompleteActionUseCase,
+  CompleteTaskUseCase,
+  HandleCompletionResponseUseCase,
+  MarkRecordIncompleteUseCase,
+  GetDailyCareActionUseCase,
+  GetDailyCareRecordUseCase,
+  GetDailyMonitoringTaskUseCase,
+  GetMonitoringParameterUseCase,
+  GetOnGoingTreatmentUseCase,
+  GenerateDailyCarePlanUseCase,
+  StartContinuousOrchestrationUseCase,
+  SynchronizePatientStateUseCase,
+  CreatePatientCareSessionUseCase as NextCreatePatientCareSessionUseCase,
+  GetPatientCareSessionStatusUseCase,
+  GetPatientCareSessionUseCase as NextGetPatientCareSessionUseCase,
+} from "@core/nutrition_care/application/useCases/next/core";
+
+// Import Next Core Service Classes
+import {
+  CommunicationService,
+  CompletionService,
+  DailyCareActionService,
+  DailyCareRecordService,
+  DailyMonitoringTaskService,
+  MonitoringParameterService,
+  OnGoingTreatmentService,
+  OrchestrationService,
+  PatientCareSessionService,
+} from "@core/nutrition_care/application/services/next/core";
+
 import {
   AddDataToPatientCareSessionRequest,
   AddDataToPatientCareSessionResponse,
@@ -1186,6 +1221,71 @@ export class NutritionCareContext {
       this.milkRepo,
       this.therapeuticMilkService
     );
+
+    // Next Core Use Cases instantiation
+    this.nextGetMessageUC = new GetCareMessageUseCase(
+      this.nextMessageRepo,
+      this.nextMessageMapper
+    );
+    this.nextGetPendingMessagesUC = new GetPendingMessagesUseCase(
+      this.nextMessageMapper,
+      this.nextPatientOrchestratorPort
+    );
+    this.nextSubmitUserResponseUC = new SubmitUserResponseUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextCompleteActionUC = new CompleteActionUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextCompleteTaskUC = new CompleteTaskUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextHandleCompletionResponseUC = new HandleCompletionResponseUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextMarkRecordIncompleteUC = new MarkRecordIncompleteUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextGetDailyCareActionUC = new GetDailyCareActionUseCase(
+      this.nextDailyCareActionRepo,
+      this.nextDailyCareActionAppMapper
+    );
+    this.nextGetDailyCareRecordUC = new GetDailyCareRecordUseCase(
+      this.nextDailyCareRecordRepo,
+      this.nextDailyCareRecordMapper
+    );
+    this.nextGetDailyMonitoringTaskUC = new GetDailyMonitoringTaskUseCase(
+      this.nextDailyMonitoringTaskRepo,
+      this.nextCarePhaseMapper
+    );
+    this.nextGetMonitoringParameterUC = new GetMonitoringParameterUseCase(
+      this.nextMonitoringParameterRepo,
+      this.nextCarePhaseMapper
+    );
+    this.nextGetOnGoingTreatmentUC = new GetOnGoingTreatmentUseCase(
+      this.nextOnGoingTreatmentRepo,
+      this.nextCarePhaseMapper
+    );
+    this.nextGenerateDailyCarePlanUC = new GenerateDailyCarePlanUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextStartContinuousOrchestrationUC = new StartContinuousOrchestrationUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextSynchronizePatientStateUC = new SynchronizePatientStateUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextCreatePatientCareSessionUC = new NextCreatePatientCareSessionUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextGetPatientCareSessionStateUC = new GetPatientCareSessionStatusUseCase(
+      this.nextPatientOrchestratorPort
+    );
+    this.nextGetPatientCareSessionUC = new NextGetPatientCareSessionUseCase(
+      this.nextPatientCareSessionRepo,
+      this.nextPatientCareSessionMapper
+    );
+
    // Next Core Modules;
   
     // Application Service
@@ -1252,6 +1352,43 @@ export class NutritionCareContext {
       getDailyJournalsUC: this.getDailyJournalsUC,
     });
 
+    // Next Core App Services instantiation
+    this.nextCommunicationAppService = new CommunicationService({
+      getPendingMessagesUC: this.nextGetPendingMessagesUC,
+      submitUserResponseUC: this.nextSubmitUserResponseUC,
+    });
+    this.nextCompletionAppService = new CompletionService({
+      completeActionUC: this.nextCompleteActionUC,
+      completeTaskUC: this.nextCompleteTaskUC,
+      handleCompletionResponseUC: this.nextHandleCompletionResponseUC,
+      markRecordIncompleteUC: this.nextMarkRecordIncompleteUC,
+    });
+    this.nextDailyCareActionAppService = new DailyCareActionService({
+      getDailyCareActionUC: this.nextGetDailyCareActionUC,
+    });
+    this.nextDailyRecordAppService = new DailyCareRecordService({
+      getDailyCareRecordUC: this.nextGetDailyCareRecordUC,
+    });
+    this.nextDailyMonitoringTaskAppService = new DailyMonitoringTaskService({
+      getDailyMonitoringTaskUC: this.nextGetDailyMonitoringTaskUC,
+    });
+    this.nextMonitoringParameterAppService = new MonitoringParameterService({
+      getMonitoringParameterUC: this.nextGetMonitoringParameterUC,
+    });
+    this.nextOnGoingTreatmentAppService = new OnGoingTreatmentService({
+      getOnGoingTreatmentUC: this.nextGetOnGoingTreatmentUC,
+    });
+    this.nextOrchestrationAppService = new OrchestrationService({
+      generateDailyCarePlanUC: this.nextGenerateDailyCarePlanUC,
+      startContinuousOrchestrationUC: this.nextStartContinuousOrchestrationUC,
+      synchronizePatientStateUC: this.nextSynchronizePatientStateUC,
+    });
+    this.nextPatientCareSessionAppService = new PatientCareSessionService({
+      createPatientCareSessionUC: this.nextCreatePatientCareSessionUC,
+      getPatientCareSessionStatusUC: this.nextGetPatientCareSessionStateUC,
+      getPatientCareSessionUC: this.nextGetPatientCareSessionUC,
+    });
+
     // Subscribers
     this.afterPatientGlobalPerformedHandler =
       new AfterPatientGlobalVariablePerformedEvent(
@@ -1312,6 +1449,43 @@ export class NutritionCareContext {
 
   getPatientCareSessionService(): IPatientCareSessionAppService {
     return this.patientCareSessionAppService;
+  }
+
+  // Next Core app service getters
+  getNextCommunicationService(): ICommunicationService {
+    return this.nextCommunicationAppService;
+  }
+
+  getNextCompletionService(): ICompletionService {
+    return this.nextCompletionAppService;
+  }
+
+  getNextDailyCareActionService(): IDailyCareActionService {
+    return this.nextDailyCareActionAppService;
+  }
+
+  getNextDailyCareRecordService(): IDailyCareRecordService {
+    return this.nextDailyRecordAppService;
+  }
+
+  getNextDailyMonitoringTaskService(): IDailyMonitoringTaskService {
+    return this.nextDailyMonitoringTaskAppService;
+  }
+
+  getNextMonitoringParameterService(): IMonitoringParameterService {
+    return this.nextMonitoringParameterAppService;
+  }
+
+  getNextOnGoingTreatmentService(): IOnGoingTreatmentService {
+    return this.nextOnGoingTreatmentAppService;
+  }
+
+  getNextOrchestrationService(): IOrchestrationService {
+    return this.nextOrchestrationAppService;
+  }
+
+  getNextPatientCareSessionService(): IPatientCareSessionServiceNext {
+    return this.nextPatientCareSessionAppService;
   }
 
   // Méthode existante de nettoyage
