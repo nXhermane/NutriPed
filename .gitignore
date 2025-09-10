@@ -47,3 +47,9 @@ DOCUMENTATION_TECHNIQUE.md
 medical_record_prototype.html
 note.txt
 coverage
+
+# Spec-kit folders
+.gemini/
+memory/
+templates/
+scripts/
