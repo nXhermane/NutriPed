@@ -172,6 +172,7 @@ import {
   IPatientCareSessionServiceNext,
   IRecommendedTreatmentService,
   RecommendedTreatmentService,
+  PatientCareSessionAggregateMapper,
 } from "@core/nutrition_care";
 
 import { PatientACLImpl } from "@core/sharedAcl";
@@ -436,6 +437,11 @@ export class NutritionCareContext {
   private readonly dailyJournalAppMapper: DailyCareJournalMapper;
   private readonly carePhaseAppMapper: CarePhaseMapper;
   private readonly patientCareSessionAppMapper: PatientCareSessionMapper;
+  // Next core app mappers ;
+  private readonly nextCarePhaseMapper: ApplicationMapper<NextCore.CarePhase,NextCoreDtos.CarePhaseDto>;
+  private readonly nextDailyCareRecordMapper: ApplicationMapper<NextCore.DailyCareRecord,NextCoreDtos.DailyCareRecordDto>;
+  private readonly nextMessageMapper: ApplicationMapper<NextCore.Message, NextCoreDtos.MessageDto>;
+  private readonly nextPatientCareSessionMapper: ApplicationMapper<NextCore.PatientCareSession , NextCoreDtos.PatientCareSessionAggregateDto>;
   // Use Cases
   private readonly createAppetiteTestRefUC: UseCase<
     CreateAppetiteTestRequest,
@@ -1016,6 +1022,10 @@ export class NutritionCareContext {
       this.dailyJournalAppMapper
     );
     // Next Core app mappers
+    this.nextCarePhaseMapper = new NextCoreMapper.CarePhaseMapper();
+    this.nextDailyCareRecordMapper = new NextCoreMapper.DailyCareRecordMapper();
+    this.nextMessageMapper = new NextCoreMapper.MessageMapper();
+    this.nextPatientCareSessionMapper = new PatientCareSessionAggregateMapper(this.nextCarePhaseMapper,this.nextDailyCareRecordMapper,this.nextMessageMapper);
     
     // Use Cases
     this.createAppetiteTestRefUC = new CreateAppetiteTestUseCase(
@@ -1094,7 +1104,7 @@ export class NutritionCareContext {
       this.carePhaseReferenceFactory
     );
 
-    // Medicine use cases - fix duplicates and errors
+    // Medicine use cases
     this.createMedicineUC = new CreateMedicineUseCase(
       this.idGenerator,
       this.medicineRepo
@@ -1176,7 +1186,8 @@ export class NutritionCareContext {
       this.milkRepo,
       this.therapeuticMilkService
     );
-
+   // Next Core Modules;
+  
     // Application Service
     this.appetiteTestAppService = new AppetiteTestAppService({
       createUC: this.createAppetiteTestRefUC,
