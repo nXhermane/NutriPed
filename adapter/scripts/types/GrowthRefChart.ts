@@ -1,5 +1,5 @@
+import { GrowthStandard } from "@/core/constants";
 import { IChartData } from "./ChartData";
-import { GrowthStandard } from "./GrowthStandard";
 
 export interface GrowthReferenceChartProps {
   code: string;

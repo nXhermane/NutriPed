@@ -1,4 +1,4 @@
-import { GrowthStandard } from "./GrowthStandard";
+import { GrowthStandard } from "@/core/constants";
 import { TableData } from "./TableData";
 
 export interface GrowthReferenceTableProps {

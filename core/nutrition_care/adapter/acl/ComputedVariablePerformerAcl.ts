@@ -74,7 +74,7 @@ export class ComputedVariablePerformerAcl
   }
   private evaluateFormula(
     formula: IFormula,
-    variableExplanation: Record<string, string>,
+    variablesExplanation: Record<string, string>,
     context: Record<string, number>
   ): Result<number> {
     try {
@@ -83,7 +83,7 @@ export class ComputedVariablePerformerAcl
       );
       const formulaEvaluationResult = getResultFormCatchEvaluationResult(
         evaluationResult,
-        variableExplanation
+        variablesExplanation
       );
       if (formulaEvaluationResult === undefined) {
         return Result.fail("The formula evaluation failed without reason.");

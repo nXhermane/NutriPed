@@ -25,7 +25,7 @@ export class NutritionalProductMapper
           conditionalDosageFormula => {
             const { applicabilities, formula } =
               conditionalDosageFormula.unpack();
-            const { description, max, min, unit, variableExplanation } =
+            const { description, max, min, unit, variablesExplanation } =
               formula.unpack();
             return {
               applicabilities: applicabilities.map(criterion => ({
@@ -38,7 +38,7 @@ export class NutritionalProductMapper
                 max: max === null ? null : max.unpack(),
                 min: min.unpack(),
                 unit: unit,
-                variableExplanation,
+                variablesExplanation,
               },
             };
           }

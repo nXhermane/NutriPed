@@ -176,14 +176,14 @@ export class NutritionalProductAdvisorService
       const dosageFormula = isApplicableFormula.unpack().formula.unpack();
       const minDosageRes = this.evaluateFormula(
         dosageFormula.min.unpack().value,
-        dosageFormula.variableExplanation,
+        dosageFormula.variablesExplanation,
         context
       );
       const maxDosageRes =
         dosageFormula.max !== null
           ? this.evaluateFormula(
               dosageFormula.max.unpack().value,
-              dosageFormula.variableExplanation,
+              dosageFormula.variablesExplanation,
               context
             )
           : Result.ok(null);

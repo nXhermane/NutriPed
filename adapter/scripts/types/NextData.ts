@@ -199,7 +199,7 @@ export interface FollowUpAction {
   applicabilities: {
     description: string;
     condition: ICondition;
-    variableExplanation: {};
+    variablesExplanation: {};
   }[];
   treatmentToApply: RecommendedTreatment[];
 }
@@ -209,7 +209,7 @@ export interface RecommendedTreatment {
   applicabilityCondition: {
     condition: ICondition;
     descritpion: string;
-    variableExplanation: { [variable: string]: string };
+    variablesExplanation: { [variable: string]: string };
   };
   type: RECOMMENDED_TREATMENT_TYPE;
   code: MilkType | MEDICINE_CODES;
@@ -226,7 +226,7 @@ export interface CarePhaseReference {
   applicabilyConditions: {
     condition: ICondition;
     description: string;
-    varaibleExplaination: {};
+    variablesExplanation: {};
   }[];
   code: CARE_PHASE_CODES;
   name: string;
@@ -298,7 +298,7 @@ export interface DosageCase {
   dosageCondition: {
     condition: ICondition;
     description: string;
-    variableExplanation: Record<string, string>;
+    variablesExplanation: Record<string, string>;
   };
   baseDosage: BaseDosage;
   dosageRanges: DosageRange[];
@@ -358,14 +358,14 @@ export interface ConditionalDosageFormula {
   applicabilities: Array<{
     condition: ICondition;
     description: string;
-    variableExplanation: Record<string, string>;
+    variablesExplanation: Record<string, string>;
   }>;
   formula: {
     min: ICondition;
     max: ICondition | null;
     unit: DosageFormulaUnit;
     desciption: string;
-    variableExplanation: Record<string, string>;
+    variablesExplanation: Record<string, string>;
   };
 }
 
@@ -378,7 +378,7 @@ export interface DosageScenario {
   applicability: {
     condition: ICondition;
     descritption: string;
-    variableExplanation: { [variable: string]: string };
+    variablesExplanation: { [variable: string]: string };
   };
   conditionalDosageFormulas: ConditionalDosageFormula[];
   dosages: DosageByWeight[];
@@ -393,7 +393,7 @@ export interface NutitionalProduct {
 export interface AdmissionCriteria {
   condition: ICondition;
   description: string;
-  variableExplanation: { [variable: string]: string };
+  variablesExplanation: { [variable: string]: string };
 }
 
 export interface Next_OrientationRef {

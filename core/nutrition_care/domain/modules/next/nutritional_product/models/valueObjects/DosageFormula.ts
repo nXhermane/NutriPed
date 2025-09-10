@@ -15,7 +15,7 @@ export interface IDosageFormula {
   max: Formula | null;
   unit: DosageFormulaUnit;
   description: string;
-  variableExplanation: Record<string, string>;
+  variablesExplanation: Record<string, string>;
 }
 
 export interface CreateDosageFormula {
@@ -23,7 +23,7 @@ export interface CreateDosageFormula {
   max: IFormula | null;
   unit: DosageFormulaUnit;
   description: string;
-  variableExplanation: Record<string, string>;
+  variablesExplanation: Record<string, string>;
 }
 
 export class DosageFormula extends ValueObject<IDosageFormula> {
@@ -52,7 +52,7 @@ export class DosageFormula extends ValueObject<IDosageFormula> {
           max: maxRes.val,
           description: createProps.description,
           unit: createProps.unit,
-          variableExplanation: createProps.variableExplanation,
+          variablesExplanation: createProps.variablesExplanation,
         })
       );
     } catch (e: unknown) {

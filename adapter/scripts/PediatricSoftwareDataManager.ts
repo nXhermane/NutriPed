@@ -121,7 +121,7 @@ export class PediatricSoftwareDataManager {
   private totalSteps = 22; // Nombre total d'étapes d'initialisation
   private currentStep = 0;
 
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService) { }
 
   addObserver(observer: InitializationObserver) {
     this.observers.push(observer);
@@ -661,12 +661,80 @@ export class PediatricSoftwareDataManager {
       carePhases.map(async carePhase => {
         try {
           const result =
-            await this.appService.carePhaseReferenceService.createUC.execute(
-              carePhase
+            await this.appService.carePhaseReferenceService.create(
+              {
+                data: {
+                  applicabilyConditions: carePhase.applicabilyConditions,
+                  code: carePhase.code,
+                  description: carePhase.description,
+                  failureCriteria: carePhase.failureCriteria,
+                  followUpPlan: carePhase.followUpPlan.map((plan) => ({
+                    applicabilities: plan.applicabilities,
+                    treatmentToApply: plan.treatmentToApply.map(recommendedTreatment => recommendedTreatment.identifier as any)
+                  })),
+                  monitoringPlan: carePhase.monitoringPlan.map((plan) => ({
+                    category: plan.category,
+                    code: plan.code,
+                    duration: plan.duration as any,
+                    frequency: plan.frequency as any,
+                    source: plan.source
+                  })),
+                  name: carePhase.name,
+                  transitionCriteria: carePhase.transitionCriteria,
+                  recommendedTreatments: carePhase.recommendedTreatments.map(treatment => ({
+                    applicabilyCondition: {
+                      condition: treatment.applicabilityCondition.condition,
+                      description: treatment.applicabilityCondition.descritpion,
+                      variablesExplanation: treatment.applicabilityCondition.variablesExplanation
+                    },
+                    code: treatment.identifier as any,
+                    type: treatment.type,
+                    treatmentCode: treatment.code,
+                    duration: treatment.duration as any,
+                    frequency: treatment.frequency as any,
+                    triggers: {
+                      onEnd: treatment.triggers?.onEnd?.map(trigger => ({
+                        action: trigger.action as any,
+                        targetTreatment: trigger.targetCode
+                      })) || [],
+                      onStart: treatment.triggers?.onStart?.map(trigger => ({
+                        action: trigger.action as any,
+                        targetTreatment: trigger.targetCode
+                      })) || []
+                    }
+                  }))
+                }
+              }
             );
+          const followUpRecommendedTreatmentResult = await Promise.all(carePhase.followUpPlan.flatMap(plan => plan.treatmentToApply.map(treatment => this.appService.carePhaseReferenceService.createRecommendedTreatment({
+            data: {
+              applicabilyCondition: {
+                condition: treatment.applicabilityCondition.condition,
+                description: treatment.applicabilityCondition.descritpion,
+                variablesExplanation: treatment.applicabilityCondition.variablesExplanation
+              },
+              code: treatment.identifier as any,
+              type: treatment.type,
+              treatmentCode: treatment.code,
+              duration: treatment.duration as any,
+              frequency: treatment.frequency as any,
+              triggers: {
+                onEnd: treatment.triggers?.onEnd?.map(trigger => ({
+                  action: trigger.action as any,
+                  targetTreatment: trigger.targetCode
+                })) || [],
+                onStart: treatment.triggers?.onStart?.map(trigger => ({
+                  action: trigger.action as any,
+                  targetTreatment: trigger.targetCode
+                })) || []
+              }
+            }
+          }))))
+
           if (result instanceof Message) {
             this.notifyError("Care Phase", `${result.type}: ${result.content}`);
           }
+          followUpRecommendedTreatmentResult.forEach(res => res instanceof Message && this.notifyError("Care Phase", `${res.type}: ${res.content}`));
           return result;
         } catch (error) {
           this.notifyError("Care Phase", `${error}`);
@@ -681,8 +749,24 @@ export class PediatricSoftwareDataManager {
       medicines.map(async medicine => {
         try {
           const result =
-            await this.appService.nextMedicineService.createUC.execute(
-              medicine
+            await this.appService.nextMedicineService.create(
+              {
+                data: {
+                  name: medicine.name,
+                  administrationRoutes: medicine.administrationRoutes,
+                  category: medicine.category,
+                  code: medicine.code,
+                  contraindications: medicine.contraindications ?? [],
+                  dosageCases: medicine.dosageCases.map(dosage => ({
+                    base: dosage.baseDosage,
+                    condition: dosage.dosageCondition,
+                    ranges: dosage.dosageRanges
+                  })),
+                  interactions: medicine.interactions ?? [],
+                  notes: medicine.notes ?? [],
+                  warnings: medicine.warnings ?? []
+                }
+              }
             );
           if (result instanceof Message) {
             this.notifyError(
@@ -704,8 +788,35 @@ export class PediatricSoftwareDataManager {
       products.map(async product => {
         try {
           const result =
-            await this.appService.nextNutritionalProductService.createNutritionalProductUC.execute(
-              product
+            await this.appService.nextNutritionalProductService.create(
+              {
+                data: {
+                  code: product.code,
+                  dosageTables: product.dosageTables.map(table => ({
+                    applicability: {
+                      condition: table.applicability.condition,
+                      description: table.applicability.descritption,
+                      variablesExplanation: table.applicability.variablesExplanation
+                    },
+                    conditionalDosageFormulas: table.conditionalDosageFormulas.map(formula => ({
+                      applicabilities: formula.applicabilities.map(criterion => ({
+                        description: criterion.description,
+                        condition: criterion.condition,
+                        variablesExplanation: criterion.variablesExplanation
+                      })),
+                      formula: {
+                        min: formula.formula.min,
+                        max: formula.formula.max,
+                        unit: formula.formula.unit,
+                        description: formula.formula.desciption,
+                        variablesExplanation: formula.formula.variablesExplanation
+                      }
+                    })),
+                    dosages: table.dosages,
+                    isAdmissionWeight: table.isAdmissionWeight
+                  }))
+                }
+              }
             );
           if (result instanceof Message) {
             this.notifyError(
@@ -727,7 +838,9 @@ export class PediatricSoftwareDataManager {
       milks.map(async milk => {
         try {
           const result =
-            await this.appService.nextMilkService.createMilkUC.execute(milk);
+            await this.appService.nextMilkService.create({
+              data: milk
+            });
           if (result instanceof Message) {
             this.notifyError("Next Milk", `${result.type}: ${result.content}`);
           }
@@ -745,8 +858,13 @@ export class PediatricSoftwareDataManager {
       orientations.map(async orientation => {
         try {
           const result =
-            await this.appService.nextOrientationService.createOrientationReferenceUC.execute(
-              orientation
+            await this.appService.nextOrientationService.create(
+              {
+                code: orientation.code,
+                criteria: orientation.criteria,
+                name: orientation.name,
+                treatmentPhase: orientation.treatmentPhase
+              }
             );
           if (result instanceof Message) {
             this.notifyError(

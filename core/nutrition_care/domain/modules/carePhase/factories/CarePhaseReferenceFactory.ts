@@ -24,8 +24,8 @@ export interface CreateCarePhaseReference extends EntityPropsBaseType {
   code: CARE_PHASE_CODES;
   name: string;
   description: string;
-  nextPhase: CARE_PHASE_CODES;
-  prevPhase: CARE_PHASE_CODES;
+  nextPhase?: CARE_PHASE_CODES ;
+  prevPhase?: CARE_PHASE_CODES;
   applicabilyConditions: CreateCriterion[];
   failureCriteria: CreateCriterion[];
   transitionCriteria: CreateCriterion[];
@@ -35,16 +35,15 @@ export interface CreateCarePhaseReference extends EntityPropsBaseType {
 }
 
 export class CarePhaseReferenceFactory
-  implements Factory<CreateCarePhaseReference, CarePhaseReference>
-{
-  constructor(private readonly idGenerator: GenerateUniqueId) {}
+  implements Factory<CreateCarePhaseReference, CarePhaseReference> {
+  constructor(private readonly idGenerator: GenerateUniqueId) { }
   async create(
     props: CreateCarePhaseReference
   ): Promise<Result<CarePhaseReference>> {
     try {
       const codeRes = SystemCode.create(props.code);
-      const nextPhaseRes = SystemCode.create(props.nextPhase);
-      const prevPhaseRes = SystemCode.create(props.prevPhase);
+      const nextPhaseRes = props.nextPhase ? SystemCode.create(props.nextPhase) : Result.ok(null);
+      const prevPhaseRes = props.prevPhase ? SystemCode.create(props.prevPhase) : Result.ok(null);
       const applicationConditionsRes = props.applicabilyConditions.map(
         criteriaProps => Criterion.create(criteriaProps)
       );
@@ -90,8 +89,8 @@ export class CarePhaseReferenceFactory
             code: codeRes.val,
             name: props.name,
             description: props.description,
-            nextPhase: nextPhaseRes.val,
-            prevPhase: prevPhaseRes.val,
+            nextPhase: nextPhaseRes.val !== null ? nextPhaseRes.val : undefined,
+            prevPhase: prevPhaseRes.val !== null ? prevPhaseRes.val : undefined,
             applicabilyConditions: applicationConditionsRes.map(res => res.val),
             failureCriteria: failureCriteriaRes.map(res => res.val),
             transitionCriteria: transitionCriteriaRes.map(res => res.val),
