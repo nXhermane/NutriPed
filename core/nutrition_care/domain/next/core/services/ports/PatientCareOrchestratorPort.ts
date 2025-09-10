@@ -119,7 +119,7 @@ export class PatientCareOrchestratorPort
         throw new Error(`Session ${sessionId} non trouvée`);
       }
 
-      return session;
+      return Result.ok(session);
     } catch (e) {
       return handleError(e);
     }

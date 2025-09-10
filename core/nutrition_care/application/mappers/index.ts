@@ -16,5 +16,3 @@ export * from "./OnGoingTreatmentMapper";
 export * from "./PatientCareSessionAggregateMapper";
 export * as NextMedicinesMapper from "./next/medicines";
 export * as NextCoreMapper from "./next/core";
-export * as NextNutritionalProductMapper from "./next/nutritional_products";
-export * as NextMilkMapper from "./next/milk";

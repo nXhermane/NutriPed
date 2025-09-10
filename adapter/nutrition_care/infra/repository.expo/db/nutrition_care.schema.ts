@@ -17,7 +17,7 @@ import {
   ValueTypeDto,
   WeightRange,
 } from "@core/nutrition_care";
-import { NextCore } from "@/core/nutrition_care/domain";
+import { CreateTreatmentTrigger, IDuration, IFrequency, NextCore } from "@/core/nutrition_care/domain";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { UserResponseSummaryPersistenceDto } from "../../dtos/next/core";
 import { CreateCriterion } from "@/core/shared";
@@ -428,3 +428,60 @@ export const patient_care_session_aggregates = sqliteTable(
     updatedAt: text("updated_at").notNull(),
   }
 );
+
+export const care_phase_references = sqliteTable("care_phase_references", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  nextPhaseCode: text("next_phase_code"),
+  prevPhaseCode: text("prev_phase_code"),
+  applicabilyConditions: text("applicabily_conditions", { mode: "json" }).notNull(),
+  failureCriteria: text("failure_criteria", { mode: "json" }).notNull(),
+  transitionCriteria: text("transition_criteria", { mode: "json" }).notNull(),
+  recommendedTreatments: text("recommended_treatments", { mode: "json" })
+    .$type<string[]>()
+    .notNull(),
+  monitoringElements: text("monitoring_elements", { mode: "json" })
+    .$type<string[]>()
+    .notNull(),
+  followUpActions: text("follow_up_actions", { mode: "json" }).notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const recommended_treatments = sqliteTable("recommended_treatments", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  triggers: text("treatment_triggers", { mode: "json" }).$type<{
+      onStart: CreateTreatmentTrigger[];
+      onEnd: CreateTreatmentTrigger[];
+    }>().notNull(),
+  duration: text("duration", { mode: "json" }).$type<IDuration>().notNull(),
+  frequency: text("frequency", { mode: "json" }).$type<IFrequency>().notNull(),
+  ajustmentPercentage: integer('ajustment_percentage'),
+  type: text("type",{enum: [
+    "nutritional","systematic"
+  ]}),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const monitoring_elements = sqliteTable("monitoring_elements", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull(),
+  category: text("category",{enum: [
+    "anthropometric_monitoring_element",
+"biochemical_monitoring_element",
+  "clinical_signs_monitoring_element",
+   "data_field_monitoring_element"
+  ]}).notNull(),
+  source: text("source",{enum: [
+     "calculated_monitoring_value", 
+    "not_calculated_monitoring_value",
+  ]}).notNull(),
+  frequency: text("frequency", { mode: "json" }).$type<IFrequency>().notNull(),
+  duration: text("duration", { mode: "json" }).$type<IDuration>().notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});

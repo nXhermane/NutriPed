@@ -21,10 +21,13 @@ export abstract class EntityBaseRepositoryExpoWithCodeColumn<
   DomainEntity extends Entity<EntityPropsBaseType>,
   PersistenceModel extends object,
   TableSchema extends SQLiteTable & BaseTableFields & { code: SQLiteColumn },
+  PersistenceRecord extends object = PersistenceModel,
+
 > extends EntityBaseRepositoryExpo<
   DomainEntity,
   PersistenceModel,
-  TableSchema
+  TableSchema,
+  PersistenceRecord
 > {
   async getByCode(code: SystemCode): Promise<DomainEntity> {
     try {

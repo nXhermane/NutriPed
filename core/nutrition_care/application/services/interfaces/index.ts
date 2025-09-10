@@ -4,6 +4,7 @@ export * from "./IComplicationService";
 export * from "./IMilkService";
 export * from "./IMedicineService";
 export * from "./IPatientCareSessionService";
+export * from "./ICarePhaseAppService";
 
 // Next/Core services
 export * from "./IOrchestrationService";

@@ -5,6 +5,7 @@ export * from "./DailyPlanGeneratorService";
 export * from "./PatientCareOrchestratorService";
 export * from "./helpers";
 export * from "./interfaces";
+export * from "./ports";
 export * from "./TreatmentDateManagementService";
 export * from "./DailyScheduleService";
 export * from "./DailyActionGeneratorService";
