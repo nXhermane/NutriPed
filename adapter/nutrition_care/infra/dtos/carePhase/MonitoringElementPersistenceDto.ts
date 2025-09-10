@@ -6,7 +6,10 @@ import {
   DATA_FIELD_CODE_TYPE,
   CLINICAL_SIGNS,
 } from "@/core/constants";
-import { IDuration, IFrequency } from "@/core/nutrition_care/domain/modules/carePhase/models/valueObjects";
+import {
+  IDuration,
+  IFrequency,
+} from "@/core/nutrition_care/domain/modules/carePhase/models/valueObjects";
 import { EntityPersistenceDto } from "../../../../shared";
 import { ValueOf } from "@/utils";
 

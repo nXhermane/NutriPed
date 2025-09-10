@@ -3,13 +3,17 @@ import {
   PatientCareSession,
   PatientCareSessionRepository,
 } from "@/core/nutrition_care/domain/next/core";
-import { PatientCareSessionAggregatePersistenceDto } from "../../../dtos/next/core";
+import {
+  PatientCareSessionAggregatePersistenceDto,
+  PatientCareSessionAggregatePersistenceRecordDto,
+} from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class PatientCareSessionRepositoryWeb
   extends EntityBaseRepositoryWeb<
     PatientCareSession,
-    PatientCareSessionAggregatePersistenceDto
+    PatientCareSessionAggregatePersistenceDto,
+    PatientCareSessionAggregatePersistenceRecordDto
   >
   implements PatientCareSessionRepository
 {

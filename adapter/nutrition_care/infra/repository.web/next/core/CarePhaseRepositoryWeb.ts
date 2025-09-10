@@ -3,11 +3,18 @@ import {
   CarePhase,
   CarePhaseRepository,
 } from "@/core/nutrition_care/domain/next/core";
-import { CarePhasePersistenceDto } from "../../../dtos/next/core";
+import {
+  CarePhasePersistenceDto,
+  CarePhasePersistenceRecordDto,
+} from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class CarePhaseRepositoryWeb
-  extends EntityBaseRepositoryWeb<CarePhase, CarePhasePersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    CarePhase,
+    CarePhasePersistenceDto,
+    CarePhasePersistenceRecordDto
+  >
   implements CarePhaseRepository
 {
   protected storeName = "care_phases";

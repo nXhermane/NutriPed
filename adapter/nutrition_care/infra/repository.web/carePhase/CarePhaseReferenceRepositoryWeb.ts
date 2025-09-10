@@ -1,10 +1,16 @@
 import { SystemCode } from "@shared";
 import { EntityBaseRepositoryWeb } from "@/adapter/shared";
 import { CarePhaseReferencePersistenceDto } from "../../dtos/carePhase/CarePhaseReferencePersistenceDto";
-import { CarePhaseReference, CarePhaseReferenceRepository } from "@/core/nutrition_care";
+import {
+  CarePhaseReference,
+  CarePhaseReferenceRepository,
+} from "@/core/nutrition_care";
 
 export class CarePhaseReferenceRepositoryWeb
-  extends EntityBaseRepositoryWeb<CarePhaseReference, CarePhaseReferencePersistenceDto>
+  extends EntityBaseRepositoryWeb<
+    CarePhaseReference,
+    CarePhaseReferencePersistenceDto
+  >
   implements CarePhaseReferenceRepository
 {
   protected storeName = "care_phase_references";
@@ -18,10 +24,16 @@ export class CarePhaseReferenceRepositoryWeb
         request.onsuccess = event => {
           const result = (event.target as IDBRequest).result;
           if (!result) {
-            reject(new Error(`CarePhaseReference with code ${code.unpack()} not found`));
+            reject(
+              new Error(
+                `CarePhaseReference with code ${code.unpack()} not found`
+              )
+            );
             return;
           }
-          resolve(this.mapper.toDomain(result as CarePhaseReferencePersistenceDto));
+          resolve(
+            this.mapper.toDomain(result as CarePhaseReferencePersistenceDto)
+          );
         };
 
         request.onerror = event => {
@@ -53,7 +65,9 @@ export class CarePhaseReferenceRepositoryWeb
       });
     } catch (error) {
       console.error(error);
-      throw new Error(`Failed to check care phase reference existence: ${error}`);
+      throw new Error(
+        `Failed to check care phase reference existence: ${error}`
+      );
     }
   }
 }

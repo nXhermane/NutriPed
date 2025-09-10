@@ -12,6 +12,7 @@ import { IndexedDBConnection } from "./IndexedDBConnection";
 export abstract class EntityBaseRepositoryWeb<
   DomainEntity extends Entity<EntityPropsBaseType>,
   PersistenceModel extends object,
+  PersistenceRecord extends object = PersistenceModel,
 > implements Repository<DomainEntity>
 {
   protected abstract storeName: string;
@@ -20,7 +21,8 @@ export abstract class EntityBaseRepositoryWeb<
     protected readonly dbConnection: IndexedDBConnection,
     protected readonly mapper: InfrastructureMapper<
       DomainEntity,
-      PersistenceModel
+      PersistenceModel,
+      PersistenceRecord
     >,
     protected readonly eventBus: IEventBus | null = null
   ) {}

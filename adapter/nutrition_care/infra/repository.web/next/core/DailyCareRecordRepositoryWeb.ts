@@ -3,13 +3,17 @@ import {
   DailyCareRecord,
   DailyCareRecordRepository,
 } from "@/core/nutrition_care/domain/next/core";
-import { DailyCareRecordPersistenceDto } from "../../../dtos/next/core";
+import {
+  DailyCareRecordPersistenceDto,
+  DailyCareRecordPersistenceRecordDto,
+} from "../../../dtos/next/core";
 import { AggregateID } from "@/core/shared";
 
 export class DailyCareRecordRepositoryWeb
   extends EntityBaseRepositoryWeb<
     DailyCareRecord,
-    DailyCareRecordPersistenceDto
+    DailyCareRecordPersistenceDto,
+    DailyCareRecordPersistenceRecordDto
   >
   implements DailyCareRecordRepository
 {
