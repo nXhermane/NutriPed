@@ -29,6 +29,11 @@ import {
   NutritionalRiskFactor,
   OrientationRef,
   UnitProps,
+  CarePhaseReference,
+  Next_Medicine,
+  NutitionalProduct,
+  MilkEntity,
+  Next_OrientationRef,
 } from "./types";
 import {
   IAppetiteTestAppService,
@@ -36,6 +41,8 @@ import {
   IMedicineAppService,
   IMilkAppService,
   IOrientationAppService,
+  NextNutritionCareAppService,
+  ICarePhaseReferenceAppService,
 } from "@core/nutrition_care";
 import { IUnitService } from "@core/units";
 import { Message, Sex } from "@shared";
@@ -78,6 +85,11 @@ export interface AppService {
   nextNutritionalRiskRefService: NextClinicalAppServices.INutritionalRiskFactorService;
   dataFieldService: IDataFieldReferenceService;
   evaluationAppetiteTest: EvaluationIAppetiteTestAppService;
+  carePhaseReferenceService: ICarePhaseReferenceAppService;
+  nextMedicineService: NextNutritionCareAppService.IMedicineAppService;
+  nextNutritionalProductService: NextNutritionCareAppService.NutritionalProductService;
+  nextMilkService: NextNutritionCareAppService.MilkService;
+  nextOrientationService: NextNutritionCareAppService.OrientationService;
 }
 
 export interface PediatricSoftwareData {
@@ -97,10 +109,16 @@ export interface PediatricSoftwareData {
   growthReferenceTables: GrowthReferenceTableProps[];
   nextClinicalSigns: Next_ClinicalSignReference[];
   dataFields: DataFieldReference[];
+  carePhases: CarePhaseReference[];
+  nextMedicines: Next_Medicine[];
+  nutritionalProducts: NutitionalProduct[];
+  nextMilks: MilkEntity[];
+  nextOrientations: Next_OrientationRef[];
+  nextAppetiteTestRefs: AppetiteTestRef[];
 }
 export class PediatricSoftwareDataManager {
   private observers: InitializationObserver[] = [];
-  private totalSteps = 14; // Nombre total d'étapes d'initialisation
+  private totalSteps = 22; // Nombre total d'étapes d'initialisation
   private currentStep = 0;
 
   constructor(private appService: AppService) {}
@@ -186,6 +204,30 @@ export class PediatricSoftwareDataManager {
       await this.processStep("Units", () => this.addUnit(data.units));
       await this.processStep("Nutritional Risk Factors", () =>
         this.addNutritionalRiskFactor(data.nutritionalRiskFactors)
+      );
+      await this.processStep("Next Clinical Signs", () =>
+        this.addNextClinicalRef(data.nextClinicalSigns)
+      );
+      await this.processStep("Data Fields", () =>
+        this.addDataFields(data.dataFields)
+      );
+      await this.processStep("Care Phases", () =>
+        this.addCarePhase(data.carePhases)
+      );
+      await this.processStep("Next Medicines", () =>
+        this.addNextMedicine(data.nextMedicines)
+      );
+      await this.processStep("Next Nutritional Products", () =>
+        this.addNextNutritionalProduct(data.nutritionalProducts)
+      );
+      await this.processStep("Next Milks", () =>
+        this.addNextMilk(data.nextMilks)
+      );
+      await this.processStep("Next Orientations", () =>
+        this.addNextOrientationRef(data.nextOrientations)
+      );
+      await this.processStep("Next Appetite Tests", () =>
+        this.addNextAppetiteTestRef(data.nextAppetiteTestRefs)
       );
 
       this.notifyComplete();
@@ -614,6 +656,113 @@ export class PediatricSoftwareDataManager {
     );
   }
 
+  async addCarePhase(carePhases: CarePhaseReference[]) {
+    await Promise.all(
+      carePhases.map(async carePhase => {
+        try {
+          const result =
+            await this.appService.carePhaseReferenceService.createUC.execute(
+              carePhase
+            );
+          if (result instanceof Message) {
+            this.notifyError("Care Phase", `${result.type}: ${result.content}`);
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Care Phase", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
+  async addNextMedicine(medicines: Next_Medicine[]) {
+    await Promise.all(
+      medicines.map(async medicine => {
+        try {
+          const result =
+            await this.appService.nextMedicineService.createUC.execute(
+              medicine
+            );
+          if (result instanceof Message) {
+            this.notifyError(
+              "Next Medicine",
+              `${result.type}: ${result.content}`
+            );
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Next Medicine", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
+  async addNextNutritionalProduct(products: NutitionalProduct[]) {
+    await Promise.all(
+      products.map(async product => {
+        try {
+          const result =
+            await this.appService.nextNutritionalProductService.createNutritionalProductUC.execute(
+              product
+            );
+          if (result instanceof Message) {
+            this.notifyError(
+              "Next Nutritional Product",
+              `${result.type}: ${result.content}`
+            );
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Next Nutritional Product", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
+  async addNextMilk(milks: MilkEntity[]) {
+    await Promise.all(
+      milks.map(async milk => {
+        try {
+          const result =
+            await this.appService.nextMilkService.createMilkUC.execute(milk);
+          if (result instanceof Message) {
+            this.notifyError("Next Milk", `${result.type}: ${result.content}`);
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Next Milk", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
+  async addNextOrientationRef(orientations: Next_OrientationRef[]) {
+    await Promise.all(
+      orientations.map(async orientation => {
+        try {
+          const result =
+            await this.appService.nextOrientationService.createOrientationReferenceUC.execute(
+              orientation
+            );
+          if (result instanceof Message) {
+            this.notifyError(
+              "Next Orientation",
+              `${result.type}: ${result.content}`
+            );
+          }
+          return result;
+        } catch (error) {
+          this.notifyError("Next Orientation", `${error}`);
+          throw error;
+        }
+      })
+    );
+  }
+
   prepareData(data: Map<string, string>): PediatricSoftwareData {
     return {
       measures: this.jsonToObj(
@@ -678,6 +827,30 @@ export class PediatricSoftwareDataManager {
       ),
       dataFields: this.jsonToObj(
         PediatricSoftwareDataZipFileArch.dataFields.filePath,
+        data
+      ),
+      carePhases: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.carePhases.filePath,
+        data
+      ),
+      nextMedicines: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.nextMedicine.filePath,
+        data
+      ),
+      nutritionalProducts: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.nutritionalProduct.filePath,
+        data
+      ),
+      nextMilks: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.milkEntitie.filePath,
+        data
+      ),
+      nextOrientations: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.nextOrientationRef.filePath,
+        data
+      ),
+      nextAppetiteTestRefs: this.jsonToObj(
+        PediatricSoftwareDataZipFileArch.appetiteTestRef.filePath,
         data
       ),
     };

@@ -22,7 +22,6 @@ export abstract class EntityBaseRepositoryExpoWithCodeColumn<
   PersistenceModel extends object,
   TableSchema extends SQLiteTable & BaseTableFields & { code: SQLiteColumn },
   PersistenceRecord extends object = PersistenceModel,
-
 > extends EntityBaseRepositoryExpo<
   DomainEntity,
   PersistenceModel,

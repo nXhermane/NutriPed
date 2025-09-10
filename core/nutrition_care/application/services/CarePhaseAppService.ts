@@ -9,11 +9,16 @@ import {
 import { CarePhaseReferenceDto } from "../dtos/carePhase/CarePhaseDto";
 
 export interface CarePhaseReferenceServiceUseCases {
-  createUC: UseCase<CreateCarePhaseReferenceRequest, CreateCarePhaseReferenceResponse>;
+  createUC: UseCase<
+    CreateCarePhaseReferenceRequest,
+    CreateCarePhaseReferenceResponse
+  >;
   getUC: UseCase<GetCarePhaseReferenceRequest, GetCarePhaseReferenceResponse>;
 }
 
-export class CarePhaseReferenceAppService implements ICarePhaseReferenceAppService {
+export class CarePhaseReferenceAppService
+  implements ICarePhaseReferenceAppService
+{
   constructor(private readonly ucs: CarePhaseReferenceServiceUseCases) {}
 
   async create(
