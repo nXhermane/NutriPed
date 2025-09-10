@@ -472,11 +472,15 @@ export class NutritionCareContext {
   private readonly dailyJournalAppMapper: DailyCareJournalMapper;
   private readonly carePhaseAppMapper: CarePhaseMapper;
   private readonly patientCareSessionAppMapper: PatientCareSessionMapper;
-  // Next core app mappers ;
+  // Next core app mappers
   private readonly nextCarePhaseMapper: ApplicationMapper<NextCore.CarePhase,NextCoreDtos.CarePhaseDto>;
   private readonly nextDailyCareRecordMapper: ApplicationMapper<NextCore.DailyCareRecord,NextCoreDtos.DailyCareRecordDto>;
   private readonly nextMessageMapper: ApplicationMapper<NextCore.Message, NextCoreDtos.MessageDto>;
   private readonly nextPatientCareSessionMapper: ApplicationMapper<NextCore.PatientCareSession , NextCoreDtos.PatientCareSessionAggregateDto>;
+  private readonly nextDailyCareActionAppMapper: ApplicationMapper<NextCore.DailyCareAction, NextCoreDtos.DailyCareActionDto>;
+  private readonly nextOnGoingTreatmentMapper: ApplicationMapper<NextCore.OnGoingTreatment, NextCoreDtos.OnGoingTreatmentDto>;
+  private readonly nextDailyMonitoringTaskMapper: ApplicationMapper<NextCore.DailyMonitoringTask, NextCoreDtos.DailyMonitoringTaskDto>;
+  private readonly nextMonitoringParameterMapper: ApplicationMapper<NextCore.MonitoringParameter, NextCoreDtos.MonitoringParameterDto>;
   // Use Cases
   private readonly createAppetiteTestRefUC: UseCase<
     CreateAppetiteTestRequest,
@@ -1061,6 +1065,10 @@ export class NutritionCareContext {
     this.nextDailyCareRecordMapper = new NextCoreMapper.DailyCareRecordMapper();
     this.nextMessageMapper = new NextCoreMapper.MessageMapper();
     this.nextPatientCareSessionMapper = new PatientCareSessionAggregateMapper(this.nextCarePhaseMapper,this.nextDailyCareRecordMapper,this.nextMessageMapper);
+    this.nextDailyCareActionAppMapper = new DailyCareActionMapper();
+    this.nextOnGoingTreatmentMapper = new OnGoingTreatmentMapper();
+    this.nextDailyMonitoringTaskMapper = new DailyMonitoringTaskMapper();
+    this.nextMonitoringParameterMapper = new MonitoringParameterMapper();
     
     // Use Cases
     this.createAppetiteTestRefUC = new CreateAppetiteTestUseCase(
