@@ -1,6 +1,135 @@
+type ValueOf<T> = T[keyof T];
+
 export interface ICondition {
   value: string;
   variables: string[];
+}
+
+export enum AnthroSystemCodes {
+  HEIGHT = "height",
+  LENGTH = "length",
+  LENHEI = "lenhei",
+  WEIGHT = "weight",
+  BMI = "bmi",
+  HEAD_CIRCUMFERENCE = "head_circumference",
+  MUAC = "muac",
+  TSF = "tsf",
+  SSF = "ssf",
+  WFLH = "wflh",
+  WFLH_UNISEX = "wflh_unisex",
+  WFH_UNISEX_NCHS = "wfh_unisex_nchs",
+  WFA = "wfa",
+  HFA = "hfa",
+  BMI_FOR_AGE = "bmi_for_age",
+  MUAC_FOR_AGE = "muac_for_age",
+  TSF_FOR_AGE = "tsf_for_age",
+  SSF_FOR_AGE = "ssf_for_age",
+  HC_FOR_AGE = "hc_for_age",
+  AGE_IN_DAY = "age_in_day",
+  AGE_IN_MONTH = "age_in_month",
+  SEX = "sex",
+}
+
+export const BIOCHEMICAL_REF_CODES = {
+  BIOCHEMICAL_IONO_NA: "biochemical_iono_na",
+  BIOCHEMICAL_IONO_K: "biochemical_iono_k",
+  BIOCHEMICAL_IONO_CL: "biochemical_iono_cl",
+  BIOCHEMICAL_IONO_CA: "biochemical_iono_ca",
+  BIOCHEMICAL_IONO_MG: "biochemical_iono_mg",
+  BIOCHEMICAL_KIDNEY_UREA: "biochemical_kidney_urea",
+  BIOCHEMICAL_KIDNEY_CREA: "bichemical_kidney_creatinine",
+  BIOCHEMICAL_BLOOD_GLUCOSE: "biochemical_blood_glucose",
+  BIOCHEMICAL_ENZY_ALT: "biochemical_enzy_alt",
+  BIOCHEMICAL_ENZY_GGT: "biochemical_enzy_ggt",
+  BIOCHEMICAL_ENZY_BILIRUBIN_TOTAL: "biochemical_enzy_bilirubin_total",
+  BIOCHEMICAL_FAT_CHELESTEROL_TOTAL: "biochemical_fat_cholesterol_total",
+  BIOCHEMICAL_FAT_HDL: "biochemical_fat_hdl",
+  BIOCHEMICAL_FAT_TG: "bichemical_fat_triglycerides",
+} as const;
+
+export const OBSERVATIONS = {
+  SUBCOSTAL_RETRACTION: "observation_subcostal_retraction",
+  EDEMA_PRESENCE: "observation_edema_presence",
+  EDEMA_GODET_COUNT: "observation_edema_godet_count",
+  SKIN_CHANGES: "observation_skin_changes",
+  HAIR_CHANGES: "observation_hair_changes",
+  NAIL_CHANGES: "observation_nail_changes",
+  CORNEA_CHANGES: "observation_cornea_changes",
+  MOUTH_CHANGES: "observation_mouth_changes",
+  HEMORRHAGE_SIGNS: "observation_hemorrhage_signs",
+  MUSCLE_LOSS: "observation_muscle_loss",
+  NEURO_SIGNS: "observation_neuro_signs",
+  HEPATOMEGALY: "observation_hepatomegaly",
+  JOINT_ENLARGEMENT: "observation_joint_enlargement",
+  TACHYCARDIA: "observation_tachycardia",
+} as const;
+
+export const VITAL_SIGNS = {
+  TEMPERATURE: "vital_sign_temperature",
+  RESPIRATORY_RATE: "vital_sign_respiratory_rate",
+} as const;
+
+export const DATA_POINTS = {
+  LIQUID_STOOL_COUNT: "data_liquid_stool_count_per_day",
+  VOMITING_COUNT: "data_vomiting_count",
+  GENERAL_CONDITION: "data_general_condition",
+  NUTRITIONAL_MILK_CONSUMPTION_G_PER_DAY:
+    "data_nutritional_milk_consumption_in_g_per_day",
+  IS_BREASTFED: "data_is_breastfed",
+} as const;
+
+export const QUESTIONS = {
+  EYELIDS_DURING_SLEEP: "question_eyelids_during_sleep",
+  CONSCIOUSNESS_LEVEL: "question_consciousness_level",
+} as const;
+
+export type DATA_FIELD_CODE_TYPE =
+  | ValueOf<typeof OBSERVATIONS>
+  | ValueOf<typeof VITAL_SIGNS>
+  | ValueOf<typeof DATA_POINTS>
+  | ValueOf<typeof QUESTIONS>;
+
+export const CLINICAL_SIGNS = {
+  HYPERTHERMIA: "clinical_hyperthermia",
+  HYPOTHERMIA: "clinical_hypothermia",
+  HYPOGLYCEMIA: "clinical_hypoglycemia",
+  DIARRHEA: "clinical_diarrhea",
+  VOMITING: "clinical_vomiting",
+  SEVERE_SICKNESS: "clinical_severe_sickness",
+  RESPIRATORY_DISTRESS: "clinical_respiratory_distress",
+  EDEMA: "clinical_edema",
+  SKIN: "clinical_skin_sign",
+  HAIR: "clinical_hair_sign",
+  NAILS: "clinical_nails_sign",
+  CORNEA: "clinical_cornea_sign",
+  MOUTH: "clinical_mouth_sign",
+  HEMORRHAGE: "clinical_hemorrhage",
+  MUSCLE: "clinical_muscle_sign",
+  NEURO: "clinical_neuro_signs",
+  LIVER: "clinical_liver_signs",
+  JOINT: "clinical_joiint_signs",
+  CARDIAC: "clinical_cardiac_signs",
+} as const;
+
+export enum MEDICINE_CODES {
+  AMOX = "AMOX",
+  AMP = "AMP",
+  GENT = "GENT",
+  CEFO = "CEFO",
+  CIPRO = "CIPRO",
+  CLOXA = "CLOXA",
+  METRO = "METRO",
+  NYST = "NYST",
+  FLUC = "FLUC",
+  FURO = "FURO",
+  CEFT = "CEFT",
+  AMOXI_ACIDE_CLAVULANIQUE = "AMOXI_ACIDE_CLAVULANIQUE",
+}
+
+export enum MilkType {
+  F100 = "f100",
+  F75 = "f75",
+  F100Diluted = "f100_diluted",
 }
 
 export enum CARE_PHASE_CODES {
@@ -57,7 +186,11 @@ export enum MONITORING_ELEMENT_CATEGORY {
 export interface MonitoringElement {
   category: MONITORING_ELEMENT_CATEGORY;
   source: MONITORING_VALUE_SOURCE;
-  code: any; // Using any for now, as I don't have all the codes
+  code:
+    | AnthroSystemCodes
+    | ValueOf<typeof BIOCHEMICAL_REF_CODES>
+    | DATA_FIELD_CODE_TYPE
+    | ValueOf<typeof CLINICAL_SIGNS>;
   frequency: MonitoringFrequency;
   duration: TreatmentDuration;
 }
@@ -79,7 +212,7 @@ export interface RecommendedTreatment {
     variableExplanation: { [variable: string]: string };
   };
   type: RECOMMENDED_TREATMENT_TYPE;
-  code: any; // Using any for now
+  code: MilkType | MEDICINE_CODES;
   duration: TreatmentDuration;
   frequency: MonitoringFrequency;
   triggers?: {
@@ -172,7 +305,7 @@ export interface DosageCase {
 }
 
 export interface Next_Medicine {
-  code: any; // Using any for now
+  code: MEDICINE_CODES;
   name: string;
   category: MedicineCategory;
   administrationRoutes: AdministrationRoute[];
@@ -181,12 +314,6 @@ export interface Next_Medicine {
   contraindications?: string[];
   interactions?: string[];
   notes?: string[];
-}
-
-export enum MilkType {
-  F100 = "f100",
-  F75 = "f75",
-  F100Diluted = "f100_diluted",
 }
 
 export enum FeedingFrequenciePerDay {
