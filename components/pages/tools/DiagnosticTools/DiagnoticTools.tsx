@@ -17,7 +17,7 @@ import { BiologicalInterpretationScreen } from "./BiologicalInterpretationScreen
 import { GlobalDiagnosticScreen } from "./GlobalDiagnosticScreen";
 import { FakeBlur } from "@/components/custom/FakeBlur";
 import { StackScreenHeader } from "../../shared";
-
+import {ClinicalEvaluationScreen as NextClinicalEvaluationScreen} from "./next"
 const Drawer = createDrawerNavigator();
 
 export function DiagnosticTools() {
@@ -52,6 +52,10 @@ export function DiagnosticTools() {
           <Drawer.Screen
             name="Diagnostic Nutritionnel"
             component={GlobalDiagnosticScreen}
+          />
+          <Drawer.Screen
+            name="Évaluation clinique (next)"
+            component={NextClinicalEvaluationScreen}
           />
         </Drawer.Navigator>
       </NavigationIndependentTree>

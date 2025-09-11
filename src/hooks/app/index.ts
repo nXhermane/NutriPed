@@ -10,3 +10,4 @@ export * from "./useDiagnosticRules";
 export * from "./usePatients";
 export * from "./useAnthropometicMeasure";
 export * from "./useComplicationRefs";
+export * from "./useDataFields";

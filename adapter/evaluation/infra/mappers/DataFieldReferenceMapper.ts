@@ -11,8 +11,7 @@ import { DataFieldReferencePersistenceDto } from "../dtos";
 
 export class DataFieldReferenceInfraMapper
   implements
-    InfrastructureMapper<DataFieldReference, DataFieldReferencePersistenceDto>
-{
+  InfrastructureMapper<DataFieldReference, DataFieldReferencePersistenceDto> {
   toPersistence(entity: DataFieldReference): DataFieldReferencePersistenceDto {
     return {
       id: entity.id,
@@ -31,7 +30,17 @@ export class DataFieldReferenceInfraMapper
   }
   toDomain(record: DataFieldReferencePersistenceDto): DataFieldReference {
     const fieldRefRes = DataFieldReference.create(
-      record as CreateDataFieldReference,
+      {
+        category: record.category as any,
+        code: record.code,
+        defaultValue: record.defaultValue,
+        label: record.label,
+        question: record.question,
+        type: record.type as any,
+        dataRange: record.range,
+        enumValue: record.enum,
+        units: record.units
+      },
       record.id
     );
     if (fieldRefRes.isFailure) {

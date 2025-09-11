@@ -1,6 +1,6 @@
 export const TOOLS_DATA = [
   {
-    name: "Diagnostic",
+    name: "Evaluation",
     desc: "Evalutation nutritionnelle",
     iconName: "Weight",
     code: "diagnostic_tools",
