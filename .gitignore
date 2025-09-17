@@ -53,3 +53,6 @@ coverage
 memory/
 templates/
 scripts/
+
+# UX Specifications - Not to be committed to repository
+UX_IMPROVEMENTS_SPECIFICATIONS.md
