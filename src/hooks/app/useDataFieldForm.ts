@@ -1,108 +1,253 @@
 import { useMemo } from 'react';
 import { DataFieldReferenceDto } from "@/core/evaluation";
 import { IField } from "@/components/custom/FormField";
-import { FieldDataType } from "@/core/constants";
+import { ConditionResult, FieldDataType } from "@/core/constants";
+import z from 'zod';
+import { FormSchema } from '@/components/custom';
+import { BirthDateField, BirthDateToTodayZodSchema, ClinicalRefCategoryUiData, ClinicalSignRefDataCategory, DataFieldCategoryUI, SexField, SexZodSchema, validateWithSchemaPipeline } from '@/src/constants/ui';
 
-type FieldType = 'text' | 'number' | 'select' | 'date' | 'boolean' | 'multiline';
 
 interface UseDataFieldFormOptions {
   /**
    * Préfixe à ajouter aux noms des champs pour éviter les conflits
    */
   fieldPrefix?: string;
-  
+
   /**
    * Si vrai, rend les champs obligatoires
    * @default false
    */
   required?: boolean;
+  /**
+   * Si vrai, ajoute les champs d'information générale au formulaire.
+   * @default fasle
+   */
+  withGeneralInfo?: boolean;
 }
 
 export function useDataFieldForm(
   fields: DataFieldReferenceDto[],
-  options: UseDataFieldFormOptions = {}
+  options: UseDataFieldFormOptions = {
+  }
 ) {
-  const { fieldPrefix = '', required = false } = options;
+  const { fieldPrefix = '', required = false, withGeneralInfo = false } = options;
 
   const formSchema = useMemo(() => {
-    if (!fields?.length) return [];
+    if (!fields?.length) return {
+      schema: [],
+      zod: {
+        validate(data: any) {
+          return {
+            success: true,
+            data
+          }
+        },
+      }
+    };
 
     // Grouper les champs par catégorie
-    const fieldsByCategory = fields.reduce<Record<string, IField[]>>((acc, field) => {
+    const fieldsByCategory = fields.reduce<Record<string, { field: IField, zod: z.ZodTypeAny }[]>>((acc, field) => {
       const category = field.category || 'default';
-      
+
       if (!acc[category]) {
         acc[category] = [];
       }
+      console.log(field.defaultValue, field.code)
 
       const fieldName = `${fieldPrefix}${field.code}`;
-      let fieldType: FieldType = 'text';
-      let fieldProps: Partial<IField> = {};
+
 
       // Déterminer le type de champ en fonction du type de données
       switch (field.type) {
-        case FieldDataType.NUMBER:
-          fieldType = 'number';
-          fieldProps = {
-            keyboardType: 'numeric',
-            ...(field.range && {
-              min: field.range[0],
-              max: field.range[1],
+        case FieldDataType.INT: {
+          const _field: IField = {
+            type: "number",
+            default: field.defaultValue,
+            label: field.label,
+            name: field.code,
+            helperText: field.question,
+            isRequire: required,
+
+          };
+          const _zodSchema = z.object({
+            [field.code]: z.number().nonnegative(),
+          });
+          acc[category].push({
+            field: _field,
+            zod: _zodSchema,
+          })
+        }
+          break;
+        case FieldDataType.BOOL: {
+          const _field: IField = {
+            type: "radio",
+            label: field.label,
+            name: field.code,
+            default: field.defaultValue.toString(),
+            radioOptions: [
+              { label: "Oui", value: ConditionResult.True.toString() },
+              { label: "Non", value: ConditionResult.False.toString() },
+            ],
+            helperText: field.question,
+            isRequire: required,
+          }
+          const _zodSchema = z.object({
+            [field.code]: z
+              .enum([
+                ConditionResult.True.toString(),
+                ConditionResult.False.toString(),
+              ])
+              .transform(data => {
+                return Boolean(Number(data));
+              }),
+          });
+          acc[category].push({
+            field: _field,
+            zod: _zodSchema,
+          })
+        }
+          break;
+        case FieldDataType.STR: {
+          const _field: IField = {
+            type: "text",
+            default: field.defaultValue,
+            label: field.label,
+            name: field.code,
+            helperText: field.question,
+            isRequire: required
+          }
+          const zod = z.string().nonempty();
+          if (!required) {
+            zod.optional();
+          }
+          const _zodSchema = z.object({
+            [field.code]: zod,
+          });
+          acc[category].push({
+            field: _field,
+            zod: _zodSchema,
+          })
+        }
+          break;
+        case FieldDataType.QUANTITY: {
+          const defaultUnit = field.units?.default;
+          const availableUnits = field.units?.available || [];
+          const _field: IField = {
+            type: "quantity",
+            name: field.code,
+            label: field.label,
+            helperText: field.question,
+            isRequire: required,
+            default: field.defaultValue,
+            defaultUnit: {
+              unit: defaultUnit!,
+              convertionFactor: 1,
+              label: defaultUnit!,
+            },
+            unitOptions:
+              availableUnits.map(unit => ({
+                unit: unit,
+                convertionFactor: 1,
+                label: unit,
+              })) || [],
+          }
+          const _zodSchema = z.object({
+            value: z
+              .number()
+              .positive("La valeur d'une quantité doit être positive."),
+            unit: z.enum(availableUnits as any, {
+              errorMap: (issue, ctx) => ({
+                message: `Unité invalide. Seules les valeurs ${availableUnits.join(",")} sont acceptées.`,
+              }),
             }),
-          };
+          });
+          acc[category].push({
+            field: _field,
+            zod: _zodSchema,
+          })
+        }
           break;
-          
-        case FieldDataType.BOOLEAN:
-          fieldType = 'boolean';
+        case FieldDataType.ENUM: {
+          const _field: IField = {
+            type: 'select',
+            name: field.code,
+            label: field.label,
+            helperText: field.question,
+            isRequire: required,
+            default: field.defaultValue,
+            selectOptions: field.enum!,
+          }
+          const _zodSchema = z.object({
+            [field.code]: z.enum(
+              field.enum?.map(val => val.value) || ([] as any)
+            ),
+          });
+          acc[category].push({
+            field: _field,
+            zod: _zodSchema,
+          })
+        }
           break;
-          
-        case FieldDataType.DATE:
-          fieldType = 'date';
+        case FieldDataType.RANGE: {
+          const _field: IField = {
+            type: "number",
+            name: field.code,
+            label: field.label,
+            helperText: field.question,
+            isRequire: required,
+            default: field.defaultValue,
+            minValue: field.range?.[0]!,
+            maxValue: field.range?.[1],
+          }
+          const _zodSchema = z.object({
+            [field.code]: z
+              .number()
+              .min(field.range?.[0]!)
+              .max(field.range?.[1]!)
+              .default(field.defaultValue),
+          });
+          acc[category].push({
+            field: _field,
+            zod: _zodSchema,
+          })
+        }
           break;
-          
-        case FieldDataType.TEXT:
-          fieldType = field.question?.length > 50 ? 'multiline' : 'text';
-          break;
-          
-        case FieldDataType.ENUM:
-          fieldType = 'select';
-          fieldProps = {
-            options: field.enum?.map(item => ({
-              label: item.label,
-              value: item.value,
-            })) || [],
-          };
-          break;
-          
-        default:
-          fieldType = 'text';
+        default: {
+          throw new Error("This data field type is not supported by form generator")
+        }
       }
-
-      // Créer la configuration du champ
-      const formField: IField = {
-        name: fieldName,
-        label: field.label,
-        placeholder: field.question,
-        type: fieldType,
-        required: required,
-        defaultValue: field.defaultValue,
-        ...fieldProps,
-      };
-
-      // Ajouter l'unité si disponible
-      if (field.units?.default) {
-        formField.rightElement = field.units.default;
-      }
-
-      acc[category].push(formField);
       return acc;
     }, {});
-
-    // Convertir en tableau de sections pour le DynamicFormGenerator
-    return Object.entries(fieldsByCategory).map(([category, fields]) => ({
-      section: category,
-      fields,
-    }));
+    const schema: FormSchema = [];
+    const zodSchemas: z.ZodTypeAny[] = [];
+    for (const [category, fields] of Object.entries(fieldsByCategory)) {
+      schema.push({
+        section: DataFieldCategoryUI[category as never],
+        fields: fields.map(_field => _field.field)
+      })
+      zodSchemas.push(...fields.map(_field => _field.zod))
+    }
+    return {
+      schema: [
+        ...(withGeneralInfo ? [
+          {
+            section:
+              ClinicalRefCategoryUiData[
+                ClinicalSignRefDataCategory.DEMOGRAPHIC
+              ].uiText,
+            fields: [SexField, BirthDateField],
+          },
+        ] : []),
+        ...schema
+      ],
+      zod: {
+        validate(data: any) {
+          return validateWithSchemaPipeline(data, [...(withGeneralInfo
+            ? [SexZodSchema, BirthDateToTodayZodSchema]
+            : []), ...zodSchemas]);
+        },
+      }
+    }
   }, [fields, fieldPrefix, required]);
 
   return {
@@ -112,7 +257,7 @@ export function useDataFieldForm(
      */
     extractValues: (formValues: Record<string, any>) => {
       if (!fields?.length) return {};
-      
+
       return fields.reduce<Record<string, any>>((acc, field) => {
         const fieldName = `${fieldPrefix}${field.code}`;
         acc[field.code] = formValues[fieldName];
@@ -124,7 +269,7 @@ export function useDataFieldForm(
      */
     getInitialValues: () => {
       if (!fields?.length) return {};
-      
+
       return fields.reduce<Record<string, any>>((acc, field) => {
         const fieldName = `${fieldPrefix}${field.code}`;
         acc[fieldName] = field.defaultValue;

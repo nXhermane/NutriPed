@@ -8,3 +8,4 @@ export * from "./ChartDetailMenuOptionData";
 export * from "./TableToolsData";
 export * from "./ClinicalSignRefsData";
 export * from "./GlobalDiagnosticData";
+export * from "./DataFieldCategory";

@@ -407,7 +407,7 @@ export const BirthDateToTodayZodSchema = z
   })
   .transform(data => {
     const date1 = new Date(data.birthDate);
-    return convertBirthDateIntoAgeInMonth(date1);
+    return {...convertBirthDateIntoAgeInMonth(date1), birthday: data.birthDate};
   });
 export const SexZodSchema = z.object({
   [AnthroSystemCodes.SEX]: z.enum([Sex.MALE, Sex.FEMALE], {
