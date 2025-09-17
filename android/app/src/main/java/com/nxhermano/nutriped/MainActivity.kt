@@ -25,7 +25,7 @@ class MainActivity : ReactActivity() {
   }
 
   // ✅ C’est ici qu’on capture les nouvelles Intents (ex. fichiers .malnutrix)
-  override fun onNewIntent(intent: Intent?) {
+  override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
     setIntent(intent)
   }
