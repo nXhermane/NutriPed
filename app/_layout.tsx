@@ -36,13 +36,13 @@ export default function RootLayout() {
               <EventProvider>
                 <DatabaseProvider>
                   <GoogleAuthProvider>
-                    <NotificationProvider>
+                    {/* <NotificationProvider> */}
                       <PediatricAppProvider>
                         <InitializationProvider>
                           <Route />
                         </InitializationProvider>
                       </PediatricAppProvider>
-                    </NotificationProvider>
+                    {/* </NotificationProvider> */}
                   </GoogleAuthProvider>
                 </DatabaseProvider>
               </EventProvider>

@@ -10,7 +10,7 @@ import * as IntentLauncher from "expo-intent-launcher";
 import { ExternalLink } from "lucide-react-native";
 import { VStack } from "../../ui/vstack";
 import { Progress, ProgressFilledTrack } from "../../ui/progress";
-import Pdf from "react-native-pdf";
+// import Pdf from "react-native-pdf";
 import { Linking } from "react-native";
 import { Loading } from "@/components/custom";
 
@@ -133,7 +133,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
           <ProgressFilledTrack className="rounded-none bg-primary-c_light" />
         </Progress>
 
-        <Pdf
+        {/**<Pdf
           enableAnnotationRendering={true}
           enableAntialiasing={true}
           enableDoubleTapZoom={true}
@@ -166,7 +166,7 @@ function PdfViewerComponent({ source, forceDownload }: PdfViewerProps) {
             height: 200,
           }}
           page={initialPage}
-        />
+        />**/}
       </VStack>
     </React.Fragment>
   );

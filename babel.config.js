@@ -1,6 +1,5 @@
 module.exports = function (api) {
   api.cache(true);
-  api.cache(true);
   return {
     presets: [
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
@@ -8,6 +7,13 @@ module.exports = function (api) {
     ],
 
     plugins: [
+      ["@babel/plugin-transform-typescript", {
+        allowDeclareFields: true,
+        allowNamespaces: true,
+        isTSX: true,
+        allExtensions: true
+
+      }],
       ["@babel/plugin-proposal-decorators", { legacy: true }],
       ["@babel/plugin-proposal-class-properties", { loose: true }],
       [
@@ -22,8 +28,8 @@ module.exports = function (api) {
         },
       ],
       ["inline-import", { extensions: [".sql"] }],
-      "@babel/proposal-export-namespace-from",
-      "react-native-reanimated/plugin",
+      "@babel/plugin-proposal-export-namespace-from",
+      // "react-native-worklets/plugin"
     ],
   };
 };
