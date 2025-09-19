@@ -1,11 +1,19 @@
 import "react-native-reanimated";
 import "@/global.css";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { Stack } from "expo-router";
+import {
+  GoogleAuthProvider,
+  ToastProvider,
+  UIProvider,
+} from "@/src/context";
 export default function RootLayout() {
   return (
-    <GluestackUIProvider >
-      <Stack />
-    </GluestackUIProvider>
+    <UIProvider>
+      <ToastProvider>
+        <GoogleAuthProvider>
+          <Stack />
+        </GoogleAuthProvider>
+      </ToastProvider>
+    </UIProvider>
   );
 }

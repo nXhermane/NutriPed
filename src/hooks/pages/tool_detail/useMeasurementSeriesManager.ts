@@ -1,0 +1,291 @@
+import { ChartDetailMenuOtpionData } from "@/src/constants/ui";
+import { useCallback, useState } from "react";
+import { usePicker } from "../../utils/usePicker";
+import {
+  addNewSerie,
+  AppDispatch,
+  ChartMeasurementSerie,
+  deleteMeasureFromSerie,
+  deleteSerie,
+} from "@/src/store";
+import { useDispatch, useSelector } from "react-redux";
+import { GrowthRefChartAndTableCodes } from "@/core/constants";
+import {
+  addMeasureToSerie,
+  ChartMeasurement,
+} from "@/src/store/chartToolStore";
+import { useToast } from "@/src/context";
+import { Alert } from "react-native";
+import { usePediatricApp } from "@/adapter";
+import { Sex } from "@/core/shared";
+
+export type SelectedChartMeasurementSerie = Omit<
+  ChartMeasurementSerie,
+  "createdAt" | "updatedAt"
+>;
+
+type ActionCodeItemKeyType =
+  | (typeof ChartDetailMenuOtpionData)[number]["key"]
+  | "deleteMeasure"
+  | "deleteSerie"
+  | "addMeasure"
+  | "multipleSelection";
+
+export function useMeasurementSeriesManager(
+  chartCode: GrowthRefChartAndTableCodes,
+  sex: Sex,
+  indicatorCode: string
+) {
+  const {
+    closePicker: closeSeriesLabelModal,
+    isOpen: isSeriesLabelModalOpen,
+    openPicker: openLabelPicker,
+  } = usePicker<{ serieLabel: string }>();
+  const dispatch = useDispatch<AppDispatch>();
+  const toast = useToast();
+  const measurementSeries = useSelector<any, ChartMeasurementSerie[]>(
+    state => state.chartToolStoreReducer.growthMeasurements[chartCode]?.series
+  );
+  const [selectedSerie, setSelectedSerie] = useState<{
+    serieId: string;
+  } | null>(null);
+  const [selectedSeries, setSelectedSeries] = useState<
+    SelectedChartMeasurementSerie[]
+  >([]);
+  const {
+    diagnosticServices: { growthIndicatorValue },
+  } = usePediatricApp();
+
+  // useEffect(() => {
+  //   if (chartCode)
+  //     dispatch(recordSelectedSeries({ chartCode, selectedSeries }));
+  // }, [JSON.stringify(selectedSeries)]);
+
+  const handleSeriesAction = useCallback(
+    (value: ActionCodeItemKeyType) => {
+      if (!chartCode || !sex || !indicatorCode) return () => {};
+      switch (value) {
+        case "new": {
+          return async () => {
+            const returnValue = await openLabelPicker();
+            if (!returnValue) return null;
+            dispatch(
+              addNewSerie({
+                chartCode: chartCode,
+                serieLabel: returnValue.serieLabel,
+              })
+            );
+            return void 0;
+          };
+        }
+        case "choose": {
+          return ({ serieId }: { serieId: string }) => {
+            if (selectedSerie === null) {
+              setSelectedSerie({ serieId });
+              setSelectedSeries([]);
+            } else {
+              setSelectedSerie(null);
+              setSelectedSeries([]);
+            }
+          };
+        }
+        case "multipleSelection": {
+          return ({ serieId }: { serieId: string }) => {
+            const serieObject = measurementSeries.find(
+              serie => serie.id === serieId
+            );
+            if (!serieObject) return null;
+            if (selectedSerie != null) {
+              setSelectedSeries(prev => {
+                let series: SelectedChartMeasurementSerie[] = [];
+                if (prev.length === 0) {
+                  const selectedSerieObject = measurementSeries.find(
+                    serie => serie.id === selectedSerie.serieId
+                  );
+                  if (selectedSerieObject)
+                    series.push({
+                      data: selectedSerieObject.data,
+                      id: selectedSerieObject.id,
+                      label: selectedSerieObject.label,
+                    });
+                  if (serieId === selectedSerie.serieId) return series;
+                }
+                const findedIndex = prev.findIndex(
+                  serie => serie.id === serieId
+                );
+                if (findedIndex === -1)
+                  series = [
+                    ...series,
+                    ...prev,
+                    {
+                      data: serieObject.data,
+                      id: serieObject.id,
+                      label: serieObject.label,
+                    },
+                  ];
+                else
+                  series = prev.filter(
+                    serie =>
+                      serie.id !== serieId || serie.id === selectedSerie.serieId
+                  );
+                return series;
+              });
+            }
+          };
+        }
+        case "delete": {
+          return () => {
+            if (!measurementSeries) return void 0;
+            Alert.alert(
+              "Confirmation de l'action",
+              "Voulez-vous vraiment supprimer toutes les series de mesures de cette courbe de croissance ? ",
+              [
+                {
+                  text: "Oui",
+                  onPress() {
+                    const serieIds = measurementSeries.map(serie => serie.id);
+                    serieIds.forEach(serieId =>
+                      dispatch(deleteSerie({ chartCode, serieId }))
+                    );
+                  },
+                  isPreferred: true,
+                  style: "default",
+                },
+                {
+                  text: "Non",
+                  style: "destructive",
+                  onPress: () => {
+                    return void 0;
+                  },
+                },
+              ]
+            );
+            return void 0;
+          };
+        }
+        case "deleteSerie": {
+          return (serieId: string) => {
+            if (!measurementSeries) return void 0;
+            const findedSerie = measurementSeries.find(
+              serie => serie.id === serieId
+            );
+            if (!findedSerie) return;
+            Alert.alert(
+              "Confirmation de l'action",
+              `Voulez-vous vraiment supprimer la serie de mesures ${findedSerie.label}? `,
+              [
+                {
+                  text: "Oui",
+                  onPress() {
+                    dispatch(deleteSerie({ chartCode, serieId }));
+                  },
+                  isPreferred: true,
+                  style: "default",
+                },
+                {
+                  text: "Non",
+                  style: "destructive",
+                  onPress: () => {
+                    return void 0;
+                  },
+                },
+              ]
+            );
+          };
+        }
+        case "deleteMeasure": {
+          return (measurementId: string) => {
+            if (selectedSerie) {
+              dispatch(
+                deleteMeasureFromSerie({
+                  chartCode,
+                  measurementId,
+                  serieId: selectedSerie.serieId,
+                })
+              );
+              return void 0;
+            }
+            toast.show(
+              "Info",
+              "Mesure non supprimer.",
+              "Vous devez choisir une serie de mesure avant de supprimer. Appuis long sur la serie que vous voulez choisir."
+            );
+          };
+        }
+        case "addMeasure": {
+          return async (data: ChartMeasurement["data"]) => {
+            if (selectedSerie) {
+              const result = await growthIndicatorValue.calculateIndicator({
+                anthropometricData: {
+                  anthropometricMeasures: Object.values(data).filter(
+                    value =>
+                      typeof value !== "number" && value.code !== "lenhei"
+                  ),
+                },
+                age_in_day: (data["age_in_day"] as number) || 0,
+                age_in_month: (data["age_in_month"] as number) || 0,
+                indicatorCode: indicatorCode,
+                sex: sex,
+              });
+              if ("data" in result) {
+                dispatch(
+                  addMeasureToSerie({
+                    chartCode,
+                    serieId: selectedSerie.serieId,
+                    measurement: data,
+                    results: {
+                      variables: result.data.variables,
+                      growthIndicatorValue: result.data.growthIndicatorValue,
+                    },
+                  })
+                );
+                return true;
+              } else {
+                console.error(result.content);
+                toast.show(
+                  "Error",
+                  "Une erreur s'est produite",
+                  "Pour des erreurs ici veillez verifier si les données entrées sont valides pour la courbe choisie.Par exemple si vous choisissez la courbe 3 mois a 5 ans et que le temps entre la date de naissance et la date d'enregistrement n'est pas supperieur ou égale à 3 mois et inférieur a 5 ans cela peut générer d'erreur."
+                );
+                return null;
+              }
+            }
+            toast.show(
+              "Info",
+              "Mesure non ajouter.",
+              "Vous devez choisir une serie de mesure avant d'ajouter.Appuis long sur la serie que vous voulez choisir."
+            );
+            return null;
+          };
+        }
+        default: {
+          console.warn(
+            "This key is not supported on chart tools action.[key]:",
+            value
+          );
+          return () => {};
+        }
+      }
+    },
+    [
+      measurementSeries,
+      chartCode,
+      selectedSerie,
+      sex,
+      indicatorCode,
+      openLabelPicker,
+      growthIndicatorValue,
+      toast,
+      dispatch,
+    ]
+  );
+
+  return {
+    handleSeriesAction,
+    closeSeriesLabelModal,
+    isSeriesLabelModalOpen,
+    selectedSerie,
+    measurementSeries,
+    selectedSeries,
+  };
+}

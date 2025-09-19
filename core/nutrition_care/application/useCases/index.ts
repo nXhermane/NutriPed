@@ -1,0 +1,12 @@
+export * from "./appetiteTest";
+export * from "./carePhase";
+export * from "./complication";
+export * from "./core";
+export * from "./medicines";
+export * from "./milk";
+export * from "./orientations";
+export * as NextMedicinesUseCases from "./next/medicines";
+export * as NextNutritionalProductUseCases from "./next/nutritional_products";
+export * as NextCoreUseCases from "./next/core";
+export * as NextMilkUseCases from "./next/milk";
+export * as NextOrientationUseCases from "./next/orientation";
