@@ -28,7 +28,7 @@ export const NetworkErrorToast: React.FC<NetworkErrorToastProps> = ({
       if (Platform.OS === 'android') {
         try {
           // URL spécifique pour les paramètres Wi-Fi Android
-          await Linking.openURL('package:com.android.settings/.wifi.WifiSettings');
+          await Linking.openURL('package:com.android.settings');// TODO: this not work like the expectation so i have the possibilitie to use expo-intent-launcher 
           console.log('Paramètres Wi-Fi ouverts avec succès');
           return;
         } catch (androidError) {

@@ -1,12 +1,13 @@
-import * as Notifications from "expo-notifications";
+import { AndroidImportance } from '@notifee/react-native';
+
 export const NOTIFICATION_CONFIG = {
   CHANNEL: {
     REMINDER_CHANNEL: {
       id: "reminder-channel",
-      importance: Notifications.AndroidImportance.HIGH,
+      importance: AndroidImportance.HIGH,
       name: "Reminder Channel",
       sound: "default",
-      vibrationPattern: [0, 250, 250, 250],
+      vibration: true,
     },
   },
   CATEGORIES: {
@@ -14,25 +15,15 @@ export const NOTIFICATION_CONFIG = {
       id: "reminder-actions",
       actions: [
         {
-          identifier: "snooze",
-          buttonTitle: "Snooze",
-          options: {
-            opensAppToForeground: false,
-            isDestructive: true,
-            isAuthenticationRequired: true,
+          title: "Snooze",
+          pressAction: {
+            id: "snooze",
           },
         },
         {
-          identifier: "done",
-          buttonTitle: "Done",
-          options: {
-            opensAppToForeground: true,
-            isDestructive: false,
-            isAuthenticationRequired: false,
-          },
-          textInput: {
-            placeholder: "Entreer du text",
-            submitButtonTitle: "Btn",
+          title: "Done",
+          pressAction: {
+            id: "done",
           },
         },
       ],
