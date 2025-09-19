@@ -15,7 +15,7 @@ module.exports = function (api) {
 
       }],
       ["@babel/plugin-proposal-decorators", { legacy: true }],
-      ["@babel/plugin-proposal-class-properties", { loose: true }],
+      // ["@babel/plugin-proposal-class-properties", { loose: true }],
       [
         "module-resolver",
         {
@@ -29,7 +29,7 @@ module.exports = function (api) {
       ],
       ["inline-import", { extensions: [".sql"] }],
       "@babel/plugin-proposal-export-namespace-from",
-      // "react-native-worklets/plugin"
+      "react-native-worklets/plugin"
     ],
   };
 };
