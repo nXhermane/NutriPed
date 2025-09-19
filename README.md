@@ -1,50 +1,84 @@
-# Welcome to your Expo app 👋
+# Malnutrix - Alpha Version
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**⚠️ Disclaimer: This is an alpha version of Malnutrix. The features and architecture are under active development and are subject to significant changes. ⚠️**
 
-## Get started
+## 🎯 Introduction
 
-1. Install dependencies
+Welcome to the new generation of Malnutrix! This project is a complete rewrite of the original application, designed to be more robust, scalable, and maintainable.
 
-   ```bash
-   npm install
-   ```
+Our goal is to progressively migrate the features and architecture of the previous version into this new, improved structure. This README serves as a guide to the target architecture and the roadmap for achieving it.
 
-2. Start the app
+## 🗺️ Roadmap to V1 - Target Architecture
 
-   ```bash
-   npx expo start
-   ```
+We are migrating from a previous architecture to a more structured and scalable one. The following represents the target architecture for V1, which will be progressively implemented.
 
-In the output, you'll find options to open the app in a
+### 📁 `adapter/` - Adapters Layer
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+This layer will contain all the adapters for external services and frameworks.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+*   `adapter/config/` - Configuration for services (auth, notifications).
+*   `adapter/db/` - Database schema definitions.
+*   `adapter/evaluation/` - Adapters for the evaluation module (infra, mappers).
+*   `adapter/medical_record/` - Adapters for the medical record module.
+*   `adapter/nutrition_care/` - Adapters for the nutrition care module.
+*   `adapter/patient/` - Adapters for the patient module.
+*   `adapter/react/` - React-specific adapters and context providers.
+*   `adapter/reminders/` - Adapters for the reminders module.
+*   `adapter/scripts/` - Data management scripts.
+*   `adapter/services/` - Implementations for external services (Auth, Database, Notifications, etc.).
+*   `adapter/shared/` - Shared adapter components (repositories, DTOs).
+*   `adapter/units/` - Adapters for the units module.
 
-## Get a fresh project
+###  core `core/` - Core Business Logic
 
-When you're ready, run:
+The heart of the application, containing the domain models, business rules, and use cases.
 
-```bash
-npm run reset-project
-```
+*   `core/evaluation/` - Evaluation domain logic.
+*   `core/medical_record/` - Medical record domain logic.
+*   `core/nutrition_care/` - Nutrition care domain logic.
+*   `core/patient/` - Patient domain logic.
+*   `core/reminders/` - Reminders domain logic.
+*   `core/shared/` - Shared core components (domain events, value objects, etc.).
+*   `core/units/` - Units domain logic.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 📱 `app/` - Presentation Layer (Expo Router)
 
-## Learn more
+The user interface of the application, built with React Native and Expo Router.
 
-To learn more about developing your project with Expo, look at the following resources:
+*   `app/(screens)/` - Application screens.
+*   `app/home/` - Home screen and related tabs.
+*   `app/onboarding/` - Onboarding flow.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 🧩 `components/` - UI Components
 
-## Join the community
+Reusable UI components.
 
-Join our community of developers creating universal apps.
+*   `components/custom/` - Custom, application-specific components.
+*   `components/pages/` - Components specific to a single page/screen.
+geo-samples
+*   `components/ui/` - Generic UI components from `gluestack-ui`.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### `src/` - Application Source
+
+*   `src/constants/` - Application constants.
+*   `src/context/` - Global application contexts.
+*   `src/hooks/` - Reusable hooks.
+*   `src/store/` - State management stores (Zustand).
+
+### 🛠️ `utils/` - Utilities
+
+Shared utility functions.
+
+## 🚧 Next Steps
+
+*   Implement the full feature set from the original application.
+*   Write comprehensive tests for all modules.
+*   Refine and stabilize the API.
+*   Improve performance and optimize for different devices.
+
+## 🧭 References
+
+*   [Expo Router Documentation](https://expo.github.io/router/)
+*   [React Native](https://reactnative.dev/)
+*   [Zustand](https://github.com/pmndrs/zustand)
+*   [Drizzle ORM](https://orm.drizzle.team/)
