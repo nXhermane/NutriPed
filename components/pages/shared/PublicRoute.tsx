@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 export function PublicRoute({ children }: PropsWithChildren) {
   const { user } = useGoogleAuth();
   if (user != null) {
-    return <Redirect href={"/home"} />;
+    return <Redirect href="/(tabs)" />;
   }
   return children;
 }

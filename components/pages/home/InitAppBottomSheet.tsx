@@ -132,7 +132,13 @@ const InitPhase: React.FC<InitPhaseProps> = ({
             {title}
           </Text>
           <Text
-            className={`font-h4 text-xs italic ${state === "error" ? "text-error-500" : state === "completed" ? "text-success-500" : "text-secondary-c"}`}
+            className={`font-h4 text-xs italic ${
+              state === "error"
+                ? "text-error-500"
+                : state === "completed"
+                ? "text-success-500"
+                : "text-secondary-c"
+            }`}
           >
             {progress} %
           </Text>
@@ -146,7 +152,13 @@ const InitPhase: React.FC<InitPhaseProps> = ({
           className={"bg-background-secondary"}
         >
           <ProgressFilledTrack
-            className={`${state === "error" ? "bg-error-500" : state === "completed" ? "bg-success-500" : "bg-secondary-c"}`}
+            className={`${
+              state === "error"
+                ? "bg-error-500"
+                : state === "completed"
+                ? "bg-success-500"
+                : "bg-secondary-c"
+            }`}
           />
         </Progress>
       </Center>
@@ -235,8 +247,8 @@ const InitPhaseWrapper: React.FC<InitPhaseWrapperProps> = ({
   >([]);
 
   useEffect(() => {
-    setPhase(prev => {
-      if (prev.findIndex(item => item.title === currentPhase) === -1) {
+    setPhase((prev) => {
+      if (prev.findIndex((item) => item.title === currentPhase) === -1) {
         setCurrentIndex(prev.length);
         return [
           ...prev,

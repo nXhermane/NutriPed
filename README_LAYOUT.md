@@ -17,7 +17,9 @@ Le fichier `app/_layout.tsx` configure la structure racine de l'application MalN
               <NotificationProvider> // 🔔 Notifications push
                 <NotificationServiceProvider> // 📢 Service de notifications
                   <PediatricAppProvider> // 🏥 Logique métier médicale
-                    <AppContent />   // 📱 Contenu de l'app
+                    <InitializationProvider> // 🔄 Initialisation de l'app
+                      <AppContent />   // 📱 Contenu de l'app
+                    </InitializationProvider>
                   </PediatricAppProvider>
                 </NotificationServiceProvider>
               </NotificationProvider>
@@ -106,6 +108,7 @@ SplashScreen.setOptions({
 8. **NotificationProvider** - Notifications push (actions utilisateur)
 9. **NotificationServiceProvider** - Service de notifications (affichage)
 10. **PediatricAppProvider** - Logique métier médicale
+11. **InitializationProvider** - Initialisation et chargement des données médicales
 
 ## 🔄 Cycle de Vie
 

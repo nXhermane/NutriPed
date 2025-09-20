@@ -1,11 +1,13 @@
 import "react-native-reanimated";
-// import "@/global.css"; // Temporairement commenté - fichier manquant
+import "react-native-get-random-values";
+import "@/global.css"
 import { Stack } from "expo-router";
 // import { KeyboardProvider } from "react-native-keyboard-controller"; // Temporairement commenté - nécessite rebuild
 import {
   AppStateProvider,
   DatabaseProvider,
   GoogleAuthProvider,
+  InitializationProvider,
   PediatricAppProvider,
   ToastProvider,
   UIProvider,
@@ -34,7 +36,9 @@ export default function RootLayout() {
                   <NotificationProvider>
                     <NotificationServiceProvider>
                       <PediatricAppProvider>
-                        <AppContent />
+                        <InitializationProvider>
+                          <AppContent />
+                        </InitializationProvider>
                       </PediatricAppProvider>
                     </NotificationServiceProvider>
                   </NotificationProvider>

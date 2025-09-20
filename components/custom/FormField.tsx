@@ -49,7 +49,7 @@ import {
   CheckboxIndicator,
   CheckboxLabel,
 } from "../ui/checkbox";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimePicker } from "@expo/ui/swift-ui";
 import { useUI } from "@/src/context";
 import { HStack } from "../ui/hstack";
 
@@ -378,6 +378,30 @@ export const FormField = <T,>({
         );
       }
       case "date": {
+        // Convertir le mode de l'ancien API vers le nouveau
+        const getDisplayedComponents = (mode: string): "date" | "hourAndMinute" | "dateAndTime" => {
+          switch (mode) {
+            case "time":
+              return "hourAndMinute";
+            case "date":
+              return "date";
+            case "countdown":
+            default:
+              return "dateAndTime";
+          }
+        };
+
+        // Convertir la valeur en format ISO string pour initialDate
+        const getInitialDate = (): string | null => {
+          if (value && typeof value === "string") {
+            return value;
+          }
+          if (field.default) {
+            return field.default;
+          }
+          return null;
+        };
+
         return (
           <React.Fragment>
             <Input className="h-v-10 rounded-lg border-[1px] border-primary-border/5 bg-background-secondary data-[focus=true]:border-primary-c">
@@ -409,21 +433,16 @@ export const FormField = <T,>({
             </Input>
             {visible && (
               <DateTimePicker
-                mode={field.mode}
-                themeVariant={colorMode}
-                maximumDate={field.maxDate}
-                minimumDate={field.minDate}
-                value={dateValue}
-                onChange={(event, _value) => {
-                  if (_value) {
-                    const date = new Date(_value);
-                    if (field.mode === "time") {
-                      const time = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
-                      handleChange(time as T);
-                    } else if (field.mode != "countdown") {
-                      handleChange(date.toISOString().split("T")[0] as T);
-                    } else {
-                    }
+                initialDate={getInitialDate()}
+                displayedComponents={getDisplayedComponents(field.mode)}
+                variant="automatic"
+                title={field.label}
+                onDateSelected={(date: Date) => {
+                  if (field.mode === "time") {
+                    const time = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+                    handleChange(time as T);
+                  } else if (field.mode !== "countdown") {
+                    handleChange(date.toISOString().split("T")[0] as T);
                   }
                   setVisible(false);
                 }}

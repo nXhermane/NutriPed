@@ -200,5 +200,15 @@ export const InitializationProvider: React.FC<InitializationProviderProps> = ({
 };
 
 export function useInitialization() {
-  return useContext(InitializationContext);
+  const context = useContext(InitializationContext);
+
+  // Vérification que le hook est utilisé dans le bon contexte
+  if (context === undefined) {
+    throw new Error(
+      'useInitialization doit être utilisé à l\'intérieur d\'un InitializationProvider. ' +
+      'Assurez-vous que votre composant est englobé par <InitializationProvider>.'
+    );
+  }
+
+  return context;
 }
